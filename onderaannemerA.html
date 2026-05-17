@@ -50,30 +50,14 @@
         .btn-filter { background: #0f172a; color: white; }
         .btn-reset { background: #e2e8f0; color: #1e293b; }
         
-        /* FIX: tabel wrapper - horizontaal scrollen verplicht */
-        .orders-table-wrapper {
-            overflow-x: auto;
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-        }
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px; /* Zorgt dat kolommen niet in elkaar vallen */
-        }
-        .orders-table th {
-            text-align: left;
-            padding: 12px 8px;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #64748b;
-        }
+        .orders-table-wrapper { overflow-x: auto; background: white; border-radius: 16px; padding: 20px; }
+        .orders-table { width: 100%; border-collapse: collapse; }
+        .orders-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; font-size: 0.75rem; font-weight: 600; color: #64748b; }
+        .orders-table td { padding: 12px 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; }
+        
+        .orders-table th,
         .orders-table td {
-            padding: 12px 8px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.8rem;
+            white-space: nowrap;
         }
         
         .action-btn { background: #2dd4bf; color: #0f172a; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.75rem; }
@@ -189,274 +173,62 @@
         .status-completed { background: #d1fae5; color: #065f46; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
-        /* ============================================ */
-        /* MOBIELE WEERGAVE - UITKLAPBARE SIDEBAR */
-        /* ============================================ */
-        
         @media (max-width: 768px) {
-            body {
-                position: relative;
-            }
-            
-            .menu-btn {
-                display: block;
-            }
-            
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: -280px;
-                bottom: 0;
-                width: 260px;
-                z-index: 1001;
-                transition: left 0.3s ease;
-                height: 100%;
-                overflow-y: auto;
-                flex-shrink: 0;
-            }
-            
-            .sidebar.open {
-                left: 0;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-            }
-            
-            .close-sidebar-btn {
-                display: flex;
-                justify-content: flex-end;
-                padding: 16px;
-                border-bottom: 1px solid #1e293b;
-            }
-            
-            .close-sidebar-btn button {
-                background: none;
-                border: none;
-                color: #e2e8f0;
-                font-size: 1rem;
-                cursor: pointer;
-                padding: 8px;
-            }
-            
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 1000;
-            }
-            
-            .sidebar-overlay.active {
-                display: block;
-            }
-            
-            .header {
-                padding: 12px 16px;
-            }
-            
-            .header h1 {
-                font-size: 1.1rem;
-            }
-            
-            .header-right {
-                gap: 8px;
-            }
-            
-            .header-right .switch-btn,
-            .header-right .switch-woningen-btn,
-            .header-right .refresh-btn,
-            .header-right .back-btn {
-                padding: 6px 10px;
-                font-size: 0.7rem;
-            }
-            
-            .user-info {
-                font-size: 0.7rem;
-            }
-            
-            .content {
-                padding: 16px;
-            }
-            
-            .dashboard-grid {
-                grid-template-columns: 1fr !important;
-                gap: 12px;
-            }
-            
-            .kpi-grid {
-                grid-template-columns: 1fr !important;
-                gap: 12px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr !important;
-            }
-            
-            .filter-bar {
-                flex-direction: column;
-                align-items: stretch;
-                border-radius: 16px;
-                padding: 12px;
-                gap: 12px;
-            }
-            
-            .filter-group {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .filter-group input {
-                width: 100%;
-                max-width: none;
-            }
-            
-            .filter-actions {
-                margin-left: 0;
-                justify-content: space-between;
-            }
-            
-            .orders-table-wrapper {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .orders-table {
-                min-width: 600px;
-            }
-            
-            .orders-table th,
-            .orders-table td {
-                font-size: 0.7rem;
-                padding: 8px 6px;
-                white-space: nowrap;
-            }
-            
-            .action-btn,
-            .delete-btn,
-            .add-btn,
-            .switch-btn,
-            .switch-woningen-btn,
-            .refresh-btn,
-            .back-btn,
-            .fiche-btn {
-                padding: 10px 16px;
-                font-size: 0.8rem;
-                min-height: 44px;
-            }
-            
-            .calendar-container {
-                padding: 12px;
-                overflow-x: auto;
-            }
-            
-            .calendar-weekdays {
-                font-size: 0.7rem;
-            }
-            
-            .calendar-day {
-                font-size: 0.7rem;
-                aspect-ratio: 1;
-                min-width: 35px;
-            }
-            
-            .planning-container {
-                padding: 12px;
-            }
-            
-            .planning-item {
-                padding: 10px;
-            }
-            
-            .modal-content {
-                width: 95%;
-                max-height: 90vh;
-                margin: 10px;
-            }
-            
-            .fiche-row {
-                flex-direction: column;
-                margin-bottom: 12px;
-            }
-            
-            .fiche-label {
-                width: 100%;
-                margin-bottom: 4px;
-            }
-            
-            .fiche-actions {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .fiche-actions button {
-                width: 100%;
-            }
-            
-            .partner-card {
-                padding: 12px;
-            }
-            
-            .partner-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .add-driver-form {
-                flex-direction: column;
-            }
-            
-            .add-driver-form input,
-            .add-driver-form button {
-                width: 100%;
-            }
-            
-            .driver-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            
-            .wiki-content {
-                padding: 8px;
-            }
-            
-            .chart-container canvas {
-                height: 200px !important;
-            }
-            
-            .toast {
-                bottom: 20px;
-                left: 16px;
-                right: 16px;
-                width: auto;
-                text-align: center;
-            }
+            body { position: relative; }
+            .menu-btn { display: block; }
+            .sidebar { position: fixed; top: 0; left: -280px; bottom: 0; width: 260px; z-index: 1001; transition: left 0.3s ease; height: 100%; overflow-y: auto; flex-shrink: 0; }
+            .sidebar.open { left: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
+            .close-sidebar-btn { display: flex; justify-content: flex-end; padding: 16px; border-bottom: 1px solid #1e293b; }
+            .close-sidebar-btn button { background: none; border: none; color: #e2e8f0; font-size: 1rem; cursor: pointer; padding: 8px; }
+            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+            .sidebar-overlay.active { display: block; }
+            .header { padding: 12px 16px; }
+            .header h1 { font-size: 1.1rem; }
+            .header-right { gap: 8px; }
+            .header-right .switch-btn, .header-right .switch-woningen-btn, .header-right .refresh-btn, .header-right .back-btn { padding: 6px 10px; font-size: 0.7rem; }
+            .user-info { font-size: 0.7rem; }
+            .content { padding: 16px; }
+            .dashboard-grid { grid-template-columns: 1fr !important; gap: 12px; }
+            .kpi-grid { grid-template-columns: 1fr !important; gap: 12px; }
+            .stats-grid { grid-template-columns: 1fr !important; }
+            .filter-bar { flex-direction: column; align-items: stretch; border-radius: 16px; padding: 12px; gap: 12px; }
+            .filter-group { width: 100%; justify-content: space-between; }
+            .filter-group input { width: 100%; max-width: none; }
+            .filter-actions { margin-left: 0; justify-content: space-between; }
+            .orders-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .orders-table { min-width: 600px; }
+            .orders-table th, .orders-table td { font-size: 0.7rem; padding: 8px 6px; white-space: nowrap; }
+            .action-btn, .delete-btn, .add-btn, .switch-btn, .switch-woningen-btn, .refresh-btn, .back-btn, .fiche-btn { padding: 10px 16px; font-size: 0.8rem; min-height: 44px; }
+            .calendar-container { padding: 12px; overflow-x: auto; }
+            .calendar-weekdays { font-size: 0.7rem; }
+            .calendar-day { font-size: 0.7rem; aspect-ratio: 1; min-width: 35px; }
+            .planning-container { padding: 12px; }
+            .planning-item { padding: 10px; }
+            .modal-content { width: 95%; max-height: 90vh; margin: 10px; }
+            .fiche-row { flex-direction: column; margin-bottom: 12px; }
+            .fiche-label { width: 100%; margin-bottom: 4px; }
+            .fiche-actions { flex-direction: column; gap: 8px; }
+            .fiche-actions button { width: 100%; }
+            .partner-card { padding: 12px; }
+            .partner-header { flex-direction: column; align-items: flex-start; }
+            .add-driver-form { flex-direction: column; }
+            .add-driver-form input, .add-driver-form button { width: 100%; }
+            .driver-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .wiki-content { padding: 8px; }
+            .chart-container canvas { height: 200px !important; }
+            .toast { bottom: 20px; left: 16px; right: 16px; width: auto; text-align: center; }
         }
         
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1rem;
-            }
-            
-            .stat-card .value {
-                font-size: 1.4rem;
-            }
-            
-            .kpi-card .value {
-                font-size: 1.4rem;
-            }
-            
-            .mini-flip-front .value,
-            .mini-flip-back .value {
-                font-size: 1.3rem;
-            }
+            .header h1 { font-size: 1rem; }
+            .stat-card .value { font-size: 1.4rem; }
+            .kpi-card .value { font-size: 1.4rem; }
+            .mini-flip-front .value, .mini-flip-back .value { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
     <div class="sidebar" id="sidebar">
         <div class="close-sidebar-btn">
             <button onclick="closeSidebar()"><i class="fas fa-times"></i> Sluiten</button>
@@ -519,14 +291,12 @@
             sidebar.classList.toggle('open');
             overlay.classList.toggle('active');
         }
-        
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         }
-        
         window.toggleSidebar = toggleSidebar;
         window.closeSidebar = closeSidebar;
     </script>
@@ -780,6 +550,7 @@
                 }
             },
             
+            // HISTORY: nu expliciet kolom 'Actie' met knop
             renderHistory() {
                 let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderHistory" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameHistory" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="historyTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
@@ -815,7 +586,7 @@
                 document.getElementById('pageTitle').innerHTML = `Agenda`;
             },
             
-            renderDrivers() {
+            renderDrivers() { /* zelfde als origineel, ongewijzigd */ 
                 let myDrivers = this.drivers.filter(c => {
                     let partner = this.partners.find(p => p.id === c.partner_id);
                     return partner && partner.is_hoofd === true;
@@ -833,7 +604,7 @@
                 document.getElementById('pageTitle').innerHTML = `Drivers`;
             },
             
-            renderPartners() {
+            renderPartners() { /* origineel, ongewijzigd */
                 let html = `<div class="people-card"><h3><i class="fas fa-handshake"></i> Mijn Partners</h3><button class="add-btn" onclick="app.showAddPartnerForm()">➕ Nieuwe Partner</button><div style="margin-top:20px;">`;
                 if (this.partners.length === 0) html += `<div class="empty-planning">Geen partners gevonden</div>`;
                 else this.partners.forEach(p => {
@@ -854,7 +625,7 @@
                 document.getElementById('pageTitle').innerHTML = `Mijn Partners`;
             },
             
-            async addDriverForPartner(partnerId) {
+            async addDriverForPartner(partnerId) { /* origineel */ 
                 let name = document.getElementById(`driverName_${partnerId}`)?.value;
                 let vehicle = document.getElementById(`driverVoertuig_${partnerId}`)?.value;
                 let plate = document.getElementById(`driverPlaat_${partnerId}`)?.value;
@@ -898,7 +669,7 @@
                 document.getElementById(`driverPlaat_${partnerId}`).value = '';
             },
             
-            async showAddDriverForm() {
+            async showAddDriverForm() { /* origineel */ 
                 const hoofdPartner = this.partners.find(p => p.is_hoofd === true);
                 if (!hoofdPartner) {
                     this.showToast('Geen hoofdpartner gevonden', true);
@@ -942,7 +713,7 @@
                 }
             },
             
-            async showAddPartnerForm() {
+            async showAddPartnerForm() { /* origineel */ 
                 let name = prompt('Bedrijfsnaam partner:');
                 if (!name) return;
                 let contact = prompt('Contactpersoon:') || '';
@@ -978,7 +749,7 @@
                 }
             },
             
-            async deleteDriver(driverId) {
+            async deleteDriver(driverId) { /* origineel */ 
                 if (!confirm('Weet u zeker dat u deze driver wilt verwijderen?')) return;
                 const { error } = await supabase
                     .from('drivers')
@@ -993,7 +764,7 @@
                 }
             },
             
-            async deletePartner(partnerId) {
+            async deletePartner(partnerId) { /* origineel */ 
                 if (!confirm('Weet u zeker dat u deze partner wilt verwijderen? Alle drivers van deze partner worden ook verwijderd.')) return;
                 const { error } = await supabase
                     .from('partners')
@@ -1009,7 +780,7 @@
                 }
             },
             
-            filterBookingsByPeriod(period, bookings) {
+            filterBookingsByPeriod(period, bookings) { /* origineel */ 
                 let now = new Date();
                 let startDate, endDate;
                 switch(period) {
@@ -1021,7 +792,7 @@
                 return bookings.filter(b => { let rideDate = this.parseDate(b.datetime, '00:00'); return rideDate >= startDate && rideDate <= endDate; });
             },
             
-            renderFinance() {
+            renderFinance() { /* origineel, ongewijzigd */ 
                 let filteredBookings = this.filterBookingsByPeriod(this.financePeriod, this.allBookings);
                 let totalRevenue = filteredBookings.reduce((sum, b) => sum + (b.amount || 0), 0);
                 let cashRevenue = filteredBookings.filter(b => b.payment === 'Cash').reduce((sum, b) => sum + (b.amount || 0), 0);
@@ -1076,7 +847,7 @@
             formatPrice(price) { return '€ ' + (price || 0).toLocaleString(); },
             setFinancePeriod(period) { this.financePeriod = period; this.renderFinance(); },
             
-            renderWiki() {
+            renderWiki() { /* origineel */ 
                 document.getElementById('contentArea').innerHTML = `
                     <div class="wiki-container">
                         <div class="wiki-content">
@@ -1097,21 +868,21 @@
                 document.getElementById('pageTitle').innerHTML = `Wiki Agent`;
             },
             
-            applyFiltersNew() {
+            applyFiltersNew() { /* origineel */ 
                 let orderFilter = document.getElementById("filterOrderNew")?.value.toLowerCase() || "";
                 let nameFilter = document.getElementById("filterNameNew")?.value.toLowerCase() || "";
                 let filtered = this.newOrders.filter(o => (orderFilter === "" || o.id?.toLowerCase().includes(orderFilter)) && (nameFilter === "" || o.name?.toLowerCase().includes(nameFilter)));
                 this.renderNewOrdersTable(filtered);
             },
             resetFiltersNew() { let o = document.getElementById("filterOrderNew"); let n = document.getElementById("filterNameNew"); if(o) o.value = ""; if(n) n.value = ""; this.renderNewOrdersTable(this.newOrders); },
-            applyFiltersOrders() {
+            applyFiltersOrders() { /* origineel */ 
                 let orderFilter = document.getElementById("filterOrderOrders")?.value.toLowerCase() || "";
                 let nameFilter = document.getElementById("filterNameOrders")?.value.toLowerCase() || "";
                 let filtered = this.ordersList.filter(o => (orderFilter === "" || o.id?.toLowerCase().includes(orderFilter)) && (nameFilter === "" || o.name?.toLowerCase().includes(nameFilter)));
                 this.renderOrdersTable(filtered);
             },
             resetFiltersOrders() { let o = document.getElementById("filterOrderOrders"); let n = document.getElementById("filterNameOrders"); if(o) o.value = ""; if(n) n.value = ""; this.renderOrdersTable(this.ordersList); },
-            applyFiltersHistory() {
+            applyFiltersHistory() { /* origineel */ 
                 let orderFilter = document.getElementById("filterOrderHistory")?.value.toLowerCase() || "";
                 let nameFilter = document.getElementById("filterNameHistory")?.value.toLowerCase() || "";
                 let filtered = this.historyOrders.filter(o => (orderFilter === "" || o.id?.toLowerCase().includes(orderFilter)) && (nameFilter === "" || o.name?.toLowerCase().includes(nameFilter)));
@@ -1119,7 +890,7 @@
             },
             resetFiltersHistory() { let o = document.getElementById("filterOrderHistory"); let n = document.getElementById("filterNameHistory"); if(o) o.value = ""; if(n) n.value = ""; this.renderHistoryTable(this.historyOrders); },
             
-            showBookingFiche(booking) {
+            showBookingFiche(booking) { /* origineel, volledig functioneel */ 
                 let driverOptions = '<option value="">-- Selecteer Driver --</option>';
                 let availableDrivers = this.drivers.filter(c => c.partner_id === booking.partner_id);
                 availableDrivers.forEach(d => { driverOptions += `<option value="${d.id}">${this.escapeHtml(d.name)} (${d.vehicle})</option>`; });
@@ -1174,7 +945,7 @@
                 document.getElementById('bookingModal').style.display = 'flex';
             },
             
-            async fetchBookingsFromSupabase() {
+            async fetchBookingsFromSupabase() { /* origineel */ 
                 const { data, error } = await supabase
                     .from('bookings')
                     .select('*')
@@ -1187,7 +958,7 @@
                 return data;
             },
             
-            async confirmBooking(bookingId) {
+            async confirmBooking(bookingId) { /* origineel */ 
                 const { error } = await supabase
                     .from('bookings')
                     .update({ status: 'accepted' })
@@ -1203,7 +974,7 @@
                 this.closeModal();
             },
             
-            async assignDriverToBooking(bookingId) {
+            async assignDriverToBooking(bookingId) { /* origineel */ 
                 const select = document.getElementById('driverSelect');
                 const driverId = select?.value;
                 if (!driverId) { this.showToast('Selecteer een driver', true); return; }
@@ -1233,7 +1004,7 @@
                 this.closeModal();
             },
             
-            downloadCSV() {
+            downloadCSV() { /* origineel */ 
                 let headers = ["ID","Datum","Tijd","Naam","Pickup","Destination","Bedrag","Betaling","Status"];
                 let rows = this.historyOrders.map(b => [b.id, b.datetime, b.time, b.name, b.pickup, b.destination, b.amount, b.payment, b.status]);
                 let csvContent = [headers, ...rows].map(row => row.map(cell => `"${cell || ''}"`).join(";")).join("\n");
@@ -1242,13 +1013,13 @@
                 this.showToast("CSV geëxporteerd!");
             },
             
-            downloadJSON() {
+            downloadJSON() { /* origineel */ 
                 let blob = new Blob([JSON.stringify(this.historyOrders, null, 2)], { type: "application/json" });
                 let link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `fleet_history_${new Date().toISOString().slice(0,10)}.json`; link.click();
                 this.showToast("JSON geëxporteerd!");
             },
             
-            refreshCurrentTab() {
+            refreshCurrentTab() { /* origineel */ 
                 switch(this.currentTab) {
                     case 'neworders': this.renderNewOrders(); break;
                     case 'orders': this.renderOrders(); break;
@@ -1262,7 +1033,7 @@
                 }
             },
             
-            switchTab(tabName) {
+            switchTab(tabName) { /* origineel */ 
                 this.currentTab = tabName;
                 document.querySelectorAll('.nav-item').forEach(item => {
                     if (item.getAttribute('data-tab') === tabName) item.classList.add('active');
@@ -1279,7 +1050,7 @@
             
             async logout() { if(confirm('Weet u zeker dat u wilt uitloggen?')) { await supabase.auth.signOut(); window.location.href = 'admin-index.html'; } },
             
-            async autoArchiveExpiredRides() {
+            async autoArchiveExpiredRides() { /* origineel */ 
                 const expiredRides = this.allBookings.filter(b => 
                     b.status === 'accepted' && this.isExpired(b.datetime, b.time)
                 );
@@ -1306,7 +1077,7 @@
                 }
             },
             
-            async init() {
+            async init() { /* origineel */ 
                 try {
                     const bookings = await this.fetchBookingsFromSupabase();
                     this.allBookings = bookings;
