@@ -11,7 +11,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f1f5f9; height: 100vh; display: flex; }
         
-        /* ========== SIDEBAR - COLLAPSE (exact zoals commander.html) ========== */
+        /* ========== SIDEBAR - COLLAPSE ========== */
         .sidebar {
             width: 280px;
             background: #0f172a;
@@ -220,7 +220,7 @@
             padding: 32px;
         }
         
-        /* Alle overige stijlen (filter-bar, tabellen, modals, etc.) zijn exact hetzelfde als in de originele code */
+        /* Alle overige stijlen (filter-bar, tabellen, modals, etc.) */
         .filter-bar { background: white; padding: 8px 16px; border-radius: 48px; margin-bottom: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border: 1px solid #e2e8f0; }
         .filter-group { display: flex; align-items: center; gap: 6px; background: #f8fafc; padding: 4px 12px; border-radius: 32px; border: 1px solid #e2e8f0; }
         .filter-group label { font-size: 0.7rem; font-weight: 600; color: #475569; }
@@ -280,7 +280,6 @@
         .calendar-day.today { border: 2px solid #2dd4bf; }
         .calendar-day.has-rides { background: #dbeafe; }
         .calendar-day.has-expired { background: #fee2e2; }
-        /* 👇 De geselecteerde dag krijgt nu voorrang (staat onder has-rides/has-expired) */
         .calendar-day.selected { background: #2dd4bf; color: #0f172a; font-weight: 600; }
         .ride-dot { width: 6px; height: 6px; background: #2dd4bf; border-radius: 50%; margin-top: 2px; }
         .expired-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; margin-top: 2px; }
@@ -347,18 +346,15 @@
         .status-completed { background: #d1fae5; color: #065f46; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
-        /* ============================================ */
-        /* RESPONSIVE - zoals commander.html */
-        /* ============================================ */
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
             .orders-table th:nth-child(4),
             .orders-table td:nth-child(4) {
-                display: none;
+                display: none;  /* Verbergt de route kolom op tablet en mobiel */
             }
         }
-
         @media (max-width: 768px) {
             .sidebar:not(.collapsed) { width: 280px; }
             .sidebar.collapsed { width: 80px; }
@@ -372,14 +368,12 @@
             .header { padding: 16px; }
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
         }
-
         @media (max-width: 480px) {
             .header h1 { font-size: 1rem; }
             .stat-card .value { font-size: 1.4rem; }
             .kpi-card .value { font-size: 1.4rem; }
             .mini-flip-front .value, .mini-flip-back .value { font-size: 1.3rem; }
         }
-
         @media (orientation: portrait) and (max-width: 900px) {
             .content { padding: 12px !important; }
             .dashboard-grid { grid-template-columns: 1fr !important; gap: 10px; }
@@ -402,46 +396,21 @@
             .header h1 { font-size: 0.9rem; }
             .orders-table { min-width: 550px; }
         }
-
         @media (orientation: portrait) and (max-width: 480px) {
             .orders-table th, .orders-table td { font-size: 0.6rem !important; padding: 4px 2px !important; }
             .action-btn { padding: 4px 6px !important; font-size: 0.65rem !important; }
             .header-right { gap: 4px; }
             .filter-group input { width: 100%; }
         }
-
-        button,
-        .nav-item,
-        .action-btn,
-        .delete-btn,
-        .add-btn,
-        .switch-btn,
-        .switch-woningen-btn,
-        .refresh-btn,
-        .back-btn,
-        .fiche-btn,
-        .calendar-day,
-        .close-modal {
+        button, .nav-item, .action-btn, .delete-btn, .add-btn, .switch-btn, .switch-woningen-btn, .refresh-btn, .back-btn, .fiche-btn, .calendar-day, .close-modal {
             -webkit-tap-highlight-color: transparent;
         }
-        button,
-        .action-btn,
-        .nav-item,
-        .calendar-day {
+        button, .action-btn, .nav-item, .calendar-day {
             touch-action: manipulation;
         }
-        html {
-            -webkit-text-size-adjust: 100%;
-        }
-        input, select, textarea {
-            font-size: 16px;
-            -webkit-appearance: none;
-            border-radius: 8px;
-        }
-        .orders-table-wrapper,
-        .modal-content {
-            -webkit-overflow-scrolling: touch;
-        }
+        html { -webkit-text-size-adjust: 100%; }
+        input, select, textarea { font-size: 16px; -webkit-appearance: none; border-radius: 8px; }
+        .orders-table-wrapper, .modal-content { -webkit-overflow-scrolling: touch; }
     </style>
 </head>
 <body>
@@ -521,7 +490,6 @@
             revenueChart: null,
             flipStates: { omzet: false, cash: false, orders: false },
             
-            // ========== SIDEBAR TOGGLE (exact zoals commander.html) ==========
             toggleSidebar() {
                 const sidebar = document.getElementById('sidebar');
                 sidebar.classList.toggle('collapsed');
@@ -591,6 +559,9 @@
                 this.ordersList.sort((a,b) => this.parseDate(a.datetime, a.time) - this.parseDate(b.datetime, b.time));
                 this.historyOrders.sort((a,b) => this.parseDate(b.datetime, b.time) - this.parseDate(a.datetime, a.time));
                 this.newOrders.sort((a,b) => this.parseDate(a.datetime, a.time) - this.parseDate(b.datetime, b.time));
+                
+                // Log op console (zichtbaar op mobiel via remote debug of als fout)
+                console.log(`Data geladen: ${this.allBookings.length} ritten, New: ${this.newOrders.length}, Orders: ${this.ordersList.length}, History: ${this.historyOrders.length}`);
             },
             
             getRidesByDate(dateStr) { return this.allBookings.filter(b => b.datetime === dateStr); },
@@ -697,7 +668,7 @@
             renderEmptyTable() { return `<div class="alert-no-data"><i class="fas fa-database"></i> Geen ritten gevonden</div>`; },
             
             renderNewOrders() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></table></thead><tbody id="newOrdersTable"></tbody>}</div>`;
+                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></tr></thead><tbody id="newOrdersTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderNewOrdersTable(this.newOrders);
                 document.getElementById('pageTitle').innerHTML = `New Orders <span class="order-count">${this.newOrders.length}</span>`;
@@ -740,7 +711,7 @@
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
                         const driverText = driver ? driver.name : (o.assigned_driver ? o.assigned_driver.name : '<span style="color:#f59e0b;">Niet toegewezen</span>');
                         return `
-                        <tr>
+                        <table>
                             <td><strong>${o.id}</strong><br><span class="status-badge status-accepted">Geaccepteerd</span></td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
@@ -765,7 +736,7 @@
                 let tbody = document.getElementById('historyTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}<tr></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
@@ -1149,16 +1120,30 @@
             },
             
             async fetchBookingsFromSupabase() {
-                const { data, error } = await supabase
-                    .from('bookings')
-                    .select('*')
-                    .order('datetime', { ascending: false });
-                if (error) {
-                    console.error('Supabase fout:', error);
-                    this.showToast('Fout bij laden van ritten: ' + error.message, true);
+                try {
+                    const { data, error } = await supabase
+                        .from('bookings')
+                        .select('*')
+                        .order('datetime', { ascending: false });
+                    if (error) {
+                        console.error('Supabase fout:', error);
+                        this.showToast('Fout bij laden van ritten: ' + error.message, true);
+                        // Toon fout op scherm
+                        const errorDiv = document.getElementById('errorMsg');
+                        errorDiv.textContent = `Fout: ${error.message}. Controleer internet op mobiel.`;
+                        errorDiv.classList.remove('hidden');
+                        return [];
+                    }
+                    // Verberg eventuele oude foutmelding
+                    document.getElementById('errorMsg').classList.add('hidden');
+                    return data;
+                } catch (err) {
+                    console.error('Netwerkfout:', err);
+                    this.showToast('Netwerkfout: kan Supabase niet bereiken op mobiel?', true);
+                    document.getElementById('errorMsg').textContent = 'Netwerkfout. Controleer uw mobiele internetverbinding.';
+                    document.getElementById('errorMsg').classList.remove('hidden');
                     return [];
                 }
-                return data;
             },
             
             async confirmBooking(bookingId) {
@@ -1297,7 +1282,7 @@
                     
                 } catch (err) {
                     console.error('Initialisatie fout:', err);
-                    document.getElementById('errorMsg').textContent = 'Fout bij het laden van de applicatie. Controleer de console.';
+                    document.getElementById('errorMsg').textContent = 'Fout bij het laden van de applicatie. Controleer de console op mobiel.';
                     document.getElementById('errorMsg').classList.remove('hidden');
                 }
             }
