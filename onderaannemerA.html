@@ -44,7 +44,7 @@
         .filter-bar { background: white; padding: 8px 16px; border-radius: 48px; margin-bottom: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border: 1px solid #e2e8f0; }
         .filter-group { display: flex; align-items: center; gap: 6px; background: #f8fafc; padding: 4px 12px; border-radius: 32px; border: 1px solid #e2e8f0; }
         .filter-group label { font-size: 0.7rem; font-weight: 600; color: #475569; }
-        .filter-group input { border: none; background: transparent; padding: 6px 0; font-family: 'Inter', sans-serif; font-size: 0.8rem; width: 120px; outline: none; }
+        .filter-group input { border: none; background: transparent; padding: 6px 0; font-family: 'Inter', sans-serif; font-size: 0.8rem; width: 120px; outline: none; text-align: left; }
         .filter-actions { display: flex; gap: 6px; margin-left: auto; }
         .filter-actions button { padding: 6px 14px; border-radius: 32px; border: none; cursor: pointer; font-weight: 500; font-size: 0.75rem; }
         .btn-filter { background: #0f172a; color: white; }
@@ -181,7 +181,7 @@
         }
 
         /* ============================================ */
-        /* MOBIEL (breedte < 768px) - origineel */
+        /* MOBIEL (breedte < 768px) - aangepast */
         /* ============================================ */
         @media (max-width: 768px) {
             body { position: relative; }
@@ -201,10 +201,39 @@
             .dashboard-grid { grid-template-columns: 1fr !important; gap: 12px; }
             .kpi-grid { grid-template-columns: 1fr !important; gap: 12px; }
             .stats-grid { grid-template-columns: 1fr !important; }
+            
+            /* filter bar aanpassing: label boven input */
             .filter-bar { flex-direction: column; align-items: stretch; border-radius: 16px; padding: 12px; gap: 12px; }
-            .filter-group { width: 100%; justify-content: space-between; }
-            .filter-group input { width: 100%; max-width: none; }
-            .filter-actions { margin-left: 0; justify-content: space-between; }
+            .filter-group { 
+                width: 100%; 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 4px; 
+                background: transparent; 
+                border: none; 
+                padding: 0; 
+            }
+            .filter-group label { 
+                font-size: 0.75rem; 
+                margin-bottom: 2px; 
+            }
+            .filter-group input { 
+                width: 100%; 
+                max-width: none; 
+                background: #f8fafc; 
+                border: 1px solid #e2e8f0; 
+                border-radius: 32px; 
+                padding: 8px 12px; 
+                font-size: 0.85rem; 
+                text-align: left; 
+            }
+            .filter-actions { 
+                margin-left: 0; 
+                justify-content: flex-start; 
+                gap: 12px; 
+                margin-top: 4px;
+            }
+            
             .orders-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
             .orders-table { min-width: 600px; }
             .orders-table th, .orders-table td { font-size: 0.7rem; padding: 8px 6px; white-space: nowrap; }
@@ -238,7 +267,6 @@
 
         /* ============================================ */
         /* NIEUW: SPECIFIEKE AANPASSINGEN VOOR PORTRETMODUS (STAAND) */
-        /* Zorgt dat alles in verhouding blijft bij omkantelen */
         /* ============================================ */
         @media (orientation: portrait) and (max-width: 900px) {
             .content { padding: 12px !important; }
@@ -249,8 +277,8 @@
             .orders-table th, .orders-table td { font-size: 0.65rem !important; padding: 6px 4px !important; }
             .action-btn, .delete-btn, .add-btn, .fiche-btn { padding: 6px 10px !important; font-size: 0.7rem !important; min-height: 36px; }
             .filter-bar { padding: 8px; gap: 6px; }
-            .filter-group { padding: 2px 8px; }
-            .filter-group input { font-size: 0.7rem; width: 100px; }
+            .filter-group { padding: 0; }
+            .filter-group input { font-size: 0.75rem; width: 100%; text-align: left; }
             .calendar-day { font-size: 0.6rem; min-width: 30px; }
             .calendar-weekdays div { font-size: 0.6rem; }
             .planning-item { padding: 8px; }
@@ -267,13 +295,12 @@
             .orders-table th, .orders-table td { font-size: 0.6rem !important; padding: 4px 2px !important; }
             .action-btn { padding: 4px 6px !important; font-size: 0.65rem !important; }
             .header-right { gap: 4px; }
-            .filter-group input { width: 80px; }
+            .filter-group input { width: 100%; }
         }
 
         /* ============================================ */
         /* iOS / SAFARI VERBETERINGEN (toegevoegd zonder schade) */
         /* ============================================ */
-        /* Voorkom grijze achtergrond bij tap op knoppen en links */
         button,
         .nav-item,
         .action-btn,
@@ -289,8 +316,6 @@
         .close-modal {
             -webkit-tap-highlight-color: transparent;
         }
-
-        /* Zorg dat touch targets sneller reageren (geen 300ms vertraging) */
         button,
         .action-btn,
         .nav-item,
@@ -298,34 +323,22 @@
         .menu-btn {
             touch-action: manipulation;
         }
-
-        /* Zorg dat tekst niet automatisch geschaald wordt in landscape modus */
         html {
             -webkit-text-size-adjust: 100%;
         }
-
-        /* Inputs en selects op iOS beter leesbaar: vermijd zoom op focus */
         input, select, textarea {
-            font-size: 16px; /* voorkomt dat Safari inzoomt bij focus */
+            font-size: 16px;
             -webkit-appearance: none;
             border-radius: 8px;
         }
-
-        /* Sluitknop in sidebar (mobiel) voldoende groot voor iOS */
         .close-sidebar-btn button {
             min-height: 44px;
             min-width: 44px;
         }
-
-        /* Voor scrollbare tabellen: vloeiend scrollen op iOS */
         .orders-table-wrapper,
         .modal-content {
             -webkit-overflow-scrolling: touch;
         }
-
-        /* ============================================ */
-        /* FIX: OVERLAY MAG ALLEEN KLIKKEN BLOKKEREN ALS HIJ ACTIEF IS */
-        /* ============================================ */
         .sidebar-overlay {
             pointer-events: none;
         }
@@ -335,7 +348,6 @@
     </style>
 </head>
 <body>
-    <!-- toegevoegd: onclick="closeSidebar()" op de overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <div class="close-sidebar-btn">
@@ -611,7 +623,7 @@
                 let tbody = document.getElementById('newOrdersTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="empty-planning">${this.renderEmptyTable()}<tr></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => `
                         <tr>
@@ -638,7 +650,7 @@
                 let tbody = document.getElementById('ordersTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</tr></td>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></table>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
@@ -669,7 +681,7 @@
                 let tbody = document.getElementById('historyTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<td><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
