@@ -55,6 +55,12 @@
         .orders-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; font-size: 0.75rem; font-weight: 600; color: #64748b; }
         .orders-table td { padding: 12px 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; }
         
+        /* OPLOSSING: zorgt dat alle tabelkolommen naast elkaar blijven (horizontaal scrollen) */
+        .orders-table th,
+        .orders-table td {
+            white-space: nowrap;
+        }
+        
         .action-btn { background: #2dd4bf; color: #0f172a; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.75rem; }
         .delete-btn { background: #ef4444; color: white; margin-left: 8px; padding: 4px 10px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.7rem; }
         .add-btn { background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.8rem; margin-bottom: 16px; }
@@ -702,7 +708,7 @@
             renderEmptyTable() { return `<div class="alert-no-data"><i class="fas fa-database"></i> Geen ritten gevonden</div>`; },
             
             renderNewOrders() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></tr></thead><tbody id="newOrdersTable"></tbody>}</div>`;
+                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></table></thead><tbody id="newOrdersTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderNewOrdersTable(this.newOrders);
                 document.getElementById('pageTitle').innerHTML = `New Orders <span class="order-count">${this.newOrders.length}</span>`;
@@ -739,7 +745,7 @@
                 let tbody = document.getElementById('ordersTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
+                    tbody.innerHTML = `<td><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
@@ -1113,7 +1119,6 @@
                 let ficheBody = document.getElementById('ficheBody');
                 const isExpired = this.isExpired(booking.datetime, booking.time);
                 
-                // Bepaal status display tekst
                 let statusDisplay = '';
                 if (booking.status === 'pending') statusDisplay = '⏳ Nieuw';
                 else if (booking.status === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
