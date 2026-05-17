@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Fleet Connect - Onderaannemer Paneel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -54,6 +54,7 @@
         .orders-table { width: 100%; border-collapse: collapse; }
         .orders-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; font-size: 0.75rem; font-weight: 600; color: #64748b; }
         .orders-table td { padding: 12px 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; }
+        .orders-table th, .orders-table td { white-space: nowrap; }
         
         .action-btn { background: #2dd4bf; color: #0f172a; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.75rem; }
         .delete-btn { background: #ef4444; color: white; margin-left: 8px; padding: 4px 10px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.7rem; }
@@ -104,8 +105,6 @@
         .expired-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; margin-top: 2px; }
         
         .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        @media (max-width: 1000px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
-        
         .info-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer; }
         .mini-flip-container { perspective: 600px; height: 140px; }
         .mini-flip-card { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.4s; transform-style: preserve-3d; }
@@ -131,7 +130,6 @@
         canvas { max-height: 300px; width: 100% !important; }
         
         .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
-        @media (max-width: 1000px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
         .kpi-card { background: white; border-radius: 16px; padding: 20px; text-align: center; }
         .kpi-card .value { font-size: 1.8rem; font-weight: 700; }
         .kpi-card .label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; margin-top: 8px; }
@@ -169,273 +167,189 @@
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
         /* ============================================ */
-        /* MOBIELE WEERGAVE - UITKLAPBARE SIDEBAR */
+        /* TABLET & MOBIEL (breedte < 1000px) */
         /* ============================================ */
-        
+        @media (max-width: 1000px) {
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ============================================ */
+        /* MOBIEL (breedte < 768px) - origineel */
+        /* ============================================ */
         @media (max-width: 768px) {
-            body {
-                position: relative;
-            }
-            
-            .menu-btn {
-                display: block;
-            }
-            
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: -280px;
-                bottom: 0;
-                width: 260px;
-                z-index: 1001;
-                transition: left 0.3s ease;
-                height: 100%;
-                overflow-y: auto;
-                flex-shrink: 0;
-            }
-            
-            .sidebar.open {
-                left: 0;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-            }
-            
-            .close-sidebar-btn {
-                display: flex;
-                justify-content: flex-end;
-                padding: 16px;
-                border-bottom: 1px solid #1e293b;
-            }
-            
-            .close-sidebar-btn button {
-                background: none;
-                border: none;
-                color: #e2e8f0;
-                font-size: 1rem;
-                cursor: pointer;
-                padding: 8px;
-            }
-            
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 1000;
-            }
-            
-            .sidebar-overlay.active {
-                display: block;
-            }
-            
-            .header {
-                padding: 12px 16px;
-            }
-            
-            .header h1 {
-                font-size: 1.1rem;
-            }
-            
-            .header-right {
-                gap: 8px;
-            }
-            
-            .header-right .switch-btn,
-            .header-right .switch-woningen-btn,
-            .header-right .refresh-btn,
-            .header-right .back-btn {
-                padding: 6px 10px;
-                font-size: 0.7rem;
-            }
-            
-            .user-info {
-                font-size: 0.7rem;
-            }
-            
+            body { position: relative; }
+            .menu-btn { display: block; }
+            .sidebar { position: fixed; top: 0; left: -280px; bottom: 0; width: 260px; z-index: 1001; transition: left 0.3s ease; height: 100%; overflow-y: auto; flex-shrink: 0; }
+            .sidebar.open { left: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
+            .close-sidebar-btn { display: flex; justify-content: flex-end; padding: 16px; border-bottom: 1px solid #1e293b; }
+            .close-sidebar-btn button { background: none; border: none; color: #e2e8f0; font-size: 1rem; cursor: pointer; padding: 8px; }
+            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
+            .sidebar-overlay.active { display: block; }
+            .header { padding: 12px 16px; }
+            .header h1 { font-size: 1.1rem; }
+            .header-right { gap: 8px; }
+            .header-right .switch-btn, .header-right .switch-woningen-btn, .header-right .refresh-btn, .header-right .back-btn { padding: 6px 10px; font-size: 0.7rem; }
+            .user-info { font-size: 0.7rem; }
+            .content { padding: 16px; }
+            .dashboard-grid { grid-template-columns: 1fr !important; gap: 12px; }
+            .kpi-grid { grid-template-columns: 1fr !important; gap: 12px; }
+            .stats-grid { grid-template-columns: 1fr !important; }
+            .filter-bar { flex-direction: column; align-items: stretch; border-radius: 16px; padding: 12px; gap: 12px; }
+            .filter-group { width: 100%; justify-content: space-between; }
+            .filter-group input { width: 100%; max-width: none; }
+            .filter-actions { margin-left: 0; justify-content: space-between; }
+            .orders-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .orders-table { min-width: 600px; }
+            .orders-table th, .orders-table td { font-size: 0.7rem; padding: 8px 6px; white-space: nowrap; }
+            .action-btn, .delete-btn, .add-btn, .switch-btn, .switch-woningen-btn, .refresh-btn, .back-btn, .fiche-btn { padding: 10px 16px; font-size: 0.8rem; min-height: 44px; }
+            .calendar-container { padding: 12px; overflow-x: auto; }
+            .calendar-weekdays { font-size: 0.7rem; }
+            .calendar-day { font-size: 0.7rem; aspect-ratio: 1; min-width: 35px; }
+            .planning-container { padding: 12px; }
+            .planning-item { padding: 10px; }
+            .modal-content { width: 95%; max-height: 90vh; margin: 10px; }
+            .fiche-row { flex-direction: column; margin-bottom: 12px; }
+            .fiche-label { width: 100%; margin-bottom: 4px; }
+            .fiche-actions { flex-direction: column; gap: 8px; }
+            .fiche-actions button { width: 100%; }
+            .partner-card { padding: 12px; }
+            .partner-header { flex-direction: column; align-items: flex-start; }
+            .add-driver-form { flex-direction: column; }
+            .add-driver-form input, .add-driver-form button { width: 100%; }
+            .driver-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .wiki-content { padding: 8px; }
+            .chart-container canvas { height: 200px !important; }
+            .toast { bottom: 20px; left: 16px; right: 16px; width: auto; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1rem; }
+            .stat-card .value { font-size: 1.4rem; }
+            .kpi-card .value { font-size: 1.4rem; }
+            .mini-flip-front .value, .mini-flip-back .value { font-size: 1.3rem; }
+        }
+
+        /* ============================================ */
+        /* NIEUW: SPECIFIEKE AANPASSINGEN VOOR PORTRETMODUS (STAAND) */
+        /* Zorgt dat alles in verhouding blijft bij omkantelen */
+        /* ============================================ */
+        @media (orientation: portrait) and (max-width: 900px) {
+            /* Algemene aanpassingen voor staand formaat */
             .content {
-                padding: 16px;
+                padding: 12px !important;
             }
             
+            /* Dashboard grid in portret: 1 kolom voor alle kaarten */
             .dashboard-grid {
                 grid-template-columns: 1fr !important;
-                gap: 12px;
+                gap: 10px;
             }
             
             .kpi-grid {
                 grid-template-columns: 1fr !important;
-                gap: 12px;
+                gap: 10px;
             }
             
-            .stats-grid {
-                grid-template-columns: 1fr !important;
+            /* Flipkaarten iets kleiner */
+            .mini-flip-container {
+                height: 110px;
+            }
+            .mini-flip-front .value, .mini-flip-back .value {
+                font-size: 1.3rem;
             }
             
+            /* Tabel beter leesbaar: verklein lettergrootte en padding */
+            .orders-table th, .orders-table td {
+                font-size: 0.65rem !important;
+                padding: 6px 4px !important;
+            }
+            
+            /* Knoppen compact maar nog goed aanklikbaar */
+            .action-btn, .delete-btn, .add-btn, .fiche-btn {
+                padding: 6px 10px !important;
+                font-size: 0.7rem !important;
+                min-height: 36px;
+            }
+            
+            /* Filterbalk compacter */
             .filter-bar {
-                flex-direction: column;
-                align-items: stretch;
-                border-radius: 16px;
-                padding: 12px;
-                gap: 12px;
+                padding: 8px;
+                gap: 6px;
             }
-            
             .filter-group {
-                width: 100%;
-                justify-content: space-between;
+                padding: 2px 8px;
             }
-            
             .filter-group input {
-                width: 100%;
-                max-width: none;
-            }
-            
-            .filter-actions {
-                margin-left: 0;
-                justify-content: space-between;
-            }
-            
-            .orders-table-wrapper {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .orders-table {
-                min-width: 600px;
-            }
-            
-            .orders-table th,
-            .orders-table td {
                 font-size: 0.7rem;
-                padding: 8px 6px;
-                white-space: nowrap;
+                width: 100px;
             }
             
-            .action-btn,
-            .delete-btn,
-            .add-btn,
-            .switch-btn,
-            .switch-woningen-btn,
-            .refresh-btn,
-            .back-btn,
-            .fiche-btn {
-                padding: 10px 16px;
-                font-size: 0.8rem;
-                min-height: 44px;
-            }
-            
-            .calendar-container {
-                padding: 12px;
-                overflow-x: auto;
-            }
-            
-            .calendar-weekdays {
-                font-size: 0.7rem;
-            }
-            
+            /* Kalender in portret: kleinere dagen */
             .calendar-day {
-                font-size: 0.7rem;
-                aspect-ratio: 1;
-                min-width: 35px;
+                font-size: 0.6rem;
+                min-width: 30px;
+            }
+            .calendar-weekdays div {
+                font-size: 0.6rem;
             }
             
-            .planning-container {
-                padding: 12px;
-            }
-            
+            /* Planning items */
             .planning-item {
-                padding: 10px;
-            }
-            
-            .modal-content {
-                width: 95%;
-                max-height: 90vh;
-                margin: 10px;
-            }
-            
-            .fiche-row {
-                flex-direction: column;
-                margin-bottom: 12px;
-            }
-            
-            .fiche-label {
-                width: 100%;
-                margin-bottom: 4px;
-            }
-            
-            .fiche-actions {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .fiche-actions button {
-                width: 100%;
-            }
-            
-            .partner-card {
-                padding: 12px;
-            }
-            
-            .partner-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .add-driver-form {
-                flex-direction: column;
-            }
-            
-            .add-driver-form input,
-            .add-driver-form button {
-                width: 100%;
-            }
-            
-            .driver-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            
-            .wiki-content {
                 padding: 8px;
             }
-            
-            .chart-container canvas {
-                height: 200px !important;
+            .planning-time, .planning-ride {
+                font-size: 0.75rem;
             }
             
-            .toast {
-                bottom: 20px;
-                left: 16px;
-                right: 16px;
-                width: auto;
-                text-align: center;
+            /* Modale fiche */
+            .fiche-body {
+                padding: 12px;
+            }
+            .fiche-row {
+                font-size: 0.75rem;
+            }
+            .fiche-label {
+                width: 100px;
+            }
+            
+            /* Header knoppen */
+            .header-right button {
+                padding: 4px 8px !important;
+                font-size: 0.65rem !important;
+            }
+            .header h1 {
+                font-size: 0.9rem;
+            }
+            
+            /* Tabellen in portret: laat kolom 'Driver' weg voor meer ruimte? 
+               (optioneel, maar dan verliest u functionaliteit. Ik kies voor behoud, maar scrollen blijft nodig) */
+            .orders-table {
+                min-width: 550px; /* iets minder breed dan normaal */
             }
         }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1rem;
+
+        /* Extra fijnregeling voor kleine portret schermen (<480px) */
+        @media (orientation: portrait) and (max-width: 480px) {
+            .orders-table th, .orders-table td {
+                font-size: 0.6rem !important;
+                padding: 4px 2px !important;
             }
-            
-            .stat-card .value {
-                font-size: 1.4rem;
+            .action-btn {
+                padding: 4px 6px !important;
+                font-size: 0.65rem !important;
             }
-            
-            .kpi-card .value {
-                font-size: 1.4rem;
+            .header-right {
+                gap: 4px;
             }
-            
-            .mini-flip-front .value,
-            .mini-flip-back .value {
-                font-size: 1.3rem;
+            .filter-group input {
+                width: 80px;
             }
         }
     </style>
 </head>
 <body>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
     <div class="sidebar" id="sidebar">
         <div class="close-sidebar-btn">
             <button onclick="closeSidebar()"><i class="fas fa-times"></i> Sluiten</button>
@@ -498,14 +412,12 @@
             sidebar.classList.toggle('open');
             overlay.classList.toggle('active');
         }
-        
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
         }
-        
         window.toggleSidebar = toggleSidebar;
         window.closeSidebar = closeSidebar;
     </script>
@@ -760,7 +672,7 @@
             },
             
             renderHistory() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderHistory" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameHistory" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Status</th><th>Actie</th></tr></thead><tbody id="historyTable"></tbody>}</div>`;
+                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderHistory" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameHistory" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="historyTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderHistoryTable(this.historyOrders);
                 document.getElementById('pageTitle').innerHTML = `History <span class="order-count">${this.historyOrders.length}</span>`;
@@ -770,27 +682,19 @@
                 let tbody = document.getElementById('historyTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="9" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
-                        let statusText = '';
-                        let statusClass = '';
-                        if (o.status === 'completed') { statusText = '✓ Uitgevoerd'; statusClass = 'status-completed'; }
-                        else if (o.status === 'cancelled') { statusText = '✗ Geannuleerd'; statusClass = 'status-cancelled'; }
-                        else if (o.status === 'accepted' && this.isExpired(o.datetime, o.time)) { statusText = '⏰ Verlopen'; statusClass = 'status-cancelled'; }
-                        else { statusText = '📋 Onbekend'; statusClass = 'status-pending'; }
-                        
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
                         const driverText = driver ? driver.name : (o.assigned_driver ? o.assigned_driver.name : 'Niet toegewezen');
                         return `<tr>
-                            <td><strong>${o.id}</strong><br><span class="status-badge ${statusClass}">${statusText}</span></td>
+                            <td><strong>${o.id}</strong></td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td>
                             <td>${o.vehicle}</td>
                             <td>€${(o.amount || 0).toFixed(2)}</td>
                             <td>${driverText}</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                             <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
                         </tr>`;
                     }).join('');
@@ -1113,7 +1017,6 @@
                 let ficheBody = document.getElementById('ficheBody');
                 const isExpired = this.isExpired(booking.datetime, booking.time);
                 
-                // Bepaal status display tekst
                 let statusDisplay = '';
                 if (booking.status === 'pending') statusDisplay = '⏳ Nieuw';
                 else if (booking.status === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
