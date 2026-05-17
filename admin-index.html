@@ -58,7 +58,6 @@
             font-size: 0.85rem;
         }
 
-        /* Nieuwe login form stijlen */
         .login-form {
             display: flex;
             flex-direction: column;
@@ -218,7 +217,6 @@
                     <h3>Onderaannemer</h3>
                     <p>Ritten · Chauffeurs · Partners · Financiën</p>
                 </div>
-                <!-- TOEGEVOEGD: Woningen Verhuur kaart -->
                 <div class="panel-card card-woningen" id="btnWoningen">
                     <i class="fas fa-home"></i>
                     <h3>Woningen Verhuur</h3>
@@ -240,7 +238,7 @@
     <script>
         /**
          * Ryzen Admin Index - Navigatie Hub
-         * Beheert de toegang tot de verschillende werkpanelen via Supabase Auth.
+         * De gebruiker moet ALTIJD handmatig inloggen. Geen automatische sessieherkenning.
          */
 
         // Supabase configuratie
@@ -253,15 +251,6 @@
         const panelSelect = document.getElementById('panelSelect');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
-
-        // Check voor bestaande sessie bij laden
-        async function checkSession() {
-            const { data, error } = await supabaseClient.auth.getSession();
-            if (data.session) {
-                showPanels();
-            }
-        }
-        checkSession();
 
         function showPanels() {
             loginSection.style.display = 'none';
@@ -304,7 +293,7 @@
             }
         });
         
-        // Auto Dealer keuze - naar autodealerpaneel.html
+        // Auto Dealer keuze
         document.getElementById('btnDealer').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('selectedHint').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Auto Dealer paneel wordt gestart...';
@@ -313,7 +302,7 @@
             }, 300);
         });
         
-        // Onderaannemer keuze - naar onderaannemerA.html
+        // Onderaannemer keuze
         document.getElementById('btnTaxi').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('selectedHint').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Onderaannemer paneel wordt gestart...';
@@ -322,7 +311,7 @@
             }, 300);
         });
         
-        // TOEGEVOEGD: Woningen Verhuur keuze - naar commander.html
+        // Woningen Verhuur keuze
         document.getElementById('btnWoningen').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('selectedHint').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Woningen paneel wordt gestart...';
