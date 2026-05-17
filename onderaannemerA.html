@@ -172,6 +172,12 @@
         @media (max-width: 1000px) {
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            
+            /* VERBERG DE KOLOM "ROUTE" (4e kolom) OP TABLET EN MOBIEL */
+            .orders-table th:nth-child(4),
+            .orders-table td:nth-child(4) {
+                display: none;
+            }
         }
 
         /* ============================================ */
@@ -315,6 +321,16 @@
         .orders-table-wrapper,
         .modal-content {
             -webkit-overflow-scrolling: touch;
+        }
+
+        /* ============================================ */
+        /* FIX: OVERLAY MAG ALLEEN KLIKKEN BLOKKEREN ALS HIJ ACTIEF IS */
+        /* ============================================ */
+        .sidebar-overlay {
+            pointer-events: none;
+        }
+        .sidebar-overlay.active {
+            pointer-events: auto;
         }
     </style>
 </head>
@@ -597,7 +613,7 @@
                     tbody.innerHTML = `<tr><td colspan="7" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => `
-                        <tr>
+                        <td>
                             <td><strong>${o.id}</strong><br><span class="status-badge status-pending">Nieuw</span></td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</td>
@@ -621,7 +637,7 @@
                 let tbody = document.getElementById('ordersTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></td>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
@@ -652,7 +668,7 @@
                 let tbody = document.getElementById('historyTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}<tr></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
