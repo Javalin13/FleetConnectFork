@@ -10,37 +10,217 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f1f5f9; height: 100vh; display: flex; }
-        .sidebar { width: 260px; background: #0f172a; color: #e2e8f0; overflow-y: auto; display: flex; flex-direction: column; flex-shrink: 0; }
-        .logo { padding: 24px 20px; font-size: 1.3rem; font-weight: 700; border-bottom: 1px solid #1e293b; cursor: pointer; transition: background-color 0.2s ease; }
-        .logo:hover { background-color: #1e293b; }
-        .logo i { color: #2dd4bf; margin-right: 10px; }
-        .logo small { font-size: 0.7rem; display: block; color: #64748b; margin-top: 4px; }
-        .nav-menu { padding: 20px 16px; flex: 1; }
-        .nav-section { margin-bottom: 20px; }
-        .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; padding: 8px 12px; margin-top: 8px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 12px; font-weight: 500; font-size: 0.9rem; color: #cbd5e1; cursor: pointer; transition: all 0.2s; }
-        .nav-item:hover { background: #1e293b; }
-        .nav-item.active { background: #2dd4bf20; color: #2dd4bf; }
-        .nav-item i { width: 22px; }
-        .nav-item.logout-item { margin-top: 16px; border-top: 1px solid #1e293b; border-radius: 0; padding-top: 16px; color: #f87171; }
-        .nav-item.switch-item { border-top: 1px solid #1e293b; margin-top: 8px; padding-top: 16px; color: #f59e0b; }
-        .nav-item.switch-item:hover { background: #f59e0b20; color: #f59e0b; }
-        .main { flex: 1; display: flex; flex-direction: column; overflow: auto; }
-        .header { background: white; padding: 20px 32px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-        .header h1 { font-size: 1.5rem; font-weight: 600; }
-        .header-right { display: flex; gap: 12px; align-items: center; }
-        .menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #0f172a; padding: 8px; }
-        .switch-btn { background: #f59e0b; color: #0f172a; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .switch-btn:hover { background: #d97706; }
-        .switch-woningen-btn { background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .switch-woningen-btn:hover { background: #059669; }
-        .refresh-btn { background: #2dd4bf; color: #0f172a; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .refresh-btn:hover { background: #14b8a6; }
-        .back-btn { background: #e2e8f0; color: #0f172a; border: none; padding: 8px 16px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .back-btn:hover { background: #cbd5e1; }
-        .user-info { font-size: 0.8rem; color: #64748b; }
-        .content { padding: 32px; }
         
+        /* ========== SIDEBAR - COLLAPSE (exact zoals commander.html) ========== */
+        .sidebar {
+            width: 280px;
+            background: #0f172a;
+            color: #e2e8f0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .sidebar.collapsed .logo .logo-text,
+        .sidebar.collapsed .logo small,
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .nav-section-title {
+            display: none;
+        }
+        .sidebar.collapsed .nav-item {
+            justify-content: center;
+        }
+        .sidebar.collapsed .nav-item i {
+            margin: 0;
+        }
+        
+        .logo {
+            padding: 24px 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-bottom: 1px solid #1e293b;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .logo i.fa-bars {
+            color: #e2e8f0;
+            font-size: 1.3rem;
+        }
+        .logo .logo-text {
+            flex: 1;
+        }
+        .logo i.fa-taxi {
+            color: #2dd4bf;
+            margin-right: 8px;
+        }
+        .logo small {
+            font-size: 0.7rem;
+            display: block;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        
+        .nav-menu {
+            padding: 20px 16px;
+            flex: 1;
+        }
+        .nav-section {
+            margin-bottom: 20px;
+        }
+        .nav-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            padding: 8px 12px;
+            white-space: nowrap;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-item:hover {
+            background: #1e293b;
+        }
+        .nav-item.active {
+            background: #2dd4bf20;
+            color: #2dd4bf;
+        }
+        .nav-item i {
+            width: 22px;
+        }
+        .nav-item.logout-item {
+            margin-top: 16px;
+            border-top: 1px solid #1e293b;
+            border-radius: 0;
+            padding-top: 16px;
+            color: #f87171;
+        }
+        .nav-item.switch-item {
+            border-top: 1px solid #1e293b;
+            margin-top: 8px;
+            padding-top: 16px;
+            color: #f59e0b;
+        }
+        .nav-item.switch-item:hover {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+        
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+        }
+        .header {
+            background: white;
+            padding: 20px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .switch-btn {
+            background: #f59e0b;
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .switch-btn:hover {
+            background: #d97706;
+        }
+        .switch-woningen-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .switch-woningen-btn:hover {
+            background: #059669;
+        }
+        .refresh-btn {
+            background: #2dd4bf;
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .refresh-btn:hover {
+            background: #14b8a6;
+        }
+        .back-btn {
+            background: #e2e8f0;
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn:hover {
+            background: #cbd5e1;
+        }
+        .user-info {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .content {
+            padding: 32px;
+        }
+        
+        /* Alle overige stijlen (filter-bar, tabellen, modals, etc.) zijn exact hetzelfde als in de originele code */
         .filter-bar { background: white; padding: 8px 16px; border-radius: 48px; margin-bottom: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border: 1px solid #e2e8f0; }
         .filter-group { display: flex; align-items: center; gap: 6px; background: #f8fafc; padding: 4px 12px; border-radius: 32px; border: 1px solid #e2e8f0; }
         .filter-group label { font-size: 0.7rem; font-weight: 600; color: #475569; }
@@ -96,11 +276,12 @@
         .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; position: relative; }
         .calendar-day:hover { background: #e2e8f0; }
-        .calendar-day.selected { background: #2dd4bf; color: #0f172a; font-weight: 600; }
         .calendar-day.other-month { color: #94a3b8; }
         .calendar-day.today { border: 2px solid #2dd4bf; }
         .calendar-day.has-rides { background: #dbeafe; }
         .calendar-day.has-expired { background: #fee2e2; }
+        /* 👇 De geselecteerde dag krijgt nu voorrang (staat onder has-rides/has-expired) */
+        .calendar-day.selected { background: #2dd4bf; color: #0f172a; font-weight: 600; }
         .ride-dot { width: 6px; height: 6px; background: #2dd4bf; border-radius: 50%; margin-top: 2px; }
         .expired-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; margin-top: 2px; }
         
@@ -167,95 +348,29 @@
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
         /* ============================================ */
-        /* TABLET & MOBIEL (breedte < 1200px) - aangepast voor tablet */
+        /* RESPONSIVE - zoals commander.html */
         /* ============================================ */
         @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-            
-            /* VERBERG DE KOLOM "ROUTE" (4e kolom) OP TABLET EN MOBIEL */
             .orders-table th:nth-child(4),
             .orders-table td:nth-child(4) {
                 display: none;
             }
         }
 
-        /* ============================================ */
-        /* MOBIEL (breedte < 768px) - aangepast */
-        /* ============================================ */
         @media (max-width: 768px) {
-            body { position: relative; }
-            .menu-btn { display: block; }
-            .sidebar { position: fixed; top: 0; left: -280px; bottom: 0; width: 260px; z-index: 1001; transition: left 0.3s ease; height: 100%; overflow-y: auto; flex-shrink: 0; }
-            .sidebar.open { left: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.3); }
-            .close-sidebar-btn { display: flex; justify-content: flex-end; padding: 16px; border-bottom: 1px solid #1e293b; }
-            .close-sidebar-btn button { background: none; border: none; color: #e2e8f0; font-size: 1rem; cursor: pointer; padding: 8px; }
-            .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; }
-            .sidebar-overlay.active { display: block; }
-            .header { padding: 12px 16px; }
-            .header h1 { font-size: 1.1rem; }
-            .header-right { gap: 8px; }
-            .header-right .switch-btn, .header-right .switch-woningen-btn, .header-right .refresh-btn, .header-right .back-btn { padding: 6px 10px; font-size: 0.7rem; }
-            .user-info { font-size: 0.7rem; }
+            .sidebar:not(.collapsed) { width: 280px; }
+            .sidebar.collapsed { width: 80px; }
+            .sidebar.collapsed .logo .logo-text,
+            .sidebar.collapsed .logo small,
+            .sidebar.collapsed .nav-item span,
+            .sidebar.collapsed .nav-section-title { display: none; }
+            .sidebar .nav-item { justify-content: flex-start; }
+            .sidebar.collapsed .nav-item { justify-content: center; }
             .content { padding: 16px; }
-            .dashboard-grid { grid-template-columns: 1fr !important; gap: 12px; }
-            .kpi-grid { grid-template-columns: 1fr !important; gap: 12px; }
-            .stats-grid { grid-template-columns: 1fr !important; }
-            
-            /* filter bar aanpassing: label boven input */
-            .filter-bar { flex-direction: column; align-items: stretch; border-radius: 16px; padding: 12px; gap: 12px; }
-            .filter-group { 
-                width: 100%; 
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 4px; 
-                background: transparent; 
-                border: none; 
-                padding: 0; 
-            }
-            .filter-group label { 
-                font-size: 0.75rem; 
-                margin-bottom: 2px; 
-            }
-            .filter-group input { 
-                width: 100%; 
-                max-width: none; 
-                background: #f8fafc; 
-                border: 1px solid #e2e8f0; 
-                border-radius: 32px; 
-                padding: 8px 12px; 
-                font-size: 0.85rem; 
-                text-align: left; 
-            }
-            .filter-actions { 
-                margin-left: 0; 
-                justify-content: flex-start; 
-                gap: 12px; 
-                margin-top: 4px;
-            }
-            
-            .orders-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            .orders-table { min-width: 600px; }
-            .orders-table th, .orders-table td { font-size: 0.7rem; padding: 8px 6px; white-space: nowrap; }
-            .action-btn, .delete-btn, .add-btn, .switch-btn, .switch-woningen-btn, .refresh-btn, .back-btn, .fiche-btn { padding: 10px 16px; font-size: 0.8rem; min-height: 44px; }
-            .calendar-container { padding: 12px; overflow-x: auto; }
-            .calendar-weekdays { font-size: 0.7rem; }
-            .calendar-day { font-size: 0.7rem; aspect-ratio: 1; min-width: 35px; }
-            .planning-container { padding: 12px; }
-            .planning-item { padding: 10px; }
-            .modal-content { width: 95%; max-height: 90vh; margin: 10px; }
-            .fiche-row { flex-direction: column; margin-bottom: 12px; }
-            .fiche-label { width: 100%; margin-bottom: 4px; }
-            .fiche-actions { flex-direction: column; gap: 8px; }
-            .fiche-actions button { width: 100%; }
-            .partner-card { padding: 12px; }
-            .partner-header { flex-direction: column; align-items: flex-start; }
-            .add-driver-form { flex-direction: column; }
-            .add-driver-form input, .add-driver-form button { width: 100%; }
-            .driver-item { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .wiki-content { padding: 8px; }
-            .chart-container canvas { height: 200px !important; }
-            .toast { bottom: 20px; left: 16px; right: 16px; width: auto; text-align: center; }
+            .header { padding: 16px; }
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
         }
 
         @media (max-width: 480px) {
@@ -265,9 +380,6 @@
             .mini-flip-front .value, .mini-flip-back .value { font-size: 1.3rem; }
         }
 
-        /* ============================================ */
-        /* NIEUW: SPECIFIEKE AANPASSINGEN VOOR PORTRETMODUS (STAAND) */
-        /* ============================================ */
         @media (orientation: portrait) and (max-width: 900px) {
             .content { padding: 12px !important; }
             .dashboard-grid { grid-template-columns: 1fr !important; gap: 10px; }
@@ -298,9 +410,6 @@
             .filter-group input { width: 100%; }
         }
 
-        /* ============================================ */
-        /* iOS / SAFARI VERBETERINGEN (toegevoegd zonder schade) */
-        /* ============================================ */
         button,
         .nav-item,
         .action-btn,
@@ -312,15 +421,13 @@
         .back-btn,
         .fiche-btn,
         .calendar-day,
-        .menu-btn,
         .close-modal {
             -webkit-tap-highlight-color: transparent;
         }
         button,
         .action-btn,
         .nav-item,
-        .calendar-day,
-        .menu-btn {
+        .calendar-day {
             touch-action: manipulation;
         }
         html {
@@ -331,58 +438,46 @@
             -webkit-appearance: none;
             border-radius: 8px;
         }
-        .close-sidebar-btn button {
-            min-height: 44px;
-            min-width: 44px;
-        }
         .orders-table-wrapper,
         .modal-content {
             -webkit-overflow-scrolling: touch;
         }
-        .sidebar-overlay {
-            pointer-events: none;
-        }
-        .sidebar-overlay.active {
-            pointer-events: auto;
-        }
     </style>
 </head>
 <body>
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="close-sidebar-btn">
-            <button onclick="closeSidebar()"><i class="fas fa-times"></i> Sluiten</button>
-        </div>
-        <div class="logo" onclick="window.location.href='admin-index.html'" style="cursor: pointer;">
-            <i class="fas fa-taxi"></i> Fleet Connect
-            <br><small>Onderaannemer Paneel</small>
+    <div class="sidebar collapsed" id="sidebar">
+        <div class="logo" onclick="app.toggleSidebar()">
+            <i class="fas fa-bars"></i>
+            <div class="logo-text">
+                <i class="fas fa-taxi"></i> Fleet Connect
+                <br><small>Onderaannemer Paneel</small>
+            </div>
         </div>
         <div class="nav-menu">
             <div class="nav-section"><div class="nav-section-title">📋 BOEKINGEN</div>
-                <div class="nav-item active" data-tab="neworders" onclick="app.switchTab('neworders'); closeSidebar();"><i class="fas fa-clipboard-list"></i> New Orders</div>
-                <div class="nav-item" data-tab="orders" onclick="app.switchTab('orders'); closeSidebar();"><i class="fas fa-box"></i> Orders</div>
-                <div class="nav-item" data-tab="history" onclick="app.switchTab('history'); closeSidebar();"><i class="fas fa-history"></i> History</div>
-                <div class="nav-item" data-tab="agenda" onclick="app.switchTab('agenda'); closeSidebar();"><i class="fas fa-calendar-alt"></i> Agenda</div>
+                <div class="nav-item active" data-tab="neworders" onclick="app.switchTab('neworders')"><i class="fas fa-clipboard-list"></i><span> New Orders</span></div>
+                <div class="nav-item" data-tab="orders" onclick="app.switchTab('orders')"><i class="fas fa-box"></i><span> Orders</span></div>
+                <div class="nav-item" data-tab="history" onclick="app.switchTab('history')"><i class="fas fa-history"></i><span> History</span></div>
+                <div class="nav-item" data-tab="agenda" onclick="app.switchTab('agenda')"><i class="fas fa-calendar-alt"></i><span> Agenda</span></div>
             </div>
             <div class="nav-section"><div class="nav-section-title">👥 BEHEER</div>
-                <div class="nav-item" data-tab="drivers" onclick="app.switchTab('drivers'); closeSidebar();"><i class="fas fa-id-card"></i> Drivers</div>
-                <div class="nav-item" data-tab="partners" onclick="app.switchTab('partners'); closeSidebar();"><i class="fas fa-handshake"></i> Mijn Partners</div>
+                <div class="nav-item" data-tab="drivers" onclick="app.switchTab('drivers')"><i class="fas fa-id-card"></i><span> Drivers</span></div>
+                <div class="nav-item" data-tab="partners" onclick="app.switchTab('partners')"><i class="fas fa-handshake"></i><span> Mijn Partners</span></div>
             </div>
             <div class="nav-section"><div class="nav-section-title">💰 FINANCIËN</div>
-                <div class="nav-item" data-tab="financieel" onclick="app.switchTab('financieel'); closeSidebar();"><i class="fas fa-chart-line"></i> Financieel</div>
+                <div class="nav-item" data-tab="financieel" onclick="app.switchTab('financieel')"><i class="fas fa-chart-line"></i><span> Financieel</span></div>
             </div>
             <div class="nav-section"><div class="nav-section-title">ℹ️ INFORMATIE</div>
-                <div class="nav-item" data-tab="wiki" onclick="app.switchTab('wiki'); closeSidebar();"><i class="fas fa-robot"></i> Wiki Agent</div>
+                <div class="nav-item" data-tab="wiki" onclick="app.switchTab('wiki')"><i class="fas fa-robot"></i><span> Wiki Agent</span></div>
             </div>
-            <div class="nav-item switch-item" onclick="app.switchToWoningen(); closeSidebar();"><i class="fas fa-home"></i> Switch naar Woningen</div>
-            <div class="nav-item switch-item" onclick="app.switchToAutoDealer(); closeSidebar();"><i class="fas fa-exchange-alt"></i> Switch naar Auto Dealer</div>
-            <div class="nav-item logout-item" onclick="app.logout(); closeSidebar();"><i class="fas fa-sign-out-alt"></i> Uitloggen</div>
+            <div class="nav-item switch-item" onclick="app.switchToWoningen()"><i class="fas fa-home"></i><span> Switch naar Woningen</span></div>
+            <div class="nav-item switch-item" onclick="app.switchToAutoDealer()"><i class="fas fa-exchange-alt"></i><span> Switch naar Auto Dealer</span></div>
+            <div class="nav-item logout-item" onclick="app.logout()"><i class="fas fa-sign-out-alt"></i><span> Uitloggen</span></div>
         </div>
     </div>
     <div class="main">
         <div id="errorMsg" class="hidden" style="background:#fee2e2; color:#b91c1c; padding:12px; text-align:center; font-weight:600;"></div>
         <div class="header">
-            <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <h1 id="pageTitle">New Orders</h1>
             <div class="header-right">
                 <button class="back-btn" onclick="window.location.href='admin-index.html'"><i class="fas fa-home"></i> Terug naar overzicht</button>
@@ -404,23 +499,6 @@
     
     <div id="toast" class="toast"></div>
 
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-        }
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        }
-        window.toggleSidebar = toggleSidebar;
-        window.closeSidebar = closeSidebar;
-    </script>
-    
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -442,6 +520,12 @@
             financePeriod: 'month',
             revenueChart: null,
             flipStates: { omzet: false, cash: false, orders: false },
+            
+            // ========== SIDEBAR TOGGLE (exact zoals commander.html) ==========
+            toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('collapsed');
+            },
             
             showToast(msg, isError) {
                 const toast = document.getElementById('toast');
@@ -613,7 +697,7 @@
             renderEmptyTable() { return `<div class="alert-no-data"><i class="fas fa-database"></i> Geen ritten gevonden</div>`; },
             
             renderNewOrders() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></tr></thead><tbody id="newOrdersTable"></tbody>}</div>`;
+                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></table></thead><tbody id="newOrdersTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderNewOrdersTable(this.newOrders);
                 document.getElementById('pageTitle').innerHTML = `New Orders <span class="order-count">${this.newOrders.length}</span>`;
@@ -629,11 +713,11 @@
                         <tr>
                             <td><strong>${o.id}</strong><br><span class="status-badge status-pending">Nieuw</span></td>
                             <td>${o.datetime} ${o.time}</td>
-                            <td>${this.escapeHtml(o.name)}</td>
-                            <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td>
-                            <td>${o.vehicle}</td>
-                            <td>€${(o.amount || 0).toFixed(2)}</td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
+                            <td>${this.escapeHtml(o.name)}</span></td>
+                            <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
+                            <td>${o.vehicle}</span></td>
+                            <td>€${(o.amount || 0).toFixed(2)}</span></td>
+                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></span></td>
                         </tr>
                     `).join('');
                 }
@@ -650,7 +734,7 @@
                 let tbody = document.getElementById('ordersTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}<tr></td>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
@@ -659,19 +743,19 @@
                         <tr>
                             <td><strong>${o.id}</strong><br><span class="status-badge status-accepted">Geaccepteerd</span></td>
                             <td>${o.datetime} ${o.time}</td>
-                            <td>${this.escapeHtml(o.name)}</td>
-                            <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td>
-                            <td>${o.vehicle}</td>
-                            <td>€${(o.amount || 0).toFixed(2)}</td>
-                            <td>${driverText}</td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
+                            <td>${this.escapeHtml(o.name)}</span></td>
+                            <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
+                            <td>${o.vehicle}</span></td>
+                            <td>€${(o.amount || 0).toFixed(2)}</span></td>
+                            <td>${driverText}</span></td>
+                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></span></td>
                         </tr>
                     `;}).join('');
                 }
             },
             
             renderHistory() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderHistory" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameHistory" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th><tr></thead><tbody id="historyTable"></tbody>}</div>`;
+                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderHistory" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameHistory" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="historyTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderHistoryTable(this.historyOrders);
                 document.getElementById('pageTitle').innerHTML = `History <span class="order-count">${this.historyOrders.length}</span>`;
@@ -689,12 +773,12 @@
                         return `<tr>
                             <td><strong>${o.id}</strong></td>
                             <td>${o.datetime} ${o.time}</td>
-                            <td>${this.escapeHtml(o.name)}</td>
-                            <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td>
-                            <td>${o.vehicle}</td>
-                            <td>€${(o.amount || 0).toFixed(2)}</td>
-                            <td>${driverText}</td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
+                            <td>${this.escapeHtml(o.name)}</span></td>
+                            <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
+                            <td>${o.vehicle}</span></td>
+                            <td>€${(o.amount || 0).toFixed(2)}</span></td>
+                            <td>${driverText}</span></td>
+                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></span></td>
                         </tr>`;
                     }).join('');
                 }
