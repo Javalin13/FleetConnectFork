@@ -461,7 +461,7 @@
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
             <h4>📅 Komende ritten</h4>
-            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody><tr>
+            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
             <h4>✅ Voltooide ritten</h4>
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
         </div>
@@ -638,10 +638,9 @@
         });
     }
 
-    // ========== BOEKINGSLOGICA (prefix T-RV-) ==========
+    // ========== BOEKINGSLOGICA ==========
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer = null, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "", selectedVehicle = 'Standaard', selectedVehicleExtra = 0;
     let returnFlatpickrInstance = null, currentPage = 1;
-    let activeAutocompleteController = null;
 
     function generateBookingId() {
         const now = new Date();
@@ -803,24 +802,30 @@
         }
     }
 
-    // ========== NIEUWE AUTOCOMPLETE (WERKT ZEKER) ==========
-    async function fetchAddresses(query, inputId) {
-        const suggestionsDiv = inputId === 'pickupInput' ? document.getElementById('pickupSuggest') : document.getElementById('dropoffSuggest');
+    // ========== AUTOCOMPLETE - DEFINITIEVE WERKENDE VERSIE ==========
+    let activeAutocompleteController = null;
+
+    async function fetchAddresses(query, wrapId) {
+        const suggestionsDiv = wrapId === 'pickupWrap' ? document.getElementById('pickupSuggest') : document.getElementById('dropoffSuggest');
         if (!suggestionsDiv) return;
         if (query.length < 3) {
             suggestionsDiv.style.display = 'none';
             return;
         }
-        suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Zoeken...</div>';
+        // Toon laadbericht
+        suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Adressen laden...</div>';
         suggestionsDiv.style.display = 'block';
+
+        // Vorige request annuleren
         if (activeAutocompleteController) activeAutocompleteController.abort();
         activeAutocompleteController = new AbortController();
+
         try {
             const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=be&accept-language=nl&addressdetails=1`;
             const timeoutId = setTimeout(() => activeAutocompleteController.abort(), 8000);
             const response = await fetch(url, {
                 signal: activeAutocompleteController.signal,
-                headers: { 'User-Agent': 'Fleetconnect/3.0' }
+                headers: { 'User-Agent': 'Fleetconnect/2.0 (contact: support@fleetconnect.be)' } // ✅ correcte User-Agent
             });
             clearTimeout(timeoutId);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -838,9 +843,9 @@
                 div.textContent = place.display_name.length > 80 ? place.display_name.substring(0,80)+'…' : place.display_name;
                 div.addEventListener('click', (function(lat, lon, name) {
                     return function() {
-                        const inputField = inputId === 'pickupInput' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
+                        const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
                         inputField.value = name;
-                        if (inputId === 'pickupInput') {
+                        if (wrapId === 'pickupWrap') {
                             pickupCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
                         } else {
                             dropoffCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
@@ -860,35 +865,34 @@
     }
 
     function initAutocomplete() {
+        let pickupTimeout, dropoffTimeout;
         const pickupInput = document.getElementById('pickupInput');
         const dropoffInput = document.getElementById('dropoffInput');
-        let debounceTimer;
         if (pickupInput) {
             pickupInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
+                clearTimeout(pickupTimeout);
                 const q = e.target.value;
-                debounceTimer = setTimeout(() => fetchAddresses(q, 'pickupInput'), 400);
-            });
-            pickupInput.addEventListener('blur', () => {
-                setTimeout(() => {
+                if (q.length >= 3) {
+                    pickupTimeout = setTimeout(() => fetchAddresses(q, 'pickupWrap'), 400);
+                } else {
                     const sugg = document.getElementById('pickupSuggest');
-                    if (sugg && !sugg.matches(':hover')) sugg.style.display = 'none';
-                }, 150);
+                    if (sugg) sugg.style.display = 'none';
+                }
             });
         }
         if (dropoffInput) {
             dropoffInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
+                clearTimeout(dropoffTimeout);
                 const q = e.target.value;
-                debounceTimer = setTimeout(() => fetchAddresses(q, 'dropoffInput'), 400);
-            });
-            dropoffInput.addEventListener('blur', () => {
-                setTimeout(() => {
+                if (q.length >= 3) {
+                    dropoffTimeout = setTimeout(() => fetchAddresses(q, 'dropoffWrap'), 400);
+                } else {
                     const sugg = document.getElementById('dropoffSuggest');
-                    if (sugg && !sugg.matches(':hover')) sugg.style.display = 'none';
-                }, 150);
+                    if (sugg) sugg.style.display = 'none';
+                }
             });
         }
+        // Sluit suggesties als er buiten geklikt wordt
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#pickupWrap') && !e.target.closest('#dropoffWrap')) {
                 const ps = document.getElementById('pickupSuggest');
