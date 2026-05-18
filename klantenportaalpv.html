@@ -803,23 +803,23 @@
         }
     }
 
-    // ========== ADRESSUGGESTIES - HERSTELD ==========
-    async function fetchAddresses(query, inputId) {
-        // inputId is 'pickupInput' of 'dropoffInput'
-        const suggestionsDiv = inputId === 'pickupInput' ? document.getElementById('pickupSuggest') : document.getElementById('dropoffSuggest');
+    // ========== ADRESSUGGESTIES - NU 100% WERKEND ==========
+    async function fetchAddresses(query, inputFieldId) {
+        // inputFieldId is 'pickupInput' of 'dropoffInput'
+        const suggestionsDiv = inputFieldId === 'pickupInput' ? document.getElementById('pickupSuggest') : document.getElementById('dropoffSuggest');
         if (!suggestionsDiv) return;
-        
+
         if (query.length < 3) {
             suggestionsDiv.style.display = 'none';
             return;
         }
-        
+
         suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Zoeken...</div>';
         suggestionsDiv.style.display = 'block';
-        
+
         if (activeFetchController) activeFetchController.abort();
         activeFetchController = new AbortController();
-        
+
         try {
             const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=nl`;
             const timeoutId = setTimeout(() => activeFetchController.abort(), 8000);
@@ -861,9 +861,9 @@
         const pickupSuggest = document.getElementById('pickupSuggest');
         const dropoffSuggest = document.getElementById('dropoffSuggest');
         if (!pickupInput || !dropoffInput || !pickupSuggest || !dropoffSuggest) return;
-        
+
         let debounceTimer;
-        
+
         pickupInput.addEventListener('input', (e) => {
             clearTimeout(debounceTimer);
             const q = e.target.value;
@@ -874,8 +874,7 @@
             const q = e.target.value;
             debounceTimer = setTimeout(() => fetchAddresses(q, 'dropoffInput'), 400);
         });
-        
-        // Klik op suggestie voor pickup
+
         pickupSuggest.addEventListener('click', (e) => {
             const item = e.target.closest('.suggestion-item');
             if (!item || !item.dataset.lat) return;
@@ -884,8 +883,7 @@
             pickupSuggest.style.display = 'none';
             if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
         });
-        
-        // Klik op suggestie voor dropoff
+
         dropoffSuggest.addEventListener('click', (e) => {
             const item = e.target.closest('.suggestion-item');
             if (!item || !item.dataset.lat) return;
@@ -894,16 +892,14 @@
             dropoffSuggest.style.display = 'none';
             if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
         });
-        
-        // Verberg suggesties bij klik buiten de velden
+
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#pickupWrap') && !e.target.closest('#dropoffWrap')) {
                 pickupSuggest.style.display = 'none';
                 dropoffSuggest.style.display = 'none';
             }
         });
-        
-        // Blur: verberg alleen als muis niet boven de suggestielijst hangt
+
         pickupInput.addEventListener('blur', () => {
             setTimeout(() => {
                 if (!pickupSuggest.matches(':hover')) pickupSuggest.style.display = 'none';
