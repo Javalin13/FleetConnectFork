@@ -288,10 +288,10 @@
                         <h1>🚖 Ritgegevens</h1>
                         <div class="sub">België – €1,50/km | Spoedritten via WhatsApp</div>
                         <div class="field"><label>📍 Ophaaladres <span class="required-star">*</span></label>
-                            <div class="suggest-wrapper" id="pickupWrap"><input type="text" id="pickupInput" placeholder="bv. Antwerpen"><div id="pickupSuggest" class="suggestions"></div></div>
+                            <div class="suggest-wrapper" id="pickupWrap"><input type="text" id="pickupInput" placeholder="bv. Antwerpen" autocomplete="off"><div id="pickupSuggest" class="suggestions"></div></div>
                         </div>
                         <div class="field"><label>🏁 Afzetadres <span class="required-star">*</span></label>
-                            <div class="suggest-wrapper" id="dropoffWrap"><input type="text" id="dropoffInput" placeholder="bv. Brussel-Zaventem"><div id="dropoffSuggest" class="suggestions"></div></div>
+                            <div class="suggest-wrapper" id="dropoffWrap"><input type="text" id="dropoffInput" placeholder="bv. Brussel-Zaventem" autocomplete="off"><div id="dropoffSuggest" class="suggestions"></div></div>
                         </div>
                         <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label>🔄 Heen en terug rit (prijs x2)</label></div>
                         <div class="field"><label>✈️ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber" placeholder="bv. KL1704"></div>
@@ -378,7 +378,7 @@
             <h4>📅 Komende ritten</h4>
             <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
             <h4>✅ Voltooide ritten</h4>
-            <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
+            <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></tr>
         </div>
     </div>
 
@@ -401,11 +401,15 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // LOGIN CHECK - redirect naar index.html als niet ingelogd
     const loggedInEmail = sessionStorage.getItem('loggedInEmail');
-
+    
+    function redirectToLogin() {
+        window.location.href = 'index.html';
+    }
+    
     if (!loggedInEmail) {
-        document.body.innerHTML = '<div style="text-align:center; margin-top:100px; font-family: Inter, sans-serif;"><i class="fas fa-sign-out-alt" style="font-size:48px; color:#b91c1c;"></i><h2>U bent uitgelogd</h2><p>Log opnieuw in via de inlogpagina.</p><button onclick="sessionStorage.clear(); window.location.reload();" style="background:#2c6e9e; color:white; border:none; padding:10px 20px; border-radius:40px; cursor:pointer;">Opnieuw laden</button></div>';
-        throw new Error('Niet ingelogd');
+        redirectToLogin();
     }
 
     function generateCustomerId(email) {
@@ -438,7 +442,7 @@
 
     function logout() {
         sessionStorage.removeItem('loggedInEmail');
-        window.location.reload();
+        redirectToLogin();
     }
     document.querySelectorAll('.logout-action').forEach(btn => btn.addEventListener('click', logout));
     document.getElementById('logoutTabBtn')?.addEventListener('click', logout);
@@ -577,6 +581,7 @@
         });
     }
 
+    // ========== ADRES AUTOCOMPLETE (volledig werkend) ==========
     async function fetchAddresses(q, wrapId) {
         const wrap = document.getElementById(wrapId);
         const suggestionsDiv = wrap.querySelector('.suggestions');
@@ -606,6 +611,7 @@
     function initAutocomplete() {
         const pickupInput = document.getElementById('pickupInput');
         const dropoffInput = document.getElementById('dropoffInput');
+        
         pickupInput.addEventListener('input', (e) => {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'pickupWrap'), 400);
@@ -614,22 +620,32 @@
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'dropoffWrap'), 400);
         });
-        document.querySelector('#pickupWrap .suggestions').addEventListener('click', (e) => {
-            const item = e.target.closest('.suggestion-item');
-            if (!item || !item.dataset.lat) return;
-            document.getElementById('pickupInput').value = item.innerText;
-            pickupCoord = { lat: parseFloat(item.dataset.lat), lon: parseFloat(item.dataset.lon) };
-            document.querySelector('#pickupWrap .suggestions').style.display = 'none';
-            if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
-        });
-        document.querySelector('#dropoffWrap .suggestions').addEventListener('click', (e) => {
-            const item = e.target.closest('.suggestion-item');
-            if (!item || !item.dataset.lat) return;
-            document.getElementById('dropoffInput').value = item.innerText;
-            dropoffCoord = { lat: parseFloat(item.dataset.lat), lon: parseFloat(item.dataset.lon) };
-            document.querySelector('#dropoffWrap .suggestions').style.display = 'none';
-            if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
-        });
+        
+        const pickupSuggestions = document.querySelector('#pickupWrap .suggestions');
+        const dropoffSuggestions = document.querySelector('#dropoffWrap .suggestions');
+        
+        if (pickupSuggestions) {
+            pickupSuggestions.addEventListener('click', (e) => {
+                const item = e.target.closest('.suggestion-item');
+                if (!item || !item.dataset.lat) return;
+                document.getElementById('pickupInput').value = item.innerText;
+                pickupCoord = { lat: parseFloat(item.dataset.lat), lon: parseFloat(item.dataset.lon) };
+                pickupSuggestions.style.display = 'none';
+                if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
+            });
+        }
+        
+        if (dropoffSuggestions) {
+            dropoffSuggestions.addEventListener('click', (e) => {
+                const item = e.target.closest('.suggestion-item');
+                if (!item || !item.dataset.lat) return;
+                document.getElementById('dropoffInput').value = item.innerText;
+                dropoffCoord = { lat: parseFloat(item.dataset.lat), lon: parseFloat(item.dataset.lon) };
+                dropoffSuggestions.style.display = 'none';
+                if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
+            });
+        }
+        
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.suggest-wrapper')) {
                 document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none');
