@@ -23,12 +23,15 @@ export const CommunicationConfig = {
         supportedLanguages: ['nl', 'fr', 'en'],
         fallbackMode: 'trilingual', // 'trilingual' or 'default'
         trilingualOrder: ['nl', 'fr', 'en'],
-        provider: 'mock' // 'mock' or 'resend'
+        provider: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'mock' : 'resend'
     },
     providers: {
         resend: {
-            apiKey: '', // DO NOT commit real keys
-            from: 'FleetConnect <noreply@fleetconnect.be>'
+            // Secure backend endpoint (Supabase Edge Function)
+            // This prevents exposing the Resend API Key in the browser.
+            endpoint: '/functions/v1/send-email',
+            from: 'FleetConnect <noreply@fleetconnect.be>',
+            replyTo: 'FleetConnect <support@fleetconnect.be>'
         }
     }
 };

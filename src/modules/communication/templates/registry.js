@@ -17,10 +17,17 @@ export const TemplateRegistry = {
     BOOKING_CANCELLED: {
         render: (data, lang, mode) => TemplateRenderer.render('BOOKING_CANCELLED', data, lang, mode)
     },
+    RIDE_COMPLETED: {
+        render: (data, lang, mode) => TemplateRenderer.render('RIDE_COMPLETED', data, lang, mode)
+    },
+    ACCOUNT_ONBOARDING: {
+        render: (data, lang, mode) => TemplateRenderer.render('ACCOUNT_ONBOARDING', data, lang, mode)
+    },
+    // Compatibility aliases
     BOOKING_COMPLETED: {
-        render: (data, lang, mode) => TemplateRenderer.render('BOOKING_COMPLETED', data, lang, mode)
+        render: (data, lang, mode) => TemplateRenderer.render('RIDE_COMPLETED', data, lang, mode)
     },
     ACCOUNT_WELCOME: {
-        render: (data, lang, mode) => TemplateRenderer.render('ACCOUNT_WELCOME', data, lang, mode)
+        render: (data, lang, mode) => TemplateRenderer.render('ACCOUNT_ONBOARDING', data, lang, mode)
     }
 };

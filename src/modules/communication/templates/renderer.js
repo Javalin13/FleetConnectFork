@@ -74,16 +74,23 @@ export class TemplateRenderer {
 
         switch (trigger) {
             case 'BOOKING_CONFIRMATION': return this.renderBookingConfirmation(data, labels, subjects, lang);
+            case 'BOOKING_ACCEPTED': return this.renderBookingAccepted(data, labels, subjects, lang);
             case 'DRIVER_ASSIGNED': return this.renderDriverAssigned(data, labels, subjects, lang);
             case 'BOOKING_CANCELLED': return this.renderBookingCancelled(data, labels, subjects, lang);
-            case 'BOOKING_COMPLETED': return this.renderBookingCompleted(data, labels, subjects, lang);
-            case 'ACCOUNT_WELCOME': return this.renderAccountWelcome(data, labels, subjects, lang);
-            default: return `<p style="font-family: sans-serif;">Update regarding booking ${data.reference}</p>`;
+            case 'BOOKING_COMPLETED':
+            case 'RIDE_COMPLETED':
+                return this.renderBookingCompleted(data, labels, subjects, lang);
+            case 'ACCOUNT_WELCOME':
+            case 'ACCOUNT_ONBOARDING':
+                return this.renderAccountWelcome(data, labels, subjects, lang);
+            default: return `<p style="font-family: sans-serif;">Update regarding booking ${data.reference || data.id}</p>`;
         }
     }
 
     static renderBookingConfirmation(data, labels, subjects, lang) {
         const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
+        const distance = data.form_data?.distance_km || data.metadata?.distance_km || data.distance || '...';
+
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_CONFIRMATION}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -91,13 +98,32 @@ export class TemplateRenderer {
             </p>
             ${EmailComponents.sectionTitle(labels.summary)}
             <table width="100%" style="margin-bottom: 30px;">
-                ${EmailComponents.detailsRow(labels.bookingReference, data.reference)}
-                ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} om ${data.time}`)}
+                ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
+                ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup)}
                 ${EmailComponents.detailsRow(labels.destination, data.destination)}
                 ${EmailComponents.detailsRow(labels.vehicle, data.vehicle)}
+                ${EmailComponents.detailsRow(labels.distance, `${distance} km`)}
+                ${EmailComponents.detailsRow(labels.price, `€ ${parseFloat(data.amount).toFixed(2)}`)}
+                ${EmailComponents.detailsRow(labels.payment, data.payment)}
             </table>
             ${EmailComponents.cta(labels.viewBooking, viewUrl)}
+        `;
+    }
+
+    static renderBookingAccepted(data, labels, subjects, lang) {
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.BOOKING_ACCEPTED}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(data.customer.name)} ${labels.acceptedBody}
+            </p>
+            ${EmailComponents.sectionTitle(labels.summary)}
+            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
+                ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
+                ${EmailComponents.detailsRow(labels.pickup, data.pickup)}
+            </table>
+            ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
         `;
     }
 
@@ -110,7 +136,7 @@ export class TemplateRenderer {
             </p>
             ${EmailComponents.sectionTitle(labels.driver)}
             <table width="100%" style="margin-bottom: 30px;">
-                ${EmailComponents.detailsRow('Naam', d.name)}
+                ${EmailComponents.detailsRow(labels.name, d.name)}
                 ${EmailComponents.detailsRow(labels.vehicle, d.vehicle)}
                 ${EmailComponents.detailsRow(labels.plate, d.license_plate || '...')}
             </table>
@@ -118,6 +144,7 @@ export class TemplateRenderer {
             <table width="100%">
                 ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup)}
+                ${EmailComponents.detailsRow(labels.destination, data.destination)}
             </table>
         `;
     }
@@ -126,7 +153,7 @@ export class TemplateRenderer {
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_CANCELLED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(data.customer.name)} ${labels.cancelledBody(data.reference)}
+                ${labels.greeting(data.customer.name)} ${labels.cancelledBody(data.reference || data.id)}
             </p>
             ${EmailComponents.cta(labels.bookNew, RouteBuilder.build('book-new'))}
         `;
@@ -139,6 +166,11 @@ export class TemplateRenderer {
                 ${labels.greeting(data.customer.name)} ${labels.completedBody}
             </p>
             ${EmailComponents.cta(labels.writeReview, RouteBuilder.build('review', { id: data.id }))}
+            <div style="text-align: center; margin-top: 10px;">
+                <a href="${RouteBuilder.build('book-new')}" style="color: ${CommunicationConfig.theme.primaryColor}; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none;">
+                    &rarr; ${labels.bookNew}
+                </a>
+            </div>
         `;
     }
 

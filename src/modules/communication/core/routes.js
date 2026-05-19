@@ -6,8 +6,9 @@ import { CommunicationConfig } from './config.js';
  */
 export class RouteBuilder {
     static getBaseUrl() {
-        // In development, you might want a localhost URL.
-        // In production, use the configured website URL.
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return `${window.location.protocol}//${window.location.host}`;
+        }
         return CommunicationConfig.brand.website;
     }
 

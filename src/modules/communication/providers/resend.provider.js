@@ -6,43 +6,54 @@ import { BaseEmailProvider } from './base.provider.js';
  */
 export class ResendProvider extends BaseEmailProvider {
     /**
-     * @param {object} config - Must include { apiKey, from }
+     * @param {object} config - Must include { endpoint, from }
      */
     constructor(config) {
         super(config);
-        if (!this.config.apiKey) {
-            console.warn('⚠️ ResendProvider initialized without API Key.');
+        if (!this.config.endpoint) {
+            console.warn('⚠️ ResendProvider initialized without secure endpoint.');
         }
     }
 
+    /**
+     * Send email via secure backend abstraction.
+     * This protects the Resend API key by executing the call server-side.
+     */
     async send(to, subject, html, options = {}) {
         const payload = {
             from: options.from || this.config.from,
+            reply_to: options.replyTo || this.config.replyTo,
             to: [to],
             subject: subject,
             html: html,
-            ...options
+            metadata: options.metadata || {}
         };
 
         try {
-            const response = await fetch('https://api.resend.com/emails', {
+            // Attempt to call the secure backend endpoint (Supabase Edge Function)
+            // We use the same Supabase instance as the rest of the app.
+            const baseUrl = window.location.origin.includes('localhost')
+                ? 'https://rreqjjrmvytnwnsidmqi.supabase.co'
+                : window.location.origin;
+
+            const response = await fetch(`${baseUrl}${this.config.endpoint}`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.config.apiKey}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             });
 
-            const data = await response.json();
-
             if (!response.ok) {
-                throw new Error(data.message || 'Failed to send email via Resend');
+                const data = await response.json().catch(() => ({}));
+                throw new Error(data.message || `HTTP ${response.status}: Failed to dispatch via backend`);
             }
+
+            const data = await response.json();
 
             return {
                 success: true,
-                id: data.id,
+                id: data.id || `resend-${Date.now()}`,
                 provider: 'resend'
             };
         } catch (error) {

@@ -1337,11 +1337,6 @@ document.getElementById('bookingModal').style.display = 'flex';
                     this.refreshCurrentTab();
 
                     // Heropen de fiche met de actuele data uit allBookings (already normalized)
-                    this.allBookings = await this.fetchBookingsFromSupabase();
-                    this.filterAndSortData();
-                    this.refreshCurrentTab();
-
-                    // Heropen de fiche met de actuele data uit allBookings
                     const updatedBooking = this.allBookings.find(b => b.id === bookingId);
                     if (updatedBooking) {
                         this.showBookingFiche(updatedBooking);
@@ -1365,47 +1360,6 @@ document.getElementById('bookingModal').style.display = 'flex';
                     // Email trigger (non-blocking)
                     comms.trigger('BOOKING_CANCELLED', bookingId, supabase);
 
-                    this.allBookings = await this.fetchBookingsFromSupabase();
-                    this.filterAndSortData();
-                    this.refreshCurrentTab();
-
-                    // Heropen de fiche met de actuele data uit allBookings
-                    const updatedBooking = this.allBookings.find(b => b.id === bookingId);
-                    if (updatedBooking) {
-                        this.showBookingFiche(updatedBooking);
-                        return; // Sla closeModal over
-                    }
-                }
-                this.closeModal();
-            },
-
-            async cancelBooking(bookingId) {
-                if (!confirm('Weet u zeker dat u deze rit wilt annuleren?')) return;
-                const { error } = await supabase
-                    .from('bookings')
-                    .update({ status: 'cancelled' })
-                    .eq('id', bookingId);
-                if (error) {
-                    this.showToast('Fout bij annuleren: ' + error.message, true);
-                } else {
-                    this.showToast(`Rit ${bookingId} geannuleerd`);
-                    this.allBookings = await this.fetchBookingsFromSupabase();
-                    this.filterAndSortData();
-                    this.refreshCurrentTab();
-                }
-                this.closeModal();
-            },
-
-            async cancelBooking(bookingId) {
-                if (!confirm('Weet u zeker dat u deze rit wilt annuleren?')) return;
-                const { error } = await supabase
-                    .from('bookings')
-                    .update({ status: 'cancelled' })
-                    .eq('id', bookingId);
-                if (error) {
-                    this.showToast('Fout bij annuleren: ' + error.message, true);
-                } else {
-                    this.showToast(`Rit ${bookingId} geannuleerd`);
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
                     this.refreshCurrentTab();
@@ -1521,6 +1475,9 @@ document.getElementById('bookingModal').style.display = 'flex';
                     if (!error) {
                         changed = true;
                         console.log(`Rit ${ride.id} automatisch gearchiveerd (verlopen)`);
+
+                    // Email trigger (non-blocking) - Notify of completion
+                    comms.trigger('BOOKING_COMPLETED', ride.id, supabase);
                     }
                 }
                 
