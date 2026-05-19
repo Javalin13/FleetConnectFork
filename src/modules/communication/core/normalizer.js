@@ -1,0 +1,106 @@
+/**
+ * DataNormalizer
+ * Rehydrates and standardizes booking/customer objects for templates.
+ * Performs full relational rehydration from Supabase to ensure a complete snapshot.
+ */
+export class DataNormalizer {
+    /**
+     * @param {string} bookingId - The booking UUID or ID
+     * @param {object} supabaseClient - Existing Supabase client
+     */
+    static async rehydrateBookingSnapshot(bookingId, supabaseClient) {
+        if (!bookingId || !supabaseClient) {
+            console.error('❌ DataNormalizer: Missing bookingId or supabaseClient');
+            return null;
+        }
+
+        try {
+            // 1. Fetch full booking details
+            const { data: booking, error: bError } = await supabaseClient
+                .from('bookings')
+                .select('*')
+                .eq('id', bookingId)
+                .single();
+
+            if (bError || !booking) throw new Error(`Booking ${bookingId} not found`);
+
+            // 2. Fetch Customer details
+            let customer = null;
+            if (booking.customer_id) {
+                const { data: cData, error: cError } = await supabaseClient
+                    .from('customers')
+                    .select('*')
+                    .eq('id', booking.customer_id)
+                    .single();
+                if (!cError) customer = cData;
+            }
+
+            // 3. Fetch Driver details (Relational UUID priority)
+            let driver = null;
+            if (booking.assigned_driver_id) {
+                const { data: dData, error: dError } = await supabaseClient
+                    .from('drivers')
+                    .select('*')
+                    .eq('id', booking.assigned_driver_id)
+                    .single();
+                if (!dError) driver = dData;
+            }
+
+            // 4. Fetch Partner details
+            let partner = null;
+            const pId = booking.partner_id || (booking.metadata?.partner_id);
+            if (pId) {
+                const { data: pData, error: pError } = await supabaseClient
+                    .from('partners')
+                    .select('*')
+                    .eq('id', pId)
+                    .single();
+                if (!pError) partner = pData;
+            }
+
+            // 5. Assemble Normalized Snapshot
+            return {
+                id: booking.id,
+                reference: booking.id, // Compatibility
+                datetime: booking.datetime,
+                time: booking.time,
+                pickup: booking.pickup,
+                destination: booking.destination,
+                vehicle: booking.vehicle,
+                amount: parseFloat(booking.amount) || 0,
+                payment: booking.payment,
+                status: booking.status,
+                flight_number: booking.flight_number,
+                extras: booking.extras,
+                preferred_language: booking.preferred_language || customer?.preferred_language || 'nl',
+                customer: customer ? {
+                    name: customer.full_name || customer.name || booking.name,
+                    email: customer.email || booking.email,
+                    phone: customer.phone || booking.phone,
+                    preferred_language: customer.preferred_language || 'nl'
+                } : {
+                    name: booking.name,
+                    email: booking.email,
+                    phone: booking.phone
+                },
+                driver: driver ? {
+                    name: driver.name,
+                    vehicle: driver.vehicle,
+                    license_plate: driver.license_plate,
+                    phone: driver.phone
+                } : (booking.assigned_driver ? booking.assigned_driver : null),
+                partner: partner ? {
+                    name: partner.name,
+                    email: partner.email,
+                    phone: partner.phone
+                } : null,
+                metadata: booking.metadata || {},
+                form_data: booking.form_data || {}
+            };
+
+        } catch (error) {
+            console.error('❌ DataNormalizer rehydration error:', error.message);
+            return null;
+        }
+    }
+}
