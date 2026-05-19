@@ -496,6 +496,26 @@
             <div class="fiche-body" id="ficheBody"></div>
         </div>
     </div>
+
+    <div id="partnerModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="fiche-header"><h3><i class="fas fa-handshake"></i> Partner Beheer</h3><button class="close-modal" onclick="app.closePartnerModal()">&times;</button></div>
+            <div class="fiche-body">
+                <div class="add-driver-form" style="flex-direction: column; gap: 15px;">
+                    <input type="text" id="p_name" placeholder="Bedrijfsnaam">
+                    <input type="text" id="p_contact" placeholder="Contactpersoon">
+                    <input type="text" id="p_email" placeholder="Email">
+                    <input type="text" id="p_phone" placeholder="Telefoon">
+                    <input type="text" id="p_prefix" placeholder="Prefix (bv. AA)">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="p_is_hoofd" style="width: auto;">
+                        <label for="p_is_hoofd">Dit is de Hoofdpartner</label>
+                    </div>
+                    <button class="add-btn" style="width: 100%; margin: 0;" onclick="app.savePartner()">Partner Opslaan</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div id="toast" class="toast"></div>
 
@@ -587,6 +607,7 @@
             
             escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); },
             closeModal() { document.getElementById('bookingModal').style.display = 'none'; },
+            closePartnerModal() { document.getElementById('partnerModal').style.display = 'none'; },
             
             filterAndSortData() {
                 this.newOrders = this.allBookings.filter(b => b.status === 'pending');
@@ -895,12 +916,22 @@
             },
             
             async showAddDriverForm() {
-                const hoofdPartner = this.partners.find(p => p.is_hoofd === true);
-                if (!hoofdPartner) {
-                    this.showToast('Geen hoofdpartner gevonden', true);
-                    return;
+                let targetPartner = this.partners.find(p => p.is_hoofd === true);
+                if (!targetPartner) {
+                    if (this.partners.length > 0) {
+                        const firstPartner = this.partners[0];
+                        if (confirm(`Geen hoofdpartner gevonden. Wilt u de driver toevoegen aan partner '${firstPartner.name}'?`)) {
+                            targetPartner = firstPartner;
+                        } else {
+                            return;
+                        }
+                    } else {
+                        this.showToast('Maak eerst een (hoofd)partner aan bij "Mijn Partners"', true);
+                        this.switchTab('partners');
+                        return;
+                    }
                 }
-                const partnerId = hoofdPartner.id;
+                const partnerId = targetPartner.id;
 
                 let name = prompt('Naam driver:');
                 if (!name) return;
@@ -916,7 +947,7 @@
                     return;
                 }
                 const nextNumber = (count || 0) + 1;
-                const driverCode = `${hoofdPartner.prefix}-${String(nextNumber).padStart(2, '0')}`;
+                const driverCode = `${targetPartner.prefix}-${String(nextNumber).padStart(2, '0')}`;
 
                 const { error } = await supabase
                     .from('drivers')
@@ -939,38 +970,52 @@
             },
             
             async showAddPartnerForm() {
-                let name = prompt('Bedrijfsnaam partner:');
-                if (!name) return;
-                let contact = prompt('Contactpersoon:') || '';
-                let email = prompt('Email:') || '';
-                let phone = prompt('Telefoon:') || '';
-                let prefix = prompt('Prefix voor driver ID (2 letters):') || name.slice(0,2).toUpperCase();
-                prefix = prefix.slice(0,2).toUpperCase();
+                document.getElementById('p_name').value = '';
+                document.getElementById('p_contact').value = '';
+                document.getElementById('p_email').value = '';
+                document.getElementById('p_phone').value = '';
+                document.getElementById('p_prefix').value = '';
+                document.getElementById('p_is_hoofd').checked = (this.partners.filter(p => p.is_hoofd).length === 0);
+                document.getElementById('partnerModal').style.display = 'flex';
+            },
 
-                const hoofdPartner = this.partners.find(p => p.is_hoofd === true);
-                if (!hoofdPartner) {
-                    this.showToast('Geen hoofdpartner gevonden. Voeg eerst een hoofdpartner toe via SQL.', true);
-                    return;
+            async savePartner() {
+                const name = document.getElementById('p_name').value;
+                const contact = document.getElementById('p_contact').value;
+                const email = document.getElementById('p_email').value;
+                const phone = document.getElementById('p_phone').value;
+                const prefix = document.getElementById('p_prefix').value;
+                const isHoofd = document.getElementById('p_is_hoofd').checked;
+
+                if (!name) { this.showToast('Bedrijfsnaam is verplicht', true); return; }
+
+                let parent_id = null;
+                if (!isHoofd) {
+                    const hoofdPartner = this.partners.find(p => p.is_hoofd === true);
+                    if (hoofdPartner) {
+                        parent_id = hoofdPartner.id;
+                    }
                 }
 
                 const { error } = await supabase
                     .from('partners')
                     .insert({
                         name: name,
-                        is_hoofd: false,
-                        parent_partner_id: hoofdPartner.id,
-                        prefix: prefix,
+                        is_hoofd: isHoofd,
+                        parent_partner_id: parent_id,
+                        prefix: prefix || name.slice(0,2).toUpperCase(),
                         contact: contact,
                         email: email,
                         phone: phone
                     });
 
                 if (error) {
-                    this.showToast('Fout bij toevoegen partner: ' + error.message, true);
+                    this.showToast('Fout bij opslaan partner: ' + error.message, true);
                 } else {
-                    this.showToast(`Partner ${name} toegevoegd`);
+                    this.showToast(`Partner ${name} opgeslagen`);
+                    this.closePartnerModal();
                     await this.loadPartners();
-                    this.renderPartners();
+                    if (this.currentTab === 'partners') this.renderPartners();
                 }
             },
             
@@ -1399,6 +1444,8 @@
         window.deletePartner = app.deletePartner.bind(app);
         window.showAddDriverForm = app.showAddDriverForm.bind(app);
         window.showAddPartnerForm = app.showAddPartnerForm.bind(app);
+        window.closePartnerModal = app.closePartnerModal.bind(app);
+        window.savePartner = app.savePartner.bind(app);
         window.setFinancePeriod = app.setFinancePeriod.bind(app);
         window.toggleFlipCard = app.toggleFlipCard.bind(app);
         window.downloadCSV = app.downloadCSV.bind(app);
