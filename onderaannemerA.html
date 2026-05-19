@@ -522,6 +522,7 @@
 
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        import { comms } from './src/modules/communication/index.js';
 
         // ========== SESSIECHECK (BEVEILIGING TEGEN TERUGNAVIGEREN) ==========
         (function checkAuthentication() {
@@ -1303,6 +1304,38 @@
                     this.showToast('Fout bij accepteren: ' + error.message, true);
                 } else {
                     this.showToast(`Rit ${bookingId} geaccepteerd`);
+
+                    // Email trigger (non-blocking)
+                    comms.trigger('BOOKING_ACCEPTED', bookingId, supabase);
+
+                    this.allBookings = await this.fetchBookingsFromSupabase();
+                    this.filterAndSortData();
+                    this.refreshCurrentTab();
+
+                    // Heropen de fiche met de actuele data uit allBookings
+                    const updatedBooking = this.allBookings.find(b => b.id === bookingId);
+                    if (updatedBooking) {
+                        this.showBookingFiche(updatedBooking);
+                        return; // Sla closeModal over
+                    }
+                }
+                this.closeModal();
+            },
+
+            async cancelBooking(bookingId) {
+                if (!confirm('Weet u zeker dat u deze rit wilt annuleren?')) return;
+                const { error } = await supabase
+                    .from('bookings')
+                    .update({ status: 'cancelled' })
+                    .eq('id', bookingId);
+                if (error) {
+                    this.showToast('Fout bij annuleren: ' + error.message, true);
+                } else {
+                    this.showToast(`Rit ${bookingId} geannuleerd`);
+
+                    // Email trigger (non-blocking)
+                    comms.trigger('BOOKING_CANCELLED', bookingId, supabase);
+
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
                     this.refreshCurrentTab();
@@ -1380,6 +1413,10 @@
                     this.showToast('Fout bij toewijzen driver: ' + error.message, true);
                 } else {
                     this.showToast(`Driver ${driver.name} toegewezen`);
+
+                    // Email trigger (non-blocking)
+                    comms.trigger('DRIVER_ASSIGNED', bookingId, supabase);
+
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
                     this.refreshCurrentTab();
