@@ -1209,8 +1209,26 @@
             
             showBookingFiche(booking) {
                 let driverOptions = '<option value="">-- Selecteer Driver --</option>';
-                // Use loose equality for partner_id filtering to be safe
-                let availableDrivers = this.drivers.filter(c => c.partner_id == booking.partner_id);
+
+                // 1. Determine Normalized Partner ID
+                let normalizedPartnerId =
+                    booking.partner_id ||
+                    booking.metadata?.partner_id ||
+                    booking.form_data?.partner_id ||
+                    1;
+
+                normalizedPartnerId = String(normalizedPartnerId);
+
+                // 2. Filter Available Drivers
+                let availableDrivers = this.drivers.filter(
+                    c => String(c.partner_id) === normalizedPartnerId
+                );
+
+                // 3. Fallback to all drivers if list is empty
+                if (!availableDrivers.length) {
+                    availableDrivers = [...this.drivers];
+                }
+
                 availableDrivers.forEach(d => {
                     // Use loose equality for assigned_driver_id comparison
                     const isSelected = booking.assigned_driver_id == d.id ? 'selected' : '';
@@ -1308,6 +1326,11 @@
                     // Email trigger (non-blocking)
                     comms.trigger('BOOKING_ACCEPTED', bookingId, supabase);
 
+                    this.allBookings = await this.fetchBookingsFromSupabase(); // Returns normalized data
+                    this.filterAndSortData();
+                    this.refreshCurrentTab();
+
+                    // Heropen de fiche met de actuele data uit allBookings (already normalized)
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
                     this.refreshCurrentTab();
