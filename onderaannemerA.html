@@ -333,6 +333,7 @@
         .toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 12px 24px; border-radius: 40px; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; }
         .hidden { display: none; }
+        .compact-checkbox { width: 18px !important; min-width: 18px !important; height: 18px !important; margin: 0 !important; cursor: pointer; -webkit-appearance: checkbox !important; appearance: checkbox !important; flex: none !important; }
         .template-tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
         .template-T1 { background: #dbeafe; color: #1e40af; }
         .template-T2 { background: #fef3c7; color: #92400e; }
@@ -508,8 +509,8 @@
                     <input type="text" id="p_phone" placeholder="Telefoon">
                     <input type="text" id="p_prefix" placeholder="Prefix (bv. AA)">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="p_is_hoofd" style="width: auto;">
-                        <label for="p_is_hoofd">Dit is de Hoofdpartner</label>
+                        <input type="checkbox" id="p_is_hoofd" class="compact-checkbox">
+                        <label for="p_is_hoofd" style="font-size: 0.85rem; cursor: pointer;">Dit is de Hoofdpartner</label>
                     </div>
                     <button class="add-btn" style="width: 100%; margin: 0;" onclick="app.savePartner()">Partner Opslaan</button>
                 </div>
