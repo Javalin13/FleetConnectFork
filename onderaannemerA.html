@@ -333,6 +333,7 @@
         .toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 12px 24px; border-radius: 40px; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; }
         .hidden { display: none; }
+        .compact-checkbox { width: 18px !important; min-width: 18px !important; height: 18px !important; margin: 0 !important; cursor: pointer; -webkit-appearance: checkbox !important; appearance: checkbox !important; flex: none !important; }
         .template-tag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
         .template-T1 { background: #dbeafe; color: #1e40af; }
         .template-T2 { background: #fef3c7; color: #92400e; }
@@ -343,6 +344,7 @@
         .status-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
         .status-pending { background: #fef3c7; color: #92400e; }
         .status-accepted { background: #dbeafe; color: #1e40af; }
+        .status-assigned { background: #e0f2fe; color: #0369a1; }
         .status-completed { background: #d1fae5; color: #065f46; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
@@ -495,11 +497,32 @@
             <div class="fiche-body" id="ficheBody"></div>
         </div>
     </div>
+
+    <div id="partnerModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="fiche-header"><h3><i class="fas fa-handshake"></i> Partner Beheer</h3><button class="close-modal" onclick="app.closePartnerModal()">&times;</button></div>
+            <div class="fiche-body">
+                <div class="add-driver-form" style="flex-direction: column; gap: 15px;">
+                    <input type="text" id="p_name" placeholder="Bedrijfsnaam">
+                    <input type="text" id="p_contact" placeholder="Contactpersoon">
+                    <input type="text" id="p_email" placeholder="Email">
+                    <input type="text" id="p_phone" placeholder="Telefoon">
+                    <input type="text" id="p_prefix" placeholder="Prefix (bv. AA)">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="p_is_hoofd" class="compact-checkbox">
+                        <label for="p_is_hoofd" style="font-size: 0.85rem; cursor: pointer;">Dit is de Hoofdpartner</label>
+                    </div>
+                    <button class="add-btn" style="width: 100%; margin: 0;" onclick="app.savePartner()">Partner Opslaan</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div id="toast" class="toast"></div>
 
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        import { comms } from './src/modules/communication/index.js';
 
         // ========== SESSIECHECK (BEVEILIGING TEGEN TERUGNAVIGEREN) ==========
         (function checkAuthentication() {
@@ -586,16 +609,18 @@
             
             escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); },
             closeModal() { document.getElementById('bookingModal').style.display = 'none'; },
+            closePartnerModal() { document.getElementById('partnerModal').style.display = 'none'; },
             
             filterAndSortData() {
                 this.newOrders = this.allBookings.filter(b => b.status === 'pending');
                 this.ordersList = this.allBookings.filter(b => 
-                    b.status === 'accepted' && !this.isExpired(b.datetime, b.time)
+                    (b.status === 'accepted' || b.status === 'assigned') && !this.isExpired(b.datetime, b.time)
                 );
                 this.historyOrders = this.allBookings.filter(b => 
                     b.status === 'completed' || 
                     b.status === 'cancelled' ||
-                    (b.status === 'accepted' && this.isExpired(b.datetime, b.time))
+                    b.status === 'declined' ||
+                    ((b.status === 'accepted' || b.status === 'assigned') && this.isExpired(b.datetime, b.time))
                 );
                 this.ordersList.sort((a,b) => this.parseDate(a.datetime, a.time) - this.parseDate(b.datetime, b.time));
                 this.historyOrders.sort((a,b) => this.parseDate(b.datetime, b.time) - this.parseDate(a.datetime, a.time));
@@ -604,6 +629,51 @@
             
             getRidesByDate(dateStr) { return this.allBookings.filter(b => b.datetime === dateStr); },
             
+            getDriverForBooking(booking) {
+                if (booking.assigned_driver_id) {
+                    const driver = this.drivers.find(d => d.id === booking.assigned_driver_id);
+                    if (driver) return driver;
+                }
+                if (booking.assigned_driver && booking.assigned_driver.name) {
+                    return booking.assigned_driver;
+                }
+                return null;
+            },
+
+            normalizeBookings(bookings) {
+                if (!bookings) return [];
+                return bookings.map(b => {
+                    // 1. Normalize partner_id (critical for driver filtering)
+                    let pId = b.partner_id;
+                    if (!pId && b.metadata) pId = b.metadata.partner_id;
+                    if (!pId && b.form_data) pId = b.form_data.partner_id;
+
+                    if (pId) {
+                        // Convert to number if it's a numeric string
+                        if (typeof pId === 'string' && /^\d+$/.test(pId)) {
+                            b.partner_id = parseInt(pId);
+                        } else {
+                            b.partner_id = pId;
+                        }
+                    } else {
+                        b.partner_id = 1; // Default fallback for Fleetconnect
+                    }
+
+                    // 2. Normalize status
+                    b.status = b.status || 'pending';
+
+                    // 3. Normalize amount
+                    b.amount = parseFloat(b.amount) || 0;
+
+                    // 4. Ensure assigned_driver_id is synced if legacy assigned_driver exists
+                    if (!b.assigned_driver_id && b.assigned_driver && b.assigned_driver.id) {
+                        b.assigned_driver_id = b.assigned_driver.id;
+                    }
+
+                    return b;
+                });
+            },
+
             getTodayStats() {
                 let todayStr = this.formatDate(new Date());
                 let todayRides = this.getRidesByDate(todayStr);
@@ -679,15 +749,17 @@
                 let rides = this.getRidesByDate(dateStr).sort((a,b) => a.time.localeCompare(b.time));
                 let formattedDate = this.selectedDate.toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 let ridesHtml = rides.length === 0 ? '<div class="empty-planning">Geen ritten op deze dag</div>' : rides.map(r => {
-                    const driver = this.drivers.find(d => d.id === r.assigned_driver_id);
-                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : (r.assigned_driver ? `${r.assigned_driver.name} (${r.assigned_driver.vehicle})` : null);
+                    const driver = this.getDriverForBooking(r);
+                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : null;
                     const isExpired = r.status === 'accepted' && this.isExpired(r.datetime, r.time);
                     const expiredClass = isExpired ? 'expired' : '';
                     let statusBadge = '';
                     if (r.status === 'pending') statusBadge = '<span class="status-badge status-pending">⏳ Nieuw</span>';
                     else if (r.status === 'accepted') statusBadge = isExpired ? '<span class="status-badge status-cancelled">⏰ Verlopen</span>' : '<span class="status-badge status-accepted">✅ Geaccepteerd</span>';
+                    else if (r.status === 'assigned') statusBadge = isExpired ? '<span class="status-badge status-cancelled">⏰ Verlopen</span>' : '<span class="status-badge status-assigned">👨‍✈️ Toegewezen</span>';
                     else if (r.status === 'completed') statusBadge = '<span class="status-badge status-completed">✓ Voltooid</span>';
                     else if (r.status === 'cancelled') statusBadge = '<span class="status-badge status-cancelled">✗ Geannuleerd</span>';
+                    else if (r.status === 'declined') statusBadge = '<span class="status-badge status-cancelled">✗ Geweigerd</span>';
                     return `
                     <div class="planning-item ${expiredClass}">
                         <div class="planning-time"><i class="fas fa-clock"></i> ${r.time} uur ${statusBadge}</div>
@@ -746,11 +818,13 @@
                     tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
-                        const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
-                        const driverText = driver ? driver.name : (o.assigned_driver ? o.assigned_driver.name : '<span style="color:#f59e0b;">Niet toegewezen</span>');
+                        const driver = this.getDriverForBooking(o);
+                        const driverText = driver ? `${driver.name} (${driver.vehicle})` : '<span style="color:#f59e0b;">Niet toegewezen</span>';
+                        const statusBadgeClass = o.status === 'assigned' ? 'status-assigned' : 'status-accepted';
+                        const statusBadgeText = o.status === 'assigned' ? 'Toegewezen' : 'Geaccepteerd';
                         return `
                         <tr>
-                            <td><strong>${o.id}</strong><br><span class="status-badge status-accepted">Geaccepteerd</span></td>
+                            <td><strong>${o.id}</strong><br><span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span></td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
@@ -774,13 +848,20 @@
                 let tbody = document.getElementById('historyTable');
                 if (!tbody) return;
                 if (orders.length === 0) {
-                    tbody.innerHTML = `<td><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
-                        const driver = this.drivers.find(d => d.id === o.assigned_driver_id);
-                        const driverText = driver ? driver.name : (o.assigned_driver ? o.assigned_driver.name : 'Niet toegewezen');
+                        const driver = this.getDriverForBooking(o);
+                        const driverText = driver ? `${driver.name} (${driver.vehicle})` : 'Niet toegewezen';
+
+                        let statusBadge = '';
+                        if (o.status === 'completed') statusBadge = '<br><span class="status-badge status-completed">Voltooid</span>';
+                        else if (o.status === 'cancelled') statusBadge = '<br><span class="status-badge status-cancelled">Geannuleerd</span>';
+                        else if (o.status === 'declined') statusBadge = '<br><span class="status-badge status-cancelled">Geweigerd</span>';
+                        else if (this.isExpired(o.datetime, o.time)) statusBadge = '<br><span class="status-badge status-cancelled">Verlopen</span>';
+
                         return `<tr>
-                            <td><strong>${o.id}</strong></td>
+                            <td><strong>${o.id}</strong>${statusBadge}</td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
@@ -882,12 +963,22 @@
             },
             
             async showAddDriverForm() {
-                const hoofdPartner = this.partners.find(p => p.is_hoofd === true);
-                if (!hoofdPartner) {
-                    this.showToast('Geen hoofdpartner gevonden', true);
-                    return;
+                let targetPartner = this.partners.find(p => p.is_hoofd === true);
+                if (!targetPartner) {
+                    if (this.partners.length > 0) {
+                        const firstPartner = this.partners[0];
+                        if (confirm(`Geen hoofdpartner gevonden. Wilt u de driver toevoegen aan partner '${firstPartner.name}'?`)) {
+                            targetPartner = firstPartner;
+                        } else {
+                            return;
+                        }
+                    } else {
+                        this.showToast('Maak eerst een (hoofd)partner aan bij "Mijn Partners"', true);
+                        this.switchTab('partners');
+                        return;
+                    }
                 }
-                const partnerId = hoofdPartner.id;
+                const partnerId = targetPartner.id;
 
                 let name = prompt('Naam driver:');
                 if (!name) return;
@@ -903,7 +994,7 @@
                     return;
                 }
                 const nextNumber = (count || 0) + 1;
-                const driverCode = `${hoofdPartner.prefix}-${String(nextNumber).padStart(2, '0')}`;
+                const driverCode = `${targetPartner.prefix}-${String(nextNumber).padStart(2, '0')}`;
 
                 const { error } = await supabase
                     .from('drivers')
@@ -926,38 +1017,52 @@
             },
             
             async showAddPartnerForm() {
-                let name = prompt('Bedrijfsnaam partner:');
-                if (!name) return;
-                let contact = prompt('Contactpersoon:') || '';
-                let email = prompt('Email:') || '';
-                let phone = prompt('Telefoon:') || '';
-                let prefix = prompt('Prefix voor driver ID (2 letters):') || name.slice(0,2).toUpperCase();
-                prefix = prefix.slice(0,2).toUpperCase();
+                document.getElementById('p_name').value = '';
+                document.getElementById('p_contact').value = '';
+                document.getElementById('p_email').value = '';
+                document.getElementById('p_phone').value = '';
+                document.getElementById('p_prefix').value = '';
+                document.getElementById('p_is_hoofd').checked = (this.partners.filter(p => p.is_hoofd).length === 0);
+                document.getElementById('partnerModal').style.display = 'flex';
+            },
 
-                const hoofdPartner = this.partners.find(p => p.is_hoofd === true);
-                if (!hoofdPartner) {
-                    this.showToast('Geen hoofdpartner gevonden. Voeg eerst een hoofdpartner toe via SQL.', true);
-                    return;
+            async savePartner() {
+                const name = document.getElementById('p_name').value;
+                const contact = document.getElementById('p_contact').value;
+                const email = document.getElementById('p_email').value;
+                const phone = document.getElementById('p_phone').value;
+                const prefix = document.getElementById('p_prefix').value;
+                const isHoofd = document.getElementById('p_is_hoofd').checked;
+
+                if (!name) { this.showToast('Bedrijfsnaam is verplicht', true); return; }
+
+                let parent_id = null;
+                if (!isHoofd) {
+                    const hoofdPartner = this.partners.find(p => p.is_hoofd === true);
+                    if (hoofdPartner) {
+                        parent_id = hoofdPartner.id;
+                    }
                 }
 
                 const { error } = await supabase
                     .from('partners')
                     .insert({
                         name: name,
-                        is_hoofd: false,
-                        parent_partner_id: hoofdPartner.id,
-                        prefix: prefix,
+                        is_hoofd: isHoofd,
+                        parent_partner_id: parent_id,
+                        prefix: prefix || name.slice(0,2).toUpperCase(),
                         contact: contact,
                         email: email,
                         phone: phone
                     });
 
                 if (error) {
-                    this.showToast('Fout bij toevoegen partner: ' + error.message, true);
+                    this.showToast('Fout bij opslaan partner: ' + error.message, true);
                 } else {
-                    this.showToast(`Partner ${name} toegevoegd`);
+                    this.showToast(`Partner ${name} opgeslagen`);
+                    this.closePartnerModal();
                     await this.loadPartners();
-                    this.renderPartners();
+                    if (this.currentTab === 'partners') this.renderPartners();
                 }
             },
             
@@ -1104,23 +1209,32 @@
             
             showBookingFiche(booking) {
                 let driverOptions = '<option value="">-- Selecteer Driver --</option>';
-                let availableDrivers = this.drivers.filter(c => c.partner_id === booking.partner_id);
-                availableDrivers.forEach(d => { driverOptions += `<option value="${d.id}">${this.escapeHtml(d.name)} (${d.vehicle})</option>`; });
+                // Use loose equality for partner_id filtering to be safe
+                let availableDrivers = this.drivers.filter(c => c.partner_id == booking.partner_id);
+                availableDrivers.forEach(d => {
+                    // Use loose equality for assigned_driver_id comparison
+                    const isSelected = booking.assigned_driver_id == d.id ? 'selected' : '';
+                    driverOptions += `<option value="${d.id}" ${isSelected}>${this.escapeHtml(d.name)} (${d.vehicle})</option>`;
+                });
                 let ficheBody = document.getElementById('ficheBody');
                 const isExpired = this.isExpired(booking.datetime, booking.time);
                 
                 let statusDisplay = '';
                 if (booking.status === 'pending') statusDisplay = '⏳ Nieuw';
                 else if (booking.status === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
+                else if (booking.status === 'assigned') statusDisplay = isExpired ? '⏰ Verlopen' : '👨‍✈️ Toegewezen';
                 else if (booking.status === 'completed') statusDisplay = '✓ UITGEVOERD';
                 else if (booking.status === 'cancelled') statusDisplay = '✗ Geannuleerd';
+                else if (booking.status === 'declined') statusDisplay = '✋ Geweigerd';
                 else statusDisplay = '📋 Onbekend';
                 
                 let statusClass = '';
                 if (booking.status === 'pending') statusClass = 'status-pending';
                 else if (booking.status === 'accepted') statusClass = isExpired ? 'status-cancelled' : 'status-accepted';
+                else if (booking.status === 'assigned') statusClass = isExpired ? 'status-cancelled' : 'status-assigned';
                 else if (booking.status === 'completed') statusClass = 'status-completed';
                 else if (booking.status === 'cancelled') statusClass = 'status-cancelled';
+                else if (booking.status === 'declined') statusClass = 'status-cancelled';
                 
                 ficheBody.innerHTML = `
                     <div class="fiche-section"><h4>Boekingsinformatie</h4>
@@ -1140,17 +1254,28 @@
                         <div class="fiche-row"><span class="fiche-label">Voertuig:</span><span class="fiche-value">${booking.vehicle}</span></div>
                         <div class="fiche-row"><span class="fiche-label">Extra's:</span><span class="fiche-value">${booking.extras || '-'}</span></div>
                     </div>
-                    ${booking.assigned_driver_id || booking.assigned_driver ? `
+                    ${this.getDriverForBooking(booking) ? `
                     <div class="fiche-section"><h4>👨‍✈️ Driver</h4>
-                        <div class="fiche-row"><span class="fiche-label">Toegewezen driver:</span><span class="fiche-value">${booking.assigned_driver ? booking.assigned_driver.name : (this.drivers.find(d => d.id === booking.assigned_driver_id)?.name || 'Onbekend')}</span></div>
+                        <div class="fiche-row"><span class="fiche-label">Toegewezen driver:</span><span class="fiche-value">${this.getDriverForBooking(booking).name} (${this.getDriverForBooking(booking).vehicle})</span></div>
                     </div>
                     ` : ''}
+
+                    ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `
+                    <div class="fiche-section"><h4>Toewijzen</h4>
+                        <div class="fiche-row"><span class="fiche-label">Driver:</span><span class="fiche-value">
+                            <select id="driverSelect" style="width:100%;">${driverOptions}</select>
+                        </span></div>
+                    </div>
+                    ` : ''}
+
                     <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
                     <div class="fiche-actions">
                         ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                        ${booking.status === 'accepted' && !isExpired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
+                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
+                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">Annuleren</button>` : ''}
                         ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Uitgevoerd</button>` : ''}
                         ${booking.status === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
+                        ${booking.status === 'declined' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✋ Geweigerd</button>` : ''}
                         <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
                     </div>
                 `;
@@ -1167,7 +1292,7 @@
                     this.showToast('Fout bij laden van ritten: ' + error.message, true);
                     return [];
                 }
-                return data;
+                return this.normalizeBookings(data);
             },
             
             async confirmBooking(bookingId) {
@@ -1179,6 +1304,38 @@
                     this.showToast('Fout bij accepteren: ' + error.message, true);
                 } else {
                     this.showToast(`Rit ${bookingId} geaccepteerd`);
+
+                    // Email trigger (non-blocking)
+                    comms.trigger('BOOKING_ACCEPTED', bookingId, supabase);
+
+                    this.allBookings = await this.fetchBookingsFromSupabase();
+                    this.filterAndSortData();
+                    this.refreshCurrentTab();
+
+                    // Heropen de fiche met de actuele data uit allBookings
+                    const updatedBooking = this.allBookings.find(b => b.id === bookingId);
+                    if (updatedBooking) {
+                        this.showBookingFiche(updatedBooking);
+                        return; // Sla closeModal over
+                    }
+                }
+                this.closeModal();
+            },
+
+            async cancelBooking(bookingId) {
+                if (!confirm('Weet u zeker dat u deze rit wilt annuleren?')) return;
+                const { error } = await supabase
+                    .from('bookings')
+                    .update({ status: 'cancelled' })
+                    .eq('id', bookingId);
+                if (error) {
+                    this.showToast('Fout bij annuleren: ' + error.message, true);
+                } else {
+                    this.showToast(`Rit ${bookingId} geannuleerd`);
+
+                    // Email trigger (non-blocking)
+                    comms.trigger('BOOKING_CANCELLED', bookingId, supabase);
+
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
                     this.refreshCurrentTab();
@@ -1193,10 +1350,16 @@
                 const driver = this.drivers.find(c => c.id == driverId);
                 if (!driver) { this.showToast('Driver niet gevonden', true); return; }
                 
+                const assignmentToken = crypto.randomUUID();
+                const assignmentSentAt = new Date().toISOString();
+
                 const { error } = await supabase
                     .from('bookings')
                     .update({ 
+                        status: 'assigned',
                         assigned_driver_id: driver.id,
+                        assignment_token: assignmentToken,
+                        assignment_sent_at: assignmentSentAt,
                         assigned_driver: {
                             id: driver.id,
                             name: driver.name,
@@ -1209,6 +1372,10 @@
                     this.showToast('Fout bij toewijzen driver: ' + error.message, true);
                 } else {
                     this.showToast(`Driver ${driver.name} toegewezen`);
+
+                    // Email trigger (non-blocking)
+                    comms.trigger('DRIVER_ASSIGNED', bookingId, supabase);
+
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
                     this.refreshCurrentTab();
@@ -1272,7 +1439,7 @@
             
             async autoArchiveExpiredRides() {
                 const expiredRides = this.allBookings.filter(b => 
-                    b.status === 'accepted' && this.isExpired(b.datetime, b.time)
+                    (b.status === 'accepted' || b.status === 'assigned') && this.isExpired(b.datetime, b.time)
                 );
                 
                 let changed = false;
@@ -1328,6 +1495,7 @@
         window.logout = app.logout.bind(app);
         window.showBookingFiche = app.showBookingFiche.bind(app);
         window.confirmBooking = app.confirmBooking.bind(app);
+        window.cancelBooking = app.cancelBooking.bind(app);
         window.assignDriverToBooking = app.assignDriverToBooking.bind(app);
         window.closeModal = app.closeModal.bind(app);
         window.applyFiltersNew = app.applyFiltersNew.bind(app);
@@ -1344,6 +1512,8 @@
         window.deletePartner = app.deletePartner.bind(app);
         window.showAddDriverForm = app.showAddDriverForm.bind(app);
         window.showAddPartnerForm = app.showAddPartnerForm.bind(app);
+        window.closePartnerModal = app.closePartnerModal.bind(app);
+        window.savePartner = app.savePartner.bind(app);
         window.setFinancePeriod = app.setFinancePeriod.bind(app);
         window.toggleFlipCard = app.toggleFlipCard.bind(app);
         window.downloadCSV = app.downloadCSV.bind(app);
