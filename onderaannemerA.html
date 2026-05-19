@@ -628,6 +628,51 @@
             
             getRidesByDate(dateStr) { return this.allBookings.filter(b => b.datetime === dateStr); },
             
+            getDriverForBooking(booking) {
+                if (booking.assigned_driver_id) {
+                    const driver = this.drivers.find(d => d.id === booking.assigned_driver_id);
+                    if (driver) return driver;
+                }
+                if (booking.assigned_driver && booking.assigned_driver.name) {
+                    return booking.assigned_driver;
+                }
+                return null;
+            },
+
+            normalizeBookings(bookings) {
+                if (!bookings) return [];
+                return bookings.map(b => {
+                    // 1. Normalize partner_id (critical for driver filtering)
+                    let pId = b.partner_id;
+                    if (!pId && b.metadata) pId = b.metadata.partner_id;
+                    if (!pId && b.form_data) pId = b.form_data.partner_id;
+
+                    if (pId) {
+                        // Convert to number if it's a numeric string
+                        if (typeof pId === 'string' && /^\d+$/.test(pId)) {
+                            b.partner_id = parseInt(pId);
+                        } else {
+                            b.partner_id = pId;
+                        }
+                    } else {
+                        b.partner_id = 1; // Default fallback for Fleetconnect
+                    }
+
+                    // 2. Normalize status
+                    b.status = b.status || 'pending';
+
+                    // 3. Normalize amount
+                    b.amount = parseFloat(b.amount) || 0;
+
+                    // 4. Ensure assigned_driver_id is synced if legacy assigned_driver exists
+                    if (!b.assigned_driver_id && b.assigned_driver && b.assigned_driver.id) {
+                        b.assigned_driver_id = b.assigned_driver.id;
+                    }
+
+                    return b;
+                });
+            },
+
             getTodayStats() {
                 let todayStr = this.formatDate(new Date());
                 let todayRides = this.getRidesByDate(todayStr);
@@ -703,8 +748,8 @@
                 let rides = this.getRidesByDate(dateStr).sort((a,b) => a.time.localeCompare(b.time));
                 let formattedDate = this.selectedDate.toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 let ridesHtml = rides.length === 0 ? '<div class="empty-planning">Geen ritten op deze dag</div>' : rides.map(r => {
-                    const driver = this.drivers.find(d => d.id === r.assigned_driver_id);
-                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : (r.assigned_driver ? `${r.assigned_driver.name} (${r.assigned_driver.vehicle})` : null);
+                    const driver = this.getDriverForBooking(r);
+                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : null;
                     const isExpired = r.status === 'accepted' && this.isExpired(r.datetime, r.time);
                     const expiredClass = isExpired ? 'expired' : '';
                     let statusBadge = '';
@@ -772,7 +817,7 @@
                     tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
-                        const driver = this.drivers.find(d => d.id === o.assigned_driver_id) || o.assigned_driver;
+                        const driver = this.getDriverForBooking(o);
                         const driverText = driver ? `${driver.name} (${driver.vehicle})` : '<span style="color:#f59e0b;">Niet toegewezen</span>';
                         const statusBadgeClass = o.status === 'assigned' ? 'status-assigned' : 'status-accepted';
                         const statusBadgeText = o.status === 'assigned' ? 'Toegewezen' : 'Geaccepteerd';
@@ -805,7 +850,7 @@
                     tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
                     tbody.innerHTML = orders.map(o => {
-                        const driver = this.drivers.find(d => d.id === o.assigned_driver_id) || o.assigned_driver;
+                        const driver = this.getDriverForBooking(o);
                         const driverText = driver ? `${driver.name} (${driver.vehicle})` : 'Niet toegewezen';
 
                         let statusBadge = '';
@@ -1163,9 +1208,11 @@
             
             showBookingFiche(booking) {
                 let driverOptions = '<option value="">-- Selecteer Driver --</option>';
-                let availableDrivers = this.drivers.filter(c => c.partner_id === booking.partner_id);
+                // Use loose equality for partner_id filtering to be safe
+                let availableDrivers = this.drivers.filter(c => c.partner_id == booking.partner_id);
                 availableDrivers.forEach(d => {
-                    const isSelected = booking.assigned_driver_id === d.id ? 'selected' : '';
+                    // Use loose equality for assigned_driver_id comparison
+                    const isSelected = booking.assigned_driver_id == d.id ? 'selected' : '';
                     driverOptions += `<option value="${d.id}" ${isSelected}>${this.escapeHtml(d.name)} (${d.vehicle})</option>`;
                 });
                 let ficheBody = document.getElementById('ficheBody');
@@ -1206,9 +1253,9 @@
                         <div class="fiche-row"><span class="fiche-label">Voertuig:</span><span class="fiche-value">${booking.vehicle}</span></div>
                         <div class="fiche-row"><span class="fiche-label">Extra's:</span><span class="fiche-value">${booking.extras || '-'}</span></div>
                     </div>
-                    ${booking.assigned_driver_id || booking.assigned_driver ? `
+                    ${this.getDriverForBooking(booking) ? `
                     <div class="fiche-section"><h4>👨‍✈️ Driver</h4>
-                        <div class="fiche-row"><span class="fiche-label">Toegewezen driver:</span><span class="fiche-value">${booking.assigned_driver ? `${booking.assigned_driver.name} (${booking.assigned_driver.vehicle})` : (this.drivers.find(d => d.id === booking.assigned_driver_id) ? `${this.drivers.find(d => d.id === booking.assigned_driver_id).name} (${this.drivers.find(d => d.id === booking.assigned_driver_id).vehicle})` : 'Onbekend')}</span></div>
+                        <div class="fiche-row"><span class="fiche-label">Toegewezen driver:</span><span class="fiche-value">${this.getDriverForBooking(booking).name} (${this.getDriverForBooking(booking).vehicle})</span></div>
                     </div>
                     ` : ''}
 
@@ -1244,7 +1291,7 @@
                     this.showToast('Fout bij laden van ritten: ' + error.message, true);
                     return [];
                 }
-                return data;
+                return this.normalizeBookings(data);
             },
             
             async confirmBooking(bookingId) {
@@ -1256,6 +1303,30 @@
                     this.showToast('Fout bij accepteren: ' + error.message, true);
                 } else {
                     this.showToast(`Rit ${bookingId} geaccepteerd`);
+                    this.allBookings = await this.fetchBookingsFromSupabase();
+                    this.filterAndSortData();
+                    this.refreshCurrentTab();
+
+                    // Heropen de fiche met de actuele data uit allBookings
+                    const updatedBooking = this.allBookings.find(b => b.id === bookingId);
+                    if (updatedBooking) {
+                        this.showBookingFiche(updatedBooking);
+                        return; // Sla closeModal over
+                    }
+                }
+                this.closeModal();
+            },
+
+            async cancelBooking(bookingId) {
+                if (!confirm('Weet u zeker dat u deze rit wilt annuleren?')) return;
+                const { error } = await supabase
+                    .from('bookings')
+                    .update({ status: 'cancelled' })
+                    .eq('id', bookingId);
+                if (error) {
+                    this.showToast('Fout bij annuleren: ' + error.message, true);
+                } else {
+                    this.showToast(`Rit ${bookingId} geannuleerd`);
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
                     this.refreshCurrentTab();
