@@ -1297,7 +1297,13 @@
                         <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
                     </div>
                 `;
-                document.getElementById('bookingModal').style.display = 'flex';
+              const modalContent = document.querySelector('#bookingModal .modal-content');
+
+if (modalContent) {
+    modalContent.scrollTop = 0;
+}
+
+document.getElementById('bookingModal').style.display = 'flex';
             },
             
             async fetchBookingsFromSupabase() {
