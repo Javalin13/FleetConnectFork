@@ -622,7 +622,6 @@
                     b.status === 'declined' ||
                     b.status === 'accepted' && this.isExpired(b.datetime, b.time) ||
                     b.status === 'assigned' && this.isExpired(b.datetime, b.time)
-                    ((b.status === 'accepted' || b.status === 'assigned') && this.isExpired(b.datetime, b.time))
                 );
                 this.ordersList.sort((a,b) => this.parseDate(a.datetime, a.time) - this.parseDate(b.datetime, b.time));
                 this.historyOrders.sort((a,b) => this.parseDate(b.datetime, b.time) - this.parseDate(a.datetime, a.time));
@@ -1299,13 +1298,7 @@
                         <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
                     </div>
                 `;
-              const modalContent = document.querySelector('#bookingModal .modal-content');
-
-if (modalContent) {
-    modalContent.scrollTop = 0;
-}
-
-document.getElementById('bookingModal').style.display = 'flex';
+                document.getElementById('bookingModal').style.display = 'flex';
             },
             
             async fetchBookingsFromSupabase() {

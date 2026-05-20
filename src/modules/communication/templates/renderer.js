@@ -6,6 +6,7 @@ import { RouteBuilder } from '../core/routes.js';
 /**
  * TemplateRenderer
  * Orchestrates the assembly of component-based, multilingual, and responsive emails.
+ * Standardizes relational data access to prevent undefined/null rendering.
  */
 export class TemplateRenderer {
     /**
@@ -87,48 +88,50 @@ export class TemplateRenderer {
         }
     }
 
+    /**
+     * Helper to get customer name safely
+     */
+    static getCustomerName(data) {
+        return data.customer?.name || data.name || 'Valued Customer';
+    }
+
     static renderBookingConfirmation(data, labels, subjects, lang) {
         const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
         const distance = data.form_data?.distance_km || data.metadata?.distance_km || data.distance || '...';
-        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        const customerName = this.getCustomerName(data);
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_CONFIRMATION}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.confirmationBody}
-                ${labels.greeting(data.customer.name)} ${labels.confirmationBody}
             </p>
             ${EmailComponents.sectionTitle(labels.summary)}
             <table width="100%" style="margin-bottom: 30px;">
                 ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
                 ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
-                ${EmailComponents.detailsRow(labels.pickup, data.pickup)}
-                ${EmailComponents.detailsRow(labels.destination, data.destination)}
-                ${EmailComponents.detailsRow(labels.vehicle, data.vehicle)}
+                ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
+                ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
+                ${EmailComponents.detailsRow(labels.vehicle, data.vehicle || 'Standard')}
                 ${EmailComponents.detailsRow(labels.distance, `${distance} km`)}
-                ${EmailComponents.detailsRow(labels.price, `€ ${parseFloat(data.amount).toFixed(2)}`)}
-                ${EmailComponents.detailsRow(labels.payment, data.payment)}
+                ${EmailComponents.detailsRow(labels.price, `€ ${parseFloat(data.amount || 0).toFixed(2)}`)}
+                ${EmailComponents.detailsRow(labels.payment, data.payment || 'Unspecified')}
             </table>
             ${EmailComponents.cta(labels.viewBooking, viewUrl)}
         `;
     }
 
     static renderBookingAccepted(data, labels, subjects, lang) {
-        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        const customerName = this.getCustomerName(data);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.BOOKING_ACCEPTED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.acceptedBody}
-        return `
-            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.BOOKING_ACCEPTED}</h2>
-            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(data.customer.name)} ${labels.acceptedBody}
             </p>
             ${EmailComponents.sectionTitle(labels.summary)}
             <table width="100%" style="margin-bottom: 30px;">
                 ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
                 ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
-                ${EmailComponents.detailsRow(labels.pickup, data.pickup)}
+                ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
             </table>
             ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
         `;
@@ -136,58 +139,46 @@ export class TemplateRenderer {
 
     static renderDriverAssigned(data, labels, subjects, lang) {
         const d = data.driver || {};
-        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        const customerName = this.getCustomerName(data);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.assignedBody}
-        return `
-            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
-            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(data.customer.name)} ${labels.assignedBody}
             </p>
             ${EmailComponents.sectionTitle(labels.driver)}
             <table width="100%" style="margin-bottom: 30px;">
-                ${EmailComponents.detailsRow(labels.name, d.name)}
+                ${EmailComponents.detailsRow(labels.name, d.name || 'Your FleetConnect Driver')}
                 ${d.phone ? EmailComponents.detailsRow(labels.phone, d.phone) : ''}
-                ${EmailComponents.detailsRow(labels.vehicle, d.vehicle)}
+                ${EmailComponents.detailsRow(labels.vehicle, d.vehicle || 'Luxury Vehicle')}
                 ${EmailComponents.detailsRow(labels.plate, d.license_plate || '...')}
             </table>
             ${EmailComponents.sectionTitle(labels.pickupInfo)}
-            <table width="100%">
+            <table width="100%" style="margin-bottom: 30px;">
                 ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
-                ${EmailComponents.detailsRow(labels.pickup, data.pickup)}
-                ${EmailComponents.detailsRow(labels.destination, data.destination)}
+                ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
+                ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
             </table>
             ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
         `;
     }
 
     static renderBookingCancelled(data, labels, subjects, lang) {
-        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        const customerName = this.getCustomerName(data);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_CANCELLED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.cancelledBody(data.reference || data.id)}
-        return `
-            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_CANCELLED}</h2>
-            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(data.customer.name)} ${labels.cancelledBody(data.reference || data.id)}
             </p>
             ${EmailComponents.cta(labels.bookNew, RouteBuilder.build('book-new'))}
         `;
     }
 
     static renderBookingCompleted(data, labels, subjects, lang) {
-        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        const customerName = this.getCustomerName(data);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_COMPLETED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.completedBody}
-        return `
-            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_COMPLETED}</h2>
-            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(data.customer.name)} ${labels.completedBody}
             </p>
             ${EmailComponents.cta(labels.writeReview, RouteBuilder.build('review', { id: data.id }))}
             <div style="text-align: center; margin-top: 10px;">
@@ -199,15 +190,11 @@ export class TemplateRenderer {
     }
 
     static renderAccountWelcome(data, labels, subjects, lang) {
-        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        const customerName = this.getCustomerName(data);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.ACCOUNT_WELCOME}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.welcomeBody}
-        return `
-            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.ACCOUNT_WELCOME}</h2>
-            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(data.customer.name)} ${labels.welcomeBody}
             </p>
             ${EmailComponents.cta(labels.setupAccount, RouteBuilder.build('account-welcome', { token: data.token }))}
         `;

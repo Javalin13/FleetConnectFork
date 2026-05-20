@@ -36,10 +36,8 @@ export const EmailTranslations = {
             pickupInfo: 'Ophaal Informatie',
             greeting: (name) => `Beste ${name},`,
             confirmationBody: 'we hebben uw boeking goed ontvangen. Ons team verwerkt uw aanvraag momenteel.',
-            acceptedBody: 'uw boeking is bevestigd door onze dispatching. We kijkenernaar uit u te mogen vervoeren.',
-            assignedBody: 'uw persoonlijke chauffeur is toegewezen voor uw rit. Hieronder vindt u de details van uw chauffeur.',
             acceptedBody: 'uw boeking is bevestigd door onze dispatching. We kijken ernaar uit u te mogen vervoeren.',
-            assignedBody: 'uw persoonlijke chauffeur is toegewezen voor uw rit.',
+            assignedBody: 'uw persoonlijke chauffeur is toegewezen voor uw rit. Hieronder vindt u de details van uw chauffeur.',
             cancelledBody: (ref) => `uw boeking met referentie <strong>${ref}</strong> is geannuleerd. Indien u reeds heeft betaald, wordt het bedrag teruggestort.`,
             completedBody: 'we hopen dat u een prettige rit heeft gehad. Bedankt voor uw vertrouwen in FleetConnect.',
             welcomeBody: 'welkom bij FleetConnect. We hebben een account voor u klaargezet waarmee u ritten sneller kunt boeken en uw historie kunt inzien.'
@@ -80,7 +78,6 @@ export const EmailTranslations = {
             confirmationBody: 'nous avons bien reçu votre réservation. Notre équipe traite actuellement votre demande.',
             acceptedBody: 'votre réservation a été confirmée par notre dispatching. Nous nous réjouissons de vous transporter.',
             assignedBody: 'votre chauffeur personnel a été assigné pour votre trajet. Voici les détails de votre chauffeur.',
-            assignedBody: 'votre chauffeur personnel a été assigné pour votre trajet.',
             cancelledBody: (ref) => `votre réservation avec la référence <strong>${ref}</strong> a été annulée. Si vous avez déjà payé, le montant vous sera remboursé.`,
             completedBody: 'nous espérons que vous avez passé un agréable trajet. Merci de votre confiance en FleetConnect.',
             welcomeBody: 'bienvenue chez FleetConnect. Nous avons préparé un compte pour vous permettre de réserver vos trajets plus rapidement.'
@@ -121,7 +118,6 @@ export const EmailTranslations = {
             confirmationBody: 'we have received your booking. Our team is currently processing your request.',
             acceptedBody: 'your booking has been confirmed by our dispatching. We look forward to transporting you.',
             assignedBody: 'your personal chauffeur has been assigned for your ride. Below are the details of your driver.',
-            assignedBody: 'your personal chauffeur has been assigned for your ride.',
             cancelledBody: (ref) => `your booking with reference <strong>${ref}</strong> has been cancelled. If you have already paid, the amount will be refunded.`,
             completedBody: 'we hope you had a pleasant ride. Thank you for your trust in FleetConnect.',
             welcomeBody: 'welcome to FleetConnect. We have set up an account for you to book rides faster and view your history.'
