@@ -90,10 +90,12 @@ export class TemplateRenderer {
     static renderBookingConfirmation(data, labels, subjects, lang) {
         const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
         const distance = data.form_data?.distance_km || data.metadata?.distance_km || data.distance || '...';
+        const customerName = data.customer?.name || data.name || 'Valued Customer';
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_CONFIRMATION}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.confirmationBody}
                 ${labels.greeting(data.customer.name)} ${labels.confirmationBody}
             </p>
             ${EmailComponents.sectionTitle(labels.summary)}
@@ -112,6 +114,11 @@ export class TemplateRenderer {
     }
 
     static renderBookingAccepted(data, labels, subjects, lang) {
+        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.BOOKING_ACCEPTED}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.acceptedBody}
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.BOOKING_ACCEPTED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -129,6 +136,11 @@ export class TemplateRenderer {
 
     static renderDriverAssigned(data, labels, subjects, lang) {
         const d = data.driver || {};
+        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.assignedBody}
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -137,6 +149,7 @@ export class TemplateRenderer {
             ${EmailComponents.sectionTitle(labels.driver)}
             <table width="100%" style="margin-bottom: 30px;">
                 ${EmailComponents.detailsRow(labels.name, d.name)}
+                ${d.phone ? EmailComponents.detailsRow(labels.phone, d.phone) : ''}
                 ${EmailComponents.detailsRow(labels.vehicle, d.vehicle)}
                 ${EmailComponents.detailsRow(labels.plate, d.license_plate || '...')}
             </table>
@@ -146,10 +159,16 @@ export class TemplateRenderer {
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup)}
                 ${EmailComponents.detailsRow(labels.destination, data.destination)}
             </table>
+            ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
         `;
     }
 
     static renderBookingCancelled(data, labels, subjects, lang) {
+        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_CANCELLED}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.cancelledBody(data.reference || data.id)}
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_CANCELLED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -160,6 +179,11 @@ export class TemplateRenderer {
     }
 
     static renderBookingCompleted(data, labels, subjects, lang) {
+        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_COMPLETED}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.completedBody}
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_COMPLETED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -175,6 +199,11 @@ export class TemplateRenderer {
     }
 
     static renderAccountWelcome(data, labels, subjects, lang) {
+        const customerName = data.customer?.name || data.name || 'Valued Customer';
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.ACCOUNT_WELCOME}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.welcomeBody}
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.ACCOUNT_WELCOME}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">

@@ -1,8 +1,9 @@
 import { BaseEmailProvider } from './base.provider.js';
+import { CommunicationConfig } from '../core/config.js';
 
 /**
  * ResendProvider
- * Integration with Resend.com API.
+ * Integration with Resend.com API via Supabase Edge Function.
  */
 export class ResendProvider extends BaseEmailProvider {
     /**
@@ -10,9 +11,6 @@ export class ResendProvider extends BaseEmailProvider {
      */
     constructor(config) {
         super(config);
-        if (!this.config.endpoint) {
-            console.warn('⚠️ ResendProvider initialized without secure endpoint.');
-        }
     }
 
     /**
@@ -23,7 +21,7 @@ export class ResendProvider extends BaseEmailProvider {
         const payload = {
             from: options.from || this.config.from,
             reply_to: options.replyTo || this.config.replyTo,
-            to: [to],
+            to: Array.isArray(to) ? to : [to],
             subject: subject,
             html: html,
             metadata: options.metadata || {}
@@ -31,12 +29,11 @@ export class ResendProvider extends BaseEmailProvider {
 
         try {
             // Attempt to call the secure backend endpoint (Supabase Edge Function)
-            // We use the same Supabase instance as the rest of the app.
-            const baseUrl = window.location.origin.includes('localhost')
-                ? 'https://rreqjjrmvytnwnsidmqi.supabase.co'
-                : window.location.origin;
+            const baseUrl = CommunicationConfig.settings.supabaseUrl;
+            const functionBase = CommunicationConfig.settings.edgeFunctionBase;
+            const endpoint = this.config.endpoint;
 
-            const response = await fetch(`${baseUrl}${this.config.endpoint}`, {
+            const response = await fetch(`${baseUrl}${functionBase}${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
