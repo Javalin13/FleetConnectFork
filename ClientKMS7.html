@@ -90,16 +90,10 @@
     .bookings-table { width: 100%; min-width: 650px; background: white; border-radius: 24px; border-collapse: collapse; font-size: 0.85rem; }
     .bookings-table th { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); color: white; padding: 14px 12px; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
     .bookings-table td { padding: 12px 12px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
-    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; white-space: nowrap; }
-    .status-pending { background: #fef3c7; color: #92400e; }
-    .status-completed { background: #d1fae5; color: #065f46; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; background: #fef3c7; white-space: nowrap; }
     .btn-icon { background: none; border: none; cursor: pointer; color: var(--silver); margin: 0 6px; font-size: 1.1rem; padding: 6px; transition: 0.2s; }
     .btn-icon:hover { color: #0A192F; transform: scale(1.1); }
-    .btn-invoice { background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.7rem; font-weight: 600; transition: 0.2s; }
-    .btn-invoice:hover { background: #059669; }
-    .btn-invoice:disabled { background: #9ca3af; cursor: not-allowed; }
-    .actions-cell { white-space: nowrap; min-width: 120px; }
-    .invoice-number { font-size: 0.7rem; color: #10b981; font-weight: 600; }
+    .actions-cell { white-space: nowrap; min-width: 80px; }
     
     /* Modal factuur stijlen */
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; }
@@ -128,7 +122,7 @@
       .tab-btn { padding: 8px 16px; font-size: 0.75rem; }
       .logout-tab-btn { margin-left: 0; }
       .bookings-table td, .bookings-table th { padding: 10px 8px; }
-      .actions-cell { min-width: 100px; }
+      .actions-cell { min-width: 90px; }
     }
     
     @media (max-width: 480px) {
@@ -140,9 +134,8 @@
       .stat-card h3 { font-size: 1.3rem; }
       .bookings-table th { font-size: 0.65rem; padding: 8px 6px; }
       .bookings-table td { padding: 8px 6px; font-size: 0.7rem; }
-      .btn-icon { font-size: 0.9rem; margin: 0 3px; }
-      .btn-invoice { padding: 4px 8px; font-size: 0.6rem; }
-      .actions-cell { min-width: 80px; }
+      .status-badge { font-size: 0.6rem; padding: 2px 8px; }
+      .actions-cell { min-width: 70px; }
     }
     
     footer { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); padding: 55px 0 35px; border-top: 1px solid var(--silver); margin-top: 60px; }
@@ -182,7 +175,6 @@
       <button id="logoutTabBtn" class="logout-tab-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
     </div>
 
-    <!-- TAB 1: Nouvelle réservation -->
     <div id="new-booking-container" class="tab-container">
       <div class="booking-carousel-container">
         <div class="progress-bar-container"><div class="progress-fill" id="progressFill" style="width: 20%;"></div></div>
@@ -214,7 +206,6 @@
       </div>
     </div>
 
-    <!-- TAB 2: Tableau de bord / Mes courses -->
     <div id="dashboard-container" class="tab-container hidden">
       <div class="stats-grid" id="statsGrid"></div>
       <div class="stats-card">
@@ -223,13 +214,12 @@
       </div>
       <div class="stats-card">
         <h3>✅ Courses terminées</h3>
-        <div class="table-responsive-wrapper"><table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/heure</th><th>Trajet</th><th>Véhicule</th><th>Montant</th><th>Statut</th><th>Facture</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+        <div class="table-responsive-wrapper"><table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/heure</th><th>Trajet</th><th>Véhicule</th><th>Montant</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
       </div>
     </div>
 
-    <!-- TAB 3: Profil -->
     <div id="profile-container" class="tab-container hidden">
-      <div class="profile-card"><h3>👤 Mes informations personnelles</h3><form id="profileForm"><div class="field"><label>Nom complet</label><input type="text" id="fullName" required></div><div class="field"><label>Adresse</label><input type="text" id="address" placeholder="Rue, numéro, code postal, ville"></div><div class="field"><label>E-mail</label><input type="email" id="profileEmail" required></div><div class="field"><label>Téléphone</label><input type="tel" id="profilePhone" required></div><div class="field"><label>N° TVA (optionnel)</label><input type="text" id="profileVat" placeholder="BE 0123.456.789"></div><button type="submit" class="btn-gold">Enregistrer</button></form></div>
+      <div class="profile-card"><h3>👤 Mes informations personnelles</h3><form id="profileForm"><div class="field"><label>Nom complet</label><input type="text" id="fullName" required></div><div class="field"><label>E-mail</label><input type="email" id="profileEmail" required></div><div class="field"><label>Téléphone</label><input type="tel" id="profilePhone" required></div><button type="submit" class="btn-gold">Enregistrer</button></form></div>
     </div>
   </div>
 </main>
@@ -256,16 +246,7 @@
   if(!sessionStorage.getItem('kms7_user_email')) sessionStorage.setItem('kms7_user_email','client@kms7.be');
   const loggedInEmail = sessionStorage.getItem('kms7_user_email');
   function generateCustomerId(email) { return "CUST-"+email.toLowerCase().replace(/[^a-z0-9]/g,""); }
-  let currentUser = { id: generateCustomerId(loggedInEmail), full_name: 'Client C-KMS-7', email: loggedInEmail, phone: '+32 470 12 34 56', address: '', vat: '' };
-  
-  // Factuur nummer teller (oplopend, los van boekingsnummer)
-  let invoiceCounter = parseInt(localStorage.getItem('c_kms7_invoice_counter') || '2026000');
-  
-  function generateInvoiceNumber() {
-    invoiceCounter++;
-    localStorage.setItem('c_kms7_invoice_counter', invoiceCounter);
-    return `${invoiceCounter}`;
-  }
+  let currentUser = { id: generateCustomerId(loggedInEmail), full_name: 'Client C-KMS-7', email: loggedInEmail, phone: '+32 470 12 34 56' };
   
   let map, pickupCoord=null, dropoffCoord=null, routeLayer=null, currentRouteData=null, currentRoundTrip=false, currentReturnDateTime="";
   let selectedVehicle='Standard', selectedVehicleExtra=0, currentPage=1;
@@ -283,41 +264,28 @@
   async function calculateAndStoreRoute(){ if(!pickupCoord||!dropoffCoord){ showError(1,'Sélectionnez des adresses dans les suggestions'); return false; } let dt=document.getElementById('datetime').value; if(!dt){ showError(1,'Choisissez la date/heure'); return false; } if(isPast(dt)){ showError(1,'Pas de réservation dans le passé'); return false; } if(document.getElementById('roundtripCheckbox').checked){ let rdt=document.getElementById('returnDatetime').value; if(!rdt||isPast(rdt)){ showError(1,'Date/heure de retour valide requise'); return false; } currentReturnDateTime=rdt; } else currentReturnDateTime=""; let urgent=isWithinNextHour(dt); document.getElementById('urgentWhatsApp').style.display=urgent?'flex':'none'; let rd=await calcRoute(pickupCoord.lat,pickupCoord.lon,dropoffCoord.lat,dropoffCoord.lon); if(!rd){ showError(1,'Itinéraire non trouvé'); return false; } currentRouteData=rd; currentRoundTrip=document.getElementById('roundtripCheckbox').checked; let d=parseFloat(rd.distanceKm), t=rd.durationMin; if(currentRoundTrip){ d*=2; t*=2; } let price=d*1.5; document.getElementById('distVal').innerHTML=d.toFixed(1); document.getElementById('timeVal').innerHTML=t; document.getElementById('priceVal').innerHTML=formatPrice(price); if(routeLayer) routeLayer.remove(); routeLayer=L.geoJSON(rd.geometry,{color:'#C0C0C0',weight:5}).addTo(map); let bounds=L.latLngBounds([pickupCoord.lat,pickupCoord.lon],[dropoffCoord.lat,dropoffCoord.lon]); map.fitBounds(bounds,{padding:[60,60]}); updateTotalDisplay(); return true; }
   function generateBookingId(){ const d=new Date(), y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); let c=parseInt(localStorage.getItem('kms7BookingCounter')||'0')+1; localStorage.setItem('kms7BookingCounter',c); return `C-KMS-7-${y}${m}${dd}-${String(c).padStart(3,'0')}`; }
   
-  async function requestInvoice(booking) {
-      if (booking.invoice_number) {
-          alert(`Une facture a déjà été générée pour cette course.\nNuméro de facture: ${booking.invoice_number}`);
-          return;
-      }
-      
-      const invoiceNumber = generateInvoiceNumber();
+  function generateInvoiceHTML(booking) {
       const subtotal = booking.amount;
       const vat = subtotal * 0.21;
       const total = subtotal + vat;
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 14);
-      const dueDateStr = dueDate.toLocaleDateString('fr-FR');
-      
-      const invoiceHTML = `
+      return `
         <div style="font-family: 'Montserrat', sans-serif;">
           <div class="invoice-header">
             <div><h2>C-KMS-7 SPRL</h2><p>Buitenplas 1/14, 1601 Sint-Pieters-Leeuw<br>TVA: BE 0789.123.456<br>+32 473 30 03 74</p></div>
-            <div style="text-align:right;"><h3>FACTURE</h3><p>N°: ${invoiceNumber}<br>Date: ${new Date().toLocaleDateString('fr-FR')}<br>Date d'échéance: ${dueDateStr}</p></div>
+            <div style="text-align:right;"><h3>FACTURE</h3><p>N°: ${booking.id}<br>Date: ${new Date().toLocaleDateString('fr-FR')}</p></div>
           </div>
           <div class="invoice-details">
             <p><strong>Client:</strong> ${booking.name}</p>
-            <p><strong>Adresse:</strong> ${currentUser.address || 'Non renseignée'}</p>
             <p><strong>Adresse e-mail:</strong> ${booking.email}</p>
             <p><strong>Téléphone:</strong> ${booking.phone}</p>
-            ${currentUser.vat ? `<p><strong>N° TVA:</strong> ${currentUser.vat}</p>` : ''}
           </div>
           <table class="invoice-table">
             <thead><tr><th>Description</th><th>Quantité</th><th>Prix unitaire</th><th>Total</th></tr></thead>
             <tbody>
-              <tr><td>Course VTC: ${booking.pickup} → ${booking.destination}</td><td>1</td><td>€ ${formatPrice(booking.amount - (selectedVehicleExtra || 0))}</td><td>€ ${formatPrice(booking.amount - (selectedVehicleExtra || 0))}</td></tr>
-              ${booking.vehicle !== 'Standard' ? `<tr><td>Supplément véhicule (${booking.vehicle})</td><td>1</td><td>€ ${formatPrice(selectedVehicleExtra)}</td><td>€ ${formatPrice(selectedVehicleExtra)}</td></tr>` : ''}
+              <tr><td>Course VTC: ${booking.pickup} → ${booking.destination}</td><td>1</td><td>€ ${formatPrice(booking.amount - (booking.extras?.includes('+')?15:0))}</td><td>€ ${formatPrice(booking.amount - (booking.extras?.includes('+')?15:0))}</td></tr>
+              ${booking.vehicle !== 'Standard' ? `<tr><td>Supplément véhicule (${booking.vehicle})</td><td>1</td><td>€ ${booking.vehicle === 'Break' ? '5,00' : booking.vehicle === 'Exclusive' ? '15,00' : '10,00'}</td><td>€ ${booking.vehicle === 'Break' ? '5,00' : booking.vehicle === 'Exclusive' ? '15,00' : '10,00'}</td></tr>` : ''}
               <tr><td>Date & heure: ${booking.datetime} ${booking.time || ''}</td><td></td><td></td><td></td></tr>
               <tr><td>Options: ${booking.extras || 'Aucune'}</td><td></td><td></td><td></td></tr>
-              <tr><td>Numéro de réservation: ${booking.id}</td><td></td><td></td><td></td></tr>
             </tbody>
           </table>
           <div class="invoice-total">
@@ -325,184 +293,43 @@
             <p>TVA (21%): € ${formatPrice(vat)}</p>
             <p><strong>Total à payer: € ${formatPrice(total)}</strong></p>
             <p><em>Moyen de paiement: ${booking.payment === 'Cash' ? 'Espèces' : booking.payment === 'Card' ? 'Carte bancaire' : 'Application mobile'}</em></p>
-            <p><em>Paiement à effectuer avant le ${dueDateStr}</em></p>
           </div>
           <div style="margin-top:30px; font-size:12px; text-align:center; border-top:1px solid #ccc; padding-top:10px;">
-            <p>Merci pour votre confiance ! En cas de question, contactez booking@kms7.be</p>
+            <p>Merci pour votre confiance ! Paiement à bord ou par virement. En cas de question, contactez booking@kms7.be</p>
           </div>
         </div>
       `;
-      
+  }
+  
+  async function showInvoice(booking) {
+      const modal = document.getElementById('invoiceModal');
+      const modalContent = document.getElementById('modalContent');
+      const invoiceHTML = generateInvoiceHTML(booking);
+      modalContent.innerHTML = invoiceHTML + `<div style="text-align:center; margin-top:20px;"><button id="downloadInvoiceBtn" class="btn-download"><i class="fas fa-download"></i> Télécharger PDF</button> <button id="closeModalBtn" class="btn-gold" style="margin-left:10px;">Fermer</button></div>`;
+      modal.classList.add('active');
+      document.getElementById('closeModalBtn').onclick = () => modal.classList.remove('active');
+      document.getElementById('downloadInvoiceBtn').onclick = () => downloadInvoicePDF(booking);
+  }
+  
+  async function downloadInvoicePDF(booking) {
+      const invoiceHTML = generateInvoiceHTML(booking);
       const element = document.createElement('div');
       element.style.padding = '20px';
       element.style.fontFamily = 'Montserrat, sans-serif';
       element.innerHTML = invoiceHTML;
-      
-      html2pdf().from(element).set({ filename: `Facture_${invoiceNumber}.pdf`, margin: [10,10,10,10] }).save();
-      
-      const { error: updateError } = await supabase
-          .from('bookings')
-          .update({ 
-              invoice_number: invoiceNumber,
-              invoice_date: new Date().toISOString(),
-              invoice_due_date: dueDate.toISOString()
-          })
-          .eq('id', booking.id);
-      
-      if (updateError) {
-          alert('Erreur lors de l\'enregistrement de la facture: ' + updateError.message);
-          return;
-      }
-      
-      alert(`✅ Facture générée avec succès!\n\nNuméro de facture: ${invoiceNumber}\nMontant: € ${formatPrice(total)}\n\nLa facture a été téléchargée automatiquement.`);
-      
-      loadUserBookings();
+      html2pdf().from(element).set({ filename: `Facture_${booking.id}.pdf`, margin: [10,10,10,10] }).save();
   }
   
-  async function finalizeBooking(){ if(!currentRouteData){ alert('Calculez d\'abord l\'itinéraire'); return; } let fn=document.getElementById('firstName').value.trim(), ln=document.getElementById('lastName').value.trim(), ph=document.getElementById('phone').value.trim(), em=document.getElementById('email').value.trim(); if(!fn||!ln||!ph||!em){ showError(5,'Veuillez remplir tous les champs'); return; } let payment=document.querySelector('input[name="payment"]:checked').value; let dist=parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) dist*=2; let totalAmount=dist*1.5+selectedVehicleExtra; let record={ id: generateBookingId(), datetime: document.getElementById('datetime').value.split(' ')[0], time: document.getElementById('datetime').value.split(' ')[1]||"", name: `${fn} ${ln}`, email: em, phone: ph, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, flight_number: document.getElementById('flightNumber').value||null, vehicle: selectedVehicle, extras: getExtrasString(), amount: totalAmount, payment: payment, status: "pending", customer_id: currentUser.id, form_data: {source:"portail_client"} }; const {error}=await supabase.from('bookings').insert([record]); if(error) alert('Erreur lors de la réservation: '+error.message); else { alert(`✅ Course réservée ! N°: ${record.id}\nMontant: € ${formatPrice(totalAmount)}`); resetForm(); switchToTab('dashboard'); loadUserBookings(); } }
+  async function finalizeBooking(){ if(!currentRouteData){ alert('Calculez d\'abord l\'itinéraire'); return; } let fn=document.getElementById('firstName').value.trim(), ln=document.getElementById('lastName').value.trim(), ph=document.getElementById('phone').value.trim(), em=document.getElementById('email').value.trim(); if(!fn||!ln||!ph||!em){ showError(5,'Veuillez remplir tous les champs'); return; } let payment=document.querySelector('input[name="payment"]:checked').value; let dist=parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) dist*=2; let totalAmount=dist*1.5+selectedVehicleExtra; let record={ id: generateBookingId(), datetime: document.getElementById('datetime').value.split(' ')[0], time: document.getElementById('datetime').value.split(' ')[1]||"", name: `${fn} ${ln}`, email: em, phone: ph, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, flight_number: document.getElementById('flightNumber').value||null, vehicle: selectedVehicle, extras: getExtrasString(), amount: totalAmount, payment: payment, status: "pending", customer_id: generateCustomerId(em), form_data: {source:"portail_client"} }; const {error}=await supabase.from('bookings').insert([record]); if(error) alert('Erreur lors de la réservation: '+error.message); else { alert(`✅ Course réservée ! N°: ${record.id}\nMontant: € ${formatPrice(totalAmount)}`); resetForm(); switchToTab('dashboard'); loadUserBookings(); } }
   function resetForm(){ if(routeLayer) routeLayer.remove(); currentRouteData=null; pickupCoord=dropoffCoord=null; document.getElementById('pickupInput').value=''; document.getElementById('dropoffInput').value=''; document.getElementById('datetime').value=''; document.getElementById('returnDatetime').value=''; document.getElementById('roundtripCheckbox').checked=false; document.getElementById('returnDateContainer').style.display='none'; showPage(1); }
   function showPage(page){ document.querySelectorAll('.carousel-page').forEach((p,i)=>p.classList.toggle('active-page',i+1===page)); document.querySelectorAll('.step-btn').forEach((btn,i)=>{ btn.classList.toggle('active',i+1===page); if(i+1<page) btn.classList.add('done'); else btn.classList.remove('done'); }); currentPage=page; document.getElementById('prevBtn').disabled=(page===1); let fillPercent=(page/5)*100; document.getElementById('progressFill').style.width=`${fillPercent}%`; if(page===5) updateTotalDisplay(); }
   async function nextPage(){ if(currentPage===1){ let ok=await calculateAndStoreRoute(); if(ok) showPage(2); } else if(currentPage===2){ if(currentRouteData) showPage(3); else showError(2,'Calculez d\'abord l\'itinéraire'); } else if(currentPage===3){ if(selectedVehicle) showPage(4); else showError(3,'Choisissez un véhicule'); } else if(currentPage===4){ showPage(5); } else if(currentPage===5){ await finalizeBooking(); } }
   function prevPage(){ if(currentPage>1) showPage(currentPage-1); }
-  
-  async function loadUserProfile(){ 
-      const {data}=await supabase.from('customers').select('name,email,phone,address,vat').eq('id',currentUser.id).maybeSingle(); 
-      if(data){ 
-          currentUser.full_name=data.name; 
-          currentUser.email=data.email; 
-          currentUser.phone=data.phone||''; 
-          currentUser.address=data.address||''; 
-          currentUser.vat=data.vat||''; 
-      } 
-      document.getElementById('fullName').value=currentUser.full_name||''; 
-      document.getElementById('profileEmail').value=currentUser.email||''; 
-      document.getElementById('profilePhone').value=currentUser.phone||''; 
-      document.getElementById('address').value=currentUser.address||''; 
-      document.getElementById('profileVat').value=currentUser.vat||''; 
-      let names=currentUser.full_name.split(' '); 
-      document.getElementById('firstName').value=names[0]||''; 
-      document.getElementById('lastName').value=names.slice(1).join(' ')||''; 
-      document.getElementById('phone').value=currentUser.phone||''; 
-      document.getElementById('email').value=currentUser.email||''; 
-  }
-  
-  document.getElementById('profileForm').addEventListener('submit',async(e)=>{ 
-      e.preventDefault(); 
-      let name=document.getElementById('fullName').value; 
-      let email=document.getElementById('profileEmail').value; 
-      let phone=document.getElementById('profilePhone').value; 
-      let address=document.getElementById('address').value; 
-      let vat=document.getElementById('profileVat').value; 
-      const {error}=await supabase.from('customers').update({name,email,phone,address,vat}).eq('id',currentUser.id); 
-      if(!error){ 
-          currentUser.full_name=name; 
-          currentUser.email=email; 
-          currentUser.phone=phone; 
-          currentUser.address=address; 
-          currentUser.vat=vat; 
-          alert('Profil mis à jour'); 
-          loadUserProfile(); 
-      } else alert('Erreur: '+error.message); 
-  });
-  
-  async function loadUserBookings(){ 
-      const {data}=await supabase.from('bookings').select('*').eq('customer_id',currentUser.id).order('datetime',{ascending:false}); 
-      let upcoming=data?.filter(b=>b.status!=='completed' && b.status!=='cancelled')||[]; 
-      let completed=data?.filter(b=>b.status==='completed')||[]; 
-      let totalSpent=completed.reduce((s,b)=>s+b.amount,0); 
-      document.getElementById('statsGrid').innerHTML=`<div class="stat-card"><h3>${upcoming.length}</h3><p>Courses à venir</p></div><div class="stat-card"><h3>${completed.length}</h3><p>Terminées</p></div><div class="stat-card"><h3>€${formatPrice(totalSpent)}</h3><p>Total dépensé</p></div>`; 
-      
-      function render(tId,list,showInvoice=true){ 
-          let tbody=document.querySelector(`#${tId} tbody`); 
-          if(!tbody) return;
-          tbody.innerHTML=list.map(b=>{
-              const statusClass = b.status === 'completed' ? 'status-completed' : 'status-pending';
-              const statusText = b.status === 'completed' ? '✓ Terminée' : '⏳ En attente';
-              const invoiceStatus = b.invoice_number ? `<span class="invoice-number">${b.invoice_number}</span>` : '<span style="color:#9ca3af;">Non demandée</span>';
-              const invoiceButton = (!b.invoice_number && b.status === 'completed') ? 
-                  `<button class="btn-invoice" onclick="requestInvoiceForBooking('${b.id}')"><i class="fas fa-file-invoice"></i> Facture</button>` : 
-                  (b.invoice_number ? `<button class="btn-invoice" disabled style="background:#9ca3af;"><i class="fas fa-check"></i> Facturé</button>` : '');
-              
-              return `<tr>
-                  <td><strong>${b.id}</strong><br><small>${b.datetime} ${b.time||''}</small></td>
-                  <td>${b.pickup.split(',')[0]} → ${b.destination.split(',')[0]}</td>
-                  <td>${b.vehicle}</td>
-                  <td>€ ${formatPrice(b.amount)}</td>
-                  <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                  ${showInvoice ? `<td>${invoiceStatus}</td>` : ''}
-                  <td class="actions-cell">
-                      <button class="btn-icon view-details" data-id='${JSON.stringify(b)}'><i class="fas fa-eye"></i></button>
-                      ${invoiceButton}
-                   </td>
-              `}).join('');
-          }); 
-      } 
-      render('upcomingTable',upcoming,false); 
-      render('completedTable',completed,true); 
-      attachBookingActions(); 
-  }
-  
-  function attachBookingActions(){ 
-      document.querySelectorAll('.view-details').forEach(btn=>btn.onclick=()=>{ 
-          let b=JSON.parse(btn.getAttribute('data-id')); 
-          showBookingDetails(b); 
-      }); 
-  }
-  
-  function showBookingDetails(booking){
-      const subtotal = booking.amount;
-      const vat = subtotal * 0.21;
-      const total = subtotal + vat;
-      const modal = document.getElementById('invoiceModal');
-      const modalContent = document.getElementById('modalContent');
-      modalContent.innerHTML = `
-          <div class="fiche-header"><h3><i class="fas fa-file-invoice"></i> Détails de la course</h3><button class="close-modal" onclick="document.getElementById('invoiceModal').classList.remove('active')">&times;</button></div>
-          <div class="fiche-body">
-              <div class="fiche-section"><h4>Informations de réservation</h4>
-                  <div class="fiche-row"><span class="fiche-label">Numéro:</span><span class="fiche-value"><strong>${booking.id}</strong></span></div>
-                  <div class="fiche-row"><span class="fiche-label">Date & heure:</span><span class="fiche-value">${booking.datetime} ${booking.time || ''}</span></div>
-                  <div class="fiche-row"><span class="fiche-label">Statut:</span><span class="fiche-value"><span class="status-badge ${booking.status === 'completed' ? 'status-completed' : 'status-pending'}">${booking.status === 'completed' ? 'Terminée' : 'En attente'}</span></span></div>
-              </div>
-              <div class="fiche-section"><h4>Trajet</h4>
-                  <div class="fiche-row"><span class="fiche-label">Prise en charge:</span><span class="fiche-value">${booking.pickup}</span></div>
-                  <div class="fiche-row"><span class="fiche-label">Destination:</span><span class="fiche-value">${booking.destination}</span></div>
-                  <div class="fiche-row"><span class="fiche-label">Véhicule:</span><span class="fiche-value">${booking.vehicle}</span></div>
-                  <div class="fiche-row"><span class="fiche-label">Options:</span><span class="fiche-value">${booking.extras || 'Aucune'}</span></div>
-              </div>
-              <div class="fiche-section"><h4>Montants</h4>
-                  <div class="fiche-row"><span class="fiche-label">Sous-total:</span><span class="fiche-value">€ ${formatPrice(subtotal)}</span></div>
-                  <div class="fiche-row"><span class="fiche-label">TVA (21%):</span><span class="fiche-value">€ ${formatPrice(vat)}</span></div>
-                  <div class="fiche-row"><span class="fiche-label"><strong>Total:</strong></span><span class="fiche-value"><strong>€ ${formatPrice(total)}</strong></span></div>
-              </div>
-              ${booking.invoice_number ? `
-              <div class="fiche-section"><h4>Facture</h4>
-                  <div class="fiche-row"><span class="fiche-label">Numéro:</span><span class="fiche-value"><strong>${booking.invoice_number}</strong></span></div>
-                  <div class="fiche-row"><span class="fiche-label">Date:</span><span class="fiche-value">${booking.invoice_date ? new Date(booking.invoice_date).toLocaleDateString('fr-FR') : '-'}</span></div>
-                  <div class="fiche-row"><span class="fiche-label">Échéance:</span><span class="fiche-value">${booking.invoice_due_date ? new Date(booking.invoice_due_date).toLocaleDateString('fr-FR') : '-'}</span></div>
-              </div>
-              ` : (booking.status === 'completed' ? `<div class="fiche-actions" style="margin-top:16px;"><button class="btn-invoice" style="padding:10px 20px;" onclick="requestInvoiceForBooking('${booking.id}'); document.getElementById('invoiceModal').classList.remove('active');"><i class="fas fa-file-invoice"></i> Demander la facture</button></div>` : '<p style="text-align:center; color:#9ca3af;">La facture peut être demandée une fois la course terminée.</p>')}
-              <div class="fiche-actions"><button class="fiche-btn close" onclick="document.getElementById('invoiceModal').classList.remove('active')">Fermer</button></div>
-          </div>
-      `;
-      modal.classList.add('active');
-  }
-  
-  window.requestInvoiceForBooking = async function(bookingId) {
-      const { data: booking } = await supabase.from('bookings').select('*').eq('id', bookingId).single();
-      if (booking) {
-          await requestInvoice(booking);
-      }
-  };
-  
-  function switchToTab(tabName){ 
-      document.querySelectorAll('.tab-container').forEach(c=>c.classList.add('hidden')); 
-      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); 
-      document.getElementById(`${tabName}-container`).classList.remove('hidden'); 
-      document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active'); 
-      if(tabName==='dashboard') loadUserBookings(); 
-      if(tabName==='profile') loadUserProfile(); 
-  }
-  
+  async function loadUserProfile(){ const {data}=await supabase.from('customers').select('name,email,phone').eq('id',currentUser.id).maybeSingle(); if(data){ currentUser.full_name=data.name; currentUser.email=data.email; currentUser.phone=data.phone||''; } document.getElementById('fullName').value=currentUser.full_name||''; document.getElementById('profileEmail').value=currentUser.email||''; document.getElementById('profilePhone').value=currentUser.phone||''; let names=currentUser.full_name.split(' '); document.getElementById('firstName').value=names[0]||''; document.getElementById('lastName').value=names.slice(1).join(' ')||''; document.getElementById('phone').value=currentUser.phone||''; document.getElementById('email').value=currentUser.email||''; }
+  document.getElementById('profileForm').addEventListener('submit',async(e)=>{ e.preventDefault(); let name=document.getElementById('fullName').value; let email=document.getElementById('profileEmail').value; let phone=document.getElementById('profilePhone').value; const {error}=await supabase.from('customers').update({name,email,phone}).eq('id',currentUser.id); if(!error){ currentUser.full_name=name; currentUser.email=email; currentUser.phone=phone; alert('Profil mis à jour'); loadUserProfile(); } else alert('Erreur: '+error.message); });
+  async function loadUserBookings(){ const {data}=await supabase.from('bookings').select('*').eq('customer_id',currentUser.id).order('datetime',{ascending:false}); let upcoming=data?.filter(b=>b.status!=='completed')||[]; let completed=data?.filter(b=>b.status==='completed')||[]; let totalSpent=completed.reduce((s,b)=>s+b.amount,0); document.getElementById('statsGrid').innerHTML=`<div class="stat-card"><h3>${upcoming.length}</h3><p>Courses à venir</p></div><div class="stat-card"><h3>${completed.length}</h3><p>Terminées</p></div><div class="stat-card"><h3>€${formatPrice(totalSpent)}</h3><p>Total dépensé</p></div>`; function render(tId,list){ let tbody=document.querySelector(`#${tId} tbody`); tbody.innerHTML=list.map(b=>`<tr><td>${b.id}</td><td>${b.datetime} ${b.time||''}</td><td>${b.pickup.split(',')[0]} → ${b.destination.split(',')[0]}</td><td>${b.vehicle}</td><td>€ ${formatPrice(b.amount)}</td><td><span class="status-badge">${b.status}</span></td><td class="actions-cell"><button class="btn-icon repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt"></i></button> <button class="btn-icon view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-file-invoice-dollar"></i></button></td></tr>`).join(''); } render('upcomingTable',upcoming); render('completedTable',completed); attachBookingActions(); }
+  function attachBookingActions(){ document.querySelectorAll('.repeat-booking').forEach(btn=>btn.onclick=()=>{ let b=JSON.parse(btn.getAttribute('data-id')); document.getElementById('pickupInput').value=b.pickup; document.getElementById('dropoffInput').value=b.destination; document.getElementById('datetime').value=`${b.datetime} ${b.time}`; switchToTab('new-booking'); }); document.querySelectorAll('.view-fiche').forEach(btn=>btn.onclick=()=>{ let b=JSON.parse(btn.getAttribute('data-id')); showInvoice(b); }); }
+  function switchToTab(tabName){ document.querySelectorAll('.tab-container').forEach(c=>c.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(`${tabName}-container`).classList.remove('hidden'); document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active'); if(tabName==='dashboard') loadUserBookings(); if(tabName==='profile') loadUserProfile(); }
   document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>switchToTab(btn.getAttribute('data-tab'))));
   document.getElementById('logoutTabBtn').addEventListener('click',()=>{ sessionStorage.removeItem('kms7_user_email'); alert('Déconnecté. La page va se recharger.'); window.location.reload(); });
   document.getElementById('roundtripCheckbox').addEventListener('change',(e)=>document.getElementById('returnDateContainer').style.display=e.target.checked?'block':'none');
@@ -514,71 +341,8 @@
   
   function initMap(){ map=L.map('map').setView([50.85,4.35],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map); }
   function initVehicleSelect(){ document.querySelectorAll('.vehicle-card-select').forEach(c=>{ c.addEventListener('click',()=>{ document.querySelectorAll('.vehicle-card-select').forEach(c2=>c2.classList.remove('selected')); c.classList.add('selected'); selectedVehicle=c.getAttribute('data-vehicle'); selectedVehicleExtra=parseInt(c.getAttribute('data-extraprice'))||0; updateTotalDisplay(); }); }); const first=document.querySelector('.vehicle-card-select'); if(first){first.classList.add('selected'); selectedVehicle=first.getAttribute('data-vehicle'); selectedVehicleExtra=0;} }
-  
-  // AUTOCOMPLÉTION FRANÇAISE CORRECTE
-  async function fetchAddresses(query, wrapId) {
-      if (query.length < 3) return;
-      const wrap = document.getElementById(wrapId);
-      const suggestionsDiv = wrap.querySelector('.suggestions');
-      if (!suggestionsDiv) return;
-      suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Recherche...</div>';
-      suggestionsDiv.style.display = 'block';
-      try {
-          const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=fr`;
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 8000);
-          const response = await fetch(url, { headers: { 'User-Agent': 'C-KMS-7-Portal/1.0' }, signal: controller.signal });
-          clearTimeout(timeoutId);
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const data = await response.json();
-          if (!data.length) {
-              suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ Aucune adresse trouvée en Belgique</div>';
-              return;
-          }
-          suggestionsDiv.innerHTML = data.map(p => `<div class="suggestion-item" data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</div>`).join('');
-          suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => {
-              item.addEventListener('click', () => {
-                  const lat = parseFloat(item.dataset.lat);
-                  const lon = parseFloat(item.dataset.lon);
-                  const fullAddress = item.innerText;
-                  const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
-                  inputField.value = fullAddress;
-                  if (wrapId === 'pickupWrap') {
-                      pickupCoord = { lat: lat, lon: lon };
-                  } else {
-                      dropoffCoord = { lat: lat, lon: lon };
-                  }
-                  suggestionsDiv.style.display = 'none';
-                  if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
-              });
-          });
-      } catch (err) {
-          console.error(err);
-          suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Erreur réseau – réessayez</div>';
-      }
-  }
-  
-  function initAutocomplete() {
-      const pickupInput = document.getElementById('pickupInput');
-      const dropoffInput = document.getElementById('dropoffInput');
-      pickupInput.addEventListener('input', (e) => {
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'pickupWrap'), 400);
-      });
-      dropoffInput.addEventListener('input', (e) => {
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'dropoffWrap'), 400);
-      });
-      document.addEventListener('click', (e) => {
-          if (!e.target.closest('.suggest-wrapper')) {
-              document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none');
-          }
-      });
-  }
-  
-  // Initialiseer teller uit localStorage
-  const savedCounter = localStorage.getItem('c_kms7_invoice_counter');
-  if (savedCounter) invoiceCounter = parseInt(savedCounter);
+  async function fetchAddresses(query, wrapId) { if (query.length < 3) return; const wrap = document.getElementById(wrapId); const suggestionsDiv = wrap.querySelector('.suggestions'); if (!suggestionsDiv) return; suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Recherche...</div>'; suggestionsDiv.style.display = 'block'; try { const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=fr`; const controller = new AbortController(); const timeoutId = setTimeout(() => controller.abort(), 8000); const response = await fetch(url, { headers: { 'User-Agent': 'C-KMS-7-Portal/1.0' }, signal: controller.signal }); clearTimeout(timeoutId); if (!response.ok) throw new Error(`HTTP ${response.status}`); const data = await response.json(); if (!data.length) { suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ Aucune adresse trouvée en Belgique</div>'; return; } suggestionsDiv.innerHTML = data.map(p => `<div class="suggestion-item" data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</div>`).join(''); suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => { item.addEventListener('click', () => { const lat = parseFloat(item.dataset.lat); const lon = parseFloat(item.dataset.lon); const fullAddress = item.innerText; const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput'); inputField.value = fullAddress; if (wrapId === 'pickupWrap') { pickupCoord = { lat: lat, lon: lon }; } else { dropoffCoord = { lat: lat, lon: lon }; } suggestionsDiv.style.display = 'none'; if (pickupCoord && dropoffCoord) calculateAndStoreRoute(); }); }); } catch (err) { console.error(err); suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Erreur réseau – réessayez</div>'; } }
+  function initAutocomplete() { const pickupInput = document.getElementById('pickupInput'); const dropoffInput = document.getElementById('dropoffInput'); pickupInput.addEventListener('input', (e) => { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'pickupWrap'), 400); }); dropoffInput.addEventListener('input', (e) => { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'dropoffWrap'), 400); }); document.addEventListener('click', (e) => { if (!e.target.closest('.suggest-wrapper')) { document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); } }); }
   
   initMap(); initVehicleSelect(); initAutocomplete(); showPage(1); loadUserProfile(); switchToTab('new-booking');
   document.getElementById('mobileMenuBtn').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('show'));
