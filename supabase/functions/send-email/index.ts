@@ -39,7 +39,7 @@ serve(async (req) => {
 
     // 3. Dispatch via Resend
     const { data, error } = await resend.emails.send({
-      from: from || 'FleetConnect <noreply@fleetconnect.be>',
+      from: from || 'FleetConnect <fleetconnect.os@gmail.com>',
       to: to,
       subject: subject,
       html: html,

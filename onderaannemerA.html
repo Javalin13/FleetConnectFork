@@ -583,11 +583,19 @@
                 const { data, error } = await supabase
                     .from('drivers')
                     .select('*');
+
+                console.log('TRACE: loadDrivers', {
+                    data,
+                    error,
+                    count: data?.length,
+                    authRole: (await supabase.auth.getUser())?.data?.user?.role
+                });
+
                 if (error) {
                     this.showToast('Fout bij laden drivers: ' + error.message, true);
                     return;
                 }
-                this.drivers = data;
+                this.drivers = data || [];
             },
             
             switchToWoningen() { window.location.href = 'commander.html'; },
@@ -1209,7 +1217,9 @@
             resetFiltersHistory() { let o = document.getElementById("filterOrderHistory"); let n = document.getElementById("filterNameHistory"); if(o) o.value = ""; if(n) n.value = ""; this.renderHistoryTable(this.historyOrders); },
             
             showBookingFiche(booking) {
-                let driverOptions = '<option value="">-- Selecteer Driver --</option>';
+                let driverOptions = this.drivers.length > 0
+                    ? '<option value="">-- Selecteer Driver --</option>'
+                    : '<option value="">-- Geen drivers geladen --</option>';
 
                 // 1. Determine Normalized Partner ID
                 let normalizedPartnerId =
@@ -1218,15 +1228,29 @@
                     booking.form_data?.partner_id ||
                     1;
 
-                normalizedPartnerId = String(normalizedPartnerId);
+                const originalPartnerId = normalizedPartnerId;
+                // Standardize to String for comparison
+                const targetPartnerIdStr = String(normalizedPartnerId);
 
                 // 2. Filter Available Drivers
+                // Defensive check: handle possible numeric/string mix in driver.partner_id
                 let availableDrivers = this.drivers.filter(
-                    c => String(c.partner_id) === normalizedPartnerId
+                    c => String(c.partner_id) === targetPartnerIdStr
                 );
 
-                // 3. Fallback to all drivers if list is empty
-                if (!availableDrivers.length) {
+                console.log('TRACE: showBookingFiche Filtering', {
+                    bookingId: booking.id,
+                    originalPartnerId,
+                    targetPartnerIdStr,
+                    availableDriversCount: availableDrivers.length,
+                    totalDriversCount: this.drivers.length,
+                    driverPartnerIds: this.drivers.map(d => d.partner_id)
+                });
+
+                // 3. Resilience: If no drivers found for this partner, fallback to all drivers
+                // This prevents the "Geen drivers gevonden" regression if partner_id is misaligned.
+                if (!availableDrivers.length && this.drivers.length > 0) {
+                    console.warn('TRACE: showBookingFiche Fallback to ALL drivers (Filtering returned 0)');
                     availableDrivers = [...this.drivers];
                 }
 
@@ -1363,11 +1387,28 @@
             },
             
             async assignDriverToBooking(bookingId) {
+                const assignBtn = document.querySelector('.fiche-btn.assign');
+                if (assignBtn) {
+                    assignBtn.disabled = true;
+                    assignBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Bezig...';
+                }
+
                 const select = document.getElementById('driverSelect');
                 const driverId = select?.value;
+
+                console.log('TRACE: assignDriverToBooking Start', {
+                    bookingId,
+                    driverId,
+                    availableDriversCount: this.drivers.length
+                });
+
                 if (!driverId) { this.showToast('Selecteer een driver', true); return; }
                 const driver = this.drivers.find(c => String(c.id) === String(driverId));
-                if (!driver) { this.showToast('Driver niet gevonden', true); return; }
+                if (!driver) {
+                    console.error('TRACE: Driver mismatch', { driverId, ids: this.drivers.map(d => d.id) });
+                    this.showToast('Driver niet gevonden', true);
+                    return;
+                }
                 
                 const assignmentToken = crypto.randomUUID();
                 const assignmentSentAt = new Date().toISOString();
@@ -1388,7 +1429,12 @@
                     .eq('id', bookingId);
                     
                 if (error) {
+                    console.error('TRACE: Assignment DB Error', error);
                     this.showToast('Fout bij toewijzen driver: ' + error.message, true);
+                    if (assignBtn) {
+                        assignBtn.disabled = false;
+                        assignBtn.innerHTML = 'Driver Toewijzen';
+                    }
                 } else {
                     this.showToast(`Driver ${driver.name} toegewezen`);
 

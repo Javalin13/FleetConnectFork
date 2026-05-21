@@ -5,7 +5,7 @@
 export const CommunicationConfig = {
     brand: {
         name: 'FleetConnect',
-        email: 'Fleetconnect@gmail.com',
+        email: 'fleetconnect.os@gmail.com',
         website: 'https://fleetconnect.be',
         logoUrl: '', // To be filled later
         supportPhone: '+3200000000',
@@ -33,7 +33,7 @@ export const CommunicationConfig = {
             // This prevents exposing the Resend API Key in the browser.
             endpoint: '/send-email',
             from: 'FleetConnect <fleetconnect.os@gmail.com>',
-replyTo: 'fleetconnect.os@gmail.com'
+            replyTo: 'FleetConnect <fleetconnect.os@gmail.com>'
         }
     }
 };
