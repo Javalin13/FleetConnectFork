@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KMS7 – Wettelijke vermeldingen, AV & Europese taxiwetgeving</title>
+  <meta name="description" content="Wettelijke vermeldingen, algemene voorwaarden B2B en Europees regelgevend kader voor taxi-, VTC- en limousinediensten – KMS7 België.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Montserrat', sans-serif; background: linear-gradient(145deg, #F8FAFE 0%, #FFFFFF 100%); color: #0A192F; line-height: 1.5; }
+    :root { --dark: #0A192F; --silver: #C0C0C0; --silver-light: #E5E5E5; --glass: rgba(255, 255, 255, 0.85); --shadow: 0 12px 30px rgba(0, 0, 0, 0.05); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    header { background: var(--dark); padding: 20px 0; border-bottom: 2px solid var(--silver); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .logo { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #E8E8E8, #FFFFFF, #B0B0B0); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 4px; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: #FDFBF7; text-decoration: none; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; transition: 0.3s; }
+    .nav-links a:hover { color: var(--silver); }
+    .lang-switch { display: flex; gap: 0.5rem; margin-left: auto; }
+    .lang-switch a { color: var(--silver); text-decoration: none; font-size: 0.75rem; font-weight: 600; padding: 4px 8px; border-radius: 20px; transition: 0.2s; }
+    .lang-switch a:hover { background: var(--silver); color: #0A192F; }
+    .lang-switch .active { background: var(--silver); color: #0A192F; }
+    .hero-legal { background: linear-gradient(rgba(10,25,47,0.7), rgba(10,25,47,0.8)), url('https://images.pexels.com/photos/3265486/pexels-photo-3265486.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover; padding: 80px 0; text-align: center; color: white; }
+    .hero-legal h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 1rem; letter-spacing: 2px; }
+    .hero-legal p { font-size: 1.1rem; max-width: 700px; margin: 0 auto; opacity: 0.9; }
+    .section-title { text-align: center; font-size: 2rem; font-weight: 700; margin: 3rem 0 2rem; position: relative; display: inline-block; width: 100%; }
+    .section-title span { background: linear-gradient(135deg, #0A192F, #2C4A6E); -webkit-background-clip: text; background-clip: text; color: transparent; border-bottom: 3px solid var(--silver); padding-bottom: 8px; }
+    .tab-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin: 2rem 0 2.5rem; }
+    .tab-btn { background: rgba(10,25,47,0.05); border: 1px solid var(--silver); padding: 12px 28px; font-weight: 700; font-size: 0.9rem; border-radius: 40px; cursor: pointer; transition: all 0.2s; color: #1E2F3E; font-family: 'Montserrat', sans-serif; }
+    .tab-btn.active { background: var(--dark); color: white; border-color: var(--silver); box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
+    .legal-content { display: none; background: var(--glass); backdrop-filter: blur(12px); border-radius: 32px; padding: 2rem 2.5rem; margin-bottom: 3rem; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.7); animation: fade 0.3s ease; }
+    .legal-content.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .legal-content h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--dark); border-left: 5px solid var(--silver); padding-left: 20px; }
+    .legal-content h3 { margin: 1.5rem 0 0.8rem; font-size: 1.3rem; font-weight: 600; }
+    .legal-content p, .legal-content li { margin-bottom: 0.8rem; color: #1A2E44; line-height: 1.6; }
+    .legal-content ul { margin-left: 1.8rem; margin-bottom: 1.2rem; }
+    .legal-content strong { color: #0A192F; }
+    .footer-legal { background: var(--dark); padding: 40px 0 30px; margin-top: 60px; border-top: 2px solid var(--silver); color: #CEC7B8; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 2rem; }
+    .footer-col h4 { font-family: 'Playfair Display', serif; color: var(--silver); margin-bottom: 1rem; font-size: 1.2rem; }
+    .footer-col a, .footer-col p { display: block; color: #CEC7B8; text-decoration: none; margin-bottom: 0.6rem; font-size: 0.85rem; }
+    .footer-col a:hover { color: white; }
+    .copyright { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(192,192,192,0.3); font-size: 0.75rem; }
+    @media (max-width: 768px) {
+      .hero-legal h1 { font-size: 2rem; }
+      .legal-content { padding: 1.5rem; }
+      .tab-btn { padding: 8px 18px; font-size: 0.8rem; }
+      .lang-switch { margin-left: 0; margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+    <div class="logo">KMS7</div>
+    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+      <ul class="nav-links">
+        <li><a href="#mentions">Wettelijke vermeldingen</a></li>
+        <li><a href="#cgv">AV B2B</a></li>
+        <li><a href="#eu">EU-wetgeving</a></li>
+        <li><a href="KMS7_nl.html">Terug naar site</a></li>
+      </ul>
+      <div class="lang-switch">
+        <a href="#" class="active" data-lang="nl">NL</a>
+        <a href="#" data-lang="en">EN</a>
+        <a href="#" data-lang="fr">FR</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero-legal">
+  <div class="container">
+    <h1>Juridisch kader & conformiteit</h1>
+    <p>Wettelijke vermeldingen, algemene verkoopsvoorwaarden (professionals) en Europese regelgeving voor taxi-, VTC- en limousinesector.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="tab-buttons" id="tabButtons">
+    <button class="tab-btn active" data-tab="mentions">📜 Wettelijke vermeldingen</button>
+    <button class="tab-btn" data-tab="cgv">🤝 Algemene voorwaarden B2B</button>
+    <button class="tab-btn" data-tab="eu">🇪🇺 Europese wetgeving – Taxi & VTC</button>
+  </div>
+
+  <!-- SECTIE WETTELIJKE VERMELDINGEN -->
+  <div id="mentions" class="legal-content active">
+    <h2>Wettelijke vermeldingen</h2>
+    <p><strong>KMS7</strong> – Personenvervoerbedrijf (VTC, limousine, luxe taxi).</p>
+    <p><strong>Maatschappelijke zetel :</strong> Buitenplas 1/14, 1601 Sint-Pieters-Leeuw, België.<br>
+    <strong>Telefoon :</strong> +32 473 30 03 74<br>
+    <strong>E-mail :</strong> legal@kms7.be<br>
+    <strong>BTW-nummer :</strong> BE 0789.123.456<br>
+    <strong>Ondernemingsregister :</strong> RPR Brussel (België).</p>
+    
+    <h3>Hosting van de site</h3>
+    <p>Deze site wordt gehost door Supabase / Vercel, waarvan de servers zich in de Europese Unie bevinden. Overeenkomstig de wetgeving worden de gegevens met de grootste vertrouwelijkheid behandeld.</p>
+    
+    <h3>Directeur van de publicatie</h3>
+    <p>Dhr. Karim M., zaakvoerder van KMS7.</p>
+    
+    <h3>Intellectueel eigendom</h3>
+    <p>Alle grafische elementen, teksten en logo's zijn exclusief eigendom van KMS7. Reproductie zonder voorafgaande toestemming is verboden.</p>
+    
+    <h3>Bescherming van persoonsgegevens (AVG)</h3>
+    <p>Overeenkomstig Verordening (EU) 2016/679 worden de bij een reservering verzamelde gegevens uitsluitend gebruikt voor het beheer van ritten en facturatie. U hebt recht op toegang, rectificatie en verwijdering. Voor het uitoefenen van deze rechten kunt u contact opnemen met <strong>dpo@kms7.be</strong>.</p>
+  </div>
+
+  <!-- SECTIE ALGEMENE VOORWAARDEN B2B -->
+  <div id="cgv" class="legal-content">
+    <h2>Algemene verkoopsvoorwaarden – Zakelijke klanten (B2B)</h2>
+    <p><strong>Artikel 1 – Toepassingsgebied</strong><br>
+    Deze voorwaarden zijn van toepassing op alle personenvervoersdiensten die door KMS7 worden verricht voor bedrijven, verenigingen en zelfstandige professionals.</p>
+    
+    <p><strong>Artikel 2 – Reservering en offerte</strong><br>
+    Elke reservering wordt schriftelijk (e-mail, platform) bevestigd na aanvaarding van de offerte. Een uniek reserveringsnummer wordt toegekend. Voor vaste klanten kan een raamovereenkomst worden opgesteld.</p>
+    
+    <p><strong>Artikel 3 – Tarieven en facturatie</strong><br>
+    De prijzen worden berekend op basis van afstand, duur en geselecteerde opties (voertuigcategorie, overuren, wachttijd). Belgische BTW van toepassing. Maandelijkse factuur voor zakelijke rekeningen met een betalingstermijn van 30 dagen netto. Vertragingsboete: 10% van het bedrag.</p>
+    
+    <p><strong>Artikel 4 – Annulering en wijziging</strong><br>
+    Gratis annulering tot 4 uur vóór het geplande ophaaluur. Daarna wordt 50% van het bedrag in rekening gebracht. Bij no-show (afwezige klant) is de volledige rit verschuldigd.</p>
+    
+    <p><strong>Artikel 5 – Aansprakelijkheid en verzekering</strong><br>
+    KMS7 beschikt over een beroepsaansprakelijkheidsverzekering die materiële en lichamelijke schade dekt, conform de Belgische wet. Bij een vertraging die niet aan ons te wijten is (overmacht, staking, uitzonderlijke files), kan onze aansprakelijkheid niet verder gaan dan terugbetaling van de verrichte dienst.</p>
+    
+    <p><strong>Artikel 6 – Verplichtingen van de klant</strong><br>
+    De klant is verplicht nauwkeurige informatie (adres, tijdstip) te verstrekken en klaar te staan op het afgesproken uur. Overmatige bagage moet bij de reservering worden gemeld.</p>
+    
+    <p><strong>Artikel 7 – Geschillen en toepasselijk recht</strong><br>
+    Deze voorwaarden zijn onderworpen aan het Belgisch recht. Bij een geschil zal een minnelijke oplossing worden gezocht voordat een gerechtelijke procedure voor de rechtbanken van Brussel wordt gestart.</p>
+    <p><em>Versie 2026 – KMS7 behoudt zich het recht voor de AV te wijzigen mits voorafgaande kennisgeving.</em></p>
+  </div>
+
+  <!-- SECTIE EUROPESE WETGEVING -->
+  <div id="eu" class="legal-content">
+    <h2>Europees regelgevend kader voor taxi-, VTC- en limousinesector</h2>
+    <p>KMS7 oefent zijn personenvervoersactiviteiten met chauffeur uit in overeenstemming met de volgende Europese beginselen en teksten:</p>
+    
+    <h3>1. Vrijheid van dienstverrichting (Richtlijn 2006/123/EG)</h3>
+    <p>Deze richtlijn garandeert de vrijheid van vestiging en het vrije verkeer van diensten binnen de EU. KMS7 respecteert de toegangsvoorwaarden tot de Belgische markt en kan incidentele diensten verrichten voor klanten die in andere lidstaten wonen.</p>
+    
+    <h3>2. Verordening (EG) nr. 1071/2009 en 1073/2009</h3>
+    <p>Hoewel hoofdzakelijk van toepassing op touringcarbedrijven, worden de beginselen van betrouwbaarheid, financiële draagkracht en beroepsbekwaamheid door België overgenomen voor VTC/taxi's. KMS7 garandeert dat zijn chauffeurs over de vereiste attesten beschikken (opleiding, uittreksel strafregister).</p>
+    
+    <h3>3. Rechten van passagiers met beperkte mobiliteit (Verordening (EU) nr. 1107/2006)</h3>
+    <p>KMS7 biedt op aanvraag een toegankelijke dienst: aangepaste voertuigen, assistentie voor personen met beperkte mobiliteit, discriminatie bij vervoersweigering is verboden.</p>
+    
+    <h3>4. AVG (Verordening (EU) 2016/679)</h3>
+    <p>De persoonsgegevens van klanten (zakelijk en particulier) worden verwerkt volgens de Europese vereisten: toestemming, bepaald doel, recht op vergetelheid, gegevensbeveiliging.</p>
+    
+    <h3>5. Verordening (EG) nr. 561/2006 (rijtijden)</h3>
+    <p>Hoewel niet verplicht voor voertuigen met minder dan 10 zitplaatsen, past KMS7 interne rust- en veiligheidsregels toe die boven de wettelijke minima uitgaan om een optimale veiligheid te garanderen.</p>
+    
+    <h3>6. Richtlijn 2009/103/EG (automobiel aansprakelijkheidsverzekering)</h3>
+    <p>KMS7 sluit een verzekering af die voldoet aan de Europese minimumbedragen (dekking van materiële en lichamelijke schade) en toont bij elke controle een attest.</p>
+    
+    <h3>7. Verordening (EU) 2015/758 (eCall)</h3>
+    <p>Alle recente voertuigen van de vloot zijn uitgerust met het ingebouwde noodoproepsysteem, wat de passieve veiligheid verbetert.</p>
+    
+    <h3>8. Verordening (EU) 2024/… (Mobiliteitspakket – VTC-aanpassingen)</h3>
+    <p>De nieuwe richtlijnen inzake digitale platforms en de detachering van chauffeurs worden door KMS7 nauwlettend gevolgd. Wij verbinden ons ertoe de wetsontwikkelingen te respecteren om een hoogwaardige en volkomen legale dienst te handhaven.</p>
+    
+    <p><strong>Conclusie :</strong> KMS7 opereert in strikte overeenstemming met het Belgische en Europese recht, om zijn zakelijke en particuliere klanten een kwaliteitsvolle, transparante en veilige dienst te garanderen.</p>
+  </div>
+</div>
+
+<footer class="footer-legal">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>KMS7</h4>
+        <p>Buitenplas 1/14<br>1601 Sint-Pieters-Leeuw</p>
+        <p>+32 473 30 03 74</p>
+        <p>booking@kms7.be</p>
+      </div>
+      <div class="footer-col">
+        <h4>JURIDISCH</h4>
+        <a href="#mentions">Wettelijke vermeldingen</a>
+        <a href="#cgv">Algemene voorwaarden B2B</a>
+        <a href="#eu">Europese wetgeving</a>
+        <a href="#">Privacybeleid</a>
+      </div>
+      <div class="footer-col">
+        <h4>BRONNEN</h4>
+        <a href="#">Professionele offerte</a>
+        <a href="#">Kwaliteitshandvest</a>
+        <a href="#">Juridisch contact</a>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 KMS7 – Alle rechten voorbehouden. Conformiteit met Belgisch en Europees recht.<br>
+      Wettelijke vermeldingen verplicht volgens de wet van 11 maart 2003 betreffende de diensten van de informatiemaatschappij.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Tab switching logic
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.legal-content');
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-tab');
+      tabs.forEach(b => b.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const targetContent = document.getElementById(targetId);
+      if (targetContent) targetContent.classList.add('active');
+    });
+  });
+
+  // Internal navigation from header
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    if (link.getAttribute('href') === 'KMS7_nl.html') return;
+    link.addEventListener('click', (e) => {
+      const hash = link.getAttribute('href');
+      if (hash && hash.startsWith('#')) {
+        e.preventDefault();
+        const targetId = hash.substring(1);
+        const targetTab = document.querySelector(`.tab-btn[data-tab="${targetId}"]`);
+        if (targetTab) targetTab.click();
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Language switcher
+  document.querySelectorAll('.lang-switch a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lang = link.getAttribute('data-lang');
+      if (lang === 'nl') window.location.href = 'Mentions_legales_KMS7_nl.html';
+      else if (lang === 'en') window.location.href = 'Mentions_legales_KMS7_en.html';
+      else if (lang === 'fr') window.location.href = 'Mentions_legales_KMS7.html';
+    });
+  });
+</script>
+</body>
+</html>
