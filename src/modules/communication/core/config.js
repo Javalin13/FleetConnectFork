@@ -24,7 +24,7 @@ export const CommunicationConfig = {
         fallbackMode: 'trilingual', // 'trilingual' or 'default'
         trilingualOrder: ['nl', 'fr', 'en'],
         provider: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'mock' : 'resend',
-        supabaseUrl: 'https://rreqjjrmvytnwnsidmqi.supabase.co',
+        supabaseUrl: 'https://rreqjjrmvytnwnsidmqi.supabase.co/functions/v1/send-email',
         edgeFunctionBase: '/functions/v1'
     },
     providers: {
