@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryz3n | Your own private logistics system – No expensive intermediaries, real-time tracking</title>
+    
+    <meta name="description" content="Your own private logistics system. Save 22% on costs, 31% faster deliveries. Real-time tracking, automatic dispatch, full data ownership. Request a demo.">
+    <meta name="keywords" content="logistics software, dispatch system, last-mile delivery, route optimisation, own logistics platform, no intermediaries, real-time tracking">
+    <meta name="author" content="Ryz3n Digital Supremacy">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://ryz3n.com/logistiek.en.html">
+    
+    <meta property="og:title" content="Ryz3n | Your own private logistics system – No intermediaries">
+    <meta property="og:description" content="Save 22% on logistics costs. Your data, your ownership. No lock-in. From €399/month.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ryz3n.com/logistiek.en.html">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== COMPLETE CSS (identiek aan Nederlandse versie) ========== */
+        :root {
+            --bg-deep: #0A0A0F;
+            --bg-surface: #0F0F15;
+            --bg-card: #13131A;
+            --bg-card-hover: #181820;
+            --accent-primary: #E94560;
+            --accent-glow: rgba(233, 69, 96, 0.3);
+            --text-white: #FFFFFF;
+            --text-gray: #A0A0B0;
+            --text-muted: #6B6B7A;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --grid-gap: 16px;
+            --transition-smooth: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-white);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-subtle) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 2rem;
+        }
+        
+        .logo { font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; }
+        .logo span { color: var(--accent-primary); }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .nav-links a:hover { color: var(--accent-primary); }
+        
+        /* Language switcher */
+        .language-switcher {
+            display: flex;
+            gap: 0.75rem;
+            margin-left: auto;
+            align-items: center;
+        }
+        .language-switcher a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: var(--transition-smooth);
+        }
+        .language-switcher a:hover {
+            color: var(--accent-primary);
+        }
+        
+        .hero {
+            padding: 3rem 0 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-primary) 50%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-subhead {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-primary);
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .cta-button:hover {
+            background: #d43d58;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+        
+        .cta-button-secondary {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-gray);
+        }
+        
+        .cta-button-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+        
+        .usp-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .usp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+        
+        .usp-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-primary);
+        }
+        
+        .usp-card strong {
+            color: var(--accent-primary);
+            font-size: 1rem;
+        }
+        
+        .usp-card p {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .section-title span { color: var(--accent-primary); }
+        
+        .section-subhead {
+            text-align: center;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 3rem auto;
+        }
+        
+        .grid-2, .grid-3, .grid-4 {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 2rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+        .card p { color: var(--text-gray); font-size: 0.9rem; line-height: 1.6; }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+            font-weight: 700;
+        }
+        
+        .social-proof-badge {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .social-proof-badge span {
+            background: rgba(233, 69, 96, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: var(--accent-primary);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+        
+        .testimonial {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent-primary);
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+        
+        .testimonial p { font-style: italic; margin-bottom: 1rem; color: var(--text-gray); }
+        .testimonial-author { font-weight: 600; color: var(--text-white); }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 1rem;
+        }
+        
+        .faq-question {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 1rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-white);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            transition: color 0.2s;
+        }
+        
+        .faq-question:hover { color: var(--accent-primary); }
+        .faq-question::after { content: "+"; color: var(--accent-primary); }
+        .faq-item.active .faq-question::after { content: "−"; }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+            padding: 0;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 0 1rem 0;
+        }
+        
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            max-width: 700px;
+            margin: 2rem auto 0;
+        }
+        
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-white);
+            font-family: inherit;
+        }
+        
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        
+        .contact-form .full-width { grid-column: span 2; }
+        .contact-form button { grid-column: span 2; justify-self: center; }
+        
+        .footer {
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 2rem;
+        }
+        
+        .footer a { color: var(--text-muted); text-decoration: none; }
+        .footer a:hover { color: var(--accent-primary); }
+        
+        @media (max-width: 1024px) {
+            .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 2.5rem; }
+            .usp-grid { grid-template-columns: 1fr; gap: 1rem; }
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+            .contact-form { grid-template-columns: 1fr; }
+            .contact-form .full-width { grid-column: span 1; }
+            .steps { flex-direction: column; }
+            .language-switcher { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- ========== HEADER ========== -->
+    <div class="header">
+        <div class="logo">Ryz3n <span>|</span> Logistics</div>
+        <div class="nav-links">
+            <a href="index.en.html">← Back to overview</a>
+            <a href="#oplossing">Solution</a>
+            <a href="#features">Features</a>
+            <a href="#contact">Request demo</a>
+        </div>
+        <div class="language-switcher">
+            <a href="logistiek.html">NL</a>
+            <a href="logistiek.en.html" style="color: var(--accent-primary);">EN</a>
+            <a href="logistiek.fr.html">FR</a>
+        </div>
+    </div>
+    
+    <!-- ========== HERO ========== -->
+    <div class="hero">
+        <h1>Your own private logistics system.<br>No expensive intermediaries. Real-time tracking.</h1>
+        <div class="hero-subhead">
+            Save 22% on logistics costs and deliver 31% faster. Your own dispatch system. Real-time tracking, automatic route optimisation, full control.<br>
+            No expensive intermediaries. No vendor lock-in. No hidden costs.
+        </div>
+        <div class="hero-buttons">
+            <a href="#contact" class="cta-button">📅 Request demo</a>
+            <a href="#oplossing" class="cta-button cta-button-secondary">💰 Calculate your savings</a>
+            <a href="#oplossing" class="cta-button cta-button-secondary">📖 See how it works</a>
+        </div>
+    </div>
+    
+    <!-- ========== USP BLOCK ========== -->
+    <div class="usp-grid">
+        <div class="usp-card">
+            <strong>📦 22% lower costs</strong>
+            <p>No expensive intermediaries. You save directly on every delivery.</p>
+        </div>
+        <div class="usp-card">
+            <strong>⚡ 31% faster deliveries</strong>
+            <p>Smart route optimisation and real-time dispatch. Your customers are served faster.</p>
+        </div>
+        <div class="usp-card">
+            <strong>🔒 100% data ownership</strong>
+            <p>Your delivery data stays yours. Not used to train competitors. No lock-in.</p>
+        </div>
+    </div>
+    
+    <!-- ========== PROBLEM ========== -->
+    <div class="section">
+        <h2 class="section-title">Does this sound familiar? <span>↓</span></h2>
+        <div class="grid-3">
+            <div class="card">
+                <h3>📋 Fragmented systems</h3>
+                <p>You use separate tools for dispatch, tracking, invoicing and route planning. <strong>You lose time and money on separate tools.</strong> No overview, no control.</p>
+            </div>
+            <div class="card">
+                <h3>🐌 No real-time insight</h3>
+                <p>You don't know where your drivers are, how long they have been on the road, or if there is a delay. Customers call, you have to search.</p>
+            </div>
+            <div class="card">
+                <h3>💰 High operational costs</h3>
+                <p>Manual planning, inefficient routes, and expensive intermediaries eat your margins. You work too hard for too little.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== SOLUTION ========== -->
+    <div class="section" id="oplossing">
+        <h2 class="section-title">Your own <span>private logistics system</span></h2>
+        <div class="section-subhead">
+            All in one dashboard. No separate tools. No expensive intermediaries. Just a system that works.
+        </div>
+        <div class="grid-2">
+            <div class="card">
+                <h3>📍 Real-time tracking</h3>
+                <p>Track all your vehicles live on the map. See where each driver is, how long they have been on the road, and when they are available.</p>
+            </div>
+            <div class="card">
+                <h3>🔄 Smart dispatch</h3>
+                <p>The system automatically assigns the nearest available driver. No manual work. No delay. Sub-150ms.</p>
+            </div>
+            <div class="card">
+                <h3>🗺️ Route optimisation</h3>
+                <p>Automatically calculate the fastest routes, taking into account traffic, priority and delivery times. Less fuel, more deliveries.</p>
+            </div>
+            <div class="card">
+                <h3>📊 Cost analysis per trip</h3>
+                <p>See exactly what each delivery earns you. Fuel, time, mileage allowance — everything is tracked.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== HOW IT WORKS (4 STEPS) ========== -->
+    <div class="section">
+        <h2 class="section-title">How it works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Order received</h3>
+                <p>Via app, website or API. Automatically in the system.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Smart dispatch</h3>
+                <p>System assigns the best driver.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Live tracking</h3>
+                <p>You and your customer see where the driver is.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Automatic invoice</h3>
+                <p>After delivery: invoice, payment, and analysis.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== FEATURES ========== -->
+    <div class="section" id="features">
+        <h2 class="section-title">Everything you need <span>in one system</span></h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>🎯 Optimised routes</h3>
+                <p>The system automatically calculates the fastest routes, taking into account traffic, distance and delivery time windows. Fewer kilometres, more deliveries.</p>
+            </div>
+            <div class="card">
+                <h3>📱 Driver app</h3>
+                <p>Your drivers get their own app to see routes, update statuses and call customers. No hassle with separate phone calls.</p>
+            </div>
+            <div class="card">
+                <h3>📦 Proof of delivery</h3>
+                <p>Signature, photo, or QR code scan upon delivery. Immediate proof, no discussion afterwards.</p>
+            </div>
+            <div class="card">
+                <h3>📊 Live dashboard</h3>
+                <p>You see all active deliveries, drivers, delays and revenue at a glance. No more separate systems.</p>
+            </div>
+            <div class="card">
+                <h3>🔒 Your data, your ownership</h3>
+                <p>No delivery is used to train a competitor. Your customer data stays yours. We don't look in.</p>
+            </div>
+            <div class="card">
+                <h3>🚫 No vendor lock-in</h3>
+                <p>You take your code, data and system anywhere. No hidden costs. No multi-year contracts.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== FOR WHOM? ========== -->
+    <div class="section">
+        <h2 class="section-title">Who is this for?</h2>
+        <div class="grid-3">
+            <div class="card">
+                <h3>🚚 Courier services</h3>
+                <p>From 5 to 500 vehicles. We scale with you. Pay only for what you use.</p>
+            </div>
+            <div class="card">
+                <h3>🍕 Meal delivery</h3>
+                <p>Restaurants, dark kitchens, meal boxes — our system adapts to your business model.</p>
+            </div>
+            <div class="card">
+                <h3>📦 E-commerce logistics</h3>
+                <p>Last-mile delivery, returns logistics, same-day delivery — all in one dashboard.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== SOCIAL PROOF ========== -->
+    <div class="section">
+        <div class="social-proof-badge">
+            <span>✅ 20+ logistics companies in Belgium and the Netherlands use Ryz3n</span>
+        </div>
+        <h2 class="section-title">What customers say</h2>
+        <div class="grid-2">
+            <div class="testimonial">
+                <p>"We used three different systems for dispatch, tracking and invoicing. Now we have everything in one. Our delivery times have improved by 28%."</p>
+                <div class="testimonial-author">— Logistics manager, 30 vehicles</div>
+            </div>
+            <div class="testimonial">
+                <p>"The implementation was live within 3 weeks. Our drivers can now see routes and update statuses without hassle. No more expensive intermediaries."</p>
+                <div class="testimonial-author">— Operations director, courier company</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== FAQ ========== -->
+    <div class="section">
+        <h2 class="section-title">Frequently asked questions</h2>
+        <div class="faq-item">
+            <button class="faq-question">How long does implementation take?</button>
+            <div class="faq-answer"><p>Average 10-14 days for a pilot. Then 4-6 weeks for full rollout with all your vehicles and routes.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Do my drivers need a special app?</button>
+            <div class="faq-answer"><p>Yes, we provide a simple driver app (iOS/Android/Web) that shows routes and allows status updates. No hassle with separate systems.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">What does it cost?</button>
+            <div class="faq-answer"><p><strong>From €399/month for 10 vehicles</strong>, including all features. No % commission. No hidden costs. You pay only for what you use. Request a custom quote.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Can I customise the system myself?</button>
+            <div class="faq-answer"><p>Yes. You get full access to the code. You can extend it yourself or we do it for you. No lock-in.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">What if I stop using Ryz3n?</button>
+            <div class="faq-answer"><p>You take everything with you. Code, database, documentation. Your system keeps running, with or without us.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Do you support multiple languages?</button>
+            <div class="faq-answer"><p>Yes. The system works in Dutch, French, English, and German — ideal for international logistics.</p></div>
+        </div>
+    </div>
+    
+    <!-- ========== CONTACT & CTA ========== -->
+    <div class="section" id="contact">
+        <h2 class="section-title">Ready to start?</h2>
+        <div class="section-subhead">
+            Request a no-obligation demo. We will show you what your own logistics system looks like — tailored to your fleet.
+        </div>
+        <form class="contact-form" action="mailto:info@ryz3n.com" method="POST" enctype="text/plain">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="text" name="company" placeholder="Company name" required>
+            <input type="email" name="email" placeholder="Email address" required>
+            <input type="tel" name="phone" placeholder="Phone number">
+            <textarea rows="3" name="message" placeholder="How many vehicles do you have? What is your biggest challenge?" class="full-width"></textarea>
+            <button type="submit" class="cta-button">📅 Request demo</button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.7rem; color: var(--text-muted);">
+            No obligations. No sales pitch. Just a technical demo with an architect. Reply within 24 hours.
+        </p>
+    </div>
+    
+    <!-- ========== FOOTER ========== -->
+    <div class="footer">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+            <a href="index.en.html">← Back to homepage</a>
+            <a href="mailto:info@ryz3n.com">info@ryz3n.com</a>
+            <a href="legal.en.html">Legal & Privacy</a>
+        </div>
+        <p>© 2025 Ryz3n Digital Supremacy — Logistics & Dispatch Software</p>
+        <p style="margin-top: 0.5rem;">🔒 No tracking • No cookies • Your data stays yours</p>
+    </div>
+    
+</div>
+
+<script>
+    // FAQ Accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const button = item.querySelector('.faq-question');
+        button.addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+    
+    // Form submit
+    const contactForm = document.querySelector('.contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✅ Demo request received. An architect will contact you within 24 hours.');
+            contactForm.reset();
+        });
+    }
+</script>
+
+</body>
+</html>

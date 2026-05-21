@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryz3n | Votre propre système de taxi – Pas d'Uber, pas de Bolt, économisez 25%</title>
+    
+    <meta name="description" content="Votre propre système de taxi sans intermédiaires. Économisez 20-30% de commission. Pas d'Uber, pas de Bolt. À partir de 299€/mois. Demandez une démo.">
+    <meta name="keywords" content="propre système taxi, logiciel taxi, pas uber, pas bolt, système de dispatch, gestion de flotte, réservation taxi, pas de commission">
+    <meta name="author" content="Ryz3n Digital Supremacy">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://ryz3n.com/taxi.fr.html">
+    
+    <meta property="og:title" content="Ryz3n | Votre propre système de taxi – Pas d'intermédiaires">
+    <meta property="og:description" content="Économisez 20-30% de commission. Vos données, votre propriété. Pas de lock-in. À partir de 299€/mois.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ryz3n.com/taxi.fr.html">
+    <meta property="og:image" content="https://ryz3n.com/og-taxi.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== CSS COMPLET (identique à la version anglaise) ========== */
+        :root {
+            --bg-deep: #0A0A0F;
+            --bg-surface: #0F0F15;
+            --bg-card: #13131A;
+            --bg-card-hover: #181820;
+            --accent-primary: #E94560;
+            --accent-glow: rgba(233, 69, 96, 0.3);
+            --text-white: #FFFFFF;
+            --text-gray: #A0A0B0;
+            --text-muted: #6B6B7A;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --grid-gap: 16px;
+            --transition-smooth: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-white);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border-subtle) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .logo span { color: var(--accent-primary); }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .nav-links a:hover { color: var(--accent-primary); }
+        
+        .language-switcher {
+            display: flex;
+            gap: 0.75rem;
+            margin-left: auto;
+            align-items: center;
+        }
+        .language-switcher a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: var(--transition-smooth);
+        }
+        .language-switcher a:hover {
+            color: var(--accent-primary);
+        }
+        
+        .hero {
+            padding: 3rem 0 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-primary) 50%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-subhead {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-primary);
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .cta-button:hover {
+            background: #d43d58;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+        
+        .cta-button-secondary {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-gray);
+        }
+        
+        .cta-button-secondary:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+        
+        .usp-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .usp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+        
+        .usp-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-primary);
+        }
+        
+        .usp-card strong {
+            color: var(--accent-primary);
+            font-size: 1rem;
+        }
+        
+        .usp-card p {
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .section-title span {
+            color: var(--accent-primary);
+        }
+        
+        .section-subhead {
+            text-align: center;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 3rem auto;
+        }
+        
+        .grid-2, .grid-3, .grid-4 {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 2rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+            font-weight: 700;
+        }
+        
+        .testimonial {
+            background: var(--bg-card);
+            border-left: 3px solid var(--accent-primary);
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+        
+        .testimonial p {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--text-gray);
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--text-white);
+        }
+        
+        .social-proof-badge {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .social-proof-badge span {
+            background: rgba(233, 69, 96, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: var(--accent-primary);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+        }
+        
+        .experience-card {
+            background: var(--bg-card-hover);
+            border-left: 3px solid var(--accent-primary);
+            border-radius: 4px;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+        }
+        
+        .experience-card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 1rem;
+        }
+        
+        .faq-question {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 1rem 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-white);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            transition: color 0.2s;
+        }
+        
+        .faq-question:hover { color: var(--accent-primary); }
+        .faq-question::after { content: "+"; color: var(--accent-primary); }
+        .faq-item.active .faq-question::after { content: "−"; }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+            padding: 0;
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 0 1rem 0;
+        }
+        
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            max-width: 700px;
+            margin: 2rem auto 0;
+        }
+        
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            color: var(--text-white);
+            font-family: inherit;
+        }
+        
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        
+        .contact-form .full-width { grid-column: span 2; }
+        .contact-form button { grid-column: span 2; justify-self: center; }
+        
+        .footer {
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 2rem;
+        }
+        
+        .footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+        
+        .footer a:hover { color: var(--accent-primary); }
+        
+        @media (max-width: 1024px) {
+            .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 2.5rem; }
+            .usp-grid { grid-template-columns: 1fr; gap: 1rem; }
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+            .contact-form { grid-template-columns: 1fr; }
+            .contact-form .full-width { grid-column: span 1; }
+            .steps { flex-direction: column; }
+            .language-switcher { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- ========== HEADER ========== -->
+    <div class="header">
+        <div class="logo">Ryz3n <span>|</span> Taxi Dispatch</div>
+        <div class="nav-links">
+            <a href="index.fr.html">← Retour à l'aperçu</a>
+            <a href="#oplossing">Solution</a>
+            <a href="#features">Fonctionnalités</a>
+            <a href="#contact">Demander une démo</a>
+        </div>
+        <div class="language-switcher">
+            <a href="taxi.html">NL</a>
+            <a href="taxi.en.html">EN</a>
+            <a href="taxi.fr.html" style="color: var(--accent-primary);">FR</a>
+        </div>
+    </div>
+    
+    <!-- ========== HERO ========== -->
+    <div class="hero">
+        <h1>Votre propre système de taxi privé.<br>Pas d'Uber. Pas de Bolt. Pas de 25% de commission.</h1>
+        <div class="hero-subhead">
+            Économisez immédiatement 20-30% sur chaque course. Votre propre système de dispatch. Les clients commandent via chatbot, vous voyez tout dans un seul tableau de bord.<br>
+            Pas d'intermédiaires coûteux. Pas de lock-in fournisseur. Pas de surprises mensuelles.
+        </div>
+        <div class="hero-buttons">
+            <a href="#contact" class="cta-button">📅 Demander une démo</a>
+            <a href="#oplossing" class="cta-button cta-button-secondary">💰 Calculez vos économies</a>
+            <a href="#oplossing" class="cta-button cta-button-secondary">📖 Voyez comment ça fonctionne</a>
+        </div>
+    </div>
+    
+    <!-- ========== CARTE D'EXPÉRIENCE ========== -->
+    <div class="experience-card">
+        <p style="font-weight: 700; color: var(--accent-primary); margin-bottom: 1rem;">🚖 15+ ans d'expérience – des colis à l'OTAN. Ce système n'est pas un projet IT. C'est ma vie en code.</p>
+        <p>J'ai conduit pour <strong>l'OTAN, la Commission européenne, des jets privés sur le tarmac</strong> – diplomates, sécurité, perfection.<br>
+        J'ai conduit pour <strong>Belgium Limousine</strong> – VIP, délégations, aucune erreur.<br>
+        J'ai conduit pour <strong>DHL, FedEx, TNT, TSE, Husk, Gorsele</strong> – colis, délais, des centaines d'arrêts par jour.<br>
+        J'ai conduit pour <strong>Airportaxi, Airtax, 40Love</strong> – transports aéroportuaires, courses internationales.<br>
+        J'ai conduit lors de <strong>grands événements</strong> (Salon de l'auto, Koerse Zoersel) – milliers de courses, dispatch en direct, pas de chaos.<br>
+        J'ai effectué <strong>des courses internationales</strong> : Pologne, Suisse, Autriche, Allemagne, France, Espagne, Luxembourg.<br>
+        Je connais <strong>la cartographie</strong> et sais <strong>exactement où et quand les embouteillages commencent</strong> – j'ai toujours conduit à contre-courant.<br>
+        Et j'avais <strong>10 véhicules moi-même</strong>. Je faisais l'administratif. Je détestais les tracas.</p>
+        <p style="margin-top: 1rem;"><strong>📊 Je joue sur différents marchés – au bon moment.</strong><br>
+        Des colis aux diplomates. De l'aéroport au jet privé. De 10 véhicules à 0. Je sais comment ça fonctionne.</p>
+        <p style="margin-top: 1rem;"><strong>J'ai construit ce système en 2 mois, à partir de zéro, parce que j'en avais marre. Il fonctionne parce que j'en avais besoin.</strong></p>
+    </div>
+    
+    <!-- ========== BLOC USP ========== -->
+    <div class="usp-grid">
+        <div class="usp-card">
+            <strong>🔒 100% propriété des données</strong>
+            <p>Vos données clients restent vôtres. Pas utilisées pour former des concurrents.</p>
+        </div>
+        <div class="usp-card">
+            <strong>🚫 Pas de lock-in fournisseur</strong>
+            <p>Vous emportez votre code et vos données partout. Pas de coûts cachés.</p>
+        </div>
+        <div class="usp-card">
+            <strong>💰 Prix fixe, pas de surprises</strong>
+            <p>Pas de commission en %. À partir de 299€/mois pour 10 véhicules.</p>
+        </div>
+    </div>
+    
+    <!-- ========== PROBLÈME ========== -->
+    <div class="section">
+        <h2 class="section-title">Cela vous dit quelque chose ? <span>↓</span></h2>
+        <div class="grid-3">
+            <div class="card">
+                <h3>📞 Chaos téléphonique</h3>
+                <p>Vos chauffeurs reçoivent les courses via WhatsApp, téléphone ou notes volantes. Pas de vue d'ensemble, doubles réservations, clients en colère.</p>
+            </div>
+            <div class="card">
+                <h3>💰 Intermédiaires coûteux</h3>
+                <p>Vous dépendez d'Uber, Bolt ou d'autres plateformes qui engloutissent 20-30% de votre chiffre d'affaires. <strong>Vous perdez 25% de votre CA en plateformes.</strong> Vous travaillez pour eux, pas pour vous.</p>
+            </div>
+            <div class="card">
+                <h3>📉 Pas de maîtrise des coûts</h3>
+                <p>Vous ne savez pas quelles courses sont rentables, quels chauffeurs sous-performent, ni où passe votre temps. Vous réagissez, vous ne planifiez pas.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== SOLUTION ========== -->
+    <div class="section" id="oplossing">
+        <h2 class="section-title">Votre propre <span>système de dispatch privé</span></h2>
+        <div class="section-subhead">
+            Pas d'intermédiaires. Pas de boîte noire. Juste un système qui fonctionne pour vous – pas pour un géant de la tech.
+        </div>
+        <div class="grid-2">
+            <div class="card">
+                <h3>📱 Les clients commandent facilement</h3>
+                <p>Chatbot, site web, WhatsApp — vos clients choisissent comment demander une course. Pas besoin d'installation d'application. Pas de barrières.</p>
+            </div>
+            <div class="card">
+                <h3>🔄 Dispatch en temps réel</h3>
+                <p>Le système attribue automatiquement le chauffeur le plus proche. Pas d'appels manuels. Pas de délai. Sub-150ms.</p>
+            </div>
+            <div class="card">
+                <h3>📊 Un seul tableau de bord</h3>
+                <p>Vous voyez toutes les courses, chauffeurs, revenus et coûts en un seul aperçu. En direct. Plus de systèmes séparés.</p>
+            </div>
+            <div class="card">
+                <h3>💰 Facturation automatique</h3>
+                <p>Après chaque course, une facture est automatiquement générée. Vos chauffeurs sont payés. Vos clients reçoivent une confirmation.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== COMMENT ÇA FONCTIONNE (4 ÉTAPES) ========== -->
+    <div class="section">
+        <h2 class="section-title">Comment ça fonctionne</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Le client réserve</h3>
+                <p>Via chatbot, site web ou téléphone. Pas de tracas.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Le système dispatche</h3>
+                <p>Automatiquement vers le chauffeur le plus proche.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Vous voyez tout</h3>
+                <p>Tableau de bord en direct avec statut, localisation, revenus.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Facturation & payé</h3>
+                <p>Automatique. Pas de travail manuel.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== FONCTIONNALITÉS ========== -->
+    <div class="section" id="features">
+        <h2 class="section-title">Tout ce dont vous avez besoin <span>dans un seul système</span></h2>
+        <div class="grid-2">
+            <div class="card">
+                <h3>🎯 Suivi en temps réel</h3>
+                <p>Suivez tous vos véhicules en direct sur la carte. Voyez où se trouve chaque chauffeur, depuis combien de temps il roule et quand il est disponible.</p>
+            </div>
+            <div class="card">
+                <h3>📈 Optimisation intelligente des itinéraires</h3>
+                <p>Le système calcule automatiquement les itinéraires les plus rapides, en tenant compte du trafic, de la distance et de la priorité. Moins de carburant, plus de courses.</p>
+            </div>
+            <div class="card">
+                <h3>📊 Analyse des coûts par course</h3>
+                <p>Voyez exactement ce que chaque course vous rapporte. Carburant, temps, indemnité kilométrique — tout est suivi.</p>
+            </div>
+            <div class="card">
+                <h3>👥 Portail conducteurs</h3>
+                <p>Vos conducteurs disposent de leur propre application/portail pour voir, accepter et signaler les courses. Plus de problèmes de communication.</p>
+            </div>
+            <div class="card">
+                <h3>🔒 Vos données, votre propriété</h3>
+                <p>Aucune course n'est utilisée pour former un concurrent. Vos données clients restent vôtres. Nous ne regardons pas.</p>
+            </div>
+            <div class="card">
+                <h3>🚫 Pas de lock-in fournisseur</h3>
+                <p>Vous emportez votre code, vos données et votre système partout. Pas de coûts cachés. Pas de contrats sur plusieurs années.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== POUR QUI ? ========== -->
+    <div class="section">
+        <h2 class="section-title">Pour qui est-ce ?</h2>
+        <div class="grid-3">
+            <div class="card">
+                <h3>🚕 Entreprises de taxi</h3>
+                <p>De 5 à 500 véhicules. Nous évoluons avec vous. Payez uniquement ce que vous utilisez.</p>
+            </div>
+            <div class="card">
+                <h3>🚐 Tour & transfert</h3>
+                <p>Courses fixes, transferts aéroportuaires, transports de groupe — notre système s'adapte à votre modèle d'entreprise.</p>
+            </div>
+            <div class="card">
+                <h3>📦 Coursiers & logistique</h3>
+                <p>Colis, repas, courses alimentaires — notre moteur de dispatch fonctionne pour toute forme de transport.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== PREUVE SOCIALE ========== -->
+    <div class="section">
+        <div class="social-proof-badge">
+            <span>✅ 25+ entreprises de taxi en Belgique et aux Pays-Bas utilisent Ryz3n</span>
+        </div>
+        <h2 class="section-title">Ce que disent nos clients</h2>
+        <div class="grid-2">
+            <div class="testimonial">
+                <p>"Nous utilisions d'abord Uber et Bolt. Maintenant, nous avons notre propre système. Nous économisons 25% par course et nos clients sont plus fidèles. Plus d'intermédiaire."</p>
+                <div class="testimonial-author">— Gestionnaire de flotte, 25 véhicules</div>
+            </div>
+            <div class="testimonial">
+                <p>"La mise en œuvre était opérationnelle en 2 semaines. Nos chauffeurs peuvent désormais voir et accepter les courses sans tracas. Le tableau de bord est simple mais puissant."</p>
+                <div class="testimonial-author">— Propriétaire, entreprise de taxi Anvers</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ========== FAQ ========== -->
+    <div class="section">
+        <h2 class="section-title">Questions fréquentes</h2>
+        <div class="faq-item">
+            <button class="faq-question">Combien de temps dure la mise en œuvre ?</button>
+            <div class="faq-answer"><p>En moyenne 10-14 jours pour un pilote. Ensuite 4-6 semaines pour un déploiement complet. Vous êtes rapidement opérationnel.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Mes clients doivent-ils télécharger une application ?</button>
+            <div class="faq-answer"><p>Non. Les clients peuvent réserver via un chatbot, WhatsApp ou une simple page web. Aucun obstacle.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Combien ça coûte ?</button>
+            <div class="faq-answer"><p><strong>À partir de 299€/mois pour 10 véhicules</strong>, incluant toutes les fonctionnalités. Pas de commission en %. Pas de coûts cachés. Vous ne payez que ce que vous utilisez. Demandez un devis personnalisé.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Puis-je personnaliser le système moi-même ?</button>
+            <div class="faq-answer"><p>Oui. Vous avez un accès complet au code. Vous pouvez l'étendre vous-même ou nous le faisons pour vous. Pas de lock-in.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Que se passe-t-il si j'arrête d'utiliser Ryz3n ?</button>
+            <div class="faq-answer"><p>Vous emportez tout. Code, base de données, documentation. Votre système continue de fonctionner, avec ou sans nous.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Supportez-vous plusieurs langues ?</button>
+            <div class="faq-answer"><p>Oui. Le système fonctionne en néerlandais, français, anglais et arabe — idéal pour les clients internationaux.</p></div>
+        </div>
+    </div>
+    
+    <!-- ========== CONTACT & CTA ========== -->
+    <div class="section" id="contact">
+        <h2 class="section-title">Prêt à démarrer ?</h2>
+        <div class="section-subhead">
+            Demandez une démo sans engagement. Nous vous montrerons à quoi ressemble votre propre système de dispatch — adapté à votre entreprise.
+        </div>
+        <form class="contact-form" action="mailto:info@ryz3n.com" method="POST" enctype="text/plain">
+            <input type="text" name="name" placeholder="Votre nom" required>
+            <input type="text" name="company" placeholder="Nom de l'entreprise" required>
+            <input type="email" name="email" placeholder="Adresse e-mail" required>
+            <input type="tel" name="phone" placeholder="Numéro de téléphone">
+            <textarea rows="3" name="message" placeholder="Combien de véhicules possédez-vous ? Quel est votre plus grand défi ?" class="full-width"></textarea>
+            <button type="submit" class="cta-button">📅 Demander une démo</button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.7rem; color: var(--text-muted);">
+            Sans engagement. Pas de discours commercial. Juste une démo technique avec un architecte. Réponse sous 24 heures.
+        </p>
+    </div>
+    
+    <!-- ========== FOOTER ========== -->
+    <div class="footer">
+        <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem;">🚖 Construit par quelqu'un qui a conduit pour l'OTAN, l'UE, des jets privés, Belgium Limousine, DHL, FedEx, TNT, TSE, Husk, Gorsele, Airportaxi, Airtax, 40Love – et qui a lui‑même géré 10 véhicules.</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+            <a href="index.fr.html">← Retour à l'accueil</a>
+            <a href="mailto:info@ryz3n.com">info@ryz3n.com</a>
+            <a href="legal.fr.html">Mentions légales & confidentialité</a>
+        </div>
+        <p>© 2025 Ryz3n Digital Supremacy — Logiciel de dispatch taxi</p>
+        <p style="margin-top: 0.5rem;">🔒 Pas de tracking • Pas de cookies • Vos données restent vôtres</p>
+    </div>
+    
+</div>
+
+<script>
+    // Accordéon FAQ
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const button = item.querySelector('.faq-question');
+        button.addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+    
+    // Envoi du formulaire
+    const contactForm = document.querySelector('.contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✅ Demande de démo reçue. Un architecte vous contactera sous 24 heures.');
+            contactForm.reset();
+        });
+    }
+</script>
+
+</body>
+</html>
