@@ -1319,13 +1319,19 @@
                     </div>
                     ` : ''}
 
-                   ${!isExpired ? `
-                    <div class="fiche-section"><h4>Toewijzen</h4>
-                        <div class="fiche-row"><span class="fiche-label">Driver:</span><span class="fiche-value">
-                            <select id="driverSelect" style="width:100%;">${driverOptions}</select>
-                        </span></div>
-                    </div>
-                    ` : ''}
+                <div class="fiche-section">
+    <h4>Toewijzen</h4>
+
+    <div class="fiche-row">
+        <span class="fiche-label">Driver:</span>
+
+        <span class="fiche-value">
+            <select id="driverSelect" style="width:100%;">
+                ${driverOptions}
+            </select>
+        </span>
+    </div>
+</div>
 
                     <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
                     <div class="fiche-actions">
@@ -1357,12 +1363,23 @@
             async confirmBooking(bookingId) {
                 console.log('TRACE: confirmBooking Start', { bookingId });
                 try {
-                    const { error } = await supabase
-                        .from('bookings')
-                        .update({ status: 'accepted' })
-                        .eq('id', bookingId);
+                 const { error } = await supabase
+    .from('bookings')
+    .update({ status: 'accepted' })
+    .eq('id', bookingId);
 
-                    if (error) throw error;
+if (error) throw error;
+
+await this.loadBookings();
+this.filterAndSortData();
+
+if (this.currentTab === 'neworders') {
+    this.renderNewOrders();
+}
+
+if (this.currentTab === 'orders') {
+    this.renderOrders();
+}
 
                     this.showToast(`Rit ${bookingId} geaccepteerd`);
 
