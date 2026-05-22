@@ -1274,9 +1274,15 @@
                     await this.loadDrivers();
                 }
 
-                let driverOptions = this.drivers.length > 0
-                    ? '<option value="">-- Selecteer Driver --</option>'
-                    : '<option value="">-- Geen drivers gevonden --</option>';
+               // HARD RUNTIME SAFETY
+if (!Array.isArray(this.drivers)) {
+    console.error('Drivers array missing, rebuilding...');
+    this.drivers = [];
+}
+
+let driverOptions = this.drivers.length > 0
+    ? '<option value="">-- Selecteer Driver --</option>'
+    : '<option value="">-- Geen drivers gevonden --</option>';
 
                 // 1. Determine Normalized Partner ID
                 let normalizedPartnerId =
@@ -1295,7 +1301,7 @@ if (
 
     targetPartnerIdStr = String(normalizedPartnerId);
 
-    availableDrivers = this.drivers.filter(
+    availableDrivers = (this.drivers || []).filter(
         c => String(c.partner_id) === targetPartnerIdStr
     );
 }
@@ -1304,7 +1310,7 @@ if (
 // if booking has no partner OR no matching drivers
 // show ALL drivers instead of empty dropdown
 if (!availableDrivers.length) {
-    availableDrivers = [...this.drivers];
+    availableDrivers = [...(this.drivers || [])];
 }
 
                 console.log('TRACE: showBookingFiche Rendering', {
