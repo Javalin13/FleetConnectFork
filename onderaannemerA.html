@@ -771,7 +771,7 @@
                 let ridesHtml = rides.length === 0 ? '<div class="empty-planning">Geen ritten op deze dag</div>' : rides.map(r => {
                     const driver = this.getDriverForBooking(r);
                     const driverText = driver ? `${driver.name} (${driver.vehicle})` : null;
-                    const isExpired = r.status === 'accepted' && this.isExpired(r.datetime, r.time);
+                    const isExpired = this.isExpired(r.datetime, r.time);
                     const expiredClass = isExpired ? 'expired' : '';
                     let statusBadge = '';
                     if (r.status === 'pending') statusBadge = '<span class="status-badge status-pending">⏳ Nieuw</span>';
@@ -1319,7 +1319,7 @@
                     </div>
                     ` : ''}
 
-                    ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `
+                   ${!isExpired ? `
                     <div class="fiche-section"><h4>Toewijzen</h4>
                         <div class="fiche-row"><span class="fiche-label">Driver:</span><span class="fiche-value">
                             <select id="driverSelect" style="width:100%;">${driverOptions}</select>
@@ -1330,8 +1330,8 @@
                     <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
                     <div class="fiche-actions">
                         ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
-                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">Annuleren</button>` : ''}
+                        ${!isExpired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
+                       ${!isExpired ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">Annuleren</button>` : ''}
                         ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Uitgevoerd</button>` : ''}
                         ${booking.status === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
                         ${booking.status === 'declined' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✋ Geweigerd</button>` : ''}
