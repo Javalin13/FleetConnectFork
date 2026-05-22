@@ -1285,6 +1285,7 @@
     booking.form_data?.partner_id;
 
 let availableDrivers = [];
+let targetPartnerIdStr = null;
 
 if (
     normalizedPartnerId !== undefined &&
@@ -1292,7 +1293,7 @@ if (
     normalizedPartnerId !== ''
 ) {
 
-    const targetPartnerIdStr = String(normalizedPartnerId);
+    targetPartnerIdStr = String(normalizedPartnerId);
 
     availableDrivers = this.drivers.filter(
         c => String(c.partner_id) === targetPartnerIdStr
