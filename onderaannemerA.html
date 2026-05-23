@@ -1215,10 +1215,10 @@
             },
             resetFiltersHistory() { let o = document.getElementById("filterOrderHistory"); let n = document.getElementById("filterNameHistory"); if(o) o.value = ""; if(n) n.value = ""; this.renderHistoryTable(this.historyOrders); },
             
-           async showBookingFiche(booking) {
+async showBookingFiche(booking) {
     try {
         // Force fresh driver load with cache bypass
-        this._loadingDrivers = null; // Clear cache
+        this._loadingDrivers = null;
         await this.loadDrivers();
         
         // Retry if still empty
@@ -1232,135 +1232,100 @@
         }
         
         console.log('TRACE: showBookingFiche - Drivers loaded:', this.drivers.length);
-                    // 1. Normalize Partner ID for comparison
-                    const normalizedPartnerId = booking.partner_id || 
-                        (booking.form_data && booking.form_data.partner_id) || 
-                        (booking.metadata && booking.metadata.partner_id) || 
-                        1;
-                    
-                    // Normalize for comparison
-                    const targetPartnerId = normalizedPartnerId;
-
-                    // 2. Filter Available Drivers
-                   let availableDrivers = [...this.drivers];
-
-                    console.log('TRACE: showBookingFiche Rendering', {
-                        bookingId: booking.id,
-                        targetPartnerId,
-                        availableDriversCount: availableDrivers.length,
-                        totalDriversCount: this.drivers.length,
-                        timestamp: new Date().toISOString()
-                    });
-
-                    availableDrivers.forEach(d => { 
-                        const selected = (String(d.id) === String(booking.assigned_driver_id)) ? 'selected' : '';
-                        driverOptions += `<option value="${d.id}" ${selected}>${this.escapeHtml(d.name)} (${d.vehicle})</option>`; 
-                    });
-                    
-                    let ficheBody = document.getElementById('ficheBody');
-                    const isExpired = this.isExpired(booking.datetime, booking.time);
-                    const normalizedStatus = String(booking.status).trim().toLowerCase();
-                    
-                    let statusDisplay = '';
-                    if (normalizedStatus  === 'pending') statusDisplay = '⏳ Nieuw';
-                    else if (normalizedStatus  === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
-                    else if (normalizedStatus  === 'assigned') statusDisplay = isExpired ? '⏰ Verlopen' : '👨‍✈️ Toegewezen';
-                    else if (normalizedStatus  === 'completed') statusDisplay = '✓ Voltooid';
-                    else if (normalizedStatus  === 'cancelled') statusDisplay = '✗ Geannuleerd';
-                    else if (normalizedStatus  === 'declined') statusDisplay = '✗ Geweigerd';
-                    else statusDisplay = '📋 ' + (booking.status || 'Onbekend');
-                    
-                    let statusClass = '';
-                    if (normalizedStatus  === 'pending') statusClass = 'status-pending';
-                    else if (normalizedStatus  === 'accepted') statusClass = isExpired ? 'status-cancelled' : 'status-accepted';
-                    else if (normalizedStatus  === 'assigned') statusClass = isExpired ? 'status-cancelled' : 'status-assigned';
-                    else if (normalizedStatus  === 'completed') statusClass = 'status-completed';
-                    else if (normalizedStatus  === 'cancelled') statusClass = 'status-cancelled';
-                    else if (normalizedStatus  === 'declined') statusClass = 'status-declined';
-                    
-                    ficheBody.innerHTML = `
-                        <div class="fiche-section"><h4>Boekingsinformatie</h4>
-                            <div class="fiche-row"><span class="fiche-label">Boekingsnummer:</span><span class="fiche-value"><strong>${booking.id}</strong></span></div>
-                            <div class="fiche-row"><span class="fiche-label">Status:</span><span class="fiche-value"><span class="status-badge ${statusClass}">${statusDisplay}</span></span></div>
-                            <div class="fiche-row"><span class="fiche-label">Datum & Tijd:</span><span class="fiche-value">${booking.datetime} om ${booking.time} uur</span></div>
-                            ${booking.flight_number ? `<div class="fiche-row"><span class="fiche-label">✈️ Vluchtnummer:</span><span class="fiche-value">${booking.flight_number}</span></div>` : ''}
-                        </div>
-                        <div class="fiche-section"><h4>Klantgegevens</h4>
-                            <div class="fiche-row"><span class="fiche-label">Naam:</span><span class="fiche-value">${this.escapeHtml(booking.name)}</span></div>
-                            <div class="fiche-row"><span class="fiche-label">Email:</span><span class="fiche-value">${booking.email || '-'}</span></div>
-                            <div class="fiche-row"><span class="fiche-label">Telefoon:</span><span class="fiche-value">${booking.phone || '-'}</span></div>
-                        </div>
-                        <div class="fiche-section"><h4>Ritgegevens</h4>
-                            <div class="fiche-row"><span class="fiche-label">Pickup:</span><span class="fiche-value">${this.escapeHtml(booking.pickup)}</span></div>
-                            <div class="fiche-row"><span class="fiche-label">Destination:</span><span class="fiche-value">${this.escapeHtml(booking.destination)}</span></div>
-                            <div class="fiche-row"><span class="fiche-label">Voertuig:</span><span class="fiche-value">${booking.vehicle}</span></div>
-                            <div class="fiche-row"><span class="fiche-label">Extra's:</span><span class="fiche-value">${booking.extras || '-'}</span></div>
-                        </div>
-         ${(booking.assigned_driver_id || booking.assigned_driver) ? `
-<div class="fiche-section">
-    <h4>👨‍✈️ Driver</h4>
-    <div class="fiche-row">
-        <span class="fiche-label">Toegewezen driver:</span>
-        <span class="fiche-value">
-            ${
-                booking.assigned_driver?.name ||
-                this.drivers.find(d => String(d.id) === String(booking.assigned_driver_id))?.name ||
-                'Onbekend'
-            }
-        </span>
-    </div>
-</div>
-` : ''}
-
-${['accepted','assigned'].includes(normalizedStatus) ? `
-    <div style="margin:16px 0;">
-    <label style="display:block;margin-bottom:8px;font-weight:600;">
-        Selecteer Driver
-    </label>
-    <select
-        id="driverSelect"
-        style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;display:block !important;"
-    >
-        <option value="">-- Selecteer Driver --</option>
-        ${this.drivers.map(driver => `
-            <option value="${driver.id}">
-                ${driver.name} (${driver.vehicle})
-            </option>
-        `).join('')}
-    </select>
-</div>
-` : ''}
-                        <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
-                       <div class="fiche-actions">
-    ${normalizedStatus === 'pending'
-        ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>`
-        : ''}
-
-    ${(['accepted','assigned'].includes(normalizedStatus))
-        ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${normalizedStatus === 'assigned' ? 'Update Driver' : 'Bevestig Toewijzing'}</button>`
-        : ''}
-
-    ${normalizedStatus === 'completed'
-        ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Voltooid</button>`
-        : ''}
-
-    ${normalizedStatus === 'cancelled'
-        ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>`
-        : ''}
-
-    <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
-</div>
-                    `;
-                    document.getElementById('bookingModal').style.display = 'flex';
-                    setTimeout(() => {
-    const body = document.getElementById('ficheBody');
-    body.scrollTop = body.scrollHeight;
-}, 100);
-                } catch (err) {
-                    console.error('❌ showBookingFiche Error:', err.message);
-                    this.showToast('Fout bij weergeven fiche', true);
-                }
-            },
+        
+        let ficheBody = document.getElementById('ficheBody');
+        const isExpired = this.isExpired(booking.datetime, booking.time);
+        const normalizedStatus = String(booking.status).trim().toLowerCase();
+        
+        let statusDisplay = '';
+        if (normalizedStatus === 'pending') statusDisplay = '⏳ Nieuw';
+        else if (normalizedStatus === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
+        else if (normalizedStatus === 'assigned') statusDisplay = isExpired ? '⏰ Verlopen' : '👨‍✈️ Toegewezen';
+        else if (normalizedStatus === 'completed') statusDisplay = '✓ Voltooid';
+        else if (normalizedStatus === 'cancelled') statusDisplay = '✗ Geannuleerd';
+        else if (normalizedStatus === 'declined') statusDisplay = '✗ Geweigerd';
+        else statusDisplay = '📋 ' + (booking.status || 'Onbekend');
+        
+        let statusClass = '';
+        if (normalizedStatus === 'pending') statusClass = 'status-pending';
+        else if (normalizedStatus === 'accepted') statusClass = isExpired ? 'status-cancelled' : 'status-accepted';
+        else if (normalizedStatus === 'assigned') statusClass = isExpired ? 'status-cancelled' : 'status-assigned';
+        else if (normalizedStatus === 'completed') statusClass = 'status-completed';
+        else if (normalizedStatus === 'cancelled') statusClass = 'status-cancelled';
+        else if (normalizedStatus === 'declined') statusClass = 'status-declined';
+        
+        // Build driver options HTML separately
+        let driverOptionsHtml = '';
+        if (this.drivers && this.drivers.length > 0) {
+            driverOptionsHtml = this.drivers.map(driver => {
+                const selected = (String(driver.id) === String(booking.assigned_driver_id)) ? 'selected' : '';
+                return `<option value="${driver.id}" ${selected}>${this.escapeHtml(driver.name)} (${driver.vehicle})</option>`;
+            }).join('');
+        } else {
+            driverOptionsHtml = '<option value="">-- Geen drivers beschikbaar --</option>';
+        }
+        
+        ficheBody.innerHTML = `
+            <div class="fiche-section"><h4>Boekingsinformatie</h4>
+                <div class="fiche-row"><span class="fiche-label">Boekingsnummer:</span><span class="fiche-value"><strong>${booking.id}</strong></span></div>
+                <div class="fiche-row"><span class="fiche-label">Status:</span><span class="fiche-value"><span class="status-badge ${statusClass}">${statusDisplay}</span></span></div>
+                <div class="fiche-row"><span class="fiche-label">Datum & Tijd:</span><span class="fiche-value">${booking.datetime} om ${booking.time} uur</span></div>
+                ${booking.flight_number ? `<div class="fiche-row"><span class="fiche-label">✈️ Vluchtnummer:</span><span class="fiche-value">${booking.flight_number}</span></div>` : ''}
+            </div>
+            <div class="fiche-section"><h4>Klantgegevens</h4>
+                <div class="fiche-row"><span class="fiche-label">Naam:</span><span class="fiche-value">${this.escapeHtml(booking.name)}</span></div>
+                <div class="fiche-row"><span class="fiche-label">Email:</span><span class="fiche-value">${booking.email || '-'}</span></div>
+                <div class="fiche-row"><span class="fiche-label">Telefoon:</span><span class="fiche-value">${booking.phone || '-'}</span></div>
+            </div>
+            <div class="fiche-section"><h4>Ritgegevens</h4>
+                <div class="fiche-row"><span class="fiche-label">Pickup:</span><span class="fiche-value">${this.escapeHtml(booking.pickup)}</span></div>
+                <div class="fiche-row"><span class="fiche-label">Destination:</span><span class="fiche-value">${this.escapeHtml(booking.destination)}</span></div>
+                <div class="fiche-row"><span class="fiche-label">Voertuig:</span><span class="fiche-value">${booking.vehicle}</span></div>
+                <div class="fiche-row"><span class="fiche-label">Extra's:</span><span class="fiche-value">${booking.extras || '-'}</span></div>
+            </div>
+            ${(booking.assigned_driver_id || booking.assigned_driver) ? `
+            <div class="fiche-section">
+                <h4>👨‍✈️ Driver</h4>
+                <div class="fiche-row">
+                    <span class="fiche-label">Toegewezen driver:</span>
+                    <span class="fiche-value">
+                        ${booking.assigned_driver?.name ||
+                          this.drivers.find(d => String(d.id) === String(booking.assigned_driver_id))?.name ||
+                          'Onbekend'}
+                    </span>
+                </div>
+            </div>
+            ` : ''}
+            ${['accepted', 'assigned'].includes(normalizedStatus) ? `
+            <div style="margin:16px 0;">
+                <label style="display:block;margin-bottom:8px;font-weight:600;">
+                    Selecteer Driver
+                </label>
+                <select id="driverSelect" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;display:block !important;">
+                    <option value="">-- Selecteer Driver --</option>
+                    ${driverOptionsHtml}
+                </select>
+            </div>
+            ` : ''}
+            <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
+            <div class="fiche-actions">
+                ${normalizedStatus === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
+                ${(['accepted', 'assigned'].includes(normalizedStatus)) ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${normalizedStatus === 'assigned' ? 'Update Driver' : 'Bevestig Toewijzing'}</button>` : ''}
+                ${normalizedStatus === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Voltooid</button>` : ''}
+                ${normalizedStatus === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
+                <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
+            </div>
+        `;
+        document.getElementById('bookingModal').style.display = 'flex';
+        setTimeout(() => {
+            const body = document.getElementById('ficheBody');
+            if (body) body.scrollTop = body.scrollHeight;
+        }, 100);
+    } catch (err) {
+        console.error('❌ showBookingFiche Error:', err.message);
+        this.showToast('Fout bij weergeven fiche', true);
+    }
+},
             
             async fetchBookingsFromSupabase() {
                 const { data, error } = await supabase
