@@ -1327,15 +1327,25 @@ ${['accepted','assigned'].includes(
 </div>
 ` : ''}
                         <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
-                        <div class="fiche-actions">
-                            ${normalizedStatus === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                          ${(['accepted', 'assigned'].includes(normalizedStatus)) ? `
-                                <button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${normalizedStatus === 'assigned' ? 'Update Driver' : 'Bevestig Toewijzing'}</button>
-                            ` : ''}
-                            ${normalizedStatus === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Voltooid</button>` : ''}
-                            ${normalizedStatus === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
-                            <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
-                        </div>
+                       <div class="fiche-actions">
+    ${normalizedStatus === 'pending'
+        ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>`
+        : ''}
+
+    ${(['accepted','assigned'].includes(normalizedStatus) && !isExpired)
+        ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${normalizedStatus === 'assigned' ? 'Update Driver' : 'Bevestig Toewijzing'}</button>`
+        : ''}
+
+    ${normalizedStatus === 'completed'
+        ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Voltooid</button>`
+        : ''}
+
+    ${normalizedStatus === 'cancelled'
+        ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>`
+        : ''}
+
+    <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
+</div>
                     `;
                     document.getElementById('bookingModal').style.display = 'flex';
                 } catch (err) {
