@@ -632,8 +632,12 @@
             
             escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); },
             closeModal() { document.getElementById('bookingModal').style.display = 'none'; },
-            async openFreshBooking(bookingId) {
-    await this.refreshAllData();
+       async openFreshBooking(bookingId) {
+    await this.loadPartners();
+    await this.loadDrivers();
+
+    this.allBookings = await this.fetchBookingsFromSupabase();
+    this.filterAndSortData();
 
     const freshBooking = this.allBookings.find(
         b => String(b.id) === String(bookingId)
