@@ -1371,29 +1371,39 @@ ${['accepted','assigned'].includes(
                 return data;
             },
             
-            async confirmBooking(bookingId) {
-                try {
-                    const { data, error } = await supabase
-                        .from('bookings')
-                        .update({ status: 'accepted'.trim().toLowerCase() })
-                        .eq('id', bookingId)
-                        .select()
-                        .single();
-                    
-                    if (error) throw error;
+ async confirmBooking(bookingId) {
+    try {
+        const { error } = await supabase
+            .from('bookings')
+            .update({ status: 'accepted' })
+            .eq('id', bookingId);
 
-                    comms.dispatch('BOOKING_ACCEPTED', bookingId);
-                    this.showToast(`Rit ${bookingId} geaccepteerd`);
-                    
-                    await this.refreshAllData();
-await this.openFreshBooking(bookingId);
-return;
-                    }
-                } catch (err) {
-                    console.error('❌ confirmBooking Error:', err.message);
-                    this.showToast('Fout bij accepteren: ' + err.message, true);
-                }
-            },
+        if (error) throw error;
+
+        comms.dispatch('BOOKING_ACCEPTED', bookingId);
+        this.showToast(`Rit ${bookingId} geaccepteerd`);
+
+        // ONLY refresh local data
+        await this.loadPartners();
+        await this.loadDrivers();
+
+        this.allBookings = await this.fetchBookingsFromSupabase();
+        this.filterAndSortData();
+
+        // reopen modal directly
+        const updatedBooking = this.allBookings.find(
+            b => String(b.id) === String(bookingId)
+        );
+
+        if (updatedBooking) {
+            await this.showBookingFiche(updatedBooking);
+        }
+
+    } catch (err) {
+        console.error('confirmBooking Error:', err);
+        this.showToast('Fout bij accepteren: ' + err.message, true);
+    }
+},
             
             async assignDriverToBooking(bookingId) {
                 try {
