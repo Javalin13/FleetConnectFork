@@ -1211,7 +1211,8 @@
                         console.log('TRACE: showBookingFiche - Drivers missing, reloading...');
                         await this.loadDrivers();
                     }
-
+console.log('BOOKING STATUS RAW:', booking.status);
+console.log('BOOKING STATUS NORMALIZED:', String(booking.status || '').trim().toLowerCase());
                     let driverOptions = this.drivers.length > 0 
                         ? '<option value="">-- Selecteer Driver --</option>'
                         : '<option value="">-- Geen drivers geladen --</option>';
