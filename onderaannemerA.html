@@ -1298,8 +1298,6 @@ console.log('BOOKING STATUS NORMALIZED:', String(booking.status || '').trim().to
 ` : ''}
 
 ${['accepted','assigned'].includes(normalizedStatus) ? `
-<div class="fiche-section">
-    <h4>👨‍✈️ Driver Toewijzen</h4>
     <div style="margin:16px 0;">
     <label style="display:block;margin-bottom:8px;font-weight:600;">
         Selecteer Driver
@@ -1315,7 +1313,6 @@ ${['accepted','assigned'].includes(normalizedStatus) ? `
             </option>
         `).join('')}
     </select>
-</div>
 </div>
 ` : ''}
                         <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
