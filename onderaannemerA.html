@@ -1279,7 +1279,7 @@
 
 ${['accepted','assigned'].includes(
     String(booking.status || '').trim().toLowerCase()
-) && !this.isExpired(booking.datetime, booking.time) ? `
+) ? `
 <div class="fiche-section">
     <h4>👨‍✈️ Driver Toewijzen</h4>
 <div class="fiche-row" style="display:flex; flex-direction:column; gap:8px;">
@@ -1306,7 +1306,7 @@ ${['accepted','assigned'].includes(
                         <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
                         <div class="fiche-actions">
                             ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                          ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `
+                          ${(booking.status === 'accepted' || booking.status === 'assigned') ? `
                                 <button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${booking.status === 'assigned' ? 'Update Driver' : 'Bevestig Toewijzing'}</button>
                             ` : ''}
                             ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Voltooid</button>` : ''}
