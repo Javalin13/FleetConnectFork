@@ -1230,7 +1230,10 @@
                             <div class="fiche-row"><span class="fiche-label">Toegewezen driver:</span><span class="fiche-value">${booking.assigned_driver ? booking.assigned_driver.name : (this.drivers.find(d => String(d.id) === String(booking.assigned_driver_id))?.name || 'Onbekend')}</span></div>
                         </div>
                         ` : ''}
-${String(booking.status).trim().toLowerCase() !== 'pending' && !this.isExpired(booking.datetime, booking.time) ? `
+${(
+    String(booking.status).trim().toLowerCase() === 'accepted' ||
+    String(booking.status).trim().toLowerCase() === 'assigned'
+) && !this.isExpired(booking.datetime, booking.time) ? `
                         <div class="fiche-section"><h4>👨‍✈️ Driver Toewijzen</h4>
                             <div class="fiche-row">
                                 <span class="fiche-label">Selecteer Driver:</span>
