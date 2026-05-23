@@ -42,7 +42,7 @@ serve(async (req) => {
 
     // 3. Dispatch via Resend
     // FORCE canonical sender if not provided or doesn't match FleetConnect domain
-    const sender = 'FleetConnect <fleetconnect.os@gmail.com>';
+  const sender = 'FleetConnect <onboarding@resend.dev>';
 
     const { data, error } = await resend.emails.send({
       from: sender,
