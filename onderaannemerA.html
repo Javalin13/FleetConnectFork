@@ -1381,15 +1381,9 @@ ${['accepted','assigned'].includes(
                     comms.dispatch('BOOKING_ACCEPTED', bookingId);
                     this.showToast(`Rit ${bookingId} geaccepteerd`);
                     
-                    // Refresh data
-                    this.allBookings = await this.fetchBookingsFromSupabase();
-                    this.filterAndSortData();
-                    await this.refreshCurrentTab();
-                    
-                    // Immediately show assignment UI with fresh relational context
-                    const updatedBooking = this.allBookings.find(b => b.id === bookingId) || data;
-                    if (updatedBooking) {
-                        await this.showBookingFiche(updatedBooking);
+                    await this.refreshAllData();
+await this.openFreshBooking(bookingId);
+return;
                     }
                 } catch (err) {
                     console.error('❌ confirmBooking Error:', err.message);
