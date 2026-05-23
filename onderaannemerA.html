@@ -561,6 +561,14 @@
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
             },
+
+            async refreshAllData() {
+    await this.loadPartners();
+    await this.loadDrivers();
+    this.allBookings = await this.fetchBookingsFromSupabase();
+    this.filterAndSortData();
+    await this.refreshCurrentTab();
+},
             
             async loadPartners() {
                 const { data, error } = await supabase
@@ -624,6 +632,20 @@
             
             escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); },
             closeModal() { document.getElementById('bookingModal').style.display = 'none'; },
+            async openFreshBooking(bookingId) {
+    await this.refreshAllData();
+
+    const freshBooking = this.allBookings.find(
+        b => String(b.id) === String(bookingId)
+    );
+
+    if (!freshBooking) {
+        this.showToast('Booking niet gevonden', true);
+        return;
+    }
+
+    await this.showBookingFiche(freshBooking);
+},
             
             filterAndSortData() {
     this.newOrders = this.allBookings.filter(
@@ -662,7 +684,7 @@
     this.newOrders.sort(
         (a, b) => this.parseDate(a.datetime, a.time) - this.parseDate(b.datetime, b.time)
     );
-}
+},
             
             getRidesByDate(dateStr) { return this.allBookings.filter(b => b.datetime === dateStr); },
             
@@ -790,7 +812,7 @@
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
                             <td>${o.vehicle}</span></td>
                             <td>€${(o.amount || 0).toFixed(2)}</span></td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></span></td>
+                            <td><button class="action-btn" onclick="app.openFreshBooking('${o.id}')">Bekijk Fiche</button></span></td>
                         </tr>
                     `).join('');
                 }
@@ -826,7 +848,7 @@
                             <td>${o.vehicle}</span></td>
                             <td>€${(o.amount || 0).toFixed(2)}</span></td>
                             <td>${driverText}</span></td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></span></td>
+                            <td><button class="action-btn" onclick="app.openFreshBooking('${o.id}')">Bekijk Fiche</button></span></td>
                         </tr>
                     `;}).join('');
                 }
@@ -863,7 +885,7 @@
                             <td>${o.vehicle}</span></td>
                             <td>€${(o.amount || 0).toFixed(2)}</span></td>
                             <td>${driverText}</span></td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></span></td>
+                           <td><button class="action-btn" onclick="app.openFreshBooking('${o.id}')">Bekijk Fiche</button></span></td>
                         </tr>`;
                     }).join('');
                 }
