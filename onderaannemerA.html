@@ -256,9 +256,20 @@
         .fiche-header h3 { font-size: 1.2rem; }
         .close-modal { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
         .fiche-body {
-    padding: 80px;
+    padding: 20px;
     max-height: 70vh;
     overflow-y: auto;
+    scroll-behavior: smooth;
+}
+#driverSelect {
+    display: block !important;
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 16px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
 }
         .fiche-section { margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; }
         .fiche-section h4 { color: #2dd4bf; margin-bottom: 12px; font-size: 0.9rem; }
@@ -1204,19 +1215,23 @@
             },
             resetFiltersHistory() { let o = document.getElementById("filterOrderHistory"); let n = document.getElementById("filterNameHistory"); if(o) o.value = ""; if(n) n.value = ""; this.renderHistoryTable(this.historyOrders); },
             
-            async showBookingFiche(booking) {
-                try {
-                    // Ensure drivers are loaded if missing (Race condition guard)
-                    if (!this.drivers || this.drivers.length === 0) {
-                        console.log('TRACE: showBookingFiche - Drivers missing, reloading...');
-                        await this.loadDrivers();
-                    }
-console.log('BOOKING STATUS RAW:', booking.status);
-console.log('BOOKING STATUS NORMALIZED:', String(booking.status || '').trim().toLowerCase());
-                    let driverOptions = this.drivers.length > 0 
-                        ? '<option value="">-- Selecteer Driver --</option>'
-                        : '<option value="">-- Geen drivers geladen --</option>';
-
+           async showBookingFiche(booking) {
+    try {
+        // Force fresh driver load with cache bypass
+        this._loadingDrivers = null; // Clear cache
+        await this.loadDrivers();
+        
+        // Retry if still empty
+        let retries = 0;
+        while ((!this.drivers || this.drivers.length === 0) && retries < 3) {
+            console.log(`TRACE: showBookingFiche - Drivers empty, retry ${retries + 1}...`);
+            await new Promise(resolve => setTimeout(resolve, 200));
+            this._loadingDrivers = null;
+            await this.loadDrivers();
+            retries++;
+        }
+        
+        console.log('TRACE: showBookingFiche - Drivers loaded:', this.drivers.length);
                     // 1. Normalize Partner ID for comparison
                     const normalizedPartnerId = booking.partner_id || 
                         (booking.form_data && booking.form_data.partner_id) || 
@@ -1360,7 +1375,7 @@ ${['accepted','assigned'].includes(normalizedStatus) ? `
                 return data;
             },
             
- async confirmBooking(bookingId) {
+async confirmBooking(bookingId) {
     try {
         const { error } = await supabase
             .from('bookings')
@@ -1372,72 +1387,83 @@ ${['accepted','assigned'].includes(normalizedStatus) ? `
         comms.dispatch('BOOKING_ACCEPTED', bookingId);
         this.showToast(`Rit ${bookingId} geaccepteerd`);
 
-        // ONLY refresh local data
+        // Force fresh data loads
         await this.loadPartners();
+        this._loadingDrivers = null; // Clear driver cache
         await this.loadDrivers();
 
         this.allBookings = await this.fetchBookingsFromSupabase();
         this.filterAndSortData();
 
-        // reopen modal directly
+        // Force refresh current tab to update counts
+        await this.refreshCurrentTab();
+
+        // Find updated booking
         const updatedBooking = this.allBookings.find(
             b => String(b.id) === String(bookingId)
         );
 
         if (updatedBooking) {
+            // Close any existing modal first to ensure clean state
+            this.closeModal();
+            // Small delay to ensure DOM is clean
+            await new Promise(resolve => setTimeout(resolve, 50));
+            // Reopen modal with updated booking
             await this.showBookingFiche(updatedBooking);
+        } else {
+            this.showToast('Booking niet gevonden na accept', true);
         }
-
     } catch (err) {
         console.error('confirmBooking Error:', err);
         this.showToast('Fout bij accepteren: ' + err.message, true);
     }
 },
             
-            async assignDriverToBooking(bookingId) {
-                try {
-                    const select = document.getElementById('driverSelect');
-                    const driverId = select?.value;
-                    if (!driverId) { this.showToast('Selecteer een driver', true); return; }
-                    const driver = this.drivers.find(c => String(c.id) === String(driverId));
-                    if (!driver) { this.showToast('Driver niet gevonden', true); return; }
-                    
-                    const assignmentToken = crypto.randomUUID();
-                    const now = new Date().toISOString();
+        async assignDriverToBooking(bookingId) {
+    try {
+        const select = document.getElementById('driverSelect');
+        const driverId = select?.value;
+        if (!driverId) { this.showToast('Selecteer een driver', true); return; }
+        const driver = this.drivers.find(c => String(c.id) === String(driverId));
+        if (!driver) { this.showToast('Driver niet gevonden', true); return; }
+        
+        const assignmentToken = crypto.randomUUID();
+        const now = new Date().toISOString();
 
-                    const { error } = await supabase
-                        .from('bookings')
-                        .update({ 
-                            status: 'assigned',
-                            assigned_driver_id: driver.id,
-                            assignment_token: assignmentToken,
-                            assignment_sent_at: now,
-                            // Clear potential previous decline/accept timestamps on re-assignment
-                            assignment_accepted_at: null,
-                            assignment_declined_at: null,
-                            assigned_driver: {
-                                id: driver.id,
-                                name: driver.name,
-                                vehicle: driver.vehicle
-                            }
-                        })
-                        .eq('id', bookingId);
-                        
-                    if (error) throw error;
-
-                    comms.dispatch('DRIVER_ASSIGNED', bookingId);
-                    this.showToast(`Driver ${driver.name} toegewezen`);
-                    
-                    // Refresh data
-                    this.allBookings = await this.fetchBookingsFromSupabase();
-                    this.filterAndSortData();
-                    this.refreshCurrentTab();
-                    this.closeModal();
-                } catch (err) {
-                    console.error('❌ assignDriverToBooking Error:', err.message);
-                    this.showToast('Fout bij toewijzen driver: ' + err.message, true);
+        const { error } = await supabase
+            .from('bookings')
+            .update({ 
+                status: 'assigned',
+                assigned_driver_id: driver.id,
+                assignment_token: assignmentToken,
+                assignment_sent_at: now,
+                assignment_accepted_at: null,
+                assignment_declined_at: null,
+                assigned_driver: {
+                    id: driver.id,
+                    name: driver.name,
+                    vehicle: driver.vehicle
                 }
-            },
+            })
+            .eq('id', bookingId);
+            
+        if (error) throw error;
+
+        comms.dispatch('DRIVER_ASSIGNED', bookingId);
+        this.showToast(`Driver ${driver.name} toegewezen`);
+        
+        // Refresh data
+        this.allBookings = await this.fetchBookingsFromSupabase();
+        this.filterAndSortData();
+        await this.refreshCurrentTab();
+        
+        // Close modal - DO NOT reopen
+        this.closeModal();
+    } catch (err) {
+        console.error('❌ assignDriverToBooking Error:', err.message);
+        this.showToast('Fout bij toewijzen driver: ' + err.message, true);
+    }
+},
             
             downloadCSV() {
                 let headers = ["ID","Datum","Tijd","Naam","Pickup","Destination","Bedrag","Betaling","Status"];
