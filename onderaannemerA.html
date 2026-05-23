@@ -1247,23 +1247,24 @@
                     
                     let ficheBody = document.getElementById('ficheBody');
                     const isExpired = this.isExpired(booking.datetime, booking.time);
+                    const normalizedStatus = String(booking.status).trim().toLowerCase();
                     
                     let statusDisplay = '';
-                    if (booking.status === 'pending') statusDisplay = '⏳ Nieuw';
-                    else if (booking.status === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
-                    else if (booking.status === 'assigned') statusDisplay = isExpired ? '⏰ Verlopen' : '👨‍✈️ Toegewezen';
-                    else if (booking.status === 'completed') statusDisplay = '✓ Voltooid';
-                    else if (booking.status === 'cancelled') statusDisplay = '✗ Geannuleerd';
-                    else if (booking.status === 'declined') statusDisplay = '✗ Geweigerd';
+                    if (normalizedStatus  === 'pending') statusDisplay = '⏳ Nieuw';
+                    else if (normalizedStatus  === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
+                    else if (normalizedStatus  === 'assigned') statusDisplay = isExpired ? '⏰ Verlopen' : '👨‍✈️ Toegewezen';
+                    else if (normalizedStatus  === 'completed') statusDisplay = '✓ Voltooid';
+                    else if (normalizedStatus  === 'cancelled') statusDisplay = '✗ Geannuleerd';
+                    else if (normalizedStatus  === 'declined') statusDisplay = '✗ Geweigerd';
                     else statusDisplay = '📋 ' + (booking.status || 'Onbekend');
                     
                     let statusClass = '';
-                    if (booking.status === 'pending') statusClass = 'status-pending';
-                    else if (booking.status === 'accepted') statusClass = isExpired ? 'status-cancelled' : 'status-accepted';
-                    else if (booking.status === 'assigned') statusClass = isExpired ? 'status-cancelled' : 'status-assigned';
-                    else if (booking.status === 'completed') statusClass = 'status-completed';
-                    else if (booking.status === 'cancelled') statusClass = 'status-cancelled';
-                    else if (booking.status === 'declined') statusClass = 'status-declined';
+                    if (normalizedStatus  === 'pending') statusClass = 'status-pending';
+                    else if (normalizedStatus  === 'accepted') statusClass = isExpired ? 'status-cancelled' : 'status-accepted';
+                    else if (normalizedStatus  === 'assigned') statusClass = isExpired ? 'status-cancelled' : 'status-assigned';
+                    else if (normalizedStatus  === 'completed') statusClass = 'status-completed';
+                    else if (normalizedStatus  === 'cancelled') statusClass = 'status-cancelled';
+                    else if (normalizedStatus  === 'declined') statusClass = 'status-declined';
                     
                     ficheBody.innerHTML = `
                         <div class="fiche-section"><h4>Boekingsinformatie</h4>
@@ -1327,12 +1328,12 @@ ${['accepted','assigned'].includes(
 ` : ''}
                         <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
                         <div class="fiche-actions">
-                            ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                          ${(booking.status === 'accepted' || booking.status === 'assigned') ? `
-                                <button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${booking.status === 'assigned' ? 'Update Driver' : 'Bevestig Toewijzing'}</button>
+                            ${normalizedStatus === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
+                          ${(['accepted', 'assigned'].includes(normalizedStatus)) ? `
+                                <button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${normalizedStatus === 'assigned' ? 'Update Driver' : 'Bevestig Toewijzing'}</button>
                             ` : ''}
-                            ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Voltooid</button>` : ''}
-                            ${booking.status === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
+                            ${normalizedStatus === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Voltooid</button>` : ''}
+                            ${normalizedStatus === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
                             <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
                         </div>
                     `;
