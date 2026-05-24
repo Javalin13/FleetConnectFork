@@ -523,6 +523,7 @@
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         import { comms } from './src/modules/communication/index.js';
+        import { CommunicationConfig } from './src/modules/communication/core/config.js';
 
         // ========== SESSIECHECK (BEVEILIGING TEGEN TERUGNAVIGEREN) ==========
         (function checkAuthentication() {
@@ -662,6 +663,9 @@
 
             normalizeBookings(bookings) {
                 if (!bookings) return [];
+                const timeoutMs = (CommunicationConfig.settings.ASSIGNMENT_TIMEOUT_MINUTES || 30) * 60 * 1000;
+                const now = new Date();
+
                 return bookings.map(b => {
                     // 1. Normalize partner_id (critical for driver filtering)
                     let pId = b.partner_id;
@@ -688,6 +692,14 @@
                     // 4. Ensure assigned_driver_id is synced if legacy assigned_driver exists
                     if (!b.assigned_driver_id && b.assigned_driver && b.assigned_driver.id) {
                         b.assigned_driver_id = b.assigned_driver.id;
+                    }
+
+                    // 5. Expiration Detection (Additive state evaluation)
+                    if (b.status === 'assigned' && b.assignment_sent_at && !b.assignment_accepted_at && !b.assignment_declined_at) {
+                        const sentAt = new Date(b.assignment_sent_at);
+                        if ((now - sentAt) > timeoutMs) {
+                            b._is_assignment_expired = true;
+                        }
                     }
 
                     return b;
@@ -840,8 +852,14 @@
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.getDriverForBooking(o);
                         const driverText = driver ? `${driver.name} (${driver.vehicle})` : '<span style="color:#f59e0b;">Niet toegewezen</span>';
-                        const statusBadgeClass = o.status === 'assigned' ? 'status-assigned' : 'status-accepted';
-                        const statusBadgeText = o.status === 'assigned' ? 'Toegewezen' : 'Geaccepteerd';
+
+                        let statusBadgeClass = o.status === 'assigned' ? 'status-assigned' : 'status-accepted';
+                        let statusBadgeText = o.status === 'assigned' ? 'Toegewezen' : 'Geaccepteerd';
+
+                        if (o._is_assignment_expired) {
+                            statusBadgeClass = 'status-cancelled';
+                            statusBadgeText = 'Verlopen';
+                        }
                         return `
                         <tr>
                             <td><strong>${o.id}</strong><br><span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span></td>
@@ -927,9 +945,19 @@
                         <div><small>Contact: ${this.escapeHtml(p.contact)} | ${p.email} | ${p.phone}</small></div>
                         <div class="driver-list"><strong>Drivers:</strong>
                             ${partnerDrivers.length === 0 ? '<div><small>Geen drivers</small></div>' : partnerDrivers.map(c => `
-                                <div class="driver-item"><span>${c.driver_code} – ${this.escapeHtml(c.name)} (${c.vehicle})</span><button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver(${c.id})">✖</button></div>
+                                <div class="driver-item">
+                                    <span>${c.driver_code} – ${this.escapeHtml(c.name)} (${c.vehicle}, ${c.color || 'onbekende kleur'}) <br> <small>${c.email || 'Geen email'}</small></span>
+                                    <button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver(${c.id})">✖</button>
+                                </div>
                             `).join('')}
-                            <div class="add-driver-form"><input type="text" id="driverName_${p.id}" placeholder="Naam"><input type="text" id="driverVoertuig_${p.id}" placeholder="Voertuig"><input type="text" id="driverPlaat_${p.id}" placeholder="Nummerplaat"><button class="action-btn" onclick="app.addDriverForPartner(${p.id})">+ Driver</button></div>
+                            <div class="add-driver-form">
+                                <input type="text" id="driverName_${p.id}" placeholder="Naam">
+                                <input type="text" id="driverEmail_${p.id}" placeholder="Email">
+                                <input type="text" id="driverVoertuig_${p.id}" placeholder="Voertuig">
+                                <input type="text" id="driverKleur_${p.id}" placeholder="Kleur">
+                                <input type="text" id="driverPlaat_${p.id}" placeholder="Nummerplaat">
+                                <button class="action-btn" onclick="app.addDriverForPartner(${p.id})">+ Driver</button>
+                            </div>
                         </div>
                     </div>`;
                 });
@@ -940,9 +968,12 @@
             
             async addDriverForPartner(partnerId) {
                 let name = document.getElementById(`driverName_${partnerId}`)?.value;
+                let email = document.getElementById(`driverEmail_${partnerId}`)?.value;
                 let vehicle = document.getElementById(`driverVoertuig_${partnerId}`)?.value;
+                let color = document.getElementById(`driverKleur_${partnerId}`)?.value;
                 let plate = document.getElementById(`driverPlaat_${partnerId}`)?.value;
                 if (!name) { this.showToast('Vul een naam in', true); return; }
+                if (!email) { this.showToast('Email is verplicht voor assignment flow', true); return; }
 
                 const partner = this.partners.find(p => p.id == partnerId);
                 if (!partner) { this.showToast('Partner niet gevonden', true); return; }
@@ -964,7 +995,9 @@
                         partner_id: partnerId,
                         driver_code: driverCode,
                         name: name,
+                        email: email,
                         vehicle: vehicle || 'Standaard',
+                        color: color || 'Zwart',
                         license_plate: plate || 'Onbekend'
                     });
 
@@ -1002,7 +1035,10 @@
 
                 let name = prompt('Naam driver:');
                 if (!name) return;
+                let email = prompt('Email driver (verplicht):');
+                if (!email) { this.showToast('Email is verplicht', true); return; }
                 let vehicle = prompt('Type voertuig:') || 'Standaard';
+                let color = prompt('Kleur voertuig:') || 'Zwart';
                 let plate = prompt('Nummerplaat:') || 'Onbekend';
 
                 const { count, error: countError } = await supabase
@@ -1022,7 +1058,9 @@
                         partner_id: partnerId,
                         driver_code: driverCode,
                         name: name,
+                        email: email,
                         vehicle: vehicle,
+                        color: color,
                         license_plate: plate
                     });
 
@@ -1281,7 +1319,11 @@
                 let statusDisplay = '';
                 if (booking.status === 'pending') statusDisplay = '⏳ Nieuw';
                 else if (booking.status === 'accepted') statusDisplay = isExpired ? '⏰ Verlopen' : '✅ Geaccepteerd';
-                else if (booking.status === 'assigned') statusDisplay = isExpired ? '⏰ Verlopen' : '👨‍✈️ Toegewezen';
+                else if (booking.status === 'assigned') {
+                    if (isExpired) statusDisplay = '⏰ Verlopen';
+                    else if (booking._is_assignment_expired) statusDisplay = '⏰ Toewijzing Verlopen';
+                    else statusDisplay = '👨‍✈️ Toegewezen';
+                }
                 else if (booking.status === 'completed') statusDisplay = '✓ UITGEVOERD';
                 else if (booking.status === 'cancelled') statusDisplay = '✗ Geannuleerd';
                 else if (booking.status === 'declined') statusDisplay = '✋ Geweigerd';
@@ -1290,7 +1332,10 @@
                 let statusClass = '';
                 if (booking.status === 'pending') statusClass = 'status-pending';
                 else if (booking.status === 'accepted') statusClass = isExpired ? 'status-cancelled' : 'status-accepted';
-                else if (booking.status === 'assigned') statusClass = isExpired ? 'status-cancelled' : 'status-assigned';
+                else if (booking.status === 'assigned') {
+                    if (isExpired || booking._is_assignment_expired) statusClass = 'status-cancelled';
+                    else statusClass = 'status-assigned';
+                }
                 else if (booking.status === 'completed') statusClass = 'status-completed';
                 else if (booking.status === 'cancelled') statusClass = 'status-cancelled';
                 else if (booking.status === 'declined') statusClass = 'status-cancelled';
@@ -1330,7 +1375,8 @@
                     <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
                     <div class="fiche-actions">
                         ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
+                        ${booking._is_assignment_expired ? `<button class="fiche-btn confirm" onclick="app.resetExpiredAssignment('${booking.id}')">Reset & Vrijgeven</button>` : ''}
+                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired && !booking._is_assignment_expired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
                         ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">Annuleren</button>` : ''}
                         ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Uitgevoerd</button>` : ''}
                         ${booking.status === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
@@ -1416,6 +1462,37 @@
                 }
                 this.closeModal();
             },
+
+            async resetExpiredAssignment(bookingId) {
+                console.log('TRACE: resetExpiredAssignment Start', { bookingId });
+                try {
+                    const { error } = await supabase
+                        .from('bookings')
+                        .update({
+                            status: 'accepted',
+                            assigned_driver_id: null,
+                            assigned_driver: null,
+                            assignment_token: null,
+                            assignment_sent_at: null,
+                            assignment_accepted_at: null,
+                            assignment_declined_at: null
+                        })
+                        .eq('id', bookingId);
+
+                    if (error) throw error;
+
+                    this.showToast(`Rit ${bookingId} is weer vrijgegeven voor toewijzing`);
+
+                    this.allBookings = await this.fetchBookingsFromSupabase();
+                    this.filterAndSortData();
+                    this.refreshCurrentTab();
+
+                } catch (error) {
+                    console.error('❌ resetExpiredAssignment Error:', error.message);
+                    this.showToast('Fout bij resetten: ' + error.message, true);
+                }
+                this.closeModal();
+            },
             
             async assignDriverToBooking(bookingId) {
                 console.log('TRACE: assignDriverToBooking Start', { bookingId });
@@ -1451,6 +1528,8 @@
                         assigned_driver_id: driver.id,
                         assignment_token: assignmentToken,
                         assignment_sent_at: assignmentSentAt,
+                        assignment_accepted_at: null,
+                        assignment_declined_at: null,
                         assigned_driver: {
                             id: driver.id,
                             name: driver.name,
@@ -1467,10 +1546,10 @@
                         assignBtn.innerHTML = 'Driver Toewijzen';
                     }
                 } else {
-                    this.showToast(`Driver ${driver.name} toegewezen`);
+                    this.showToast(`Aanvraag verzonden naar ${driver.name}`);
 
-                    // Email trigger (non-blocking)
-                    comms.trigger('DRIVER_ASSIGNED', bookingId, supabase);
+                    // Email trigger (non-blocking) - REQUEST instead of direct ASSIGNED
+                    comms.trigger('DRIVER_ASSIGNMENT_REQUEST', bookingId, supabase);
 
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
@@ -1595,6 +1674,7 @@
         window.showBookingFiche = app.showBookingFiche.bind(app);
         window.confirmBooking = app.confirmBooking.bind(app);
         window.cancelBooking = app.cancelBooking.bind(app);
+        window.resetExpiredAssignment = app.resetExpiredAssignment.bind(app);
         window.assignDriverToBooking = app.assignDriverToBooking.bind(app);
         window.closeModal = app.closeModal.bind(app);
         window.applyFiltersNew = app.applyFiltersNew.bind(app);

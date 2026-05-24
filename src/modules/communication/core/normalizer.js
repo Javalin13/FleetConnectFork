@@ -101,8 +101,11 @@ export class DataNormalizer {
                     phone: booking.phone
                 },
                 driver: driver ? {
+                    id: driver.id,
                     name: driver.name,
+                    email: driver.email,
                     vehicle: driver.vehicle,
+                    color: driver.color,
                     license_plate: driver.license_plate,
                     phone: driver.phone
                 } : (booking.assigned_driver ? booking.assigned_driver : null),
@@ -113,6 +116,9 @@ export class DataNormalizer {
                 } : null,
                 metadata: booking.metadata || {},
                 form_data: booking.form_data || {},
+                assignment_token: booking.assignment_token,
+                assignment_accepted_at: booking.assignment_accepted_at,
+                assignment_declined_at: booking.assignment_declined_at,
                 is_registered: !!customer
             };
 

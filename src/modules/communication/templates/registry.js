@@ -14,6 +14,9 @@ export const TemplateRegistry = {
     DRIVER_ASSIGNED: {
         render: (data, lang, mode) => TemplateRenderer.render('DRIVER_ASSIGNED', data, lang, mode)
     },
+    DRIVER_ASSIGNMENT_REQUEST: {
+        render: (data, lang, mode) => TemplateRenderer.render('DRIVER_ASSIGNMENT_REQUEST', data, lang, mode)
+    },
     BOOKING_CANCELLED: {
         render: (data, lang, mode) => TemplateRenderer.render('BOOKING_CANCELLED', data, lang, mode)
     },

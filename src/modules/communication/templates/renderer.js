@@ -76,6 +76,7 @@ export class TemplateRenderer {
         switch (trigger) {
             case 'BOOKING_CONFIRMATION': return this.renderBookingConfirmation(data, labels, subjects, lang);
             case 'BOOKING_ACCEPTED': return this.renderBookingAccepted(data, labels, subjects, lang);
+            case 'DRIVER_ASSIGNMENT_REQUEST': return this.renderDriverAssignmentRequest(data, labels, subjects, lang);
             case 'DRIVER_ASSIGNED': return this.renderDriverAssigned(data, labels, subjects, lang);
             case 'BOOKING_CANCELLED': return this.renderBookingCancelled(data, labels, subjects, lang);
             case 'BOOKING_COMPLETED':
@@ -143,9 +144,54 @@ export class TemplateRenderer {
         `;
     }
 
+    static renderDriverAssignmentRequest(data, labels, subjects, lang) {
+        const d = data.driver || {};
+        const acceptUrl = RouteBuilder.build('driver-accept', { token: data.assignment_token });
+        const declineUrl = RouteBuilder.build('driver-decline', { token: data.assignment_token });
+
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.DRIVER_ASSIGNMENT_REQUEST}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(d.name || 'Driver')} ${labels.assignmentRequestBody}
+            </p>
+            ${EmailComponents.sectionTitle(labels.summary)}
+            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.bookingReference, data.id)}
+                ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
+                ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
+                ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
+                ${EmailComponents.detailsRow(labels.vehicle, data.vehicle || '...')}
+            </table>
+
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 20px;">
+                <tr>
+                    <td align="center">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td align="center" bgcolor="${CommunicationConfig.theme.primaryColor}" style="border-radius: 8px;">
+                                    <a href="${acceptUrl}" target="_blank" style="font-size: 16px; font-family: 'Inter', sans-serif; color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 8px; border: 1px solid ${CommunicationConfig.theme.primaryColor}; display: inline-block; font-weight: 600;">
+                                        ${labels.acceptAssignment}
+                                    </a>
+                                </td>
+                                <td width="20"></td>
+                                <td align="center" bgcolor="#ef4444" style="border-radius: 8px;">
+                                    <a href="${declineUrl}" target="_blank" style="font-size: 16px; font-family: 'Inter', sans-serif; color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 8px; border: 1px solid #ef4444; display: inline-block; font-weight: 600;">
+                                        ${labels.declineAssignment}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        `;
+    }
+
     static renderDriverAssigned(data, labels, subjects, lang) {
         const d = data.driver || {};
         const customerName = this.getCustomerName(data);
+        const driverFirstName = d.name ? d.name.split(' ')[0] : 'Your FleetConnect Driver';
+
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -153,9 +199,8 @@ export class TemplateRenderer {
             </p>
             ${EmailComponents.sectionTitle(labels.driver)}
             <table width="100%" style="margin-bottom: 30px;">
-                ${EmailComponents.detailsRow(labels.name, d.name || 'Your FleetConnect Driver')}
-                ${d.phone ? EmailComponents.detailsRow(labels.phone, d.phone) : ''}
-                ${EmailComponents.detailsRow(labels.vehicle, d.vehicle || 'Luxury Vehicle')}
+                ${EmailComponents.detailsRow(labels.name, driverFirstName)}
+                ${EmailComponents.detailsRow(labels.vehicle, `${d.vehicle || 'Luxury Vehicle'} (${d.color || '...'})`)}
                 ${EmailComponents.detailsRow(labels.plate, d.license_plate || '...')}
             </table>
             ${EmailComponents.sectionTitle(labels.pickupInfo)}
@@ -164,6 +209,11 @@ export class TemplateRenderer {
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
                 ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
             </table>
+            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0; font-family: 'Inter', sans-serif; font-size: 14px; color: #64748b; text-align: center;">
+                    ${labels.dispatchContact}: <strong>${CommunicationConfig.brand.supportPhone}</strong>
+                </p>
+            </div>
             ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
         `;
     }
