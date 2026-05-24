@@ -122,6 +122,12 @@ export class TemplateRenderer {
 
     static renderBookingAccepted(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data);
+
+        // CTA Routing Decision
+        const ctaUrl = data.is_registered
+            ? RouteBuilder.build('view-booking', { id: data.id })
+            : RouteBuilder.build('setup-account-prefilled', { id: data.id, email: data.customer?.email || data.email });
+
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.BOOKING_ACCEPTED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -133,7 +139,7 @@ export class TemplateRenderer {
                 ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
             </table>
-            ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
+            ${EmailComponents.cta(labels.viewBooking, ctaUrl)}
         `;
     }
 
