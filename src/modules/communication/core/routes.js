@@ -31,6 +31,9 @@ export class RouteBuilder {
             case 'account-welcome':
                 return `${baseUrl}/setup-account.html?token=${params.token}`;
 
+            case 'setup-account-prefilled':
+                return `${baseUrl}/setup-account.html?booking_id=${params.id}&email=${params.email}`;
+
             default:
                 return baseUrl;
         }

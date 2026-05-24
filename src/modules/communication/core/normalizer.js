@@ -112,7 +112,8 @@ export class DataNormalizer {
                     phone: partner.phone
                 } : null,
                 metadata: booking.metadata || {},
-                form_data: booking.form_data || {}
+                form_data: booking.form_data || {},
+                is_registered: !!customer
             };
 
         } catch (error) {
