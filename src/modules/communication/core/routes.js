@@ -34,6 +34,12 @@ export class RouteBuilder {
             case 'setup-account-prefilled':
                 return `${baseUrl}/setup-account.html?booking_id=${params.id}&email=${params.email}`;
 
+            case 'driver-accept':
+                return `${baseUrl}/driver-accept.html?token=${params.token}`;
+
+            case 'driver-decline':
+                return `${baseUrl}/driver-decline.html?token=${params.token}`;
+
             default:
                 return baseUrl;
         }

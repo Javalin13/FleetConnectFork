@@ -927,9 +927,19 @@
                         <div><small>Contact: ${this.escapeHtml(p.contact)} | ${p.email} | ${p.phone}</small></div>
                         <div class="driver-list"><strong>Drivers:</strong>
                             ${partnerDrivers.length === 0 ? '<div><small>Geen drivers</small></div>' : partnerDrivers.map(c => `
-                                <div class="driver-item"><span>${c.driver_code} – ${this.escapeHtml(c.name)} (${c.vehicle})</span><button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver(${c.id})">✖</button></div>
+                                <div class="driver-item">
+                                    <span>${c.driver_code} – ${this.escapeHtml(c.name)} (${c.vehicle}, ${c.color || 'onbekende kleur'}) <br> <small>${c.email || 'Geen email'}</small></span>
+                                    <button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver(${c.id})">✖</button>
+                                </div>
                             `).join('')}
-                            <div class="add-driver-form"><input type="text" id="driverName_${p.id}" placeholder="Naam"><input type="text" id="driverVoertuig_${p.id}" placeholder="Voertuig"><input type="text" id="driverPlaat_${p.id}" placeholder="Nummerplaat"><button class="action-btn" onclick="app.addDriverForPartner(${p.id})">+ Driver</button></div>
+                            <div class="add-driver-form">
+                                <input type="text" id="driverName_${p.id}" placeholder="Naam">
+                                <input type="text" id="driverEmail_${p.id}" placeholder="Email">
+                                <input type="text" id="driverVoertuig_${p.id}" placeholder="Voertuig">
+                                <input type="text" id="driverKleur_${p.id}" placeholder="Kleur">
+                                <input type="text" id="driverPlaat_${p.id}" placeholder="Nummerplaat">
+                                <button class="action-btn" onclick="app.addDriverForPartner(${p.id})">+ Driver</button>
+                            </div>
                         </div>
                     </div>`;
                 });
@@ -940,9 +950,12 @@
             
             async addDriverForPartner(partnerId) {
                 let name = document.getElementById(`driverName_${partnerId}`)?.value;
+                let email = document.getElementById(`driverEmail_${partnerId}`)?.value;
                 let vehicle = document.getElementById(`driverVoertuig_${partnerId}`)?.value;
+                let color = document.getElementById(`driverKleur_${partnerId}`)?.value;
                 let plate = document.getElementById(`driverPlaat_${partnerId}`)?.value;
                 if (!name) { this.showToast('Vul een naam in', true); return; }
+                if (!email) { this.showToast('Email is verplicht voor assignment flow', true); return; }
 
                 const partner = this.partners.find(p => p.id == partnerId);
                 if (!partner) { this.showToast('Partner niet gevonden', true); return; }
@@ -964,7 +977,9 @@
                         partner_id: partnerId,
                         driver_code: driverCode,
                         name: name,
+                        email: email,
                         vehicle: vehicle || 'Standaard',
+                        color: color || 'Zwart',
                         license_plate: plate || 'Onbekend'
                     });
 
@@ -1002,7 +1017,10 @@
 
                 let name = prompt('Naam driver:');
                 if (!name) return;
+                let email = prompt('Email driver (verplicht):');
+                if (!email) { this.showToast('Email is verplicht', true); return; }
                 let vehicle = prompt('Type voertuig:') || 'Standaard';
+                let color = prompt('Kleur voertuig:') || 'Zwart';
                 let plate = prompt('Nummerplaat:') || 'Onbekend';
 
                 const { count, error: countError } = await supabase
@@ -1022,7 +1040,9 @@
                         partner_id: partnerId,
                         driver_code: driverCode,
                         name: name,
+                        email: email,
                         vehicle: vehicle,
+                        color: color,
                         license_plate: plate
                     });
 
@@ -1451,6 +1471,8 @@
                         assigned_driver_id: driver.id,
                         assignment_token: assignmentToken,
                         assignment_sent_at: assignmentSentAt,
+                        assignment_accepted_at: null,
+                        assignment_declined_at: null,
                         assigned_driver: {
                             id: driver.id,
                             name: driver.name,
@@ -1467,10 +1489,10 @@
                         assignBtn.innerHTML = 'Driver Toewijzen';
                     }
                 } else {
-                    this.showToast(`Driver ${driver.name} toegewezen`);
+                    this.showToast(`Aanvraag verzonden naar ${driver.name}`);
 
-                    // Email trigger (non-blocking)
-                    comms.trigger('DRIVER_ASSIGNED', bookingId, supabase);
+                    // Email trigger (non-blocking) - REQUEST instead of direct ASSIGNED
+                    comms.trigger('DRIVER_ASSIGNMENT_REQUEST', bookingId, supabase);
 
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();

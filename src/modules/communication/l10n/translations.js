@@ -7,6 +7,7 @@ export const EmailTranslations = {
         subjects: {
             BOOKING_CONFIRMATION: 'Uw FleetConnect boeking is ontvangen',
             BOOKING_ACCEPTED: 'Goed nieuws! Uw boeking is geaccepteerd',
+            DRIVER_ASSIGNMENT_REQUEST: 'Nieuwe ritopdracht beschikbaar',
             DRIVER_ASSIGNED: 'Uw chauffeur is onderweg',
             BOOKING_CANCELLED: 'Bevestiging van annulering',
             BOOKING_COMPLETED: 'Bedankt voor het reizen met FleetConnect',
@@ -38,6 +39,10 @@ export const EmailTranslations = {
             confirmationBody: 'we hebben uw boeking goed ontvangen. Ons team verwerkt uw aanvraag momenteel.',
             acceptedBody: 'uw boeking is bevestigd door onze dispatching. We kijken ernaar uit u te mogen vervoeren.',
             assignedBody: 'uw persoonlijke chauffeur is toegewezen voor uw rit. Hieronder vindt u de details van uw chauffeur.',
+            assignmentRequestBody: 'u bent geselecteerd voor een nieuwe rit. Bekijk de details hieronder en laat ons weten of u deze rit kunt uitvoeren.',
+            acceptAssignment: 'Accepteren',
+            declineAssignment: 'Weigeren',
+            dispatchContact: 'Dispatch contact',
             cancelledBody: (ref) => `uw boeking met referentie <strong>${ref}</strong> is geannuleerd. Indien u reeds heeft betaald, wordt het bedrag teruggestort.`,
             completedBody: 'we hopen dat u een prettige rit heeft gehad. Bedankt voor uw vertrouwen in FleetConnect.',
             welcomeBody: 'welkom bij FleetConnect. We hebben een account voor u klaargezet waarmee u ritten sneller kunt boeken en uw historie kunt inzien.'
@@ -47,6 +52,7 @@ export const EmailTranslations = {
         subjects: {
             BOOKING_CONFIRMATION: 'Votre réservation FleetConnect est reçue',
             BOOKING_ACCEPTED: 'Bonne nouvelle ! Votre réservation est acceptée',
+            DRIVER_ASSIGNMENT_REQUEST: 'Nouvelle mission de transport disponible',
             DRIVER_ASSIGNED: 'Votre chauffeur est en route',
             BOOKING_CANCELLED: 'Confirmation d\'annulation',
             BOOKING_COMPLETED: 'Merci d\'avoir voyagé avec FleetConnect',
@@ -78,6 +84,10 @@ export const EmailTranslations = {
             confirmationBody: 'nous avons bien reçu votre réservation. Notre équipe traite actuellement votre demande.',
             acceptedBody: 'votre réservation a été confirmée par notre dispatching. Nous nous réjouissons de vous transporter.',
             assignedBody: 'votre chauffeur personnel a été assigné pour votre trajet. Voici les détails de votre chauffeur.',
+            assignmentRequestBody: 'vous avez été sélectionné pour une nouvelle course. Consultez les détails ci-dessous et faites-nous savoir si vous pouvez l\'effectuer.',
+            acceptAssignment: 'Accepter',
+            declineAssignment: 'Refuser',
+            dispatchContact: 'Contact dispatch',
             cancelledBody: (ref) => `votre réservation avec la référence <strong>${ref}</strong> a été annulée. Si vous avez déjà payé, le montant vous sera remboursé.`,
             completedBody: 'nous espérons que vous avez passé un agréable trajet. Merci de votre confiance en FleetConnect.',
             welcomeBody: 'bienvenue chez FleetConnect. Nous avons préparé un compte pour vous permettre de réserver vos trajets plus rapidement.'
@@ -87,6 +97,7 @@ export const EmailTranslations = {
         subjects: {
             BOOKING_CONFIRMATION: 'Your FleetConnect booking is received',
             BOOKING_ACCEPTED: 'Good news! Your booking is accepted',
+            DRIVER_ASSIGNMENT_REQUEST: 'New ride assignment available',
             DRIVER_ASSIGNED: 'Your driver is on the way',
             BOOKING_CANCELLED: 'Cancellation confirmation',
             BOOKING_COMPLETED: 'Thank you for traveling with FleetConnect',
@@ -118,6 +129,10 @@ export const EmailTranslations = {
             confirmationBody: 'we have received your booking. Our team is currently processing your request.',
             acceptedBody: 'your booking has been confirmed by our dispatching. We look forward to transporting you.',
             assignedBody: 'your personal chauffeur has been assigned for your ride. Below are the details of your driver.',
+            assignmentRequestBody: 'you have been selected for a new ride. Review the details below and let us know if you can perform this assignment.',
+            acceptAssignment: 'Accept',
+            declineAssignment: 'Decline',
+            dispatchContact: 'Dispatch contact',
             cancelledBody: (ref) => `your booking with reference <strong>${ref}</strong> has been cancelled. If you have already paid, the amount will be refunded.`,
             completedBody: 'we hope you had a pleasant ride. Thank you for your trust in FleetConnect.',
             welcomeBody: 'welcome to FleetConnect. We have set up an account for you to book rides faster and view your history.'

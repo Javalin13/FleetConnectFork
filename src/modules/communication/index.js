@@ -58,7 +58,14 @@ export class CommunicationService {
             const html = template.render(snapshot, lang, mode);
 
             // 5. Dispatch
-            const to = snapshot.customer?.email || snapshot.email;
+            let to = snapshot.customer?.email || snapshot.email;
+
+            // Route DRIVER_ASSIGNMENT_REQUEST to the driver's email
+            if (trigger === 'DRIVER_ASSIGNMENT_REQUEST') {
+                to = snapshot.driver?.email;
+                if (!to) throw new Error('Driver email missing for assignment request');
+            }
+
             if (!to) throw new Error('Recipient email missing');
 
             console.log(`[CommunicationService] Sending ${trigger} to ${to} via ${this.activeProvider.constructor.name}`);

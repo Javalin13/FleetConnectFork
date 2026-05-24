@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleetConnect - Opdracht Weigeren</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; color: #1e293b; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); max-width: 500px; width: 100%; text-align: center; border: 1px solid #e2e8f0; }
+        .icon { font-size: 64px; margin-bottom: 24px; }
+        .icon.success { color: #64748b; }
+        .icon.error { color: #ef4444; }
+        .icon.loading { color: #64748b; }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        p { color: #64748b; line-height: 1.6; margin-bottom: 30px; }
+        .btn { display: inline-block; background: #0f172a; color: white; padding: 12px 30px; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn:hover { background: #1e293b; transform: translateY(-1px); }
+        .spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div id="loading" class="card">
+        <div class="icon loading"><i class="fas fa-circle-notch spinner"></i></div>
+        <h1>Verwerken...</h1>
+        <p>Een moment geduld, we verwerken uw afwijzing.</p>
+    </div>
+
+    <div id="success" class="card hidden">
+        <div class="icon success"><i class="fas fa-info-circle"></i></div>
+        <h1>Opdracht Geweigerd</h1>
+        <p>Bedankt voor uw snelle reactie. De dispatching is op de hoogte gesteld en zal de rit opnieuw toewijzen.</p>
+        <button class="btn" onclick="window.close()">Sluiten</button>
+    </div>
+
+    <div id="already" class="card hidden">
+        <div class="icon loading" style="color: #f59e0b;"><i class="fas fa-exclamation-circle"></i></div>
+        <h1>Reeds Beantwoord</h1>
+        <p>U heeft al gereageerd op deze opdracht. De status kan niet meer worden gewijzigd via deze link.</p>
+        <button class="btn" onclick="window.close()">Sluiten</button>
+    </div>
+
+    <div id="error" class="card hidden">
+        <div class="icon error"><i class="fas fa-times-circle"></i></div>
+        <h1>Fout opgetreden</h1>
+        <p id="errorMsg">De afwijzing kon niet worden verwerkt. Mogelijk is de link ongeldig of verlopen.</p>
+        <button class="btn" onclick="location.reload()">Opnieuw proberen</button>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function handleDecline() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (!token) {
+                showState('error', 'Geen geldige token gevonden in de URL.');
+                return;
+            }
+
+            try {
+                // 1. Fetch booking by token
+                const { data: booking, error: fetchError } = await supabase
+                    .from('bookings')
+                    .select('id, assignment_accepted_at, assignment_declined_at')
+                    .eq('assignment_token', token)
+                    .single();
+
+                if (fetchError || !booking) {
+                    throw new Error('Opdracht niet gevonden.');
+                }
+
+                // 2. Duplicate Check
+                if (booking.assignment_accepted_at || booking.assignment_declined_at) {
+                    showState('already');
+                    return;
+                }
+
+                // 3. Update assignment state
+                const { error: updateError } = await supabase
+                    .from('bookings')
+                    .update({
+                        assignment_declined_at: new Date().toISOString(),
+                        status: 'accepted', // Revert to accepted for reassignment
+                        assigned_driver_id: null,
+                        assigned_driver: null,
+                        assignment_token: null // Clear token to allow new assignment
+                    })
+                    .eq('id', booking.id);
+
+                if (updateError) throw updateError;
+
+                showState('success');
+
+            } catch (err) {
+                console.error(err);
+                showState('error', err.message);
+            }
+        }
+
+        function showState(state, msg) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('success').classList.add('hidden');
+            document.getElementById('already').classList.add('hidden');
+            document.getElementById('error').classList.add('hidden');
+
+            const el = document.getElementById(state);
+            if (el) {
+                el.classList.remove('hidden');
+                if (msg && state === 'error') {
+                    document.getElementById('errorMsg').textContent = msg;
+                }
+            }
+        }
+
+        handleDecline();
+    </script>
+</body>
+</html>
