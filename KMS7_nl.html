@@ -13,7 +13,7 @@
   <meta property="og:description" content="Ontdek de kunst van maatwerk reizen: luchthavenvervoer, limousines voor ceremonies, zakelijke VTC. Elegantie en stiptheid 24/7.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.kms7.be/nl/">
-  <meta property="og:image" content="https://images.pexels.com/photos/210124/pexels-photo-210124.jpeg?auto=compress&cs=tinysrgb&w=1200">
+  <meta property="og:image" content="heroKMS7.png">
   <meta property="og:locale" content="nl_NL">
   <meta name="twitter:card" content="summary_large_image">
   
@@ -53,14 +53,97 @@
     /* LOGIN KNOOP STIJL */
     .login-nav-item a { background: var(--silver); padding: 8px 20px; border-radius: 40px; color: #0A192F !important; }
     .login-nav-item a:hover { background: var(--silver-bright); transform: translateY(-2px); }
-    .hero { min-height: 90vh; background: linear-gradient(rgba(10,25,47,0.2), rgba(15,42,63,0.3)), url('https://images.pexels.com/photos/210124/pexels-photo-210124.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat; display: flex; align-items: center; text-align: center; }
-    .hero-glass { max-width: 850px; margin: 0 auto; background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 24px; padding: 3rem 2.5rem; border: 1px solid rgba(255,255,255,0.6); box-shadow: var(--shadow-glass), var(--glow-silver); }
-    .hero h1 { font-family: 'Playfair Display', serif; font-size: 3.8rem; margin-bottom: 1.2rem; letter-spacing: 3px; background: var(--chrome-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 2px 5px rgba(10,25,47,0.2), 0 0 1px rgba(10,25,47,0.5); }
-    .subtile-chic { font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 600; letter-spacing: 4px; color: #334E68; margin-bottom: 2rem; }
+    
+    /* ============================================================ */
+    /* ULTRA-MINIMALISTISCHE HERO (SUBTIEL EN LICHT, AFBEELDING COMPLEET VRIJ) */
+    /* ============================================================ */
+    .hero { 
+      min-height: 90vh; 
+      background: linear-gradient(rgba(10, 25, 47, 0.3), rgba(15, 42, 63, 0.35)), url('heroKMS7.png') center/cover no-repeat; 
+      display: flex;  
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 50px;
+    }
+
+    .hero-split-box {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: flex-end;
+    }
+
+    .hero-left-content {
+      text-align: left;
+    }
+    .hero h1 { 
+      font-family: 'Playfair Display', serif; 
+      font-size: 3rem; 
+      margin-bottom: 0.1rem; 
+      letter-spacing: 2px; 
+      background: var(--chrome-gradient); 
+      -webkit-background-clip: text; 
+      background-clip: text; 
+      color: transparent; 
+      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .hero-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: #FFFFFF;
+      letter-spacing: 2px;
+      margin-bottom: 1.2rem;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    .hero-right-content {
+      text-align: left;
+      border-left: 1px solid rgba(192, 192, 192, 0.2);
+      padding-left: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .hero-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #E2E8F0;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      margin: 0;
+    }
+    .hero-tag span {
+      color: var(--silver);
+      font-weight: 600;
+    }
+
+    @media (max-width: 992px) {
+      .hero-split-box {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+      }
+      .hero-left-content, .hero-right-content {
+        text-align: center;
+      }
+      .hero-right-content {
+        border-left: none;
+        padding-left: 0;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+    /* ============================================================ */
+    
     .btn-gold, .btn-outline-gold, .nav-btn { position: relative; overflow: hidden; transition: all 0.3s ease; border-radius: 40px; }
     .btn-gold::after, .btn-outline-gold::after, .nav-btn::after { content: ''; position: absolute; top: -50%; left: -60%; width: 200%; height: 200%; background: linear-gradient(115deg, rgba(255,255,255,0) 10%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 90%); transform: rotate(25deg); transition: all 0.4s; opacity: 0; }
     .btn-gold:hover::after, .btn-outline-gold:hover::after, .nav-btn:hover::after { left: 100%; opacity: 1; }
-    .btn-gold { background: var(--platinum-gradient); border: none; color: #0A192F; padding: 14px 38px; font-weight: 700; letter-spacing: 2px; border-radius: 40px; cursor: pointer; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .btn-gold { background: var(--platinum-gradient); border: none; color: #0A192F; padding: 10px 24px; font-weight: 700; letter-spacing: 1px; border-radius: 40px; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .btn-gold:hover { background: linear-gradient(135deg, #B0B0B0 0%, #D0D0D0 50%, #F0F0F0 100%); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(192,192,192,0.4); }
     .btn-outline-gold { background: transparent; border: 1px solid var(--silver); color: var(--silver); padding: 12px 32px; font-weight: 600; letter-spacing: 2px; border-radius: 40px; cursor: pointer; }
     .btn-outline-gold:hover { background: rgba(192,192,192,0.15); color: #0A192F; border-color: white; }
@@ -71,6 +154,39 @@
     .metal-card p { color: #1A2E44; margin-bottom: 1rem; }
     .img-placeholder { border-radius: 28px; height: 360px; background-size: cover; background-position: center; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.6); transition: transform 0.3s; }
     .img-placeholder:hover { transform: scale(1.01); }
+    
+    /* ============================================================ */
+    /* STIJL VOOR DE AFBEELDINGEN - PERFECT PASSEND */
+    /* ============================================================ */
+    /* EERSTE AFBEELDING (LINKER HELFT - CHAUFFEUR & NOTITIEBLOK) */
+    .img-tweeluik-left {
+      border-radius: 28px;
+      height: 360px;
+      background-image: url('picgridKMS7.png');
+      background-size: 100% 100%;
+      background-position: 0% 0%;
+      background-repeat: no-repeat;
+      box-shadow: var(--shadow-glass);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: transform 0.3s;
+    }
+    .img-tweeluik-left:hover { transform: scale(1.01); }
+    
+    /* TWEEDE AFBEELDING (RECHTER HELFT - NIEUWE AFBEELDING picgridKMS72.png) */
+    .img-tweeluik-right {
+      border-radius: 28px;
+      height: 360px;
+      background-image: url('picgridKMS72.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      box-shadow: var(--shadow-glass);
+      border: 1px solid rgba(255,255,255,0.6);
+      transition: transform 0.3s;
+    }
+    .img-tweeluik-right:hover { transform: scale(1.01); }
+    /* ============================================================ */
+    
     .feature-link { text-decoration: none; display: block; }
     .feature-icon-container { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 28px; transition: all 0.3s ease; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.7); text-align: center; padding: 2rem; display: flex; flex-direction: column; align-items: center; }
     .feature-icon-container:hover { transform: translateY(-6px); border-color: white; box-shadow: var(--shadow-glass-hover); }
@@ -132,6 +248,15 @@
       .lang-switch { margin-left: 0; width: 100%; justify-content: center; margin-top: 10px; }
       .login-nav-item { margin-top: 10px; }
     }
+    /* ============================================================ */
+    /* GRID VOOR AFBEELDINGEN - Perfecte verhouding */
+    /* ============================================================ */
+    .grid-2cols {
+      display: grid;
+      grid-template-columns: 1fr 0.8fr;
+      gap: 3rem;
+    }
+    /* ============================================================ */
     .suggest-wrapper { position: relative; }
     .suggestions { position: absolute; background: white; border: 1px solid var(--silver); max-height: 220px; overflow-y: auto; width: 100%; z-index: 10000; display: none; border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
     .suggestion-item { padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #eee; }
@@ -154,7 +279,7 @@
         <a href="#" data-lang="en">EN</a>
         <a href="#" data-lang="fr">FR</a>
       </li>
-      <!-- LOGIN KNOOP -->
+      <!-- LOGIN KNOOP - GEWIJZIGD NAAR LoginKMS7.html -->
       <li class="login-nav-item">
         <a href="LoginKMS7.html" id="loginNavBtn"><i class="fas fa-user-circle"></i> <span id="loginBtnText">Inloggen</span></a>
       </li>
@@ -163,26 +288,43 @@
 </header>
 
 <main>
+  <!-- ULTRA-MINIMALISTISCHE HERO SECTIE -->
   <section class="hero">
-    <div class="container hero-glass">
-      <h1>KMS7 | Elegantie in beweging</h1>
-      <p class="subtile-chic">Luxe taxi, VTC en limousine service in België. Luchthavenvervoer, zakenreizen, ceremonies. Elegantie, stiptheid, comfort 24/7.</p>
-      <a href="#reservation" class="btn-gold">Boek een rit <i class="fas fa-arrow-right"></i></a>
+    <div class="container">
+      <div class="hero-split-box">
+        
+        <div class="hero-left-content">
+          <h1>KMS7</h1>
+          <div class="hero-subtitle">Elegantie in beweging</div>
+          <a href="#reservation" class="btn-gold">Boek een rit <i class="fas fa-arrow-right"></i></a>
+        </div>
+        
+        <div class="hero-right-content">
+          <p class="hero-tag">✦ Service <span>VTC Premium</span></p>
+          <p class="hero-tag">✦ Ritten <span>Op Maat</span></p>
+          <p class="hero-tag">✦ Excellentie <span>Garanti 24/7</span></p>
+        </div>
+        
+      </div>
     </div>
   </section>
 
   <div class="container" id="services">
-    <div class="grid-2cols" style="margin: 30px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+    <!-- RIJ 1: Tekst links, Afbeelding rechts -->
+    <div class="grid-2cols" style="margin: 30px 0;">
       <div class="metal-card">
         <h3>✨ Senioren & mindere mobiliteit</h3>
         <p>Bij KMS7 is elke reis een verhaal van zachtheid. Een bubbel van sereniteit voor uw ouderen, geduldig begeleid naar medische afspraken of uitstapjes. Aangepaste voertuigen, getrainde chauffeurs.</p>
         <p>Wij zijn de discrete schakel die generaties verbindt.</p>
       </div>
-      <div class="img-placeholder" style="background-image: url('https://images.pexels.com/photos/4382157/pexels-photo-4382157.jpeg?auto=compress&cs=tinysrgb&w=800');" aria-label="Oudere persoon begeleid door KMS7-chauffeur"></div>
+      <!-- EERSTE AFBEELDING - TWEELUIK LINKER HELFT (Chauffeur & notitieblok) -->
+      <div class="img-tweeluik-left" aria-label="KMS7 chauffeur in kostuum met notitieblok in luxe limousine"></div>
     </div>
     
-    <div class="grid-2cols" style="margin: 60px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
-      <div class="img-placeholder" style="background-image: url('https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800');" aria-label="Zakenman met tablet achterin een KMS7-limousine"></div>
+    <!-- RIJ 2: Afbeelding links, Tekst rechts -->
+    <div class="grid-2cols" style="margin: 60px 0;">
+      <!-- TWEEDE AFBEELDING - NIEUWE AFBEELDING (picgridKMS72.png) -->
+      <div class="img-tweeluik-right" aria-label="Centrale console KMS7 met mineraalwater en oplader"></div>
       <div class="metal-card">
         <h3>💼 Professionals & gezinnen</h3>
         <p><strong>Excellentie voor uw bedrijf, zachtheid voor uw gezin.</strong> Luchthavenvervoer (Zaventem, Charleroi, Luik), bedrijfsevenementen, schoolritten, shuttles naar treinstations. Absolute stiptheid, discretie, premium vloot.</p>
@@ -213,7 +355,7 @@
     </div>
   </section>
 
-  <!-- HEXAGON CLICKABLE BLOCKS -->
+  <!-- HEXAGON BLOKKEN KLIKBAAR -->
   <section style="background: radial-gradient(circle at 30% 30%, #F4F6F9 0%, #FFFFFF 100%);">
     <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem;">
       <a href="KMS7services.html#pro" class="feature-link"><div class="feature-icon-container"><img class="hexagon-image" src="https://images.pexels.com/photos/1166759/pexels-photo-1166759.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="Professionele KMS7-chauffeur in pak"><h4>PROFESSIONALITEIT</h4><p>Onberispelijk rijgedrag, elegante kledij, discrete service, continue opleiding.</p></div></a>
@@ -258,24 +400,29 @@
           <button class="step-btn" data-step="5">5. Betaling</button>
         </div>
 
+        <!-- PAGE 1 -->
         <div id="page1" class="carousel-page active-page">
-          <div class="field"><label>📍 Ophaaladres *</label><div class="suggest-wrapper" id="pickupWrap"><input type="text" id="pickupInput" placeholder="bv. Brussel-Zuid" autocomplete="off"><div id="pickupSuggest" class="suggestions"></div></div></div>
-          <div class="field"><label>🏁 Bestemming *</label><div class="suggest-wrapper" id="dropoffWrap"><input type="text" id="dropoffInput" placeholder="bv. Luchthaven Zaventem" autocomplete="off"><div id="dropoffSuggest" class="suggestions"></div></div></div>
+          <div class="field"><label>📍 Ophaaladres *</label><div class="suggest-wrapper" id="pickupWrap"><input type="text" id="pickupInput" placeholder="bv. Brussel-Zuid" autocomplete="off"><div id="pickupSuggest" class="suggestions" style="position:absolute; background:white; border:1px solid var(--silver); display:none;"></div></div></div>
+          <div class="field"><label>🏁 Bestemming *</label><div class="suggest-wrapper" id="dropoffWrap"><input type="text" id="dropoffInput" placeholder="bv. Luchthaven Zaventem" autocomplete="off"><div id="dropoffSuggest" class="suggestions" style="position:absolute; background:white; border:1px solid var(--silver); display:none;"></div></div></div>
           <div class="roundtrip-box" style="display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0;"><input type="checkbox" id="roundtripCheckbox"> <label style="color:#0A1C2F;">🔄 Retour (prijs x2)</label></div>
           <div class="field"><label>✈️ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber" placeholder="bv. AF1234"></div>
-          <div class="field"><label>📅 Datum & tijd heen *</label><input type="text" id="datetime" placeholder="Kies datum/tijd" readonly></div>
-          <div class="field return-date-field" id="returnDateContainer" style="display: none;"><label>📅 Datum & tijd terug</label><input type="text" id="returnDatetime" placeholder="Kies datum/tijd" readonly></div>
+          <div class="field"><label>📅 Datum & tijd heen *</label><input type="text" id="datetime" placeholder="Kies datum/tijd" readonly><i class="fas fa-calendar-alt" style="position: absolute; right: 15px; top: 40px; color: var(--silver);"></i></div>
+          <div class="field return-date-field" id="returnDateContainer" style="display: none;"><label>📅 Datum & tijd terug</label><input type="text" id="returnDatetime" placeholder="Kies datum/tijd" readonly><i class="fas fa-calendar-alt" style="position: absolute; right: 15px; top: 40px; color: var(--silver);"></i></div>
           <div id="urgentWhatsApp" class="urgent-whatsapp"><span>⚠️ Vertrek binnen het uur – Neem contact op via WhatsApp</span><a href="https://wa.me/32473300374" class="whatsapp-btn">WhatsApp</a></div>
           <div id="page1Error" class="error"></div>
           <div class="footnote" style="font-size:0.7rem; color:#4A5568;">* Verplichte velden – klik op het datumveld om de kalender te openen</div>
         </div>
 
+        <!-- PAGE 2 -->
         <div id="page2" class="carousel-page"><div id="map"></div><div class="info-strip"><div class="info-card"><div class="label">📏 Afstand</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Duur</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Prijs</div><div class="value" id="priceVal">—</div><small>€</small></div></div><div id="page2Error" class="error"></div></div>
 
+        <!-- PAGE 3 -->
         <div id="page3" class="carousel-page"><h3>Kies uw voertuig</h3><div class="vehicle-grid-select" id="vehicleGrid"><div class="vehicle-card-select" data-vehicle="Standard" data-extraprice="0"><i class="fas fa-car"></i><div>Standard</div><div>+0€</div></div><div class="vehicle-card-select" data-vehicle="Break" data-extraprice="5"><i class="fas fa-car-side"></i><div>Break</div><div>+5€</div></div><div class="vehicle-card-select" data-vehicle="Exclusive" data-extraprice="15"><i class="fas fa-car"></i><div>Exclusive</div><div>+15€</div></div><div class="vehicle-card-select" data-vehicle="MiniVan" data-extraprice="10"><i class="fas fa-van-shuttle"></i><div>MiniVan</div><div>+10€</div></div></div><div class="extra-fields"><h4>➕ Extra opties</h4><div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;"><div><label>👥 Passagiers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Bagage</label><input type="number" id="luggage" min="0" value="0"></div></div><div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Persoonlijke ontvangst</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Fles water</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div><div><label>📝 Speciale wensen</label><textarea id="specialWishes" rows="2" placeholder="bv. kinderzitje..."></textarea></div></div><div id="page3Error" class="error"></div></div>
 
+        <!-- PAGE 4 -->
         <div id="page4" class="carousel-page"><div class="field"><label>Voornaam *</label><input type="text" id="firstName"></div><div class="field"><label>Achternaam *</label><input type="text" id="lastName"></div><div class="field"><label>Mobiel *</label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div><div class="field"><label>E-mail *</label><input type="email" id="email"></div><div class="field"><label>BTW (optioneel)</label><input type="text" id="vat"></div><div id="page4Error" class="error"></div></div>
 
+        <!-- PAGE 5 -->
         <div id="page5" class="carousel-page"><div class="rit-overzicht" id="bookingSummary"></div><div class="payment-method"><span>Betaalmethode :</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Contant</label><label><input type="radio" name="payment" value="Card"> 💳 Bankkaart</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div><div id="totalDisplay" class="total-display">Totaal: € 0,00</div><button id="finalConfirmBtn" class="btn-gold" style="width:100%;">✅ Bevestig boeking</button><div id="page5Error" class="error"></div><input type="hidden" id="hiddenCustomerId"><input type="hidden" id="hiddenFormData"><input type="hidden" id="hiddenCreatedAt"><input type="hidden" id="hiddenPartnerId" value="1"><input type="hidden" id="hiddenAssignedDriverId"></div>
 
         <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Vorige</button><button class="nav-btn next" id="nextBtn">Volgende ▶</button></div>
@@ -283,7 +430,21 @@
     </div>
   </section>
 
-  <section id="about"><div class="container grid-2cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;"><div class="metal-card"><h2 style="font-family:'Playfair Display'; font-size:2rem;">OVER | KMS7</h2><p><strong>De kunst van reizen tussen aarde en hemel.</strong> KMS7, leider in personenvervoer in België (Brussel, Wallonië, Vlaanderen). Discretie, excellentie, sereniteit. Engelssprekende chauffeurs, recente airconditioned voertuigen, all-risk verzekering.</p><p>Onze belofte: <strong>geen vertraging, geen stress, 100% plezier.</strong></p></div><div class="img-placeholder" style="background-image: url('https://images.pexels.com/photos/3719037/pexels-photo-3719037.jpeg?auto=compress&cs=tinysrgb&w=800');" aria-label="KMS7 vloot: sedans en limousines"></div></div></section>
+  <!-- ============================================================ -->
+  <!-- OVER ONS SECTIE - MET NIEUWE AFBEELDING pixKMS7.png -->
+  <!-- ============================================================ -->
+  <section id="about">
+    <div class="container grid-2cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+      <div class="metal-card">
+        <h2 style="font-family:'Playfair Display'; font-size:2rem;">OVER | KMS7</h2>
+        <p><strong>De kunst van reizen tussen aarde en hemel.</strong> KMS7, leider in personenvervoer in België (Brussel, Wallonië, Vlaanderen). Discretie, excellentie, sereniteit. Engelssprekende chauffeurs, recente airconditioned voertuigen, all-risk verzekering.</p>
+        <p>Onze belofte: <strong>geen vertraging, geen stress, 100% plezier.</strong></p>
+      </div>
+      <!-- NIEUWE AFBEELDING pixKMS7.png -->
+      <div class="img-placeholder" style="background-image: url('pixKMS7.png'); background-size: cover; background-position: center; border-radius: 28px; height: 360px; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.6); transition: transform 0.3s;" aria-label="KMS7 vloot: sedans en limousines"></div>
+    </div>
+  </section>
+  <!-- ============================================================ -->
 
   <section style="background: rgba(0,0,0,0.02);">
     <div class="container">
@@ -303,7 +464,10 @@
   <div class="container footer-grid">
     <div class="footer-col"><h4>KMS7</h4><p>Buitenplas 1/14<br>1601 Sint-Pieters-Leeuw</p><p>+32 473 30 03 74</p><p>booking@kms7.be</p><p>BTW: BE 0789.123.456</p></div>
     <div class="footer-col"><h4>SNAPPE LINKS</h4><a href="#flotte">Onze VTC-vloot</a><a href="#services">Onze diensten</a><a href="#reservation">Gratis offerte</a><a href="KMS7services.html">Gedetailleerde diensten</a></div>
-    <div class="footer-col"><h4>INFORMATIE</h4><a href="#about">Over ons</a><a href="#reservation">Reservering</a><a href="Mentions_legales_KMS7.html">Juridische kennisgeving</a><a href="Mentions_legales_KMS7.html">Algemene voorwaarden</a></div>
+    <div class="footer-col"><h4>INFORMATIE</h4><a href="#about">Over ons</a><a href="#reservation">Reservering</a>
+      <a href="Mentions_legales_KMS7.html">Juridische kennisgeving</a>
+      <a href="Mentions_legales_KMS7.html">Algemene voorwaarden</a>
+    </div>
     <div class="footer-col"><h4>CONTACT</h4><a href="#reservation" class="btn-outline-gold" style="display:inline-block;">Boek nu</a></div>
   </div>
   <div class="container" style="text-align:center; margin-top: 2.5rem; font-size: 0.8rem;">© 2026 KMS7 — Elegantie in beweging – Luxe taxi België | Alle rechten voorbehouden</div>
@@ -312,32 +476,17 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  import { comms } from './src/modules/communication/index.js';
 
   const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ============================================================
-  // 🔐 DYNAMISCHE LOGIN KNOOP - Verandert in Dashboard als ingelogd
+  // 🔐 DYNAMISCHE LOGIN KNOOP - GEWIJZIGD (altijd naar LoginKMS7.html)
   // ============================================================
-  (async function updateLoginButton() {
-    const loginBtn = document.getElementById('loginNavBtn');
-    const btnTextSpan = document.getElementById('loginBtnText');
-    if (!loginBtn) return;
-    
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      if (btnTextSpan) btnTextSpan.textContent = 'Dashboard';
-      loginBtn.href = 'ClientKMS7_nl.html';
-      loginBtn.style.background = 'var(--platinum-gradient)';
-    } else {
-      if (btnTextSpan) btnTextSpan.textContent = 'Inloggen';
-      loginBtn.href = 'LoginKMS7.html';
-      loginBtn.style.background = 'var(--silver)';
-    }
-  })();
-
+  // De dynamische check is verwijderd omdat de knop nu altijd naar de loginpagina verwijst.
+  // De knop blijft visueel hetzelfde, maar stuurt altijd door naar LoginKMS7.html.
+  
   // ============================================================
   // 🌐 TAALSWITCHER
   // ============================================================
@@ -352,7 +501,7 @@
   });
 
   // ============================================================
-  // 📍 RESERVATIE LOGICA (blijft hetzelfde)
+  // 📍 RESERVATIE LOGICA
   // ============================================================
   let map, pickupCoord = null, dropoffCoord = null, routeLayer = null, pickupMarker = null, dropoffMarker = null;
   let currentRouteData = null, currentRoundTrip = false, currentDateTime = "", currentReturnDateTime = "";
@@ -438,7 +587,7 @@
   async function calculateAndStoreRoute() { if (!pickupCoord || !dropoffCoord) { showError(1, 'Selecteer adressen uit de suggesties.'); return false; } const dt = document.getElementById('datetime').value; if (!dt) { showError(1, 'Kies de vertrekdatum/tijd.'); return false; } if (isPast(dt)) { showError(1, '❌ Geen reserveringen in het verleden.'); return false; } if (currentRoundTrip) { const rdt = document.getElementById('returnDatetime').value; if (!rdt) { showError(1, 'Kies de retourdatum/tijd.'); return false; } if (isPast(rdt)) { showError(1, '❌ Retour kan niet in het verleden liggen.'); return false; } currentReturnDateTime = rdt; } else currentReturnDateTime = ""; const urgent = isWithinNextHour(dt); const urgentDiv = document.getElementById('urgentWhatsApp'); if (urgentDiv) urgentDiv.style.display = urgent ? 'flex' : 'none'; const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon); if (!rd) { showError(1, 'Kan route niet berekenen.'); return false; } currentRouteData = rd; currentRoundTrip = document.getElementById('roundtripCheckbox').checked; currentDateTime = dt; await updateMapAndInfo(rd); return true; }
   function initVehicleSelection() { document.querySelectorAll('.vehicle-card-select').forEach(card => { card.addEventListener('click', () => { document.querySelectorAll('.vehicle-card-select').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedVehicle = card.getAttribute('data-vehicle'); selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0; updateTotalDisplay(); }); }); const first = document.querySelector('.vehicle-card-select'); if (first) { first.classList.add('selected'); selectedVehicle = first.getAttribute('data-vehicle'); selectedVehicleExtra = parseInt(first.getAttribute('data-extraprice')) || 0; } }
   function fillHiddenSupabaseFields() { const email = document.getElementById('email').value.trim(); const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`; document.getElementById('hiddenCustomerId').value = customerId; document.getElementById('hiddenFormData').value = JSON.stringify({ source: "web-booking-kms7", version: "2.0" }); document.getElementById('hiddenCreatedAt').value = new Date().toISOString(); }
-  async function sendToSupabase(bookingData) { try { const { error } = await supabase.from('bookings').insert([bookingData]); if (error) throw error; comms.trigger('BOOKING_CONFIRMATION', bookingData.id, supabase); return true; } catch (error) { alert(`Fout: ${error.message}`); return false; } }
+  async function sendToSupabase(bookingData) { try { const { error } = await supabase.from('bookings').insert([bookingData]); if (error) throw error; return true; } catch (error) { alert(`Fout: ${error.message}`); return false; } }
   async function finalizeBooking() { const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash"; let totalAmount = 0; if (currentRouteData) { let dist = parseFloat(currentRouteData.distanceKm); if (currentRoundTrip) dist *= 2; totalAmount = dist * 1.5 + (selectedVehicleExtra || 0); } const firstName = document.getElementById('firstName').value.trim(); const lastName = document.getElementById('lastName').value.trim(); const email = document.getElementById('email').value.trim(); const phone = document.getElementById('phone').value.trim(); if (!firstName || !lastName || !email || !phone) { alert('Vul alle verplichte velden in (Voornaam, Achternaam, Mobiel, E-mail).'); return; } fillHiddenSupabaseFields(); const customerId = document.getElementById('hiddenCustomerId').value; const formData = JSON.parse(document.getElementById('hiddenFormData').value); const createdAt = document.getElementById('hiddenCreatedAt').value; const partnerId = parseInt(document.getElementById('hiddenPartnerId').value); const assignedDriverId = document.getElementById('hiddenAssignedDriverId').value || null; let datetimeStr = currentDateTime || ""; let datePart = datetimeStr.split(' ')[0] || ""; let timePart = datetimeStr.split(' ')[1] || ""; const bookingData = { id: generateBookingId(), datetime: datePart, time: timePart, name: `${firstName} ${lastName}`, email, phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, flight_number: document.getElementById('flightNumber').value.trim() || "", vehicle: selectedVehicle, extras: getExtrasString(), amount: totalAmount, payment: paymentMethod, status: "pending", customer_id: customerId, form_data: formData, created_at: createdAt, assigned_driver_id: assignedDriverId, partner_id: partnerId }; const success = await sendToSupabase(bookingData); if (success) { alert(`✅ Boeking bevestigd!\n\n📋 Nummer: ${bookingData.id}\n💰 Bedrag: € ${totalAmount.toFixed(2)}\n\nEen bevestigingsmail is verzonden (simulatie).`); resetAll(); } else { alert('❌ Er is een fout opgetreden. Probeer opnieuw of neem contact op.'); } }
   function resetAll() { if (routeLayer) map.removeLayer(routeLayer); if (pickupMarker) map.removeLayer(pickupMarker); if (dropoffMarker) map.removeLayer(dropoffMarker); currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = ''; document.getElementById('roundtripCheckbox').checked = false; document.getElementById('returnDateContainer').style.display = 'none'; document.getElementById('firstName').value = ''; document.getElementById('lastName').value = ''; document.getElementById('phone').value = ''; document.getElementById('email').value = ''; document.getElementById('vat').value = ''; document.getElementById('flightNumber').value = ''; document.getElementById('meetGreet').checked = false; document.getElementById('kissRide').checked = false; document.getElementById('waterBottle').checked = false; document.getElementById('wifi').checked = false; document.getElementById('specialWishes').value = ''; document.getElementById('passengers').value = 1; document.getElementById('luggage').value = 0; currentRoundTrip = false; currentReturnDateTime = ''; showPage(1); }
   function updateProgressBar() { const percent = (currentPage / 5) * 100; document.getElementById('progressFill').style.width = `${percent}%`; }
@@ -451,8 +600,8 @@
   document.getElementById('nextBtn').addEventListener('click', nextPage);
   document.getElementById('prevBtn').addEventListener('click', prevPage);
   document.getElementById('finalConfirmBtn').addEventListener('click', finalizeBooking);
-  flatpickr("#datetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today", locale: "nl" });
-  flatpickr("#returnDatetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today", locale: "nl" });
+  flatpickr("#datetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
+  flatpickr("#returnDatetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
 
   const vehiclesData = { standard: { name:"STANDARD", desc:"Efficiëntie & betrouwbaarheid", options:"Sedan of Van. Gecertificeerde chauffeur. 4/7 pers.", model:"BMW 3 Serie", features:"PROFESSIONALITEIT + Stiptheid", onboard:"Water, opladers, tablet"}, elegance: { name:"ÉLÉGANCE", desc:"Verfijning & comfort", options:"Executive Sedan, 4 pers.", model:"BMW 5 Serie", features:"Persoonlijk welkom, discretie", onboard:"Premium water, pers"}, premium: { name:"PREMIUM", desc:"Topklasse excellentie", options:"Luxe Sedan, 4 pers.", model:"BMW 7 Serie", features:"Exclusiviteit, vertrouwelijkheid", onboard:"Wi-Fi, verfrissingen"}, first: { name:"FIRST", desc:"Maatwerkreis", options:"Exclusieve Prestige Sedan", model:"Mercedes S-Klasse", features:"Uitzonderlijke service", onboard:"VIP welkom"}, limousine: { name:"LIMOUSINE", desc:"Ceremonies & prestige", options:"Exclusieve Limousine", model:"Limo Premium", features:"Onvergetelijke rit", onboard:"Bar, kristalsfeer"}, minivan: { name:"MINI-VAN", desc:"Ruime ruimte", options:"Premium Van tot 8 pers.", model:"Mercedes V-Klasse", features:"Modulair, gezinsvriendelijk", onboard:"Multi-zone, stopcontacten"} };
   function renderVehicle(vk){ let v=vehiclesData[vk]; let html=`<div style="text-align:center; margin-bottom:1.5rem;"><h3 style="color:#0A192F; font-size:1.8rem;">${v.name}</h3><p style="color:#1A2E44;">${v.desc}</p><p><i class="fas fa-car"></i> ${v.model}</p></div><div class="vehicle-grid"><div class="vehicle-card"><h4>OPTIES</h4><p>${v.options}</p><button class="btn-outline-gold" style="margin-top:1.2rem;" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">BOEKEN</button></div><div class="vehicle-card"><h4>ENGAGEMENT</h4><p>${v.features}</p><p><i class="fas fa-clock"></i> 24/7</p></div><div class="vehicle-card"><h4>DIENSTEN AAN BOORD</h4><p>${v.onboard}</p><button class="btn-gold" style="margin-top:1.2rem; width:100%;" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">BOEKEN</button></div></div>`; document.getElementById("vehicleContent").innerHTML=html; }

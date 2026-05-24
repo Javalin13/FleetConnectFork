@@ -8,40 +8,281 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* Stijlen identiek aan eerder gegeven – hier beknopt weergegeven, maar u kunt de volledige stijlen uit uw bestand kopiëren */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: linear-gradient(180deg, #F4F6F9 0%, #FFFFFF 100%); font-family: 'Montserrat', sans-serif; color: #0A1C2F; line-height: 1.6; scroll-behavior: smooth; }
-    :root { --midnight-dark: #0A192F; --midnight-light: #0F2A3F; --silver: #C0C0C0; --silver-dim: rgba(192,192,192,0.25); --silver-bright: #E8E8E8; --glass-white: rgba(255,255,255,0.7); --glass-border: 1px solid rgba(255,255,255,0.8); --shadow-glass: 0 8px 32px rgba(0,0,0,0.04), 0 0 0 1px rgba(192,192,192,0.2); --chrome-gradient: linear-gradient(135deg, #E0E0E0 0%, #FFFFFF 25%, #B0B0B0 50%, #F5F5F5 75%, #A0A0A0 100%); --titanium-gradient: linear-gradient(135deg, #C0C0C0 0%, #F0F0F0 40%, #909090 60%, #E8E8E8 100%); }
-    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-    header { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); border-bottom: 1px solid var(--silver); padding: 18px 0; position: sticky; top: 0; z-index: 100; }
-    .navbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    .logo { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 2rem; letter-spacing: 5px; background: var(--chrome-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-decoration: none; }
-    .right-header { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-    .back-home { color: #FDFBF7; text-decoration: none; font-weight: 600; letter-spacing: 1px; padding: 8px 20px; border-radius: 40px; background: rgba(255,255,255,0.1); transition: all 0.3s; }
-    .back-home:hover { background: var(--silver); color: #0A192F; }
-    .lang-switch { display: flex; gap: 8px; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 40px; }
-    .lang-btn { background: none; border: none; color: #FDFBF7; font-weight: 600; font-size: 0.75rem; cursor: pointer; padding: 4px 8px; border-radius: 30px; transition: 0.2s; font-family: 'Montserrat', sans-serif; }
-    .lang-btn.active { background: var(--silver); color: var(--midnight-dark); }
-    .hero { background: linear-gradient(rgba(10,25,47,0.4), rgba(15,42,63,0.6)), url('https://images.pexels.com/photos/210124/pexels-photo-210124.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover no-repeat; min-height: 40vh; display: flex; align-items: center; text-align: center; }
-    .hero-content { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 32px; padding: 2rem; max-width: 800px; margin: 0 auto; border: var(--glass-border); }
-    .hero h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; background: var(--chrome-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 1rem; }
-    .hero p { color: #1A2E44; font-weight: 500; }
-    .tabs-container { margin: 60px 0; }
-    .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 2.5rem; }
-    .tab-btn { background: var(--glass-white); backdrop-filter: blur(12px); border: 1px solid rgba(192,192,192,0.5); padding: 12px 28px; font-weight: 700; font-size: 1rem; border-radius: 50px; cursor: pointer; transition: all 0.2s; color: #0A192F; font-family: 'Montserrat', sans-serif; }
-    .tab-btn.active { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); color: white; border-color: var(--silver); box-shadow: 0 6px 14px rgba(10,25,47,0.2); }
-    .tab-content { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 32px; padding: 2.5rem; border: var(--glass-border); box-shadow: var(--shadow-glass); }
-    .tab-pane { display: none; animation: fadeIn 0.3s ease; }
-    .tab-pane.active-pane { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
-    .tab-pane h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #0A192F; margin-bottom: 1rem; border-left: 5px solid var(--silver); padding-left: 20px; }
-    .tab-pane p { margin-bottom: 1rem; color: #1A2E44; }
-    .btn-service { display: inline-block; margin-top: 1.5rem; background: var(--titanium-gradient); padding: 12px 28px; border-radius: 50px; text-decoration: none; font-weight: bold; color: #0A192F; transition: 0.2s; cursor: pointer; }
-    .btn-service:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    footer { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); padding: 40px 0; margin-top: 60px; text-align: center; color: #CEC7B8; border-top: 1px solid var(--silver); }
-    .footer-links a { color: var(--silver); text-decoration: none; margin: 0 15px; }
-    .footer-links a:hover { color: white; }
-    @media (max-width: 768px) { .tabs { flex-direction: column; align-items: stretch; } .tab-btn { text-align: center; } .hero h1 { font-size: 2rem; } .right-header { margin-top: 10px; justify-content: center; } }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(180deg, #F4F6F9 0%, #FFFFFF 100%);
+      font-family: 'Montserrat', sans-serif;
+      color: #0A1C2F;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --midnight-dark: #0A192F;
+      --midnight-light: #0F2A3F;
+      --silver: #C0C0C0;
+      --silver-dim: rgba(192, 192, 192, 0.25);
+      --silver-bright: #E8E8E8;
+      --glass-white: rgba(255, 255, 255, 0.7);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.8);
+      --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(192, 192, 192, 0.2);
+      --chrome-gradient: linear-gradient(135deg, #E0E0E0 0%, #FFFFFF 25%, #B0B0B0 50%, #F5F5F5 75%, #A0A0A0 100%);
+      --titanium-gradient: linear-gradient(135deg, #C0C0C0 0%, #F0F0F0 40%, #909090 60%, #E8E8E8 100%);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%);
+      border-bottom: 1px solid var(--silver);
+      padding: 18px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 2rem;
+      letter-spacing: 5px;
+      background: var(--chrome-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-decoration: none;
+    }
+
+    .right-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .back-home {
+      color: #FDFBF7;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      padding: 8px 20px;
+      border-radius: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s;
+    }
+
+    .back-home:hover {
+      background: var(--silver);
+      color: #0A192F;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 40px;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      color: #FDFBF7;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 30px;
+      transition: 0.2s;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .lang-btn.active {
+      background: var(--silver);
+      color: var(--midnight-dark);
+    }
+
+    .hero {
+      background: linear-gradient(rgba(10, 25, 47, 0.4), rgba(15, 42, 63, 0.6)), url('heroKMS7.png');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      min-height: 40vh;
+      display: flex;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-content {
+      background: var(--glass-white);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      border: var(--glass-border);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      background: var(--chrome-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      color: #1A2E44;
+      font-weight: 500;
+    }
+
+    .tabs-container {
+      margin: 60px 0;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .tab-btn {
+      background: var(--glass-white);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(192, 192, 192, 0.5);
+      padding: 12px 28px;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #0A192F;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%);
+      color: white;
+      border-color: var(--silver);
+      box-shadow: 0 6px 14px rgba(10, 25, 47, 0.2);
+    }
+
+    .tab-content {
+      background: var(--glass-white);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      padding: 2.5rem;
+      border: var(--glass-border);
+      box-shadow: var(--shadow-glass);
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-pane.active-pane {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tab-pane h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #0A192F;
+      margin-bottom: 1rem;
+      border-left: 5px solid var(--silver);
+      padding-left: 20px;
+    }
+
+    .tab-pane p {
+      margin-bottom: 1rem;
+      color: #1A2E44;
+    }
+
+    .btn-service {
+      display: inline-block;
+      margin-top: 1.5rem;
+      background: var(--titanium-gradient);
+      padding: 12px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #0A192F;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-service:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    footer {
+      background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%);
+      padding: 40px 0;
+      margin-top: 60px;
+      text-align: center;
+      color: #CEC7B8;
+      border-top: 1px solid var(--silver);
+    }
+
+    .footer-links a {
+      color: var(--silver);
+      text-decoration: none;
+      margin: 0 15px;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .tabs {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .tab-btn {
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .right-header {
+        margin-top: 10px;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -98,6 +339,7 @@
 </footer>
 
 <script>
+  // Complete translations for French, Dutch and English
   const translations = {
     fr: {
       backToHome: "Retour à l'accueil",
@@ -118,17 +360,53 @@
       footerAbout: "À propos",
       footerCopyright: "© 2026 KMS7 – Tous droits réservés | Transferts aéroport Bruxelles & Charleroi – Chauffeur privé Belgique"
     },
-    nl: { /* ... volledige Nederlandse vertalingen ... */ 
-      backToHome: "Terug naar home", heroTitle: "Onze exclusieve diensten", heroSub: "Elegantie in beweging – Ontdek de pijlers van KMS7-excellentie.", tabPro: "PROFESSIONALITEIT", tabPonctualite: "PUNCTUALITEITSGARANTIE", tabServices: "PREMIUM SERVICES AAN BOORD", tabDispo: "24U/24 - 7D/7", pro: `<h2>PROFESSIONALITEIT – De kunst van discrete service</h2><p>Bij <strong>KMS7, luxe taxi en VTC in België</strong>, staat professionaliteit centraal. Onze chauffeurs zijn streng geselecteerd en continu getraind. Vloot van hoogwaardige limousines (BMW 7, Mercedes S-Klasse, Audi A8). Stipte, veilige rijstijl, elegante kledij, discrete bediening. Maandelijkse opleidingen: stressmanagement, EHBO, talen.</p><a href="KMS7_nl.html#reservation" class="btn-service">Reserveer uw premium rit →</a>`, ponctualite: `<h2>PUNCTUALITEITSGARANTIE – De waarde van tijd</h2><p>Chauffeurs komen 10 minuten vroeger. Bij vertraging door KMS7 (behalve overmacht) wordt de rit vergoed tot €50. Real-time GPS tracking, SMS/e-mail bevestiging met foto chauffeur. Volgbare vluchten. Dynamische routeaanpassing.</p><a href="KMS7_nl.html#reservation" class="btn-service">Reserveer en reis zorgeloos →</a>`, services: `<h2>PREMIUM SERVICES AAN BOORD – Comfort van een rijdende salon</h2><p>Mineraalwater, koffie/thee, universele laders, opklapbare tafel, kranten/tijdschriften, 5G Wi-Fi. Optioneel: minibar, inductielader, massagestoelen, audiosysteem.</p><a href="KMS7_nl.html#reservation" class="btn-service">Beleef de ervaring →</a>`, dispo: `<h2>24U/24 - 7D/7 – Volledige beschikbaarheid</h2><p>Last-minute reserveringen (<20 min). Nachtelijke ritten, weekends en feestdagen zonder toeslag. Klantenservice 24/7. Vervangende voertuigen beschikbaar. Groepen tot 8 personen (Mercedes V-Klasse).</p><a href="KMS7_nl.html#reservation" class="btn-service">Onmiddellijk beschikbaar →</a>`, footerTagline: "KMS7 – Elegantie in beweging | Luxe taxi, VTC en limousine in België", footerHome: "Home", footerServices: "Diensten", footerReservation: "Reserveren", footerAbout: "Over ons", footerCopyright: "© 2026 KMS7 – Alle rechten voorbehouden | Luchthaventransfers Brussel & Charleroi – Privéchauffeur België"
+    nl: {
+      backToHome: "Terug naar home",
+      heroTitle: "Onze exclusieve diensten",
+      heroSub: "Elegantie in beweging – Ontdek de pijlers van KMS7-excellentie.",
+      tabPro: "PROFESSIONALITEIT",
+      tabPonctualite: "PUNCTUALITEITSGARANTIE",
+      tabServices: "PREMIUM SERVICES AAN BOORD",
+      tabDispo: "24U/24 - 7D/7",
+      pro: `<h2>PROFESSIONALITEIT – De kunst van discrete service</h2><p>Bij <strong>KMS7, luxe taxi en VTC in België</strong>, staat professionaliteit centraal. Onze chauffeurs zijn streng geselecteerd en continu getraind. Vloot van hoogwaardige limousines (BMW 7, Mercedes S-Klasse, Audi A8). Stipte, veilige rijstijl, elegante kledij, discrete bediening. Maandelijkse opleidingen: stressmanagement, EHBO, talen.</p><a href="KMS7.html#reservation" class="btn-service">Reserveer uw premium rit →</a>`,
+      ponctualite: `<h2>PUNCTUALITEITSGARANTIE – De waarde van tijd</h2><p>Chauffeurs komen 10 minuten vroeger. Bij vertraging door KMS7 (behalve overmacht) wordt de rit vergoed tot €50. Real-time GPS tracking, SMS/e-mail bevestiging met foto chauffeur. Volgbare vluchten. Dynamische routeaanpassing.</p><a href="KMS7.html#reservation" class="btn-service">Reserveer en reis zorgeloos →</a>`,
+      services: `<h2>PREMIUM SERVICES AAN BOORD – Comfort van een rijdende salon</h2><p>Mineraalwater, koffie/thee, universele laders, opklapbare tafel, kranten/tijdschriften, 5G Wi-Fi. Optioneel: minibar, inductielader, massagestoelen, audiosysteem.</p><a href="KMS7.html#reservation" class="btn-service">Beleef de ervaring →</a>`,
+      dispo: `<h2>24U/24 - 7D/7 – Volledige beschikbaarheid</h2><p>Last-minute reserveringen (<20 min). Nachtelijke ritten, weekends en feestdagen zonder toeslag. Klantenservice 24/7. Vervangende voertuigen beschikbaar. Groepen tot 8 personen (Mercedes V-Klasse).</p><a href="KMS7.html#reservation" class="btn-service">Onmiddellijk beschikbaar →</a>`,
+      footerTagline: "KMS7 – Elegantie in beweging | Luxe taxi, VTC en limousine in België",
+      footerHome: "Home",
+      footerServices: "Diensten",
+      footerReservation: "Reserveren",
+      footerAbout: "Over ons",
+      footerCopyright: "© 2026 KMS7 – Alle rechten voorbehouden | Luchthaventransfers Brussel & Charleroi – Privéchauffeur België"
     },
-    en: { /* ... volledige Engelse vertalingen ... */
-      backToHome: "Back to home", heroTitle: "Our exclusive services", heroSub: "Elegance in motion – Discover the pillars of KMS7 excellence.", tabPro: "PROFESSIONALISM", tabPonctualite: "PUNCTUALITY COMMITMENT", tabServices: "PREMIUM ONBOARD SERVICES", tabDispo: "24/7 - 365 DAYS", pro: `<h2>PROFESSIONALISM – The art of discreet service</h2><p>At <strong>KMS7, luxury taxi and VTC in Belgium</strong>, professionalism is key. Our chauffeurs are rigorously selected and continuously trained. Fleet of premium limousines (BMW 7 Series, Mercedes S-Class, Audi A8). Impeccable driving, elegant attire, confidential service. Monthly workshops: stress management, first aid, languages.</p><a href="KMS7_en.html#reservation" class="btn-service">Book your premium ride →</a>`, ponctualite: `<h2>PUNCTUALITY COMMITMENT – The value of time</h2><p>Chauffeurs arrive 10 minutes early. If delay is KMS7's fault (excluding force majeure), ride is compensated up to €50. Real-time GPS tracking, SMS/email confirmation with driver photo. Flight monitoring. Dynamic route adjustments.</p><a href="KMS7_en.html#reservation" class="btn-service">Book and travel with peace of mind →</a>`, services: `<h2>PREMIUM ONBOARD SERVICES – The comfort of a rolling lounge</h2><p>Mineral water, coffee/tea, universal chargers, foldable table, newspapers/magazines, 5G Wi-Fi. Optional: minibar, wireless charging, massaging seats, premium audio.</p><a href="KMS7_en.html#reservation" class="btn-service">Experience the journey →</a>`, dispo: `<h2>24/7 – Full availability, no exception</h2><p>Last-minute bookings (<20 min). Night rides, weekends and public holidays without surcharge. 24/7 customer support. Backup vehicles available. Groups up to 8 (Mercedes V-Class).</p><a href="KMS7_en.html#reservation" class="btn-service">Available immediately →</a>`, footerTagline: "KMS7 – Elegance in motion | Luxury taxi, VTC & limousine service in Belgium", footerHome: "Home", footerServices: "Services", footerReservation: "Book", footerAbout: "About", footerCopyright: "© 2026 KMS7 – All rights reserved | Brussels & Charleroi airport transfers – Private chauffeur Belgium"
+    en: {
+      backToHome: "Back to home",
+      heroTitle: "Our exclusive services",
+      heroSub: "Elegance in motion – Discover the pillars of KMS7 excellence.",
+      tabPro: "PROFESSIONALISM",
+      tabPonctualite: "PUNCTUALITY COMMITMENT",
+      tabServices: "PREMIUM ONBOARD SERVICES",
+      tabDispo: "24/7 - 365 DAYS",
+      pro: `<h2>PROFESSIONALISM – The art of discreet service</h2><p>At <strong>KMS7, luxury taxi and VTC in Belgium</strong>, professionalism is key. Our chauffeurs are rigorously selected and continuously trained. Fleet of premium limousines (BMW 7 Series, Mercedes S-Class, Audi A8). Impeccable driving, elegant attire, confidential service. Monthly workshops: stress management, first aid, languages.</p><a href="KMS7.html#reservation" class="btn-service">Book your premium ride →</a>`,
+      ponctualite: `<h2>PUNCTUALITY COMMITMENT – The value of time</h2><p>Chauffeurs arrive 10 minutes early. If delay is KMS7's fault (excluding force majeure), ride is compensated up to €50. Real-time GPS tracking, SMS/email confirmation with driver photo. Flight monitoring. Dynamic route adjustments.</p><a href="KMS7.html#reservation" class="btn-service">Book and travel with peace of mind →</a>`,
+      services: `<h2>PREMIUM ONBOARD SERVICES – The comfort of a rolling lounge</h2><p>Mineral water, coffee/tea, universal chargers, foldable table, newspapers/magazines, 5G Wi-Fi. Optional: minibar, wireless charging, massaging seats, premium audio.</p><a href="KMS7.html#reservation" class="btn-service">Experience the journey →</a>`,
+      dispo: `<h2>24/7 – Full availability, no exception</h2><p>Last-minute bookings (<20 min). Night rides, weekends and public holidays without surcharge. 24/7 customer support. Backup vehicles available. Groups up to 8 (Mercedes V-Class).</p><a href="KMS7.html#reservation" class="btn-service">Available immediately →</a>`,
+      footerTagline: "KMS7 – Elegance in motion | Luxury taxi, VTC & limousine service in Belgium",
+      footerHome: "Home",
+      footerServices: "Services",
+      footerReservation: "Book",
+      footerAbout: "About",
+      footerCopyright: "© 2026 KMS7 – All rights reserved | Brussels & Charleroi airport transfers – Private chauffeur Belgium"
     }
   };
+
   let currentLang = 'fr';
+
   function setLanguage(lang) {
     currentLang = lang;
     const t = translations[lang];
+    
+    // Update all text elements with new language
     document.getElementById('backToHome').innerText = t.backToHome;
     document.getElementById('heroTitle').innerText = t.heroTitle;
     document.getElementById('heroSub').innerText = t.heroSub;
@@ -136,26 +414,109 @@
     document.getElementById('TabPonctualite').innerText = t.tabPonctualite;
     document.getElementById('TabServices').innerText = t.tabServices;
     document.getElementById('TabDispo').innerText = t.tabDispo;
+    
+    // Update tab pane content with HTML (preserve structure)
     document.getElementById('pro').innerHTML = t.pro;
     document.getElementById('ponctualite').innerHTML = t.ponctualite;
     document.getElementById('services').innerHTML = t.services;
     document.getElementById('dispo').innerHTML = t.dispo;
+    
+    // Update footer texts
     document.getElementById('footerTagline').innerText = t.footerTagline;
     document.getElementById('footerHome').innerText = t.footerHome;
     document.getElementById('footerServices').innerText = t.footerServices;
     document.getElementById('footerReservation').innerText = t.footerReservation;
     document.getElementById('footerAbout').innerText = t.footerAbout;
     document.getElementById('footerCopyright').innerText = t.footerCopyright;
-    document.querySelectorAll('.lang-btn').forEach(btn => { if (btn.getAttribute('data-lang') === lang) btn.classList.add('active'); else btn.classList.remove('active'); });
+    
+    // Update active class on language buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      if (btn.getAttribute('data-lang') === lang) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    
+    // Reattach event listeners to any newly created buttons (like .btn-service inside tabs)
+    attachServiceButtonListeners();
   }
+
+  // Helper to keep service buttons pointing to correct homepage with current language context
+  function attachServiceButtonListeners() {
+    const serviceBtns = document.querySelectorAll('.btn-service');
+    serviceBtns.forEach(btn => {
+      btn.removeEventListener('click', handleServiceClick);
+      btn.addEventListener('click', handleServiceClick);
+    });
+  }
+
+  function handleServiceClick(e) {
+    // Optional: allow redirection - default href is already KMS7.html#reservation, that is fine.
+    // This just ensures no stray behavior.
+  }
+
+  // Tab switching logic
   const tabBtns = document.querySelectorAll('.tab-btn');
-  const panes = { pro: document.getElementById('pro'), ponctualite: document.getElementById('ponctualite'), services: document.getElementById('services'), dispo: document.getElementById('dispo') };
-  function activateTab(tabId) { Object.keys(panes).forEach(id => panes[id].classList.remove('active-pane')); panes[tabId].classList.add('active-pane'); tabBtns.forEach(btn => { if (btn.getAttribute('data-tab') === tabId) btn.classList.add('active'); else btn.classList.remove('active'); }); }
-  tabBtns.forEach(btn => { btn.addEventListener('click', () => { const tabId = btn.getAttribute('data-tab'); activateTab(tabId); history.pushState(null, null, `#${tabId}`); }); });
+  const panes = {
+    pro: document.getElementById('pro'),
+    ponctualite: document.getElementById('ponctualite'),
+    services: document.getElementById('services'),
+    dispo: document.getElementById('dispo')
+  };
+
+  function activateTab(tabId) {
+    // Hide all panes
+    Object.keys(panes).forEach(id => {
+      panes[id].classList.remove('active-pane');
+    });
+    // Show selected pane
+    if (panes[tabId]) {
+      panes[tabId].classList.add('active-pane');
+    }
+    // Update active class on tab buttons
+    tabBtns.forEach(btn => {
+      if (btn.getAttribute('data-tab') === tabId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // Add click listeners to tabs
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.getAttribute('data-tab');
+      activateTab(tabId);
+      history.pushState(null, null, `#${tabId}`);
+    });
+  });
+
+  // Check for hash on page load and set active tab accordingly
   const hash = window.location.hash.substring(1);
-  if (hash && panes[hash]) activateTab(hash); else activateTab('pro');
-  document.querySelectorAll('.lang-btn').forEach(btn => { btn.addEventListener('click', (e) => { const lang = btn.getAttribute('data-lang'); setLanguage(lang); }); });
+  if (hash && panes[hash]) {
+    activateTab(hash);
+  } else {
+    activateTab('pro');
+  }
+
+  // Language switcher event listeners
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const lang = btn.getAttribute('data-lang');
+      setLanguage(lang);
+      // No need to reset active tab, just keep same tab active but its content updated
+    });
+  });
+
+  // Set initial language (French)
   setLanguage('fr');
+  
+  // Re-attach service button listeners after any dynamic updates, but also on load
+  attachServiceButtonListeners();
+
+  // Also ensure any click on logo/back-home etc remains functional — those are standard links.
 </script>
 </body>
 </html>
