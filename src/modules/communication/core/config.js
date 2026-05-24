@@ -25,7 +25,8 @@ export const CommunicationConfig = {
         trilingualOrder: ['nl', 'fr', 'en'],
         provider: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'mock' : 'resend',
         supabaseUrl: 'https://rreqjjrmvytnwnsidmqi.supabase.co',
-        edgeFunctionBase: '/functions/v1'
+        edgeFunctionBase: '/functions/v1',
+        ASSIGNMENT_TIMEOUT_MINUTES: 30
     },
     providers: {
         resend: {
