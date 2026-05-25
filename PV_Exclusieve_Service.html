@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Dezelfde CSS als eerder – hier beknopt weergegeven */
         :root {
             --bg-body: #f4f7fc;
             --primary: #2c6e9e;
@@ -20,12 +21,6 @@
             --card-bg: rgba(255,255,255,0.92);
             --border-light: #e2edf7;
             --shadow: 0 8px 20px rgba(0,0,0,0.05);
-            --sidebar-bg: #ffffff;
-            --sidebar-text: #1a2a3a;
-            --sidebar-hover: #eef2fa;
-            --sidebar-width-collapsed: 0px;
-            --sidebar-width-expanded: 280px;
-            --overlay-bg: rgba(0,0,0,0.4);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { margin: 0; padding: 0; height: 100%; }
@@ -33,27 +28,16 @@
         #background-map { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; filter: brightness(1.05) contrast(1.02); }
         .content-overlay { position: relative; z-index: 10; background: rgba(255,255,255,0.85); backdrop-filter: blur(1px); min-height: 100vh; display: flex; flex-direction: column; }
         .container { width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 24px; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); backdrop-filter: blur(2px); z-index: 150; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; pointer-events: none; }
-        .sidebar-wrapper { position: sticky; top: 0; z-index: 200; height: fit-content; display: flex; justify-content: flex-end; pointer-events: none; float: right; clear: right; }
-        .sidebar-trigger { position: fixed; top: 0; right: 0; width: 30px; height: 100%; z-index: 199; pointer-events: auto; cursor: pointer; background: transparent; }
-        .sidebar { width: var(--sidebar-width-collapsed); background: var(--sidebar-bg); color: var(--sidebar-text); transition: width 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1); box-shadow: -4px 0 20px rgba(0,0,0,0.08); display: flex; flex-direction: column; pointer-events: auto; border-radius: 16px 0 0 16px; border: 1px solid var(--border-light); border-right: none; overflow: hidden; height: auto; min-height: 280px; white-space: nowrap; }
-        .sidebar-trigger:hover ~ .sidebar-wrapper .sidebar, .sidebar-wrapper:hover .sidebar, .sidebar:hover { width: var(--sidebar-width-expanded); }
-        .sidebar-trigger:hover ~ .overlay, .sidebar-wrapper:hover ~ .overlay, .sidebar:hover ~ .overlay { opacity: 1; visibility: visible; pointer-events: auto; }
-        .sidebar-nav { display: flex; flex-direction: column; padding: 24px 16px; gap: 12px; }
-        .sidebar-nav a { color: var(--sidebar-text); text-decoration: none; padding: 14px 16px; border-radius: 14px; transition: 0.2s; font-weight: 500; display: flex; align-items: center; gap: 14px; background: var(--white); border: 1px solid var(--border-light); }
-        .sidebar-nav a i { width: 24px; color: var(--primary); font-size: 1.2rem; }
-        .sidebar-nav a span { opacity: 0; transition: opacity 0.2s ease 0.1s; }
-        .sidebar:hover .sidebar-nav a span, .sidebar-trigger:hover ~ .sidebar-wrapper .sidebar .sidebar-nav a span, .sidebar-wrapper:hover .sidebar .sidebar-nav a span { opacity: 1; }
-        .sidebar-nav a:hover { background: var(--sidebar-hover); transform: translateX(-4px); border-color: var(--primary); }
-        .page-hero { background: linear-gradient(135deg, rgba(44,110,158,0.1) 0%, rgba(201,160,61,0.05) 100%); padding: 60px 0 40px; border-bottom: 1px solid var(--border-light); }
-        .breadcrumb { margin-bottom: 30px; font-size: 0.85rem; color: var(--text-light); }
+        .language-switcher { position: fixed; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 1000; background: rgba(255,255,255,0.9); padding: 6px 12px; border-radius: 40px; backdrop-filter: blur(4px); border: 1px solid rgba(0,0,0,0.1); }
+        .lang-btn { background: var(--white); border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.2s; color: var(--text-dark); }
+        .lang-btn:hover, .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .breadcrumb { margin: 30px 0 20px; font-size: 0.85rem; color: var(--text-light); padding-top: 60px; }
         .breadcrumb a { color: var(--primary); text-decoration: none; }
-        .breadcrumb a:hover { text-decoration: underline; }
         .breadcrumb i { margin: 0 8px; font-size: 0.7rem; }
-        .page-title { font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
+        .page-title { font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
         .page-title i { color: var(--accent-gold); margin-right: 15px; }
-        .intro-text { font-size: 1.2rem; color: var(--text-light); max-width: 800px; margin-bottom: 30px; }
-        .content-section { padding: 60px 0; }
+        .intro-text { font-size: 1.1rem; color: var(--text-light); max-width: 800px; margin-bottom: 30px; }
+        .content-section { padding: 40px 0 60px; }
         .content-card { background: var(--card-bg); backdrop-filter: blur(8px); border: 1px solid var(--border-light); border-radius: 32px; padding: 40px; margin-bottom: 40px; box-shadow: var(--shadow); }
         .content-card h2 { color: var(--primary); font-size: 1.8rem; margin-bottom: 20px; border-left: 4px solid var(--accent-gold); padding-left: 20px; }
         .content-card h3 { color: var(--text-dark); font-size: 1.3rem; margin: 25px 0 15px 0; }
@@ -62,112 +46,101 @@
         .feature-list li { padding: 12px 0; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 12px; }
         .feature-list li i { color: var(--accent-green); width: 24px; font-size: 1.2rem; }
         .highlight-box { background: linear-gradient(135deg, rgba(44,110,158,0.05) 0%, rgba(107,140,66,0.05) 100%); border-left: 4px solid var(--accent-gold); padding: 25px; border-radius: 20px; margin: 30px 0; }
-        .nav-pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border-light); }
-        .nav-pagination a { background: var(--primary); color: white; padding: 12px 28px; border-radius: 40px; text-decoration: none; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
-        .nav-pagination a:hover { background: var(--primary-dark); }
         .btn-primary { background: var(--primary); color: white; border: none; padding: 14px 32px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
         .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .nav-tabs { display: flex; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+        .nav-tab { background: var(--card-bg); backdrop-filter: blur(4px); border: 1px solid var(--border-light); padding: 10px 20px; border-radius: 40px; text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .nav-tab:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .nav-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .nav-pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border-light); }
+        .nav-pagination a { background: var(--primary); color: white; padding: 12px 28px; border-radius: 40px; text-decoration: none; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
         .footer-dark { background: #0d1f2c; color: #e0edf5; padding: 48px 0 24px; margin-top: 60px; }
         .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; margin-bottom: 30px; }
         .footer-brand h4, .footer-ryz3n h4, .footer-legal h4, .footer-partners h4 { color: var(--primary); margin-bottom: 16px; font-size: 1.2rem; }
         .footer-brand p, .footer-ryz3n a, .footer-legal a, .footer-partners a { color: #e0edf5; text-decoration: none; line-height: 1.8; display: block; }
-        .footer-ryz3n a:hover, .footer-legal a:hover, .footer-partners a:hover { color: var(--primary); text-decoration: underline; }
         .footer-bottom { text-align: center; border-top: 1px solid rgba(224,237,245,0.2); padding-top: 24px; font-size: 0.85rem; }
-        .footer-bottom a { color: var(--primary); text-decoration: none; }
-        .nav-tabs { display: flex; justify-content: center; gap: 12px; margin: 30px 0 20px; flex-wrap: wrap; }
-        .nav-tab { background: var(--card-bg); backdrop-filter: blur(4px); border: 1px solid var(--border-light); padding: 10px 20px; border-radius: 40px; text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
-        .nav-tab:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .nav-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
-        @media (max-width: 768px) { .sidebar-trigger { width: 40px; } .page-title { font-size: 1.8rem; } .content-card { padding: 25px; } }
+        @media (max-width: 768px) {
+            .page-title { font-size: 1.5rem; }
+            .content-card { padding: 25px; }
+            .language-switcher { top: 10px; right: 15px; gap: 6px; }
+            .lang-btn { font-size: 0.7rem; padding: 4px 10px; }
+            .breadcrumb { padding-top: 50px; }
+        }
     </style>
 </head>
 <body>
 <div id="background-map"></div>
-<div class="content-overlay">
-    <div class="sidebar-trigger"></div>
-    <div class="sidebar-wrapper">
-        <div class="sidebar">
-            <div class="sidebar-nav">
-                <a href="PV.html"><i class="fas fa-home"></i><span> Home</span></a>
-                <a href="PV_Exclusieve_Service.html"><i class="fas fa-gem"></i><span> Exclusieve service</span></a>
-                <a href="PV_Vaste_Prijzen.html"><i class="fas fa-euro-sign"></i><span> Vaste prijzen</span></a>
-                <a href="PV_Premium_Vloot.html"><i class="fas fa-car-side"></i><span> Premium vloot</span></a>
-                <a href="PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i><span> Luchthavenvervoer</span></a>
-                <a href="PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i><span> Zakelijk vervoer</span></a>
-                <a href="PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i><span> Events & Gala</span></a>
-                <a href="PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i><span> Koeriersdienst</span></a>
-            </div>
-        </div>
-    </div>
-    <div class="overlay"></div>
 
-    <section class="page-hero">
-        <div class="container">
-            <div class="breadcrumb"><a href="PV.html">Home</a> <i class="fas fa-chevron-right"></i> <span style="color: var(--accent-gold);">Exclusieve Service</span></div>
-            <h1 class="page-title"><i class="fas fa-gem"></i> Exclusieve Service</h1>
-            <p class="intro-text">Ontdek het verschil van echte exclusiviteit. Persoonlijke aandacht, maatwerk en een onberispelijke service die verder gaat dan vervoer.</p>
-            <a href="PV.html#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> Ervaar exclusieve service</a>
+<div class="content-overlay">
+    <div class="language-switcher">
+        <button class="lang-btn" data-lang="nl">NL</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="PV.html" data-i18n="breadcrumb-home">Home</a> 
+            <i class="fas fa-chevron-right"></i> 
+            <span style="color: var(--accent-gold);" data-i18n="breadcrumb-current">Exclusieve Service</span>
         </div>
-    </section>
+        <h1 class="page-title"><i class="fas fa-gem"></i> <span data-i18n="page-title">Exclusieve Service</span></h1>
+        <p class="intro-text" data-i18n="intro-text">Ontdek het verschil van echte exclusiviteit. Persoonlijke aandacht, maatwerk en een onberispelijke service die verder gaat dan vervoer.</p>
+        <a href="PV.html#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> <span data-i18n="book-btn">Ervaar exclusieve service</span></a>
+    </div>
 
     <div class="container">
         <div class="nav-tabs">
-            <a href="PV.html" class="nav-tab"><i class="fas fa-home"></i> Home</a>
-            <a href="PV_Exclusieve_Service.html" class="nav-tab active"><i class="fas fa-gem"></i> Exclusief</a>
-            <a href="PV_Vaste_Prijzen.html" class="nav-tab"><i class="fas fa-euro-sign"></i> Prijzen</a>
-            <a href="PV_Premium_Vloot.html" class="nav-tab"><i class="fas fa-car-side"></i> Vloot</a>
-            <a href="PV_Luchthavenvervoer.html" class="nav-tab"><i class="fas fa-plane-departure"></i> Luchthaven</a>
-            <a href="PV_Zakelijk_Vervoer.html" class="nav-tab"><i class="fas fa-briefcase"></i> Zakelijk</a>
-            <a href="PV_Events_Gala.html" class="nav-tab"><i class="fas fa-glass-cheers"></i> Events</a>
-            <a href="PV_Koeriersdienst.html" class="nav-tab"><i class="fas fa-file-signature"></i> Koerier</a>
+            <a href="PV.html" class="nav-tab"><i class="fas fa-home"></i> <span data-i18n="tab-home">Home</span></a>
+            <a href="PV_Exclusieve_Service.html" class="nav-tab active"><i class="fas fa-gem"></i> <span data-i18n="tab-exclusive">Exclusief</span></a>
+            <a href="PV_Vaste_Prijzen.html" class="nav-tab"><i class="fas fa-euro-sign"></i> <span data-i18n="tab-prices">Prijzen</span></a>
+            <a href="PV_Premium_Vloot.html" class="nav-tab"><i class="fas fa-car-side"></i> <span data-i18n="tab-fleet">Vloot</span></a>
+            <a href="PV_Luchthavenvervoer.html" class="nav-tab"><i class="fas fa-plane-departure"></i> <span data-i18n="tab-airport">Luchthaven</span></a>
+            <a href="PV_Zakelijk_Vervoer.html" class="nav-tab"><i class="fas fa-briefcase"></i> <span data-i18n="tab-business">Zakelijk</span></a>
+            <a href="PV_Events_Gala.html" class="nav-tab"><i class="fas fa-glass-cheers"></i> <span data-i18n="tab-events">Events</span></a>
+            <a href="PV_Koeriersdienst.html" class="nav-tab"><i class="fas fa-file-signature"></i> <span data-i18n="tab-courier">Koerier</span></a>
         </div>
     </div>
 
     <div class="container">
         <div class="content-section">
             <div class="content-card">
-                <h2>👑 Meer dan alleen een rit</h2>
-                <p>Bij Fleetconnect geloven we dat uitzonderlijk vervoer begint bij uitzonderlijke service. Onze exclusieve service is ontworpen voor de veeleisende klant die het beste verdient.</p>
-                
+                <h2><span data-i18n="card-title">👑 Meer dan alleen een rit</span></h2>
+                <p data-i18n="card-intro">Bij Fleetconnect geloven we dat uitzonderlijk vervoer begint bij uitzonderlijke service. Onze exclusieve service is ontworpen voor de veeleisende klant die het beste verdient.</p>
                 <div class="highlight-box">
-                    <i class="fas fa-star" style="color: var(--accent-gold); font-size: 1.5rem; margin-bottom: 15px; display: inline-block;"></i>
-                    <p style="font-size: 1.1rem; font-weight: 500;">"Wij denken in mogelijkheden, niet in beperkingen. Uw wens is onze opdracht."</p>
+                    <i class="fas fa-star" style="color: var(--accent-gold); font-size: 1.5rem;"></i>
+                    <p style="font-size: 1.1rem; font-weight: 500;" data-i18n="highlight-text">"Wij denken in mogelijkheden, niet in beperkingen. Uw wens is onze opdracht."</p>
                 </div>
-
-                <h3>🤵 Persoonlijke Chauffeur Service</h3>
+                <h3 data-i18n="chauffeur-title">🤵 Persoonlijke Chauffeur Service</h3>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> <strong>Vaste chauffeur toegewezen</strong> – Dezelfde vertrouwde chauffeur voor al uw ritten</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>24/7 beschikbaar</strong> – Altijd iemand bereikbaar voor uw vragen</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Uw voorkeuren opgeslagen</strong> – Krant, muziek, temperatuur, drankje</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Stiptheidsgarantie</strong> – Binnen 5 minuten na afgesproken tijd</li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="chauffeur-1-label">Vaste chauffeur toegewezen</strong> <span data-i18n="chauffeur-1-text">– Dezelfde vertrouwde chauffeur voor al uw ritten</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="chauffeur-2-label">24/7 beschikbaar</strong> <span data-i18n="chauffeur-2-text">– Altijd iemand bereikbaar voor uw vragen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="chauffeur-3-label">Uw voorkeuren opgeslagen</strong> <span data-i18n="chauffeur-3-text">– Krant, muziek, temperatuur, drankje</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="chauffeur-4-label">Stiptheidsgarantie</strong> <span data-i18n="chauffeur-4-text">– Binnen 5 minuten na afgesproken tijd</span></li>
                 </ul>
-
-                <h3>🎁 VIP Extra's</h3>
+                <h3 data-i18n="vip-title">🎁 VIP Extra's</h3>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> <strong>Champagne & catering</strong> – Naar wens samengesteld</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Bloemen & geschenken</strong> – Wij bezorgen namens u</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Conciërge service</strong> – Restaurantreserveringen, ticketbestellingen, en meer</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Security opties</strong> – Bij verzoek beschikbaar</li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="vip-1-label">Champagne & catering</strong> <span data-i18n="vip-1-text">– Naar wens samengesteld</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="vip-2-label">Bloemen & geschenken</strong> <span data-i18n="vip-2-text">– Wij bezorgen namens u</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="vip-3-label">Conciërge service</strong> <span data-i18n="vip-3-text">– Restaurantreserveringen, ticketbestellingen, en meer</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="vip-4-label">Security opties</strong> <span data-i18n="vip-4-text">– Bij verzoek beschikbaar</span></li>
                 </ul>
-
-                <h3>🌍 Internationale ritten</h3>
-                <p>Voor bestemmingen buiten België bieden wij exclusieve arrangementen:</p>
+                <h3 data-i18n="international-title">🌍 Internationale ritten</h3>
+                <p data-i18n="international-desc">Voor bestemmingen buiten België bieden wij exclusieve arrangementen:</p>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> <strong>Parijs, Amsterdam, Luxemburg, London (Eurotunnel)</strong> – Vaste prijzen op aanvraag</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Meerdaagse ritten</strong> – Hotelarrangementen mogelijk</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Buitenlandse chauffeurs</strong> – Locale kennis aan boord</li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="int-1-label">Parijs, Amsterdam, Luxemburg, London (Eurotunnel)</strong> <span data-i18n="int-1-text">– Vaste prijzen op aanvraag</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="int-2-label">Meerdaagse ritten</strong> <span data-i18n="int-2-text">– Hotelarrangementen mogelijk</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="int-3-label">Buitenlandse chauffeurs</strong> <span data-i18n="int-3-text">– Locale kennis aan boord</span></li>
                 </ul>
-
-                <h3>❓ Veelgestelde vragen exclusieve service</h3>
+                <h3 data-i18n="faq-title">❓ Veelgestelde vragen exclusieve service</h3>
                 <ul class="feature-list">
-                    <li><i class="fas fa-question-circle"></i> <strong>Wat is de meerprijs voor exclusieve service?</strong> - Vanaf €25 extra bovenop de standaard ritprijs.</li>
-                    <li><i class="fas fa-question-circle"></i> <strong>Kan ik een proefrit boeken?</strong> - Ja, neem contact op voor een gratis kennismakingsrit.</li>
-                    <li><i class="fas fa-question-circle"></i> <strong>Is de exclusieve service ook voor groepen?</strong> - Jazeker, wij passen ons aan uw situatie aan.</li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q1">Wat is de meerprijs voor exclusieve service?</strong> <span data-i18n="faq-a1">- Vanaf €25 extra bovenop de standaard ritprijs.</span></li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q2">Kan ik een proefrit boeken?</strong> <span data-i18n="faq-a2">- Ja, neem contact op voor een gratis kennismakingsrit.</span></li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q3">Is de exclusieve service ook voor groepen?</strong> <span data-i18n="faq-a3">- Jazeker, wij passen ons aan uw situatie aan.</span></li>
                 </ul>
-
                 <div class="nav-pagination">
-                    <a href="PV.html"><i class="fas fa-arrow-left"></i> Vorige: Home</a>
-                    <a href="PV_Vaste_Prijzen.html">Volgende: Vaste prijzen <i class="fas fa-arrow-right"></i></a>
+                    <a href="PV.html"><i class="fas fa-arrow-left"></i> <span data-i18n="prev-link">Vorige: Home</span></a>
+                    <a href="PV_Vaste_Prijzen.html"><span data-i18n="next-link">Volgende: Vaste prijzen</span> <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -176,17 +149,164 @@
     <footer class="footer-dark">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-brand"><h4><i class="fas fa-crown"></i> Fleetconnect</h4><p>Premium taxivervoer in België – Stijl, stiptheid en service.</p></div>
-                <div class="footer-ryz3n"><h4>Ryz3n | Digital Supremacy</h4><a href="#">Control Panel</a><a href="#">Taxi Dispatch</a><a href="#">Legal & Privacy</a></div>
-                <div class="footer-legal"><h4>Juridisch</h4><a href="#">Algemene voorwaarden</a><a href="#">Privacy</a><a href="#">Cookiebeleid</a></div>
-                <div class="footer-partners"><h4>Partners</h4><a href="#">Horizon Of Infinity</a></div>
+                <div class="footer-brand"><h4><i class="fas fa-crown"></i> Fleetconnect</h4><p data-i18n="footer-brand-text">Premium taxivervoer in België – Stijl, stiptheid en service.</p></div>
+                <div class="footer-ryz3n"><h4>Ryz3n | Digital Supremacy</h4><a href="#" data-i18n="footer-control">Control Panel</a><a href="#" data-i18n="footer-dispatch">Taxi Dispatch</a><a href="#" data-i18n="footer-legal">Legal & Privacy</a></div>
+                <div class="footer-legal"><h4 data-i18n="footer-legal-title">Juridisch</h4><a href="#" data-i18n="footer-tos">Algemene voorwaarden</a><a href="#" data-i18n="footer-privacy">Privacy</a><a href="#" data-i18n="footer-cookies">Cookiebeleid</a></div>
+                <div class="footer-partners"><h4 data-i18n="footer-partners-title">Partners</h4><a href="#">Horizon Of Infinity</a></div>
             </div>
-            <div class="footer-bottom">© 2026 Fleetconnect – <a href="#">Ryz3n</a></div>
+            <div class="footer-bottom"><span data-i18n="footer-copyright">© 2026 Fleetconnect – </span><a href="#">Ryz3n</a></div>
         </div>
     </footer>
 </div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+    const translations = {
+        nl: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Exclusieve Service", "page-title": "Exclusieve Service",
+            "intro-text": "Ontdek het verschil van echte exclusiviteit. Persoonlijke aandacht, maatwerk en een onberispelijke service die verder gaat dan vervoer.",
+            "book-btn": "Ervaar exclusieve service",
+            "tab-home": "Home", "tab-exclusive": "Exclusief", "tab-prices": "Prijzen", "tab-fleet": "Vloot", "tab-airport": "Luchthaven", "tab-business": "Zakelijk", "tab-events": "Events", "tab-courier": "Koerier",
+            "card-title": "👑 Meer dan alleen een rit",
+            "card-intro": "Bij Fleetconnect geloven we dat uitzonderlijk vervoer begint bij uitzonderlijke service. Onze exclusieve service is ontworpen voor de veeleisende klant die het beste verdient.",
+            "highlight-text": "\"Wij denken in mogelijkheden, niet in beperkingen. Uw wens is onze opdracht.\"",
+            "chauffeur-title": "🤵 Persoonlijke Chauffeur Service",
+            "chauffeur-1-label": "Vaste chauffeur toegewezen", "chauffeur-1-text": "– Dezelfde vertrouwde chauffeur voor al uw ritten",
+            "chauffeur-2-label": "24/7 beschikbaar", "chauffeur-2-text": "– Altijd iemand bereikbaar voor uw vragen",
+            "chauffeur-3-label": "Uw voorkeuren opgeslagen", "chauffeur-3-text": "– Krant, muziek, temperatuur, drankje",
+            "chauffeur-4-label": "Stiptheidsgarantie", "chauffeur-4-text": "– Binnen 5 minuten na afgesproken tijd",
+            "vip-title": "🎁 VIP Extra's",
+            "vip-1-label": "Champagne & catering", "vip-1-text": "– Naar wens samengesteld",
+            "vip-2-label": "Bloemen & geschenken", "vip-2-text": "– Wij bezorgen namens u",
+            "vip-3-label": "Conciërge service", "vip-3-text": "– Restaurantreserveringen, ticketbestellingen, en meer",
+            "vip-4-label": "Security opties", "vip-4-text": "– Bij verzoek beschikbaar",
+            "international-title": "🌍 Internationale ritten",
+            "international-desc": "Voor bestemmingen buiten België bieden wij exclusieve arrangementen:",
+            "int-1-label": "Parijs, Amsterdam, Luxemburg, London (Eurotunnel)", "int-1-text": "– Vaste prijzen op aanvraag",
+            "int-2-label": "Meerdaagse ritten", "int-2-text": "– Hotelarrangementen mogelijk",
+            "int-3-label": "Buitenlandse chauffeurs", "int-3-text": "– Locale kennis aan boord",
+            "faq-title": "❓ Veelgestelde vragen exclusieve service",
+            "faq-q1": "Wat is de meerprijs voor exclusieve service?", "faq-a1": "- Vanaf €25 extra bovenop de standaard ritprijs.",
+            "faq-q2": "Kan ik een proefrit boeken?", "faq-a2": "- Ja, neem contact op voor een gratis kennismakingsrit.",
+            "faq-q3": "Is de exclusieve service ook voor groepen?", "faq-a3": "- Jazeker, wij passen ons aan uw situatie aan.",
+            "prev-link": "Vorige: Home", "next-link": "Volgende: Vaste prijzen",
+            "footer-brand-text": "Premium taxivervoer in België – Stijl, stiptheid en service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Juridisch", "footer-tos": "Algemene voorwaarden", "footer-privacy": "Privacy", "footer-cookies": "Cookiebeleid",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        fr: {
+            "breadcrumb-home": "Accueil", "breadcrumb-current": "Service Exclusif", "page-title": "Service Exclusif",
+            "intro-text": "Découvrez la différence d'une véritable exclusivité. Une attention personnalisée, du sur-mesure et un service irréprochable qui va au-delà du transport.",
+            "book-btn": "Vivez le service exclusif",
+            "tab-home": "Accueil", "tab-exclusive": "Exclusif", "tab-prices": "Prix fixes", "tab-fleet": "Flotte", "tab-airport": "Aéroport", "tab-business": "Affaires", "tab-events": "Événements", "tab-courier": "Messagerie",
+            "card-title": "👑 Bien plus qu'un trajet",
+            "card-intro": "Chez Fleetconnect, nous croyons qu'un transport exceptionnel commence par un service exceptionnel. Notre service exclusif est conçu pour le client exigeant qui mérite le meilleur.",
+            "highlight-text": "« Nous pensons en possibilités, pas en limites. Votre souhait est notre mission. »",
+            "chauffeur-title": "🤵 Service Chauffeur Personnel",
+            "chauffeur-1-label": "Chauffeur attitré", "chauffeur-1-text": "– Le même chauffeur de confiance pour tous vos trajets",
+            "chauffeur-2-label": "Disponible 24/7", "chauffeur-2-text": "– Quelqu'un toujours joignable pour vos questions",
+            "chauffeur-3-label": "Préférences enregistrées", "chauffeur-3-text": "– Journal, musique, température, boisson",
+            "chauffeur-4-label": "Garantie ponctualité", "chauffeur-4-text": "– Dans les 5 minutes suivant l'heure convenue",
+            "vip-title": "🎁 Extras VIP",
+            "vip-1-label": "Champagne & traiteur", "vip-1-text": "– Sur mesure selon vos souhaits",
+            "vip-2-label": "Fleurs & cadeaux", "vip-2-text": "– Nous livrons en votre nom",
+            "vip-3-label": "Service de conciergerie", "vip-3-text": "– Réservations restaurants, billets et plus",
+            "vip-4-label": "Options de sécurité", "vip-4-text": "– Disponibles sur demande",
+            "international-title": "🌍 Trajets internationaux",
+            "international-desc": "Pour les destinations hors Belgique, nous proposons des arrangements exclusifs :",
+            "int-1-label": "Paris, Amsterdam, Luxembourg, Londres (Eurotunnel)", "int-1-text": "– Prix fixes sur demande",
+            "int-2-label": "Trajets de plusieurs jours", "int-2-text": "– Forfaits hôtel possibles",
+            "int-3-label": "Chauffeurs étrangers", "int-3-text": "– Connaissance locale à bord",
+            "faq-title": "❓ FAQ service exclusif",
+            "faq-q1": "Quel est le supplément pour le service exclusif ?", "faq-a1": "- À partir de 25€ en plus du prix standard du trajet.",
+            "faq-q2": "Puis-je réserver un essai ?", "faq-a2": "- Oui, contactez-nous pour un trajet de découverte gratuit.",
+            "faq-q3": "Le service exclusif est-il aussi pour les groupes ?", "faq-a3": "- Absolument, nous nous adaptons à votre situation.",
+            "prev-link": "Précédent: Accueil", "next-link": "Suivant: Prix fixes",
+            "footer-brand-text": "Service de taxi premium en Belgique – Style, ponctualité et service.",
+            "footer-control": "Panneau de contrôle", "footer-dispatch": "Répartition des taxis", "footer-legal": "Juridique et confidentialité",
+            "footer-legal-title": "Juridique", "footer-tos": "Conditions générales", "footer-privacy": "Confidentialité", "footer-cookies": "Politique de cookies",
+            "footer-partners-title": "Partenaires", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        en: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Exclusive Service", "page-title": "Exclusive Service",
+            "intro-text": "Discover the difference of true exclusivity. Personal attention, customisation and impeccable service that goes beyond transport.",
+            "book-btn": "Experience exclusive service",
+            "tab-home": "Home", "tab-exclusive": "Exclusive", "tab-prices": "Prices", "tab-fleet": "Fleet", "tab-airport": "Airport", "tab-business": "Business", "tab-events": "Events", "tab-courier": "Courier",
+            "card-title": "👑 More than just a ride",
+            "card-intro": "At Fleetconnect, we believe exceptional transport begins with exceptional service. Our exclusive service is designed for the demanding client who deserves the best.",
+            "highlight-text": "\"We think in possibilities, not limitations. Your wish is our command.\"",
+            "chauffeur-title": "🤵 Personal Chauffeur Service",
+            "chauffeur-1-label": "Dedicated chauffeur", "chauffeur-1-text": "– Same trusted driver for all your rides",
+            "chauffeur-2-label": "24/7 availability", "chauffeur-2-text": "– Someone always reachable for your questions",
+            "chauffeur-3-label": "Saved preferences", "chauffeur-3-text": "– Newspaper, music, temperature, drink",
+            "chauffeur-4-label": "Punctuality guarantee", "chauffeur-4-text": "– Within 5 minutes of agreed time",
+            "vip-title": "🎁 VIP Extras",
+            "vip-1-label": "Champagne & catering", "vip-1-text": "– Tailored to your wishes",
+            "vip-2-label": "Flowers & gifts", "vip-2-text": "– We deliver on your behalf",
+            "vip-3-label": "Concierge service", "vip-3-text": "– Restaurant reservations, ticket bookings, and more",
+            "vip-4-label": "Security options", "vip-4-text": "– Available upon request",
+            "international-title": "🌍 International trips",
+            "international-desc": "For destinations outside Belgium we offer exclusive arrangements:",
+            "int-1-label": "Paris, Amsterdam, Luxembourg, London (Eurotunnel)", "int-1-text": "– Fixed prices on request",
+            "int-2-label": "Multi-day trips", "int-2-text": "– Hotel packages possible",
+            "int-3-label": "Foreign chauffeurs", "int-3-text": "– Local knowledge on board",
+            "faq-title": "❓ Exclusive service FAQ",
+            "faq-q1": "What is the surcharge for exclusive service?", "faq-a1": "- From €25 extra on top of the standard ride price.",
+            "faq-q2": "Can I book a test ride?", "faq-a2": "- Yes, contact us for a free introductory ride.",
+            "faq-q3": "Is exclusive service also for groups?", "faq-a3": "- Absolutely, we adapt to your situation.",
+            "prev-link": "Previous: Home", "next-link": "Next: Fixed prices",
+            "footer-brand-text": "Premium taxi transport in Belgium – Style, punctuality and service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Legal", "footer-tos": "Terms & Conditions", "footer-privacy": "Privacy", "footer-cookies": "Cookie Policy",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
+        }
+    };
+
+    function setLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = translations[lang][key];
+                else el.innerHTML = translations[lang][key];
+            }
+        });
+        document.documentElement.lang = lang;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        localStorage.setItem('preferredLanguage', lang);
+    }
+
+    // PRIORITEIT: 1. URL parameter, 2. localStorage, 3. standaard nl
+    function getInitialLanguage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
+            return langParam;
+        }
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang && (savedLang === 'nl' || savedLang === 'fr' || savedLang === 'en')) {
+            return savedLang;
+        }
+        return 'nl';
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            setLanguage(lang);
+            // URL updaten zonder de parameter, maar behoud de taal in localStorage
+            const url = new URL(window.location.href);
+            url.searchParams.delete('lang');
+            window.history.replaceState({}, '', url);
+        });
+    });
+
+    const initialLang = getInitialLanguage();
+    setLanguage(initialLang);
+
     var bgMap = L.map('background-map').setView([50.8503, 4.3517], 7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attribution">CARTO</a>',

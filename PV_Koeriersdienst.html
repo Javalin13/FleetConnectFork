@@ -20,171 +20,385 @@
             --card-bg: rgba(255,255,255,0.92);
             --border-light: #e2edf7;
             --shadow: 0 8px 20px rgba(0,0,0,0.05);
-            --sidebar-bg: #ffffff;
-            --sidebar-text: #1a2a3a;
-            --sidebar-hover: #eef2fa;
-            --sidebar-width-collapsed: 0px;
-            --sidebar-width-expanded: 280px;
-            --overlay-bg: rgba(0,0,0,0.4);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { margin: 0; padding: 0; height: 100%; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-dark); line-height: 1.5; overflow-x: hidden; }
-        #background-map { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; filter: brightness(1.05) contrast(1.02); }
-        .content-overlay { position: relative; z-index: 10; background: rgba(255,255,255,0.85); backdrop-filter: blur(1px); min-height: 100vh; display: flex; flex-direction: column; }
-        .container { width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 24px; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); backdrop-filter: blur(2px); z-index: 150; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; pointer-events: none; }
-        .sidebar-wrapper { position: sticky; top: 0; z-index: 200; height: fit-content; display: flex; justify-content: flex-end; pointer-events: none; float: right; clear: right; }
-        .sidebar-trigger { position: fixed; top: 0; right: 0; width: 30px; height: 100%; z-index: 199; pointer-events: auto; cursor: pointer; background: transparent; }
-        .sidebar { width: var(--sidebar-width-collapsed); background: var(--sidebar-bg); color: var(--sidebar-text); transition: width 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1); box-shadow: -4px 0 20px rgba(0,0,0,0.08); display: flex; flex-direction: column; pointer-events: auto; border-radius: 16px 0 0 16px; border: 1px solid var(--border-light); border-right: none; overflow: hidden; height: auto; min-height: 280px; white-space: nowrap; }
-        .sidebar-trigger:hover ~ .sidebar-wrapper .sidebar, .sidebar-wrapper:hover .sidebar, .sidebar:hover { width: var(--sidebar-width-expanded); }
-        .sidebar-trigger:hover ~ .overlay, .sidebar-wrapper:hover ~ .overlay, .sidebar:hover ~ .overlay { opacity: 1; visibility: visible; pointer-events: auto; }
-        .sidebar-nav { display: flex; flex-direction: column; padding: 24px 16px; gap: 12px; }
-        .sidebar-nav a { color: var(--sidebar-text); text-decoration: none; padding: 14px 16px; border-radius: 14px; transition: 0.2s; font-weight: 500; display: flex; align-items: center; gap: 14px; background: var(--white); border: 1px solid var(--border-light); }
-        .sidebar-nav a i { width: 24px; color: var(--primary); font-size: 1.2rem; }
-        .sidebar-nav a span { opacity: 0; transition: opacity 0.2s ease 0.1s; }
-        .sidebar:hover .sidebar-nav a span, .sidebar-trigger:hover ~ .sidebar-wrapper .sidebar .sidebar-nav a span, .sidebar-wrapper:hover .sidebar .sidebar-nav a span { opacity: 1; }
-        .sidebar-nav a:hover { background: var(--sidebar-hover); transform: translateX(-4px); border-color: var(--primary); }
-        .page-hero { background: linear-gradient(135deg, rgba(44,110,158,0.1) 0%, rgba(201,160,61,0.05) 100%); padding: 60px 0 40px; border-bottom: 1px solid var(--border-light); }
-        .breadcrumb { margin-bottom: 30px; font-size: 0.85rem; color: var(--text-light); }
-        .breadcrumb a { color: var(--primary); text-decoration: none; }
-        .breadcrumb a:hover { text-decoration: underline; }
-        .breadcrumb i { margin: 0 8px; font-size: 0.7rem; }
-        .page-title { font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
-        .page-title i { color: var(--accent-gold); margin-right: 15px; }
-        .intro-text { font-size: 1.2rem; color: var(--text-light); max-width: 800px; margin-bottom: 30px; }
-        .content-section { padding: 60px 0; }
-        .content-card { background: var(--card-bg); backdrop-filter: blur(8px); border: 1px solid var(--border-light); border-radius: 32px; padding: 40px; margin-bottom: 40px; box-shadow: var(--shadow); }
-        .content-card h2 { color: var(--primary); font-size: 1.8rem; margin-bottom: 20px; border-left: 4px solid var(--accent-gold); padding-left: 20px; }
-        .content-card h3 { color: var(--text-dark); font-size: 1.3rem; margin: 25px 0 15px 0; }
-        .content-card p { color: var(--text-light); margin-bottom: 16px; line-height: 1.6; }
-        .feature-list { list-style: none; margin: 20px 0; }
-        .feature-list li { padding: 12px 0; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 12px; }
-        .feature-list li i { color: var(--accent-green); width: 24px; font-size: 1.2rem; }
-        .highlight-box { background: linear-gradient(135deg, rgba(44,110,158,0.05) 0%, rgba(107,140,66,0.05) 100%); border-left: 4px solid var(--accent-gold); padding: 25px; border-radius: 20px; margin: 30px 0; }
-        .price-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
-        .price-table th, .price-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-light); }
-        .price-table th { background: rgba(44,110,158,0.1); color: var(--primary); font-weight: 700; }
-        .price-table tr:hover { background: rgba(44,110,158,0.05); }
-        .nav-pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border-light); }
-        .nav-pagination a { background: var(--primary); color: white; padding: 12px 28px; border-radius: 40px; text-decoration: none; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
-        .nav-pagination a:hover { background: var(--primary-dark); }
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 14px 32px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .footer-dark { background: #0d1f2c; color: #e0edf5; padding: 48px 0 24px; margin-top: 60px; }
-        .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; margin-bottom: 30px; }
-        .footer-brand h4, .footer-ryz3n h4, .footer-legal h4, .footer-partners h4 { color: var(--primary); margin-bottom: 16px; font-size: 1.2rem; }
-        .footer-brand p, .footer-ryz3n a, .footer-legal a, .footer-partners a { color: #e0edf5; text-decoration: none; line-height: 1.8; display: block; }
-        .footer-ryz3n a:hover, .footer-legal a:hover, .footer-partners a:hover { color: var(--primary); text-decoration: underline; }
-        .footer-bottom { text-align: center; border-top: 1px solid rgba(224,237,245,0.2); padding-top: 24px; font-size: 0.85rem; }
-        .footer-bottom a { color: var(--primary); text-decoration: none; }
-        .nav-tabs { display: flex; justify-content: center; gap: 12px; margin: 30px 0 20px; flex-wrap: wrap; }
-        .nav-tab { background: var(--card-bg); backdrop-filter: blur(4px); border: 1px solid var(--border-light); padding: 10px 20px; border-radius: 40px; text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
-        .nav-tab:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .nav-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
-        @media (max-width: 768px) { .sidebar-trigger { width: 40px; } .page-title { font-size: 1.8rem; } .content-card { padding: 25px; } .price-table th, .price-table td { padding: 10px; font-size: 0.85rem; } }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        #background-map {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            filter: brightness(1.05) contrast(1.02);
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(1px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        /* Taalwisselaar (rechtsboven) */
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.9);
+            padding: 6px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .lang-btn {
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            color: var(--text-dark);
+        }
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        /* Breadcrumb */
+        .breadcrumb {
+            margin: 30px 0 20px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            padding-top: 60px;
+        }
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumb i {
+            margin: 0 8px;
+            font-size: 0.7rem;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .page-title i {
+            color: var(--accent-gold);
+            margin-right: 15px;
+        }
+        .intro-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        .content-section {
+            padding: 40px 0 60px;
+        }
+        .content-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-light);
+            border-radius: 32px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+        .content-card h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 20px;
+        }
+        .content-card h3 {
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            margin: 25px 0 15px 0;
+        }
+        .content-card p {
+            color: var(--text-light);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .feature-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .feature-list li i {
+            color: var(--accent-green);
+            width: 24px;
+            font-size: 1.2rem;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(44,110,158,0.05) 0%, rgba(107,140,66,0.05) 100%);
+            border-left: 4px solid var(--accent-gold);
+            padding: 25px;
+            border-radius: 20px;
+            margin: 30px 0;
+        }
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        .price-table th, .price-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .price-table th {
+            background: rgba(44,110,158,0.1);
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .price-table tr:hover {
+            background: rgba(44,110,158,0.05);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            background: var(--card-bg);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-light);
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-tab:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .nav-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-light);
+        }
+        .nav-pagination a {
+            background: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-pagination a:hover {
+            background: var(--primary-dark);
+        }
+        .footer-dark {
+            background: #0d1f2c;
+            color: #e0edf5;
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        .footer-brand h4, .footer-ryz3n h4, .footer-legal h4, .footer-partners h4 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+        .footer-brand p, .footer-ryz3n a, .footer-legal a, .footer-partners a {
+            color: #e0edf5;
+            text-decoration: none;
+            line-height: 1.8;
+            display: block;
+        }
+        .footer-ryz3n a:hover, .footer-legal a:hover, .footer-partners a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(224,237,245,0.2);
+            padding-top: 24px;
+            font-size: 0.85rem;
+        }
+        .footer-bottom a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .page-title { font-size: 1.5rem; }
+            .content-card { padding: 25px; }
+            .price-table th, .price-table td { padding: 10px; font-size: 0.85rem; }
+            .language-switcher { top: 10px; right: 15px; gap: 6px; }
+            .lang-btn { font-size: 0.7rem; padding: 4px 10px; }
+            .breadcrumb { padding-top: 50px; }
+        }
     </style>
 </head>
 <body>
 <div id="background-map"></div>
-<div class="content-overlay">
-    <div class="sidebar-trigger"></div>
-    <div class="sidebar-wrapper">
-        <div class="sidebar">
-            <div class="sidebar-nav">
-                <a href="PV.html"><i class="fas fa-home"></i><span> Home</span></a>
-                <a href="PV_Exclusieve_Service.html"><i class="fas fa-gem"></i><span> Exclusieve service</span></a>
-                <a href="PV_Vaste_Prijzen.html"><i class="fas fa-euro-sign"></i><span> Vaste prijzen</span></a>
-                <a href="PV_Premium_Vloot.html"><i class="fas fa-car-side"></i><span> Premium vloot</span></a>
-                <a href="PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i><span> Luchthavenvervoer</span></a>
-                <a href="PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i><span> Zakelijk vervoer</span></a>
-                <a href="PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i><span> Events & Gala</span></a>
-                <a href="PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i><span> Koeriersdienst</span></a>
-            </div>
-        </div>
-    </div>
-    <div class="overlay"></div>
 
-    <section class="page-hero">
-        <div class="container">
-            <div class="breadcrumb"><a href="PV.html">Home</a> <i class="fas fa-chevron-right"></i> <span style="color: var(--accent-gold);">Koeriersdienst</span></div>
-            <h1 class="page-title"><i class="fas fa-file-signature"></i> Koeriersdienst</h1>
-            <p class="intro-text">Snelle, veilige en betrouwbare levering van documenten en pakketten. Binnen dezelfde dag, of zelfs binnen het uur.</p>
-            <a href="PV.html#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> Boek een koerier</a>
+<div class="content-overlay">
+    <div class="language-switcher">
+        <button class="lang-btn" data-lang="nl">NL</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="PV.html" data-i18n="breadcrumb-home">Home</a> 
+            <i class="fas fa-chevron-right"></i> 
+            <span style="color: var(--accent-gold);" data-i18n="breadcrumb-current">Koeriersdienst</span>
         </div>
-    </section>
+        <h1 class="page-title"><i class="fas fa-file-signature"></i> <span data-i18n="page-title">Koeriersdienst</span></h1>
+        <p class="intro-text" data-i18n="intro-text">Snelle, veilige en betrouwbare levering van documenten en pakketten. Binnen dezelfde dag, of zelfs binnen het uur.</p>
+        <a href="PV.html#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> <span data-i18n="book-btn">Boek een koerier</span></a>
+    </div>
 
     <div class="container">
         <div class="nav-tabs">
-            <a href="PV.html" class="nav-tab"><i class="fas fa-home"></i> Home</a>
-            <a href="PV_Exclusieve_Service.html" class="nav-tab"><i class="fas fa-gem"></i> Exclusief</a>
-            <a href="PV_Vaste_Prijzen.html" class="nav-tab"><i class="fas fa-euro-sign"></i> Prijzen</a>
-            <a href="PV_Premium_Vloot.html" class="nav-tab"><i class="fas fa-car-side"></i> Vloot</a>
-            <a href="PV_Luchthavenvervoer.html" class="nav-tab"><i class="fas fa-plane-departure"></i> Luchthaven</a>
-            <a href="PV_Zakelijk_Vervoer.html" class="nav-tab"><i class="fas fa-briefcase"></i> Zakelijk</a>
-            <a href="PV_Events_Gala.html" class="nav-tab"><i class="fas fa-glass-cheers"></i> Events</a>
-            <a href="PV_Koeriersdienst.html" class="nav-tab active"><i class="fas fa-file-signature"></i> Koerier</a>
+            <a href="PV.html" class="nav-tab"><i class="fas fa-home"></i> <span data-i18n="tab-home">Home</span></a>
+            <a href="PV_Exclusieve_Service.html" class="nav-tab"><i class="fas fa-gem"></i> <span data-i18n="tab-exclusive">Exclusief</span></a>
+            <a href="PV_Vaste_Prijzen.html" class="nav-tab"><i class="fas fa-euro-sign"></i> <span data-i18n="tab-prices">Prijzen</span></a>
+            <a href="PV_Premium_Vloot.html" class="nav-tab"><i class="fas fa-car-side"></i> <span data-i18n="tab-fleet">Vloot</span></a>
+            <a href="PV_Luchthavenvervoer.html" class="nav-tab"><i class="fas fa-plane-departure"></i> <span data-i18n="tab-airport">Luchthaven</span></a>
+            <a href="PV_Zakelijk_Vervoer.html" class="nav-tab"><i class="fas fa-briefcase"></i> <span data-i18n="tab-business">Zakelijk</span></a>
+            <a href="PV_Events_Gala.html" class="nav-tab"><i class="fas fa-glass-cheers"></i> <span data-i18n="tab-events">Events</span></a>
+            <a href="PV_Koeriersdienst.html" class="nav-tab active"><i class="fas fa-file-signature"></i> <span data-i18n="tab-courier">Koerier</span></a>
         </div>
     </div>
 
     <div class="container">
         <div class="content-section">
             <div class="content-card">
-                <h2>📦 Uw betrouwbare partner voor snelle leveringen</h2>
-                <p>Of het nu gaat om juridische documenten, medische monsters of dringende pakketten – Fleetconnect Koeriersdienst zorgt voor een veilige en snelle bezorging. Wij begrijpen dat tijd vaak kritiek is.</p>
+                <h2><span data-i18n="card-title">📦 Uw betrouwbare partner voor snelle leveringen</span></h2>
+                <p data-i18n="card-intro">Of het nu gaat om juridische documenten, medische monsters of dringende pakketten – Fleetconnect Koeriersdienst zorgt voor een veilige en snelle bezorging. Wij begrijpen dat tijd vaak kritiek is.</p>
                 
                 <div class="highlight-box">
                     <i class="fas fa-star" style="color: var(--accent-gold); font-size: 1.5rem; margin-bottom: 15px; display: inline-block;"></i>
-                    <p style="font-size: 1.1rem; font-weight: 500;">"Uw documenten zijn veilig bij ons – discrete en snelle levering door heel België."</p>
+                    <p style="font-size: 1.1rem; font-weight: 500;" data-i18n="highlight-text">"Uw documenten zijn veilig bij ons – discrete en snelle levering door heel België."</p>
                 </div>
 
-                <h3>⚡ Leveropties</h3>
+                <h3 data-i18n="delivery-title">⚡ Leveropties</h3>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> <strong>Direct Koerier (Spoed)</strong> – Binnen 2 uur bezorgd (binnen een straal van 30km)</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Zelfde dag levering</strong> – Voor bestellingen vóór 12:00, gegarandeerd vandaag bezorgd</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Volgende dag levering</strong> – De voordelige optie voor niet-spoedeisende zendingen</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Medisch transport</strong> – Gekoeld transport voor bloed, medicijnen en labresultaten</li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="delivery-1-label">Direct Koerier (Spoed)</strong> <span data-i18n="delivery-1-text">– Binnen 2 uur bezorgd (binnen een straal van 30km)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="delivery-2-label">Zelfde dag levering</strong> <span data-i18n="delivery-2-text">– Voor bestellingen vóór 12:00, gegarandeerd vandaag bezorgd</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="delivery-3-label">Volgende dag levering</strong> <span data-i18n="delivery-3-text">– De voordelige optie voor niet-spoedeisende zendingen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="delivery-4-label">Medisch transport</strong> <span data-i18n="delivery-4-text">– Gekoeld transport voor bloed, medicijnen en labresultaten</span></li>
                 </ul>
 
-                <h3>💰 Prijzen koeriersdienst</h3>
-                <table class="price-table">
-                    <thead><tr><th>Afstand</th><th>Standaard (zelfde dag)</th><th>Spoed (binnen 2u)</th><th>Medisch transport</th></tr></thead>
+                <h3 data-i18n="prices-title">💰 Prijzen koeriersdienst</h3>
+                <table class="price-table" id="price-table">
+                    <thead><tr><th data-i18n="table-header-distance">Afstand</th><th data-i18n="table-header-standard">Standaard (zelfde dag)</th><th data-i18n="table-header-express">Spoed (binnen 2u)</th><th data-i18n="table-header-medical">Medisch transport</th></tr></thead>
                     <tbody>
-                        <tr><td>0-10 km</td><td>€ 25,00</td><td>€ 40,00</td><td>€ 35,00</td></tr>
-                        <tr><td>10-25 km</td><td>€ 35,00</td><td>€ 55,00</td><td>€ 50,00</td></tr>
-                        <tr><td>25-50 km</td><td>€ 50,00</td><td>€ 75,00</td><td>€ 70,00</td></tr>
-                        <tr><td>50-100 km</td><td>€ 75,00</td><td>€ 110,00</td><td>€ 100,00</td></tr>
-                        <tr><td>100+ km</td><td>€ 0,90/km</td><td>€ 1,30/km</td><td>€ 1,20/km</td></tr>
+                        <tr><td data-i18n="dist-1">0-10 km</td><td>€ 25,00</td><td>€ 40,00</td><td>€ 35,00</td></tr>
+                        <tr><td data-i18n="dist-2">10-25 km</td><td>€ 35,00</td><td>€ 55,00</td><td>€ 50,00</td></tr>
+                        <tr><td data-i18n="dist-3">25-50 km</td><td>€ 50,00</td><td>€ 75,00</td><td>€ 70,00</td></tr>
+                        <tr><td data-i18n="dist-4">50-100 km</td><td>€ 75,00</td><td>€ 110,00</td><td>€ 100,00</td></tr>
+                        <tr><td data-i18n="dist-5">100+ km</td><td>€ 0,90/km</td><td>€ 1,30/km</td><td>€ 1,20/km</td></tr>
                     </tbody>
                 </table>
 
-                <h3>📋 Wat wij vervoeren</h3>
+                <h3 data-i18n="cargo-title">📋 Wat wij vervoeren</h3>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> <strong>Documenten</strong> – Contracten, akten, juridische stukken (vertrouwelijk)</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Medisch</strong> – Bloedmonsters, medicijnen, laboratoriumuitslagen (gekoeld)</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Pakketten</strong> – Tot 50kg per zending</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Bankzaken</strong> – Waardedocumenten en geldtransport (op aanvraag)</li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="cargo-1-label">Documenten</strong> <span data-i18n="cargo-1-text">– Contracten, akten, juridische stukken (vertrouwelijk)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="cargo-2-label">Medisch</strong> <span data-i18n="cargo-2-text">– Bloedmonsters, medicijnen, laboratoriumuitslagen (gekoeld)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="cargo-3-label">Pakketten</strong> <span data-i18n="cargo-3-text">– Tot 50kg per zending</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="cargo-4-label">Bankzaken</strong> <span data-i18n="cargo-4-text">– Waardedocumenten en geldtransport (op aanvraag)</span></li>
                 </ul>
 
-                <h3>🔒 Veiligheid en tracking</h3>
+                <h3 data-i18n="safety-title">🔒 Veiligheid en tracking</h3>
                 <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> <strong>Track & Trace</strong> – Real-time volgen van uw zending</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Handtekening bij ontvangst</strong> – Bewijs van levering</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Verzekerd transport</strong> – Tot € 2.500 standaard verzekerd</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Discrete verpakking</strong> – Geen herkenbare branding op leveringen</li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="safety-1-label">Track & Trace</strong> <span data-i18n="safety-1-text">– Real-time volgen van uw zending</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="safety-2-label">Handtekening bij ontvangst</strong> <span data-i18n="safety-2-text">– Bewijs van levering</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="safety-3-label">Verzekerd transport</strong> <span data-i18n="safety-3-text">– Tot € 2.500 standaard verzekerd</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="safety-4-label">Discrete verpakking</strong> <span data-i18n="safety-4-text">– Geen herkenbare branding op leveringen</span></li>
                 </ul>
 
-                <h3>❓ Veelgestelde vragen koerier</h3>
+                <h3 data-i18n="faq-title">❓ Veelgestelde vragen koerier</h3>
                 <ul class="feature-list">
-                    <li><i class="fas fa-question-circle"></i> <strong>Hoe snel kan een koerier bij mij zijn?</strong> - Binnen 30 minuten in stedelijke gebieden.</li>
-                    <li><i class="fas fa-question-circle"></i> <strong>Kan ik een zending laten ophalen bij een klant?</strong> - Ja, wij doen zowel pick-up als delivery.</li>
-                    <li><i class="fas fa-question-circle"></i> <strong>Worden medische zendingen gekoeld vervoerd?</strong> - Ja, wij beschikken over gekoelde transportboxen.</li>
-                    <li><i class="fas fa-question-circle"></i> <strong>Wat kost een internationale koerier?</strong> - Neem contact op voor een offerte.</li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q1">Hoe snel kan een koerier bij mij zijn?</strong> <span data-i18n="faq-a1">- Binnen 30 minuten in stedelijke gebieden.</span></li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q2">Kan ik een zending laten ophalen bij een klant?</strong> <span data-i18n="faq-a2">- Ja, wij doen zowel pick-up als delivery.</span></li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q3">Worden medische zendingen gekoeld vervoerd?</strong> <span data-i18n="faq-a3">- Ja, wij beschikken over gekoelde transportboxen.</span></li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q4">Wat kost een internationale koerier?</strong> <span data-i18n="faq-a4">- Neem contact op voor een offerte.</span></li>
                 </ul>
 
                 <div class="nav-pagination">
-                    <a href="PV_Events_Gala.html"><i class="fas fa-arrow-left"></i> Vorige: Events & Gala</a>
-                    <a href="PV.html">Terug naar Home <i class="fas fa-arrow-right"></i></a>
+                    <a href="PV_Events_Gala.html"><i class="fas fa-arrow-left"></i> <span data-i18n="prev-link">Vorige: Events & Gala</span></a>
+                    <a href="PV.html"><span data-i18n="next-link">Terug naar Home</span> <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -193,17 +407,179 @@
     <footer class="footer-dark">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-brand"><h4><i class="fas fa-crown"></i> Fleetconnect</h4><p>Premium taxivervoer in België – Stijl, stiptheid en service.</p></div>
-                <div class="footer-ryz3n"><h4>Ryz3n | Digital Supremacy</h4><a href="#">Control Panel</a><a href="#">Taxi Dispatch</a><a href="#">Legal & Privacy</a></div>
-                <div class="footer-legal"><h4>Juridisch</h4><a href="#">Algemene voorwaarden</a><a href="#">Privacy</a><a href="#">Cookiebeleid</a></div>
-                <div class="footer-partners"><h4>Partners</h4><a href="#">Horizon Of Infinity</a></div>
+                <div class="footer-brand"><h4><i class="fas fa-crown"></i> Fleetconnect</h4><p data-i18n="footer-brand-text">Premium taxivervoer in België – Stijl, stiptheid en service.</p></div>
+                <div class="footer-ryz3n"><h4>Ryz3n | Digital Supremacy</h4><a href="#" data-i18n="footer-control">Control Panel</a><a href="#" data-i18n="footer-dispatch">Taxi Dispatch</a><a href="#" data-i18n="footer-legal">Legal & Privacy</a></div>
+                <div class="footer-legal"><h4 data-i18n="footer-legal-title">Juridisch</h4><a href="#" data-i18n="footer-tos">Algemene voorwaarden</a><a href="#" data-i18n="footer-privacy">Privacy</a><a href="#" data-i18n="footer-cookies">Cookiebeleid</a></div>
+                <div class="footer-partners"><h4 data-i18n="footer-partners-title">Partners</h4><a href="#">Horizon Of Infinity</a></div>
             </div>
-            <div class="footer-bottom">© 2026 Fleetconnect – <a href="#">Ryz3n</a></div>
+            <div class="footer-bottom"><span data-i18n="footer-copyright">© 2026 Fleetconnect – </span><a href="#">Ryz3n</a></div>
         </div>
     </footer>
 </div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+    const translations = {
+        nl: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Koeriersdienst", "page-title": "Koeriersdienst",
+            "intro-text": "Snelle, veilige en betrouwbare levering van documenten en pakketten. Binnen dezelfde dag, of zelfs binnen het uur.",
+            "book-btn": "Boek een koerier",
+            "tab-home": "Home", "tab-exclusive": "Exclusief", "tab-prices": "Prijzen", "tab-fleet": "Vloot", "tab-airport": "Luchthaven", "tab-business": "Zakelijk", "tab-events": "Events", "tab-courier": "Koerier",
+            "card-title": "📦 Uw betrouwbare partner voor snelle leveringen",
+            "card-intro": "Of het nu gaat om juridische documenten, medische monsters of dringende pakketten – Fleetconnect Koeriersdienst zorgt voor een veilige en snelle bezorging. Wij begrijpen dat tijd vaak kritiek is.",
+            "highlight-text": "\"Uw documenten zijn veilig bij ons – discrete en snelle levering door heel België.\"",
+            "delivery-title": "⚡ Leveropties",
+            "delivery-1-label": "Direct Koerier (Spoed)", "delivery-1-text": "– Binnen 2 uur bezorgd (binnen een straal van 30km)",
+            "delivery-2-label": "Zelfde dag levering", "delivery-2-text": "– Voor bestellingen vóór 12:00, gegarandeerd vandaag bezorgd",
+            "delivery-3-label": "Volgende dag levering", "delivery-3-text": "– De voordelige optie voor niet-spoedeisende zendingen",
+            "delivery-4-label": "Medisch transport", "delivery-4-text": "– Gekoeld transport voor bloed, medicijnen en labresultaten",
+            "prices-title": "💰 Prijzen koeriersdienst",
+            "table-header-distance": "Afstand", "table-header-standard": "Standaard (zelfde dag)", "table-header-express": "Spoed (binnen 2u)", "table-header-medical": "Medisch transport",
+            "dist-1": "0-10 km", "dist-2": "10-25 km", "dist-3": "25-50 km", "dist-4": "50-100 km", "dist-5": "100+ km",
+            "cargo-title": "📋 Wat wij vervoeren",
+            "cargo-1-label": "Documenten", "cargo-1-text": "– Contracten, akten, juridische stukken (vertrouwelijk)",
+            "cargo-2-label": "Medisch", "cargo-2-text": "– Bloedmonsters, medicijnen, laboratoriumuitslagen (gekoeld)",
+            "cargo-3-label": "Pakketten", "cargo-3-text": "– Tot 50kg per zending",
+            "cargo-4-label": "Bankzaken", "cargo-4-text": "– Waardedocumenten en geldtransport (op aanvraag)",
+            "safety-title": "🔒 Veiligheid en tracking",
+            "safety-1-label": "Track & Trace", "safety-1-text": "– Real-time volgen van uw zending",
+            "safety-2-label": "Handtekening bij ontvangst", "safety-2-text": "– Bewijs van levering",
+            "safety-3-label": "Verzekerd transport", "safety-3-text": "– Tot € 2.500 standaard verzekerd",
+            "safety-4-label": "Discrete verpakking", "safety-4-text": "– Geen herkenbare branding op leveringen",
+            "faq-title": "❓ Veelgestelde vragen koerier",
+            "faq-q1": "Hoe snel kan een koerier bij mij zijn?", "faq-a1": "- Binnen 30 minuten in stedelijke gebieden.",
+            "faq-q2": "Kan ik een zending laten ophalen bij een klant?", "faq-a2": "- Ja, wij doen zowel pick-up als delivery.",
+            "faq-q3": "Worden medische zendingen gekoeld vervoerd?", "faq-a3": "- Ja, wij beschikken over gekoelde transportboxen.",
+            "faq-q4": "Wat kost een internationale koerier?", "faq-a4": "- Neem contact op voor een offerte.",
+            "prev-link": "Vorige: Events & Gala", "next-link": "Terug naar Home",
+            "footer-brand-text": "Premium taxivervoer in België – Stijl, stiptheid en service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Juridisch", "footer-tos": "Algemene voorwaarden", "footer-privacy": "Privacy", "footer-cookies": "Cookiebeleid",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        fr: {
+            "breadcrumb-home": "Accueil", "breadcrumb-current": "Service de messagerie", "page-title": "Service de messagerie",
+            "intro-text": "Livraison rapide, sécurisée et fiable de documents et colis. Le jour même, voire dans l'heure.",
+            "book-btn": "Réserver un coursier",
+            "tab-home": "Accueil", "tab-exclusive": "Exclusif", "tab-prices": "Prix fixes", "tab-fleet": "Flotte", "tab-airport": "Aéroport", "tab-business": "Affaires", "tab-events": "Événements", "tab-courier": "Messagerie",
+            "card-title": "📦 Votre partenaire fiable pour les livraisons rapides",
+            "card-intro": "Qu'il s'agisse de documents juridiques, d'échantillons médicaux ou de colis urgents – le service de messagerie Fleetconnect garantit une livraison sûre et rapide. Nous savons que le temps est souvent critique.",
+            "highlight-text": "\"Vos documents sont en sécurité chez nous – livraison discrète et rapide dans toute la Belgique.\"",
+            "delivery-title": "⚡ Options de livraison",
+            "delivery-1-label": "Coursier express (urgence)", "delivery-1-text": "– Livré dans les 2 heures (rayon de 30 km)",
+            "delivery-2-label": "Livraison le jour même", "delivery-2-text": "– Pour les commandes avant 12h00, livraison garantie aujourd'hui",
+            "delivery-3-label": "Livraison le lendemain", "delivery-3-text": "– L'option économique pour les envois non urgents",
+            "delivery-4-label": "Transport médical", "delivery-4-text": "– Transport réfrigéré pour sang, médicaments et résultats de laboratoire",
+            "prices-title": "💰 Tarifs du service de messagerie",
+            "table-header-distance": "Distance", "table-header-standard": "Standard (jour même)", "table-header-express": "Express (2h)", "table-header-medical": "Transport médical",
+            "dist-1": "0-10 km", "dist-2": "10-25 km", "dist-3": "25-50 km", "dist-4": "50-100 km", "dist-5": "100+ km",
+            "cargo-title": "📋 Ce que nous transportons",
+            "cargo-1-label": "Documents", "cargo-1-text": "– Contrats, actes, pièces juridiques (confidentiel)",
+            "cargo-2-label": "Médical", "cargo-2-text": "– Échantillons sanguins, médicaments, résultats de laboratoire (réfrigéré)",
+            "cargo-3-label": "Colis", "cargo-3-text": "– Jusqu'à 50 kg par envoi",
+            "cargo-4-label": "Opérations bancaires", "cargo-4-text": "– Documents de valeur et transport d'argent (sur demande)",
+            "safety-title": "🔒 Sécurité et suivi",
+            "safety-1-label": "Track & Trace", "safety-1-text": "– Suivi en temps réel de votre envoi",
+            "safety-2-label": "Signature à la réception", "safety-2-text": "– Preuve de livraison",
+            "safety-3-label": "Transport assuré", "safety-3-text": "– Jusqu'à 2 500 € d'assurance standard",
+            "safety-4-label": "Emballage discret", "safety-4-text": "– Pas de branding reconnaissable sur les livraisons",
+            "faq-title": "❓ FAQ messagerie",
+            "faq-q1": "À quelle vitesse un coursier peut-il arriver ?", "faq-a1": "- Dans les 30 minutes en zone urbaine.",
+            "faq-q2": "Puis-je faire ramasser un colis chez un client ?", "faq-a2": "- Oui, nous assurons à la fois l'enlèvement et la livraison.",
+            "faq-q3": "Les envois médicaux sont-ils transportés réfrigérés ?", "faq-a3": "- Oui, nous disposons de boîtes de transport réfrigérées.",
+            "faq-q4": "Combien coûte un coursier international ?", "faq-a4": "- Contactez-nous pour un devis.",
+            "prev-link": "Précédent: Événements & Gala", "next-link": "Retour à l'accueil",
+            "footer-brand-text": "Service de taxi premium en Belgique – Style, ponctualité et service.",
+            "footer-control": "Panneau de contrôle", "footer-dispatch": "Répartition des taxis", "footer-legal": "Juridique et confidentialité",
+            "footer-legal-title": "Juridique", "footer-tos": "Conditions générales", "footer-privacy": "Confidentialité", "footer-cookies": "Politique de cookies",
+            "footer-partners-title": "Partenaires", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        en: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Courier service", "page-title": "Courier service",
+            "intro-text": "Fast, secure and reliable delivery of documents and parcels. Same day, or even within the hour.",
+            "book-btn": "Book a courier",
+            "tab-home": "Home", "tab-exclusive": "Exclusive", "tab-prices": "Prices", "tab-fleet": "Fleet", "tab-airport": "Airport", "tab-business": "Business", "tab-events": "Events", "tab-courier": "Courier",
+            "card-title": "📦 Your reliable partner for fast deliveries",
+            "card-intro": "Whether it's legal documents, medical samples or urgent parcels – Fleetconnect Courier Service ensures safe and fast delivery. We understand that time is often critical.",
+            "highlight-text": "\"Your documents are safe with us – discreet and fast delivery throughout Belgium.\"",
+            "delivery-title": "⚡ Delivery options",
+            "delivery-1-label": "Direct Courier (Express)", "delivery-1-text": "– Delivered within 2 hours (within a 30km radius)",
+            "delivery-2-label": "Same day delivery", "delivery-2-text": "– For orders before 12:00, guaranteed delivery today",
+            "delivery-3-label": "Next day delivery", "delivery-3-text": "– The budget option for non-urgent shipments",
+            "delivery-4-label": "Medical transport", "delivery-4-text": "– Cooled transport for blood, medicines and lab results",
+            "prices-title": "💰 Courier service prices",
+            "table-header-distance": "Distance", "table-header-standard": "Standard (same day)", "table-header-express": "Express (within 2h)", "table-header-medical": "Medical transport",
+            "dist-1": "0-10 km", "dist-2": "10-25 km", "dist-3": "25-50 km", "dist-4": "50-100 km", "dist-5": "100+ km",
+            "cargo-title": "📋 What we transport",
+            "cargo-1-label": "Documents", "cargo-1-text": "– Contracts, deeds, legal papers (confidential)",
+            "cargo-2-label": "Medical", "cargo-2-text": "– Blood samples, medicines, lab results (cooled)",
+            "cargo-3-label": "Parcels", "cargo-3-text": "– Up to 50kg per shipment",
+            "cargo-4-label": "Banking", "cargo-4-text": "– Valuable documents and cash transport (on request)",
+            "safety-title": "🔒 Safety and tracking",
+            "safety-1-label": "Track & Trace", "safety-1-text": "– Real-time tracking of your shipment",
+            "safety-2-label": "Signature on delivery", "safety-2-text": "– Proof of delivery",
+            "safety-3-label": "Insured transport", "safety-3-text": "– Up to €2,500 standard insurance",
+            "safety-4-label": "Discreet packaging", "safety-4-text": "– No recognizable branding on deliveries",
+            "faq-title": "❓ Courier FAQ",
+            "faq-q1": "How fast can a courier reach me?", "faq-a1": "- Within 30 minutes in urban areas.",
+            "faq-q2": "Can I have a shipment picked up at a customer's location?", "faq-a2": "- Yes, we do both pick-up and delivery.",
+            "faq-q3": "Are medical shipments transported cooled?", "faq-a3": "- Yes, we have cooled transport boxes.",
+            "faq-q4": "How much does an international courier cost?", "faq-a4": "- Contact us for a quote.",
+            "prev-link": "Previous: Events & Gala", "next-link": "Back to Home",
+            "footer-brand-text": "Premium taxi transport in Belgium – Style, punctuality and service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Legal", "footer-tos": "Terms & Conditions", "footer-privacy": "Privacy", "footer-cookies": "Cookie Policy",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
+        }
+    };
+
+    function setLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = translations[lang][key];
+                else el.innerHTML = translations[lang][key];
+            }
+        });
+        document.documentElement.lang = lang;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        localStorage.setItem('preferredLanguage', lang);
+    }
+
+    // *** BEPALING INITIËLE TAAL (prioriteit: URL parameter > localStorage > 'nl') ***
+    function getInitialLanguage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
+            return langParam;
+        }
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang && (savedLang === 'nl' || savedLang === 'fr' || savedLang === 'en')) {
+            return savedLang;
+        }
+        return 'nl';
+    }
+
+    // TAALWISSELAAR KLIK
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            setLanguage(lang);
+            // Verwijder de ?lang= parameter uit de URL voor een schone weergave
+            const url = new URL(window.location.href);
+            url.searchParams.delete('lang');
+            window.history.replaceState({}, '', url);
+        });
+    });
+
+    // INITIËLE TAAL INSTELLEN
+    const initialLang = getInitialLanguage();
+    setLanguage(initialLang);
+
+    // Leaflet kaart
     var bgMap = L.map('background-map').setView([50.8503, 4.3517], 7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attribution">CARTO</a>',
