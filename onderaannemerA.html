@@ -904,7 +904,12 @@
                             ${this.getDriverFilterOptions()}
                         </select>
                     </div>
-                    <div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button></div>
+                    <div class="filter-actions">
+                        <button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button>
+                        <button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button>
+                        <button class="btn-filter" style="background: #10b981;" onclick="app.downloadHistoryCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+                        <button class="btn-filter" style="background: #3b82f6;" onclick="app.downloadHistoryJSON()"><i class="fas fa-file-code"></i> JSON</button>
+                    </div>
                 </div>
                 <div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="historyTable"></tbody></table></div>`;
                 document.getElementById('contentArea').innerHTML = html;
@@ -1635,6 +1640,137 @@
                 let blob = new Blob([JSON.stringify(this.historyOrders, null, 2)], { type: "application/json" });
                 let link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `fleet_history_${new Date().toISOString().slice(0,10)}.json`; link.click();
                 this.showToast("JSON geëxporteerd!");
+            },
+
+            // Download de HUIDIGE (gefilterde) history data als CSV
+            downloadHistoryCSV() {
+                // Haal de huidige gefilterde data op uit de tabel
+                let currentData = [];
+                const rows = document.querySelectorAll('#historyTable tr');
+
+                if (rows.length === 0 || (rows.length === 1 && rows[0].innerText.includes('Geen ritten'))) {
+                    // Gebruik de historyOrders array als fallback
+                    currentData = this.historyOrders;
+                } else {
+                    // Parse de tabel data
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length >= 7) {
+                            // Haal driver text op (cel index 6)
+                            const driverCell = cells[6];
+                            const driverText = driverCell ? driverCell.innerText.trim() : 'Niet toegewezen';
+
+                            currentData.push({
+                                id: cells[0]?.innerText.split('\n')[0] || '',
+                                datetime: cells[1]?.innerText.split(' ')[0] || '',
+                                time: cells[1]?.innerText.split(' ')[1] || '',
+                                name: cells[2]?.innerText || '',
+                                pickup: cells[3]?.innerText.split('→')[0]?.trim() || '',
+                                destination: cells[3]?.innerText.split('→')[1]?.trim() || '',
+                                vehicle: cells[4]?.innerText || '',
+                                amount: parseFloat(cells[5]?.innerText.replace('€', '').trim()) || 0,
+                                driver: driverText,
+                                status: this.getStatusFromRow(cells[0])
+                            });
+                        }
+                    });
+                }
+
+                if (currentData.length === 0) {
+                    this.showToast('Geen data om te exporteren', true);
+                    return;
+                }
+
+                // CSV headers
+                const headers = ['ID', 'Datum', 'Tijd', 'Klant Naam', 'Pickup', 'Destination', 'Voertuig', 'Bedrag (€)', 'Driver', 'Status'];
+
+                // CSV rijen
+                const csvRows = currentData.map(item => [
+                    item.id,
+                    item.datetime,
+                    item.time,
+                    item.name,
+                    item.pickup,
+                    item.destination,
+                    item.vehicle,
+                    item.amount,
+                    item.driver,
+                    item.status
+                ].map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'));
+
+                const csvContent = [headers.map(h => `"${h}"`).join(';'), ...csvRows].join('\n');
+                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+                link.download = `fleet_history_${timestamp}.csv`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+
+                this.showToast(`CSV geëxporteerd! (${currentData.length} ritten)`);
+            },
+
+            // Download de HUIDIGE (gefilterde) history data als JSON
+            downloadHistoryJSON() {
+                // Haal de huidige gefilterde data op uit de tabel
+                let currentData = [];
+                const rows = document.querySelectorAll('#historyTable tr');
+
+                if (rows.length === 0 || (rows.length === 1 && rows[0].innerText.includes('Geen ritten'))) {
+                    currentData = this.historyOrders;
+                } else {
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length >= 7) {
+                            const driverCell = cells[6];
+                            const driverText = driverCell ? driverCell.innerText.trim() : 'Niet toegewezen';
+
+                            currentData.push({
+                                id: cells[0]?.innerText.split('\n')[0] || '',
+                                datetime: cells[1]?.innerText.split(' ')[0] || '',
+                                time: cells[1]?.innerText.split(' ')[1] || '',
+                                name: cells[2]?.innerText || '',
+                                pickup: cells[3]?.innerText.split('→')[0]?.trim() || '',
+                                destination: cells[3]?.innerText.split('→')[1]?.trim() || '',
+                                vehicle: cells[4]?.innerText || '',
+                                amount: parseFloat(cells[5]?.innerText.replace('€', '').trim()) || 0,
+                                driver: driverText,
+                                status: this.getStatusFromRow(cells[0]),
+                                export_date: new Date().toISOString()
+                            });
+                        }
+                    });
+                }
+
+                if (currentData.length === 0) {
+                    this.showToast('Geen data om te exporteren', true);
+                    return;
+                }
+
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+                const blob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.download = `fleet_history_${timestamp}.json`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+
+                this.showToast(`JSON geëxporteerd! (${currentData.length} ritten)`);
+            },
+
+            // Helper functie om status badge text te extraheren
+            getStatusFromRow(firstCell) {
+                if (!firstCell) return 'Onbekend';
+                const statusSpan = firstCell.querySelector('.status-badge');
+                if (statusSpan) {
+                    return statusSpan.innerText.trim();
+                }
+                const cellText = firstCell.innerText;
+                if (cellText.includes('Voltooid')) return 'Voltooid';
+                if (cellText.includes('Geannuleerd')) return 'Geannuleerd';
+                if (cellText.includes('Geweigerd')) return 'Geweigerd';
+                if (cellText.includes('Verlopen')) return 'Verlopen';
+                return 'Onbekend';
             },
             
             refreshCurrentTab() {
