@@ -1796,10 +1796,29 @@
                 this.refreshCurrentTab();
             },
             
-            refreshAllData() { 
-                this.filterAndSortData();
-                this.refreshCurrentTab(); 
-                this.showToast('Data ververst');
+            async refreshAllData() {
+                this.showToast('Data wordt vernieuwd...');
+
+                try {
+                    // 1. Haal verse booking data van Supabase
+                    const freshBookings = await this.fetchBookingsFromSupabase();
+                    this.allBookings = freshBookings;
+
+                    // 2. Herfilter en sorteer alle lijsten
+                    this.filterAndSortData();
+
+                    // 3. Herlaad drivers en partners (voor het geval er wijzigingen zijn)
+                    await this.loadPartners();
+                    await this.loadDrivers();
+
+                    // 4. Vernieuw de huidige tab in de UI
+                    this.refreshCurrentTab();
+
+                    this.showToast('Data succesvol vernieuwd!');
+                } catch (error) {
+                    console.error('❌ Refresh fout:', error);
+                    this.showToast('Fout bij vernieuwen: ' + error.message, true);
+                }
             },
             
             // ========== AANGEPASTE LOGOUT (MET SESSIEVERWIJDERING EN REPLACE) ==========
