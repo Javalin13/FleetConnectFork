@@ -489,6 +489,7 @@
             <button class="tab-btn active" data-tab="new-booking">📝 Nieuwe Rit</button>
             <button class="tab-btn" data-tab="profile">👤 Mijn Profiel</button>
             <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Ritten</button>
+            <button class="tab-btn" data-tab="payments">💰 Betalingen</button>
             <a href="index.html" id="logoutTabBtn" class="logout-tab-btn" style="text-decoration:none;"><i class="fas fa-sign-out-alt"></i> Uitloggen</a>
         </div>
 
@@ -631,6 +632,18 @@
             <h4>✅ Voltooide ritten</h4>
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
         </div>
+
+        <div id="payments-container" class="tab-container hidden">
+            <div class="profile-card">
+                <h3>💰 Betalingsgeschiedenis</h3>
+                <div id="paymentsList" style="margin-top:20px;">
+                    <table class="bookings-table" id="paymentsTable">
+                        <thead><tr><th>ID</th><th>Datum</th><th>Bedrag</th><th>Methode</th><th>Status</th><th>Factuur</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="footer-dark">
@@ -650,6 +663,12 @@
 </div>
 <div id="ritModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
 
+<script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { comms } from './src/modules/communication/index.js';
+    window.createClient = createClient;
+    window.comms = comms;
+</script>
 <script>
     // HAMBURGER MENU FUNCTIONALITEIT
     const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -695,6 +714,21 @@
         return 'nl';
     }
     
+    function handlePaymentStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const payment = urlParams.get('payment');
+        const bookingId = urlParams.get('id');
+
+        if (payment === 'success') {
+            alert(`Bedankt! Uw betaling voor booking ${bookingId} is succesvol ontvangen.`);
+            // Email trigger (non-blocking) for Stripe success
+            if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
+            switchToTab('payments');
+        } else if (payment === 'cancelled') {
+            alert(`De betaling voor booking ${bookingId} is geannuleerd. U kunt het later opnieuw proberen via 'Mijn Ritten'.`);
+        }
+    }
+
     // Markeer actieve taal in sidebar
     function setActiveLanguageButton() {
         const currentLang = getLanguageFromURL();
@@ -721,6 +755,15 @@
     const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
     
+    let supabase;
+    const initSupabase = () => {
+        if (window.createClient) {
+            if (!supabase) supabase = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            return true;
+        }
+        return false;
+    };
+
     let currentUser = { id: 'demo-user', full_name: 'Demo Gebruiker', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
     let userBookings = [];
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
@@ -735,6 +778,7 @@
         document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
         if (tabName === 'dashboard') renderDashboard();
         if (tabName === 'profile') loadUserProfile();
+        if (tabName === 'payments') loadPaymentHistory();
     }
     
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
@@ -767,6 +811,55 @@
         loadUserProfile();
     });
     
+    // Betalingen functies
+    async function loadPaymentHistory() {
+        const tbody = document.querySelector('#paymentsTable tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '<tr><td colspan="6">Laden...</td></tr>';
+
+        try {
+            if (!initSupabase()) {
+                tbody.innerHTML = '<tr><td colspan="6">Wacht op initialisatie...</td></tr>';
+                setTimeout(loadPaymentHistory, 1000);
+                return;
+            }
+
+            const email = currentUser.email;
+            const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
+
+            const { data, error } = await supabase
+                .from('payments')
+                .select('*, bookings(id, invoice_id)')
+                .eq('customer_id', customerId)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">Geen betalingen gevonden</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(p => `
+                <tr>
+                    <td>${p.booking_id}</td>
+                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
+                    <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
+                    <td>${p.payment_method || 'card'}</td>
+                    <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status}</span></td>
+                    <td>
+                        ${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}
+                    </td>
+                </tr>
+            `).join('');
+
+        } catch (err) {
+            console.error('Payment history error:', err);
+            tbody.innerHTML = `<tr><td colspan="6">Fout: ${err.message}</td></tr>`;
+        }
+    }
+
     // Dashboard functies
     async function loadUserBookings() {
         userBookings = [
@@ -1050,10 +1143,11 @@
         let datePart = "", timePart = "";
         if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
         
-        const customerId = `CUST-${fn.toLowerCase()}${ln.toLowerCase()}`;
+        const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
         
+        const bookingId = generateBookingId();
         const record = {
-            id: generateBookingId(),
+            id: bookingId,
             datetime: datePart,
             time: timePart,
             name: `${fn} ${ln}`,
@@ -1066,18 +1160,50 @@
             extras: getExtrasString(),
             amount: totalAmount,
             payment: payment,
-            status: "pending",
+            status: payment === "Cash" ? "pending" : "pending_payment",
             customer_id: customerId,
             form_data: { ai: true, source: "web-portal" },
             assigned_driver_id: null,
-            partner_id: 1
+            partner_id: 1,
+            payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
         };
         
+        if (!initSupabase()) {
+            alert('Supabase niet geïnitialiseerd');
+            return;
+        }
+
         const success = await sendToSupabase(record);
         if (success) {
-            alert(`✅ Boeking bevestigd!\n📋 Nummer: ${record.id}\n💰 € ${totalAmount.toFixed(2)}`);
-            resetAll();
-            await loadUserBookings();
+            if (payment === "Kaart" || payment === "App") {
+                try {
+                    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+                        body: {
+                            bookingId: bookingId,
+                            email: em,
+                            amount: totalAmount,
+                            paymentMethodType: payment,
+                            successUrl: `${window.location.origin}/klantenportaalpv.html?payment=success&id=${bookingId}`,
+                            cancelUrl: `${window.location.origin}/klantenportaalpv.html?payment=cancelled&id=${bookingId}`
+                        }
+                    });
+                    if (error) throw error;
+                    if (data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        throw new Error("Geen Stripe URL ontvangen");
+                    }
+                } catch (stripeErr) {
+                    console.error('Stripe error:', stripeErr);
+                    alert('Er ging iets mis bij het opstarten van de betaling: ' + stripeErr.message);
+                }
+            } else {
+                alert(`✅ Boeking bevestigd!\n📋 Nummer: ${record.id}\n💰 € ${totalAmount.toFixed(2)}`);
+                // Email trigger (non-blocking)
+                if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
+                resetAll();
+                await loadUserBookings();
+            }
         }
     }
     
@@ -1147,10 +1273,6 @@
     flatpickr("#datetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
     flatpickr("#returnDatetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true });
     
-    const bgMap = L.map('background-map').setView([50.8503,4.3517],7);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' }).addTo(bgMap);
-    bgMap.dragging.disable(); bgMap.touchZoom.disable(); bgMap.doubleClickZoom.disable(); bgMap.scrollWheelZoom.disable();
-    
     initMap();
     initVehicleSelection();
     initAutocomplete();
@@ -1158,6 +1280,7 @@
     loadUserProfile();
     loadUserBookings();
     switchToTab('new-booking');
+    handlePaymentStatus();
 </script>
 </body>
 </html>

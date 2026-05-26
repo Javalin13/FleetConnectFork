@@ -478,6 +478,7 @@
 </script>
 <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { comms } from './src/modules/communication/index.js';
     
     const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
@@ -570,9 +571,10 @@
             extras: extrasRaw,
             amount: parseFloat(finalAmount),
             payment: paymentMethod,
-            status: "pending",
+            status: paymentMethod === "Cash" ? "pending" : "pending_payment",
             customer_id: generateCustomerId(emailRaw),
-            form_data: buildFormData()
+            form_data: buildFormData(),
+            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid"
         };
     }
     
@@ -624,16 +626,20 @@
         const heenRecord = {
             id: baseId, datetime: heenDatePart, time: heenTimePart, name: fullName, email: emailRaw, phone: phoneRaw,
             pickup: pickupRaw, destination: destRaw, flight_number: flightNumberRaw, vehicle: vehicleRaw, extras: extrasRaw,
-            amount: halfAmount, payment: paymentMethod, status: "pending",
+            amount: halfAmount, payment: paymentMethod,
+            status: paymentMethod === "Cash" ? "pending" : "pending_payment",
             customer_id: generateCustomerId(emailRaw),
-            form_data: buildFormData()
+            form_data: buildFormData(),
+            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid"
         };
         const terugRecord = {
             id: `${baseId}/B`, datetime: terugDatePart, time: terugTimePart, name: fullName, email: emailRaw, phone: phoneRaw,
             pickup: pickupRaw, destination: destRaw, flight_number: flightNumberRaw, vehicle: vehicleRaw, extras: extrasRaw,
-            amount: halfAmount, payment: paymentMethod, status: "pending",
+            amount: halfAmount, payment: paymentMethod,
+            status: paymentMethod === "Cash" ? "pending" : "pending_payment",
             customer_id: generateCustomerId(emailRaw),
-            form_data: buildFormData()
+            form_data: buildFormData(),
+            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid"
         };
         console.log('📦 Verzenden heen rit:', heenRecord);
         console.log('📦 Verzenden terug rit:', terugRecord);
@@ -641,9 +647,36 @@
             const res1 = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=minimal' }, body: JSON.stringify(heenRecord) });
             const res2 = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=minimal' }, body: JSON.stringify(terugRecord) });
             if (!res1.ok || !res2.ok) throw new Error('Fout bij opslaan roundtrip');
-            await sendEmailNotification(heenRecord, true, currentReturnDateTime);
-            alert(`🎉 Roundtrip reservatie succesvol!\n\nHeen: ${heenRecord.id}\nTerug: ${terugRecord.id}\n\nBevestiging naar ${heenRecord.email}`);
-            return true;
+
+            if (paymentMethod === "Kaart" || paymentMethod === "App") {
+                try {
+                    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+                        body: {
+                            bookingId: heenRecord.id,
+                            email: emailRaw,
+                            amount: totalAmount,
+                            paymentMethodType: paymentMethod,
+                            successUrl: `${window.location.origin}/klantenportaal.html?payment=success&id=${heenRecord.id}`,
+                            cancelUrl: `${window.location.origin}/klantenportaal.html?payment=cancelled&id=${heenRecord.id}`
+                        }
+                    });
+                    if (error) throw error;
+                    if (data.url) {
+                        window.location.href = data.url;
+                        return true;
+                    } else {
+                        throw new Error("Geen Stripe URL ontvangen");
+                    }
+                } catch (stripeErr) {
+                    console.error('Stripe error:', stripeErr);
+                    alert('Er ging iets mis bij het opstarten van de betaling: ' + stripeErr.message);
+                }
+            } else {
+                alert(`🎉 Roundtrip reservatie succesvol!\n\nHeen: ${heenRecord.id}\nTerug: ${terugRecord.id}\n\nBevestiging naar ${heenRecord.email}`);
+                comms.trigger('BOOKING_CONFIRMATION', heenRecord.id, supabase);
+                resetAll();
+                return true;
+            }
         } catch (error) { alert(`❌ Fout: ${error.message}`); return false; }
     }
     
@@ -727,11 +760,39 @@
         let totalAmount = dist * 1.5 + (selectedVehicleExtra || 0);
         if (currentRoundTrip && currentReturnDateTime) {
             const success = await createRoundTripBookings(pm, totalAmount);
-            if (success) resetAll();
+            // Handling reset/redirect inside createRoundTripBookings
         } else {
             const record = buildSupabaseRecord(pm, totalAmount, false, null);
             const success = await sendToSupabase(record);
-            if (success) resetAll();
+            if (success) {
+                if (pm === "Kaart" || pm === "App") {
+                    try {
+                        const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+                            body: {
+                                bookingId: record.id,
+                                email: em,
+                                amount: totalAmount,
+                                paymentMethodType: pm,
+                                successUrl: `${window.location.origin}/klantenportaal.html?payment=success&id=${record.id}`,
+                                cancelUrl: `${window.location.origin}/klantenportaal.html?payment=cancelled&id=${record.id}`
+                            }
+                        });
+                        if (error) throw error;
+                        if (data.url) {
+                            window.location.href = data.url;
+                        } else {
+                            throw new Error("Geen Stripe URL ontvangen");
+                        }
+                    } catch (stripeErr) {
+                        console.error('Stripe error:', stripeErr);
+                        alert('Er ging iets mis bij het opstarten van de betaling: ' + stripeErr.message);
+                    }
+                } else {
+                    alert(`✅ Boeking bevestigd!\n\n📋 Boekingsnummer: ${record.id}\n💰 Totaalbedrag: € ${totalAmount.toFixed(2)}`);
+                    comms.trigger('BOOKING_CONFIRMATION', record.id, supabase);
+                    resetAll();
+                }
+            }
         }
     }
     

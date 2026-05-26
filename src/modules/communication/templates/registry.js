@@ -32,5 +32,8 @@ export const TemplateRegistry = {
     },
     ACCOUNT_WELCOME: {
         render: (data, lang, mode) => TemplateRenderer.render('ACCOUNT_ONBOARDING', data, lang, mode)
+    },
+    PAYMENT_REFUND_CONFIRMATION: {
+        render: (data, lang, mode) => TemplateRenderer.render('PAYMENT_REFUND_CONFIRMATION', data, lang, mode)
     }
 };

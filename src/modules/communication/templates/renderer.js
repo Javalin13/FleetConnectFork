@@ -85,6 +85,8 @@ export class TemplateRenderer {
             case 'ACCOUNT_WELCOME':
             case 'ACCOUNT_ONBOARDING':
                 return this.renderAccountWelcome(data, labels, subjects, lang);
+            case 'PAYMENT_REFUND_CONFIRMATION':
+                return this.renderPaymentRefundConfirmation(data, labels, subjects, lang);
             default: return `<p style="font-family: sans-serif;">Update regarding booking ${data.reference || data.id}</p>`;
         }
     }
@@ -253,6 +255,23 @@ export class TemplateRenderer {
                 ${labels.greeting(customerName)} ${labels.welcomeBody}
             </p>
             ${EmailComponents.cta(labels.setupAccount, RouteBuilder.build('account-welcome', { token: data.token }))}
+        `;
+    }
+
+    static renderPaymentRefundConfirmation(data, labels, subjects, lang) {
+        const customerName = this.getCustomerName(data);
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.PAYMENT_REFUND_CONFIRMATION}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.refundConfirmationBody}
+            </p>
+            ${EmailComponents.sectionTitle(labels.summary)}
+            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
+                ${EmailComponents.detailsRow(labels.price, `€ ${parseFloat(data.amount || 0).toFixed(2)}`)}
+                ${EmailComponents.detailsRow(labels.refundStatus, 'Completed')}
+            </table>
+            ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
         `;
     }
 }

@@ -308,12 +308,100 @@
 
 <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { comms } from './src/modules/communication/index.js';
     const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     function fillHiddenSupabaseFields() { const email = document.getElementById('email').value.trim(); const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`; document.getElementById('hiddenCustomerId').value = customerId; document.getElementById('hiddenFormData').value = JSON.stringify({ source: "web-booking" }); document.getElementById('hiddenCreatedAt').value = new Date().toISOString(); }
     async function sendToSupabase(bookingData) { console.log('📦 Verzenden naar Supabase:', bookingData); try { const { error } = await supabase.from('bookings').insert([bookingData]); if (error) throw error; console.log('✅ Boeking opgeslagen in Supabase!'); return true; } catch (error) { console.error('❌ Supabase fout:', error.message); alert(`Fout: ${error.message}`); return false; } }
-    async function finalizeBooking() { const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash"; let totalAmount = 0; const routeData = window.getCurrentRouteData(); const roundTrip = window.getCurrentRoundTrip(); const vehicleExtra = window.getSelectedVehicleExtra(); if (routeData) { let dist = parseFloat(routeData.distanceKm); if (roundTrip) dist *= 2; totalAmount = (dist * 1.5) + (vehicleExtra || 0); } const firstName = document.getElementById('firstName').value.trim(); const lastName = document.getElementById('lastName').value.trim(); const email = document.getElementById('email').value.trim(); const phone = document.getElementById('phone').value.trim(); if (!firstName || !lastName || !email || !phone) { alert('Vul alle verplichte velden in (voornaam, achternaam, GSM, e-mail)'); return; } fillHiddenSupabaseFields(); const customerId = document.getElementById('hiddenCustomerId').value; const formDataRaw = document.getElementById('hiddenFormData').value; const formData = JSON.parse(formDataRaw); const createdAt = document.getElementById('hiddenCreatedAt').value; const partnerId = parseInt(document.getElementById('hiddenPartnerId').value); const assignedDriverId = document.getElementById('hiddenAssignedDriverId').value || null; const bookingData = { id: window.generateBookingId(), datetime: window.getCurrentDateTime().split(' ')[0] || "", time: window.getCurrentDateTime().split(' ')[1] || "", name: `${firstName} ${lastName}`, email: email, phone: phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, flight_number: document.getElementById('flightNumber').value.trim() || "", vehicle: window.getSelectedVehicle(), extras: window.getExtrasString(), amount: totalAmount.toString(), payment: paymentMethod, status: "pending", customer_id: customerId, form_data: formData, created_at: createdAt, partner_id: partnerId, assigned_driver_id: assignedDriverId }; const success = await sendToSupabase(bookingData); if (success) { alert(`✅ Boeking bevestigd!\n\n📋 Boekingsnummer: ${bookingData.id}\n💰 Totaalbedrag: € ${totalAmount.toFixed(2)}\n\nEen bevestiging is opgeslagen in de database.`); window.resetAll(); window.hideOverlay(); } else { alert('❌ Er ging iets mis met het opslaan van uw boeking. Probeer opnieuw of contacteer ons.'); } }
+    async function finalizeBooking() {
+        const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
+        let totalAmount = 0;
+        const routeData = window.getCurrentRouteData();
+        const roundTrip = window.getCurrentRoundTrip();
+        const vehicleExtra = window.getSelectedVehicleExtra();
+        if (routeData) {
+            let dist = parseFloat(routeData.distanceKm);
+            if (roundTrip) dist *= 2;
+            totalAmount = (dist * 1.5) + (vehicleExtra || 0);
+        }
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        if (!firstName || !lastName || !email || !phone) {
+            alert('Vul alle verplichte velden in (voornaam, achternaam, GSM, e-mail)');
+            return;
+        }
+        fillHiddenSupabaseFields();
+        const customerId = document.getElementById('hiddenCustomerId').value;
+        const formDataRaw = document.getElementById('hiddenFormData').value;
+        const formData = JSON.parse(formDataRaw);
+        const createdAt = document.getElementById('hiddenCreatedAt').value;
+        const partnerId = parseInt(document.getElementById('hiddenPartnerId').value);
+        const assignedDriverId = document.getElementById('hiddenAssignedDriverId').value || null;
+
+        const bookingId = window.generateBookingId();
+        const bookingData = {
+            id: bookingId,
+            datetime: window.getCurrentDateTime().split(' ')[0] || "",
+            time: window.getCurrentDateTime().split(' ')[1] || "",
+            name: `${firstName} ${lastName}`,
+            email: email,
+            phone: phone,
+            pickup: document.getElementById('pickupInput').value,
+            destination: document.getElementById('dropoffInput').value,
+            flight_number: document.getElementById('flightNumber').value.trim() || "",
+            vehicle: window.getSelectedVehicle(),
+            extras: window.getExtrasString(),
+            amount: totalAmount.toString(),
+            payment: paymentMethod,
+            status: paymentMethod === "Cash" ? "pending" : "pending_payment",
+            customer_id: customerId,
+            form_data: formData,
+            created_at: createdAt,
+            partner_id: partnerId,
+            assigned_driver_id: assignedDriverId,
+            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid"
+        };
+
+        const success = await sendToSupabase(bookingData);
+        if (success) {
+            if (paymentMethod === "Kaart" || paymentMethod === "App") {
+                // Trigger Stripe Checkout
+                try {
+                    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+                        body: {
+                            bookingId: bookingId,
+                            email: email,
+                            amount: totalAmount,
+                            paymentMethodType: paymentMethod,
+                            successUrl: `${window.location.origin}/klantenportaalpv.html?payment=success&id=${bookingId}`,
+                            cancelUrl: `${window.location.origin}/klantenportaalpv.html?payment=cancelled&id=${bookingId}`
+                        }
+                    });
+                    if (error) throw error;
+                    if (data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        throw new Error("Geen Stripe URL ontvangen");
+                    }
+                } catch (stripeErr) {
+                    console.error('Stripe error:', stripeErr);
+                    alert('Er ging iets mis bij het opstarten van de betaling: ' + stripeErr.message);
+                }
+            } else {
+                alert(`✅ Boeking bevestigd!\n\n📋 Boekingsnummer: ${bookingData.id}\n💰 Totaalbedrag: € ${totalAmount.toFixed(2)}\n\nEen bevestiging is opgeslagen in de database.`);
+                // Email trigger (non-blocking)
+                comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
+
+                window.resetAll();
+                window.hideOverlay();
+            }
+        } else {
+            alert('❌ Er ging iets mis met het opslaan van uw boeking. Probeer opnieuw of contacteer ons.');
+        }
+    }
     window.addEventListener('showBookingOverlay', () => { window.showOverlay(); });
     document.getElementById('confirmBookingBtn')?.addEventListener('click', finalizeBooking);
     document.getElementById('closeOverlayBtn')?.addEventListener('click', () => window.hideOverlay());

@@ -13,7 +13,8 @@ export const EmailTranslations = {
             BOOKING_COMPLETED: 'Bedankt voor het reizen met FleetConnect',
             RIDE_COMPLETED: 'Bedankt voor het reizen met FleetConnect',
             ACCOUNT_WELCOME: 'Welkom bij FleetConnect',
-            ACCOUNT_ONBOARDING: 'Welkom bij FleetConnect'
+            ACCOUNT_ONBOARDING: 'Welkom bij FleetConnect',
+            PAYMENT_REFUND_CONFIRMATION: 'Uw terugbetaling is verwerkt'
         },
         labels: {
             bookingReference: 'Boekingsnummer',
@@ -45,7 +46,9 @@ export const EmailTranslations = {
             dispatchContact: 'Dispatch contact',
             cancelledBody: (ref) => `uw boeking met referentie <strong>${ref}</strong> is geannuleerd. Indien u reeds heeft betaald, wordt het bedrag teruggestort.`,
             completedBody: 'we hopen dat u een prettige rit heeft gehad. Bedankt voor uw vertrouwen in FleetConnect.',
-            welcomeBody: 'welkom bij FleetConnect. We hebben een account voor u klaargezet waarmee u ritten sneller kunt boeken en uw historie kunt inzien.'
+            welcomeBody: 'welkom bij FleetConnect. We hebben een account voor u klaargezet waarmee u ritten sneller kunt boeken en uw historie kunt inzien.',
+            refundConfirmationBody: 'uw terugbetaling is succesvol verwerkt. Het bedrag zal binnen enkele werkdagen op uw rekening verschijnen.',
+            refundStatus: 'Terugbetaling Status'
         }
     },
     fr: {
@@ -58,7 +61,8 @@ export const EmailTranslations = {
             BOOKING_COMPLETED: 'Merci d\'avoir voyagé avec FleetConnect',
             RIDE_COMPLETED: 'Merci d\'avoir voyagé avec FleetConnect',
             ACCOUNT_WELCOME: 'Bienvenue chez FleetConnect',
-            ACCOUNT_ONBOARDING: 'Bienvenue chez FleetConnect'
+            ACCOUNT_ONBOARDING: 'Bienvenue chez FleetConnect',
+            PAYMENT_REFUND_CONFIRMATION: 'Votre remboursement a été traité'
         },
         labels: {
             bookingReference: 'Référence de réservation',
@@ -90,7 +94,9 @@ export const EmailTranslations = {
             dispatchContact: 'Contact dispatch',
             cancelledBody: (ref) => `votre réservation avec la référence <strong>${ref}</strong> a été annulée. Si vous avez déjà payé, le montant vous sera remboursé.`,
             completedBody: 'nous espérons que vous avez passé un agréable trajet. Merci de votre confiance en FleetConnect.',
-            welcomeBody: 'bienvenue chez FleetConnect. Nous avons préparé un compte pour vous permettre de réserver vos trajets plus rapidement.'
+            welcomeBody: 'bienvenue chez FleetConnect. Nous avons préparé un compte pour vous permettre de réserver vos trajets plus rapidement.',
+            refundConfirmationBody: 'votre remboursement a été traité avec succès. Le montant apparaîtra sur votre compte d\'ici quelques jours ouvrables.',
+            refundStatus: 'Statut du remboursement'
         }
     },
     en: {
@@ -103,7 +109,8 @@ export const EmailTranslations = {
             BOOKING_COMPLETED: 'Thank you for traveling with FleetConnect',
             RIDE_COMPLETED: 'Thank you for traveling with FleetConnect',
             ACCOUNT_WELCOME: 'Welcome to FleetConnect',
-            ACCOUNT_ONBOARDING: 'Welcome to FleetConnect'
+            ACCOUNT_ONBOARDING: 'Welcome to FleetConnect',
+            PAYMENT_REFUND_CONFIRMATION: 'Your refund has been processed'
         },
         labels: {
             bookingReference: 'Booking Reference',
@@ -135,7 +142,9 @@ export const EmailTranslations = {
             dispatchContact: 'Dispatch contact',
             cancelledBody: (ref) => `your booking with reference <strong>${ref}</strong> has been cancelled. If you have already paid, the amount will be refunded.`,
             completedBody: 'we hope you had a pleasant ride. Thank you for your trust in FleetConnect.',
-            welcomeBody: 'welcome to FleetConnect. We have set up an account for you to book rides faster and view your history.'
+            welcomeBody: 'welcome to FleetConnect. We have set up an account for you to book rides faster and view your history.',
+            refundConfirmationBody: 'your refund has been successfully processed. The amount will appear in your account within a few business days.',
+            refundStatus: 'Refund Status'
         }
     }
 };

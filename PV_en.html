@@ -746,8 +746,9 @@
         const partnerId = parseInt(document.getElementById('hiddenPartnerId').value);
         const assignedDriverId = document.getElementById('hiddenAssignedDriverId').value || null;
         
+        const bookingId = window.generateBookingId();
         const bookingData = {
-            id: window.generateBookingId(),
+            id: bookingId,
             datetime: window.getCurrentDateTime().split(' ')[0] || "",
             time: window.getCurrentDateTime().split(' ')[1] || "",
             name: `${firstName} ${lastName}`,
@@ -760,18 +761,44 @@
             extras: window.getExtrasString(),
             amount: totalAmount.toString(),
             payment: paymentMethod,
-            status: "pending",
+            status: paymentMethod === "Cash" ? "pending" : "pending_payment",
             customer_id: customerId,
             form_data: formData,
             created_at: createdAt,
             partner_id: partnerId,
-            assigned_driver_id: assignedDriverId
+            assigned_driver_id: assignedDriverId,
+            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid"
         };
         const success = await sendToSupabase(bookingData);
         if (success) {
-            alert(`✅ Booking confirmed!\n\n📋 Booking number: ${bookingData.id}\n💰 Total amount: € ${totalAmount.toFixed(2)}\n\nA confirmation has been saved to the database.`);
-            window.resetAll();
-            window.hideOverlay();
+            if (paymentMethod === "Kaart" || paymentMethod === "App") {
+                try {
+                    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+                        body: {
+                            bookingId: bookingId,
+                            email: email,
+                            amount: totalAmount,
+                            paymentMethodType: paymentMethod,
+                            successUrl: `${window.location.origin}/klantenportaalpv.html?payment=success&id=${bookingId}&lang=en`,
+                            cancelUrl: `${window.location.origin}/klantenportaalpv.html?payment=cancelled&id=${bookingId}&lang=en`
+                        }
+                    });
+                    if (error) throw error;
+                    if (data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        throw new Error("No Stripe URL received");
+                    }
+                } catch (stripeErr) {
+                    console.error('Stripe error:', stripeErr);
+                    alert('Something went wrong starting the payment: ' + stripeErr.message);
+                }
+            } else {
+                alert(`✅ Booking confirmed!\n\n📋 Booking number: ${bookingData.id}\n💰 Total amount: € ${totalAmount.toFixed(2)}\n\nA confirmation has been saved to the database.`);
+                comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
+                window.resetAll();
+                window.hideOverlay();
+            }
         } else {
             alert('❌ Something went wrong saving your booking. Please try again or contact us.');
         }

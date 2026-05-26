@@ -467,6 +467,7 @@
             </div>
             <div class="nav-section"><div class="nav-section-title">💰 FINANCIËN</div>
                 <div class="nav-item" data-tab="financieel" onclick="app.switchTab('financieel')"><i class="fas fa-chart-line"></i><span> Financieel</span></div>
+                <div class="nav-item" data-tab="settlements" onclick="app.switchTab('settlements')"><i class="fas fa-university"></i><span> Settlements</span></div>
             </div>
             <div class="nav-section"><div class="nav-section-title">ℹ️ INFORMATIE</div>
                 <div class="nav-item" data-tab="wiki" onclick="app.switchTab('wiki')"><i class="fas fa-robot"></i><span> Wiki Agent</span></div>
@@ -830,9 +831,13 @@
                 if (orders.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="7" class="empty-planning">${this.renderEmptyTable()}</td></tr>`;
                 } else {
-                    tbody.innerHTML = orders.map(o => `
+                    tbody.innerHTML = orders.map(o => {
+                        let payStatus = o.payment_status || 'unpaid';
+                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : 'status-pending'}">${payStatus.toUpperCase()}</small>`;
+
+                        return `
                         <tr>
-                            <td><strong>${o.id}</strong><br><span class="status-badge status-pending">Nieuw</span></td>
+                            <td><strong>${o.id}</strong><br><span class="status-badge status-pending">Nieuw</span>${payBadge}</td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
@@ -840,7 +845,7 @@
                             <td>€${(o.amount || 0).toFixed(2)}</span></td>
                             <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
                         </tr>
-                    `).join('');
+                    `;}).join('');
                 }
             },
             
@@ -879,9 +884,13 @@
                             statusBadgeClass = 'status-cancelled';
                             statusBadgeText = 'Verlopen';
                         }
+
+                        let payStatus = o.payment_status || 'unpaid';
+                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : 'status-pending'}">${payStatus.toUpperCase()}</small>`;
+
                         return `
                         <tr>
-                            <td><strong>${o.id}</strong><br><span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span></td>
+                            <td><strong>${o.id}</strong><br><span class="status-badge ${statusBadgeClass}">${statusBadgeText}</span>${payBadge}</td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
@@ -933,8 +942,11 @@
                         else if (o.status === 'declined') statusBadge = '<br><span class="status-badge status-cancelled">Geweigerd</span>';
                         else if (this.isExpired(o.datetime, o.time)) statusBadge = '<br><span class="status-badge status-cancelled">Verlopen</span>';
 
+                        let payStatus = o.payment_status || 'unpaid';
+                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : (payStatus === 'refunded' ? 'status-cancelled' : 'status-pending')}">${payStatus.toUpperCase()}</small>`;
+
                         return `<tr>
-                            <td><strong>${o.id}</strong>${statusBadge}</td>
+                            <td><strong>${o.id}</strong>${statusBadge}${payBadge}</td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
@@ -1256,6 +1268,70 @@
             
             formatPrice(price) { return '€ ' + (price || 0).toLocaleString(); },
             setFinancePeriod(period) { this.financePeriod = period; this.renderFinance(); },
+
+            async renderSettlements() {
+                document.getElementById('pageTitle').innerHTML = `Financiële Afwikkeling (Settlements)`;
+                this.showToast('Settlements laden...');
+
+                try {
+                    const { data: payments, error: pError } = await supabase.from('payments').select('*').order('created_at', { ascending: false });
+                    const { data: refunds, error: rError } = await supabase.from('refunds').select('*').order('created_at', { ascending: false });
+
+                    if (pError || rError) throw (pError || rError);
+
+                    const grossRevenue = payments.filter(p => p.status === 'succeeded').reduce((sum, p) => sum + parseFloat(p.amount), 0);
+                    const totalRefunded = refunds.filter(r => r.status === 'completed').reduce((sum, r) => sum + parseFloat(r.amount), 0);
+                    const netSettlement = grossRevenue - totalRefunded;
+                    const stripeFeeEstimate = grossRevenue * 0.029 + (payments.length * 0.25);
+
+                    let html = `
+                        <div class="stats-grid">
+                            <div class="stat-card"><h4>Bruto Omzet</h4><div class="value">€ ${grossRevenue.toFixed(2)}</div><small>${payments.length} betalingen</small></div>
+                            <div class="stat-card"><h4>Teruggestort</h4><div class="value">€ ${totalRefunded.toFixed(2)}</div><small>${refunds.length} refunds</small></div>
+                            <div class="stat-card"><h4>Stripe Fee (Schatting)</h4><div class="value">€ ${stripeFeeEstimate.toFixed(2)}</div><small>2.9% + €0.25</small></div>
+                            <div class="stat-card"><h4>Netto Afwikkeling</h4><div class="value">€ ${netSettlement.toFixed(2)}</div><small>Exclusief fees</small></div>
+                        </div>
+
+                        <div class="orders-table-wrapper" style="margin-bottom: 24px;">
+                            <h3><i class="fas fa-credit-card"></i> Recente Betalingen (Stripe)</h3>
+                            <table class="orders-table">
+                                <thead><tr><th>Booking</th><th>Datum</th><th>Bedrag</th><th>Methode</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    ${payments.length === 0 ? '<tr><td colspan="5">Geen betalingen gevonden</td></tr>' : payments.map(p => `
+                                        <tr>
+                                            <td>${p.booking_id}</td>
+                                            <td>${new Date(p.created_at).toLocaleString()}</td>
+                                            <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
+                                            <td>${p.payment_method || 'card'}</td>
+                                            <td><span class="status-badge ${p.status === 'succeeded' ? 'status-completed' : 'status-cancelled'}">${p.status}</span></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="orders-table-wrapper">
+                            <h3><i class="fas fa-undo"></i> Recente Refunds</h3>
+                            <table class="orders-table">
+                                <thead><tr><th>Booking</th><th>Datum</th><th>Bedrag</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    ${refunds.length === 0 ? '<tr><td colspan="4">Geen refunds gevonden</td></tr>' : refunds.map(r => `
+                                        <tr>
+                                            <td>${r.booking_id}</td>
+                                            <td>${new Date(r.created_at).toLocaleString()}</td>
+                                            <td>€ ${parseFloat(r.amount).toFixed(2)}</td>
+                                            <td><span class="status-badge status-completed">${r.status}</span></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    document.getElementById('contentArea').innerHTML = html;
+                } catch (err) {
+                    this.showToast('Fout bij laden settlements: ' + err.message, true);
+                }
+            },
             
             renderWiki() {
                 document.getElementById('contentArea').innerHTML = `
@@ -1413,6 +1489,8 @@
                     <div class="fiche-section"><h4>Boekingsinformatie</h4>
                         <div class="fiche-row"><span class="fiche-label">Boekingsnummer:</span><span class="fiche-value"><strong>${booking.id}</strong></span></div>
                         <div class="fiche-row"><span class="fiche-label">Status:</span><span class="fiche-value"><span class="status-badge ${statusClass}">${statusDisplay}</span></span></div>
+                        <div class="fiche-row"><span class="fiche-label">Betaalstatus:</span><span class="fiche-value"><span class="status-badge ${booking.payment_status === 'paid' ? 'status-completed' : 'status-pending'}">${(booking.payment_status || 'unpaid').toUpperCase()}</span></span></div>
+                        ${booking.invoice_id ? `<div class="fiche-row"><span class="fiche-label">Stripe Invoice:</span><span class="fiche-value">${booking.invoice_id}</span></div>` : ''}
                         <div class="fiche-row"><span class="fiche-label">Datum & Tijd:</span><span class="fiche-value">${booking.datetime} om ${booking.time} uur</span></div>
                         ${booking.flight_number ? `<div class="fiche-row"><span class="fiche-label">✈️ Vluchtnummer:</span><span class="fiche-value">${booking.flight_number}</span></div>` : ''}
                     </div>
@@ -1447,6 +1525,9 @@
                         ${booking._is_assignment_expired ? `<button class="fiche-btn confirm" onclick="app.resetExpiredAssignment('${booking.id}')">Reset & Vrijgeven</button>` : ''}
                         ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired && !booking._is_assignment_expired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
                         ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">Annuleren</button>` : ''}
+
+                        ${booking.payment_status === 'paid' && booking.status !== 'cancelled' && booking.status !== 'completed' ? `<button class="fiche-btn" style="background:#f97316; color:white;" onclick="app.refundBooking('${booking.id}')">Refund via Stripe</button>` : ''}
+
                         ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Uitgevoerd</button>` : ''}
                         ${booking.status === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
                         ${booking.status === 'declined' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✋ Geweigerd</button>` : ''}
@@ -1563,6 +1644,34 @@
                 this.closeModal();
             },
             
+            async refundBooking(bookingId) {
+                if (!confirm(`Weet u zeker dat u een volledige terugbetaling wilt uitvoeren voor booking ${bookingId} via Stripe?`)) return;
+
+                this.showToast('Bezig met refund...');
+                try {
+                    const { data, error } = await supabase.functions.invoke('process-refund', {
+                        body: { bookingId: bookingId }
+                    });
+
+                    if (error) throw error;
+
+                    if (data.success) {
+                        this.showToast('Refund succesvol uitgevoerd');
+
+                        // Trigger email (non-blocking)
+                        comms.trigger('PAYMENT_REFUND_CONFIRMATION', bookingId, supabase);
+
+                        await this.refreshAllData();
+                        this.closeModal();
+                    } else {
+                        throw new Error(data.error || 'Refund mislukt');
+                    }
+                } catch (err) {
+                    console.error('Refund error:', err);
+                    this.showToast('Fout bij refund: ' + err.message, true);
+                }
+            },
+
             async assignDriverToBooking(bookingId) {
                 console.log('TRACE: assignDriverToBooking Start', { bookingId });
 
@@ -1782,6 +1891,7 @@
                     case 'drivers': this.renderDrivers(); break;
                     case 'partners': this.renderPartners(); break;
                     case 'financieel': this.renderFinance(); break;
+                    case 'settlements': this.renderSettlements(); break;
                     case 'wiki': this.renderWiki(); break;
                     default: this.renderNewOrders();
                 }
@@ -1913,6 +2023,7 @@
         window.closePartnerModal = app.closePartnerModal.bind(app);
         window.savePartner = app.savePartner.bind(app);
         window.setFinancePeriod = app.setFinancePeriod.bind(app);
+        window.refundBooking = app.refundBooking.bind(app);
         window.toggleFlipCard = app.toggleFlipCard.bind(app);
         window.downloadCSV = app.downloadCSV.bind(app);
         window.downloadJSON = app.downloadJSON.bind(app);
