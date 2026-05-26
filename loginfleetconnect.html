@@ -158,22 +158,19 @@
         const password = document.getElementById('password').value;
 
         try {
-            const { data, error } = await supabase
-                .from('customers')
-                .select('email, password_hash')   // kolomnaam aangepast
-                .eq('email', email)
-                .single();
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
 
-            if (error || !data) {
-                showToast('Ongeldige e‑mail of wachtwoord');
+            if (error) {
+                showToast(error.message === 'Invalid login credentials' ? 'Ongeldige e-mail of wachtwoord' : error.message);
                 return;
             }
 
-            if (data.password_hash === password) {   // vergelijking met password_hash
+            if (data.session) {
                 sessionStorage.setItem('loggedInEmail', email);
                 window.location.href = 'klantenportaal.html';
-            } else {
-                showToast('Ongeldige e‑mail of wachtwoord');
             }
         } catch (err) {
             console.error('Login error:', err);

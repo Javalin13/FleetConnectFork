@@ -388,23 +388,27 @@
     window.comms = comms;
 
     // AUTH & SESSION
-    const loggedInEmail = sessionStorage.getItem('loggedInEmail');
-
-    if (!loggedInEmail) {
-        // Toon een melding op de pagina en verberg de functionaliteit
-        document.body.innerHTML = '<div style="text-align:center; margin-top:100px; font-family: sans-serif;"><i class="fas fa-sign-out-alt" style="font-size:48px; color:#b91c1c;"></i><h2>U bent uitgelogd</h2><p>Log opnieuw in via de inlogpagina.</p><button onclick="sessionStorage.clear(); window.location.reload();" style="background:#0066cc; color:white; border:none; padding:10px 20px; border-radius:40px; cursor:pointer;">Opnieuw laden</button></div>';
-        // Stop verdere uitvoering van scripts
-        throw new Error('Niet ingelogd');
+    async function checkAuth() {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+             document.body.innerHTML = '<div style="text-align:center; margin-top:100px; font-family: sans-serif;"><i class="fas fa-sign-out-alt" style="font-size:48px; color:#b91c1c;"></i><h2>U bent uitgelogd</h2><p>Log opnieuw in via de inlogpagina.</p><button onclick="window.location.href=\'index.html\';" style="background:#0066cc; color:white; border:none; padding:10px 20px; border-radius:40px; cursor:pointer;">Naar Inloggen</button></div>';
+             throw new Error('Niet ingelogd');
+        }
+        currentUser.id = session.user.id;
+        currentUser.email = session.user.email;
+        loadUserProfile();
+        loadUserBookings();
     }
+    checkAuth();
 
     function generateCustomerId(email) {
         return "CUST-" + email.toLowerCase().replace(/[^a-z0-9]/g, "");
     }
 
     let currentUser = {
-        id: loggedInEmail ? generateCustomerId(loggedInEmail) : 'demo-user',
+        id: 'demo-user',
         full_name: 'Gebruiker',
-        email: loggedInEmail || 'demo@fleetconnect.be',
+        email: 'demo@fleetconnect.be',
         phone: ''
     };
 
@@ -481,14 +485,17 @@
 
     // DASHBOARD (grotendeels ongewijzigd, maar met roundtrip ondersteuning voor weergave)
     async function loadUserBookings() {
-        const { data } = await supabase.from('bookings').select('*').eq('customer_id', currentUser.id).order('datetime', { ascending: false });
-        if (data && data.length) userBookings = data;
-        else {
-            userBookings = [
-                { id: "PZ-20260515-001", datetime: "15-05-2026", time: "09:00", name: currentUser.full_name, pickup: "Gent, België", destination: "Brussel, België", vehicle: "Standaard", amount: 67.50, status: "completed", extras: "Meet & Greet", flight_number: "BA398", email: currentUser.email, phone: currentUser.phone, payment: "Cash" },
-                { id: "PZ-20260516-002", datetime: "16-05-2026", time: "14:30", name: currentUser.full_name, pickup: "Antwerpen, België", destination: "Leuven, België", vehicle: "Break", amount: 55.00, status: "pending", extras: "WiFi", email: currentUser.email, phone: currentUser.phone, payment: "Cash" }
-            ];
+        const { data, error } = await supabase
+            .from('bookings')
+            .select('*')
+            .or(`user_id.eq.${currentUser.id},customer_id.eq.CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`)
+            .order('datetime', { ascending: false });
+
+        if (error) {
+            console.error('Error loading bookings:', error);
+            return;
         }
+        userBookings = data || [];
         renderDashboard();
     }
     function renderDashboard() {
@@ -984,6 +991,7 @@
             const { data, error } = await supabase
                 .from('payments')
                 .select('*, bookings(id, invoice_id)')
+                .eq('user_id', currentUser.id)
                 .eq('customer_id', currentUser.id)
                 .order('created_at', { ascending: false });
             if (error) throw error;

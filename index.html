@@ -191,35 +191,53 @@
     </div>
 
     <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
         const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const loginBtn = document.getElementById('loginBtn');
         const emailInput = document.getElementById('emailInput');
+        const passInput = document.getElementById('passInput');
         const errorBox = document.getElementById('errorBox');
         const forgotBtn = document.getElementById('forgotBtn');
         const forgotModal = document.getElementById('forgotModal');
         const closeModal = document.getElementById('closeModal');
         const sendMagicBtn = document.getElementById('sendMagicBtn');
 
+        // Check for existing session
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.location.href = 'klantenportaalpv.html';
+            }
+        }
+        checkSession();
+
         async function handleLogin() {
             const email = emailInput.value.trim();
-            if (!email) {
-                showError('Voer uw e-mailadres in.');
+            const password = passInput.value.trim();
+
+            if (!email || !password) {
+                showError('Voer uw e-mailadres en wachtwoord in.');
                 return;
             }
 
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/customers?email=eq.${encodeURIComponent(email)}`, {
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
                 });
-                const customers = await response.json();
 
-                if (customers.length > 0) {
+                if (error) {
+                    showError(error.message === 'Invalid login credentials' ? 'Ongeldige inloggegevens.' : error.message);
+                    return;
+                }
+
+                if (data.session) {
                     sessionStorage.setItem('loggedInEmail', email);
                     window.location.href = 'klantenportaalpv.html';
-                } else {
-                    showError('E-mailadres niet gevonden. Maak eerst een boeking.');
                 }
             } catch (err) {
                 showError('Er is een fout opgetreden. Probeer het later opnieuw.');
@@ -243,11 +261,18 @@
             forgotModal.style.display = 'none';
         });
 
-        sendMagicBtn.addEventListener('click', () => {
+        sendMagicBtn.addEventListener('click', async () => {
             const email = document.getElementById('forgotEmail').value.trim();
             if (email) {
-                alert(`Magische link gestuurd naar ${email}`);
-                forgotModal.style.display = 'none';
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}/reset-password.html`,
+                });
+                if (error) {
+                    alert('Fout: ' + error.message);
+                } else {
+                    alert(`Herstel-instructies gestuurd naar ${email}`);
+                    forgotModal.style.display = 'none';
+                }
             } else {
                 alert('Voer een geldig e-mailadres in.');
             }

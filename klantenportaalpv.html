@@ -764,6 +764,31 @@
         return false;
     };
 
+    // AUTH GUARD
+    async function checkAuth() {
+        if (!initSupabase()) {
+            setTimeout(checkAuth, 100);
+            return;
+        }
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            window.location.href = 'index.html';
+        } else {
+            currentUser.id = session.user.id;
+            currentUser.email = session.user.email;
+            // Optionally load profile from customers table
+            const { data: customer } = await supabase.from('customers').select('*').eq('user_id', session.user.id).maybeSingle();
+            if (customer) {
+                currentUser.full_name = customer.name;
+                currentUser.phone = customer.phone;
+                currentUser.default_pickup_address = customer.default_pickup_address || '';
+            }
+            loadUserProfile();
+            loadUserBookings();
+        }
+    }
+    checkAuth();
+
     let currentUser = { id: 'demo-user', full_name: 'Demo Gebruiker', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
     let userBookings = [];
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
@@ -862,11 +887,24 @@
 
     // Dashboard functies
     async function loadUserBookings() {
-        userBookings = [
-            { id: "FC-20260515-001", datetime: "15-05-2026", time: "09:00", name: currentUser.full_name, pickup: "Gent, België", destination: "Brussel, België", vehicle: "Standaard", amount: 67.50, status: "completed", extras: "Meet & Greet", flight_number: "BA398", email: currentUser.email, phone: currentUser.phone, payment: "Cash" },
-            { id: "FC-20260516-002", datetime: "16-05-2026", time: "14:30", name: currentUser.full_name, pickup: "Antwerpen, België", destination: "Leuven, België", vehicle: "Break", amount: 55.00, status: "pending", extras: "WiFi", email: currentUser.email, phone: currentUser.phone, payment: "Cash" }
-        ];
-        renderDashboard();
+        if (!initSupabase()) {
+            setTimeout(loadUserBookings, 100);
+            return;
+        }
+
+        try {
+            const { data, error } = await supabase
+                .from('bookings')
+                .select('*')
+                .or(`user_id.eq.${currentUser.id},customer_id.eq.CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`)
+                .order('datetime', { ascending: false });
+
+            if (error) throw error;
+            userBookings = data || [];
+            renderDashboard();
+        } catch (err) {
+            console.error('Error loading bookings:', err);
+        }
     }
     
     function renderDashboard() {
