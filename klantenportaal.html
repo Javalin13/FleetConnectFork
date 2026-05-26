@@ -992,6 +992,7 @@
                 .from('payments')
                 .select('*, bookings(id, invoice_id)')
                 .eq('user_id', currentUser.id)
+                .eq('customer_id', currentUser.id)
                 .order('created_at', { ascending: false });
             if (error) throw error;
             if (!data || data.length === 0) {
