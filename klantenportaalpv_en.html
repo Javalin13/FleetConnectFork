@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/default.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/en.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
@@ -215,8 +215,8 @@
             padding: 16px;
             margin-top: auto;
         }
-        .logout-btn-sidebar {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        .login-btn {
+            background: linear-gradient(135deg, var(--accent-gold), #b8860b);
             color: white;
             text-decoration: none;
             padding: 14px 16px;
@@ -227,11 +227,8 @@
             justify-content: center;
             gap: 12px;
             transition: transform 0.2s;
-            cursor: pointer;
-            border: none;
-            width: 100%;
         }
-        .logout-btn-sidebar:hover {
+        .login-btn:hover {
             transform: translateY(-2px);
         }
         
@@ -392,30 +389,6 @@
         .footer-dark { background: #0d1f2c; color: #e0edf5; padding: 48px 0 24px; margin-top: 40px; }
         .footer-grid { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; padding: 0 2rem; }
         .hidden { display: none !important; }
-        .profile-checkbox-wrapper {
-            background: #f0f9ff;
-            border: 1px solid var(--primary);
-            border-radius: 16px;
-            padding: 14px 18px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-        .profile-checkbox-wrapper input {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-        .profile-checkbox-wrapper label {
-            margin: 0;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-transform: none;
-            color: var(--primary);
-            font-weight: 600;
-        }
         @media (max-width:800px) { .vehicle-grid { grid-template-columns: repeat(2,1fr); } .carousel-page { padding: 20px; } }
     </style>
 </head>
@@ -436,9 +409,9 @@
         <div class="language-section">
             <div class="language-title"><i class="fas fa-globe"></i> Language</div>
             <div class="language-buttons">
-                <a href="#" class="lang-sidebar-btn" data-lang="nl">NL</a>
-                <a href="#" class="lang-sidebar-btn" data-lang="fr">FR</a>
-                <a href="#" class="lang-sidebar-btn active" data-lang="en">EN</a>
+                <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl">NL</a>
+                <a href="klantenportaal_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
+                <a href="klantenportaal_en.html?lang=en" class="lang-sidebar-btn active" data-lang="en">EN</a>
             </div>
         </div>
         
@@ -457,10 +430,10 @@
         </div>
         
         <div class="login-section">
-            <button id="logoutSidebarBtn" class="logout-btn-sidebar">
-                <i class="fas fa-sign-out-alt"></i> LOGOUT
+            <a href="index.html?lang=en" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> LOGIN
                 <i class="fas fa-arrow-right"></i>
-            </button>
+            </a>
         </div>
     </div>
 </div>
@@ -470,7 +443,7 @@
         <div class="container">
             <div class="hero-card" style="background: var(--card-bg); backdrop-filter: blur(8px); max-width:700px; margin:0 auto; padding:30px; border-radius:48px;">
                 <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> FleetConnect</h1>
-                <p style="color:var(--text-light);">Professional fleet management – Punctual, reliable & smartly connected</p>
+                <p style="color:var(--text-light);">Professional fleet management – Punctual, reliable & smart connected</p>
             </div>
         </div>
     </section>
@@ -493,18 +466,21 @@
                 <i class="fas fa-car-side"></i>
                 <h3>Premium Fleet</h3>
                 <p>Mercedes, BMW & luxury minivans</p>
-                <div class="service-summary">Travel in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div>
+                <div class="service-summary">Ride in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div>
             </a>
         </div>
     </div>
 
     <div class="container">
         <div class="tabs-container">
-            <button class="tab-btn active" data-tab="new-booking">📝 New Trip</button>
+            <button class="tab-btn active" data-tab="new-booking">📝 New Ride</button>
             <button class="tab-btn" data-tab="profile">👤 My Profile</button>
-            <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Trips</button>
+            <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Rides</button>
             <button class="tab-btn" data-tab="payments">💰 Payments</button>
-            <button id="logoutTabBtn" class="logout-tab-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <!-- LOGOUT BUTTON - FIXED! -->
+            <button id="logoutBtn" class="logout-tab-btn" style="background:none; border:none; cursor:pointer; font-weight:600;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
 
         <div id="new-booking-container" class="tab-container">
@@ -514,21 +490,21 @@
                         <button class="step-btn active" data-page="1">1. Trip Details</button>
                         <button class="step-btn" data-page="2">2. Route & Price</button>
                         <button class="step-btn" data-page="3">3. Vehicle & Options</button>
-                        <button class="step-btn" data-page="4">4. Customer Details</button>
+                        <button class="step-btn" data-page="4">4. Customer Info</button>
                         <button class="step-btn" data-page="5">5. Checkout</button>
                     </div>
                     <div id="page1" class="carousel-page active-page">
                         <h1>🚖 Trip Details</h1>
-                        <div class="sub">Belgium – €1.50/km | urgent trips via WhatsApp</div>
+                        <div class="sub">Belgium – €1.50/km | urgent rides via WhatsApp</div>
                         <div class="field"><label>📍 Pickup Address <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="pickupWrap">
-                                <input type="text" id="pickupInput" placeholder="e.g. Antwerp" autocomplete="off">
+                                <input type="text" id="pickupInput" placeholder="e.g., Antwerp" autocomplete="off">
                                 <div id="pickupSuggest" class="suggestions"></div>
                             </div>
                         </div>
                         <div class="field"><label>🏁 Drop-off Address <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="dropoffWrap">
-                                <input type="text" id="dropoffInput" placeholder="e.g. Brussels" autocomplete="off">
+                                <input type="text" id="dropoffInput" placeholder="e.g., Brussels" autocomplete="off">
                                 <div id="dropoffSuggest" class="suggestions"></div>
                             </div>
                         </div>
@@ -564,19 +540,11 @@
                         </div>
                         <div class="extra-fields"><h3>➕ Extra options</h3><div class="extra-grid"><div><label>👥 Number of passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Luggage pieces</label><input type="number" id="luggage" min="0" value="0"></div></div>
                         <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Meet & Greet</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Water bottle</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div>
-                        <div><label>📝 Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g. child seat"></textarea></div></div>
+                        <div><label>📝 Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g., child seat"></textarea></div></div>
                         <div id="page3Error" class="error"></div>
                     </div>
                     <div id="page4" class="carousel-page">
-                        <h1>📋 Your details</h1>
-                        <div class="sub">Enter your contact information</div>
-                        
-                        <!-- NEW: Checkbox for profile data -->
-                        <div class="profile-checkbox-wrapper" id="useProfileCheckboxWrapper">
-                            <input type="checkbox" id="useProfileDataCheckbox">
-                            <label for="useProfileDataCheckbox">👤 Use my profile details for this booking</label>
-                        </div>
-                        
+                        <h1>📋 Your details</h1><div class="sub">Enter your contact information</div>
                         <div class="field"><label>First name <span class="required-star">*</span></label><input type="text" id="firstName"></div>
                         <div class="field"><label>Last name <span class="required-star">*</span></label><input type="text" id="lastName"></div>
                         <div class="field"><label>Mobile <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
@@ -592,7 +560,7 @@
                             <div class="rit-overzicht-detail"><strong>📅 Departure date/time:</strong> <span id="overviewHeen">—</span></div>
                             <div id="overviewReturnContainer" style="display:none;"><strong>🔄 Return date/time:</strong> <span id="overviewReturn">—</span></div>
                             <div class="rit-overzicht-detail"><strong>🚘 Vehicle:</strong> <span id="overviewVehicle">—</span></div>
-                            <div class="rit-overzicht-detail"><strong>➕ Extras:</strong> <span id="overviewExtras">—</span></div>
+                            <div class="rit-overzicht-detail"><strong>➕ Extra options:</strong> <span id="overviewExtras">—</span></div>
                             <div class="rit-overzicht-totaal"><strong>💰 Total price:</strong> <span id="overviewTotal">€ 0.00</span></div>
                         </div>
                         <div class="payment-method"><span>Payment method:</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Cash</label><label><input type="radio" name="payment" value="Card"> 💳 Card</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div>
@@ -617,7 +585,7 @@
                 <i class="fas fa-briefcase"></i>
                 <h3>Business Transport</h3>
                 <p>Executive class, invoicing</p>
-                <div class="service-summary">Make an impression with executive class transport. Post-booking invoicing possible.</div>
+                <div class="service-summary">Impress with executive class transport. Post-booking invoicing possible.</div>
             </a>
             <a href="PV_Events_Gala.html?lang=en" class="service-card">
                 <i class="fas fa-glass-cheers"></i>
@@ -648,15 +616,15 @@
 
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
-            <h4>📅 Upcoming trips</h4>
+            <h4>📅 Upcoming rides</h4>
             <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
-            <h4>✅ Completed trips</h4>
+            <h4>✅ Completed rides</h4>
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </div>
 
         <div id="payments-container" class="tab-container hidden">
             <div class="profile-card">
-                <h3>💰 Payment History</h3>
+                <h3>💰 Payment history</h3>
                 <div id="paymentsList" style="margin-top:20px;">
                     <table class="bookings-table" id="paymentsTable">
                         <thead><tr><th>ID</th><th>Date</th><th>Amount</th><th>Method</th><th>Status</th><th>Invoice</th></tr></thead>
@@ -691,95 +659,7 @@
     window.comms = comms;
 </script>
 <script>
-    // ============================================
-    // SUPABASE INITIALISATION
-    // ============================================
-    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
-    
-    let supabase;
-    const initSupabase = () => {
-        if (window.createClient) {
-            if (!supabase) supabase = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            return true;
-        }
-        return false;
-    };
-
-    // ============================================
-    // LOGOUT FUNCTION - Redirects to index.html
-    // ============================================
-    async function performLogout() {
-        try {
-            // 1. Sign out from Supabase
-            if (supabase) {
-                await supabase.auth.signOut();
-            }
-            
-            // 2. Clear all local storage
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            // 3. Clear cookies
-            document.cookie.split(";").forEach(c => {
-                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-            });
-            
-            // 4. Redirect to login page (index.html)
-            window.location.replace('index.html?logout=success');
-            
-        } catch (err) {
-            console.error('Logout error:', err);
-            // Force redirect even if error occurs
-            window.location.replace('index.html?logout=success');
-        }
-    }
-    
-    // ============================================
-    // AUTH GUARD
-    // ============================================
-    let currentUser = { id: 'demo-user', full_name: 'Demo User', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
-    let userBookings = [];
-    let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
-    let selectedVehicle = 'Standard', selectedVehicleExtra = 0, currentPage = 1;
-    let debounceTimer;
-    
-    async function checkAuth() {
-        if (!initSupabase()) {
-            setTimeout(checkAuth, 100);
-            return;
-        }
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            window.location.replace('index.html');
-        } else {
-            currentUser.id = session.user.id;
-            currentUser.email = session.user.email;
-            const { data: customer } = await supabase.from('customers').select('*').eq('user_id', session.user.id).maybeSingle();
-            if (customer) {
-                currentUser.full_name = customer.name;
-                currentUser.phone = customer.phone;
-                currentUser.default_pickup_address = customer.default_pickup_address || '';
-            }
-            loadUserProfile();
-            loadUserBookings();
-            
-            // Load checkbox preference from localStorage
-            const savedPref = localStorage.getItem('useProfileDataPref');
-            const checkbox = document.getElementById('useProfileDataCheckbox');
-            if (checkbox && savedPref !== null) {
-                checkbox.checked = savedPref === 'true';
-                if (checkbox.checked) {
-                    fillWithProfileData();
-                }
-            }
-        }
-    }
-    checkAuth();
-    
-    // ============================================
-    // HAMBURGER MENU
-    // ============================================
+    // HAMBURGER MENU FUNCTIONALITY
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
@@ -803,58 +683,143 @@
         if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu();
     });
     
-    // ============================================
-    // LOGOUT BUTTONS - Both trigger performLogout()
-    // ============================================
-    document.getElementById('logoutTabBtn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        performLogout();
-    });
-    document.getElementById('logoutSidebarBtn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        performLogout();
-    });
+    // ========== LOGOUT FUNCTION - FIXED! ==========
+    async function handleLogout() {
+        const confirmed = confirm('Are you sure you want to logout?');
+        if (!confirmed) return;
+        
+        if (!initSupabase()) {
+            window.location.href = 'index.html?logout=success&lang=en';
+            return;
+        }
+        
+        try {
+            const { error } = await supabase.auth.signOut();
+            
+            if (error) {
+                console.error('Logout error:', error);
+                alert('Logout error: ' + error.message);
+                return;
+            }
+            
+            localStorage.removeItem('supabase.auth.token');
+            sessionStorage.clear();
+            
+            // Redirect to login page with logout parameter - YOU STAY ON THE LOGIN PAGE!
+            window.location.href = 'index.html?logout=success&lang=en';
+            
+        } catch (err) {
+            console.error('Logout error:', err);
+            window.location.href = 'index.html?logout=success&lang=en';
+        }
+    }
     
-    // ============================================
-    // LANGUAGE FUNCTIONALITY
-    // ============================================
-    function setActiveLanguageButton() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentLang = urlParams.get('lang') || 'en';
-        document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
-            const btnLang = btn.getAttribute('data-lang');
-            if (btnLang === currentLang) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
+    // LANGUAGE FUNCTIONALITY FOR GRID LINKS
+    function updateGridLinks(lang) {
+        document.querySelectorAll('.uitleg-grid a, .services-grid a, .footer-legal a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && (href.includes('.html') || href.includes('PV_'))) {
+                const cleanHref = href.split('?')[0];
+                link.setAttribute('href', `${cleanHref}?lang=${lang}`);
             }
         });
     }
-    setActiveLanguageButton();
     
-    document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const lang = btn.getAttribute('data-lang');
-            window.location.href = `klantenportaalpv_eng.html?lang=${lang}`;
+    function getLanguageFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
+            return langParam;
+        }
+        return 'en';
+    }
+
+    function handlePaymentStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const payment = urlParams.get('payment');
+        const bookingId = urlParams.get('id');
+
+        if (payment === 'success') {
+            alert(`Thank you! Your payment for booking ${bookingId} has been received successfully.`);
+            if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
+            switchToTab('payments');
+        } else if (payment === 'cancelled') {
+            alert(`The payment for booking ${bookingId} was cancelled. You can try again later via 'My Rides'.`);
+        }
+    }
+
+    function setActiveLanguageButton() {
+        const currentLang = getLanguageFromURL();
+        document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
+            if (btn.getAttribute('href')?.includes(`?lang=${currentLang}`)) {
+                btn.classList.add('active');
+                btn.style.background = '#2c6e9e';
+                btn.style.color = 'white';
+            } else {
+                btn.classList.remove('active');
+                btn.style.background = '#f1f5f9';
+                btn.style.color = '#1a2a3a';
+            }
         });
-    });
+    }
+
+    const currentLang = getLanguageFromURL();
+    updateGridLinks(currentLang);
+    setActiveLanguageButton();
+    document.documentElement.lang = currentLang;
     
-    // ============================================
-    // TAB FUNCTIONS
-    // ============================================
+    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+    
+    let supabase;
+    const initSupabase = () => {
+        if (window.createClient) {
+            if (!supabase) supabase = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            return true;
+        }
+        return false;
+    };
+
+    async function checkAuth() {
+        if (!initSupabase()) {
+            setTimeout(checkAuth, 100);
+            return;
+        }
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            window.location.href = 'index.html?lang=' + currentLang;
+        } else {
+            currentUser.id = session.user.id;
+            currentUser.email = session.user.email;
+            const { data: customer } = await supabase.from('customers').select('*').eq('user_id', session.user.id).maybeSingle();
+            if (customer) {
+                currentUser.full_name = customer.name;
+                currentUser.phone = customer.phone;
+                currentUser.default_pickup_address = customer.default_pickup_address || '';
+            }
+            loadUserProfile();
+            loadUserBookings();
+        }
+    }
+    checkAuth();
+
+    let currentUser = { id: 'demo-user', full_name: 'Demo User', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
+    let userBookings = [];
+    let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
+    let selectedVehicle = 'Standard', selectedVehicleExtra = 0, currentPage = 1;
+    let debounceTimer;
+
     function switchToTab(tabName) {
         document.querySelectorAll('.tab-container').forEach(c => c.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`${tabName}-container`).classList.remove('hidden');
-        const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-        if (tabBtn) tabBtn.classList.add('active');
+        document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
         if (tabName === 'dashboard') renderDashboard();
         if (tabName === 'profile') loadUserProfile();
         if (tabName === 'payments') loadPaymentHistory();
     }
     
-    document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', (e) => {
         const nav = e.currentTarget.getAttribute('data-nav');
         if (nav === 'home' || nav === 'portal') switchToTab('new-booking');
@@ -862,143 +827,62 @@
         closeMenu();
     }));
     
-    // ============================================
-    // PROFILE FUNCTIONS (with currentUser update)
-    // ============================================
+    // LOGOUT BUTTON EVENT LISTENER
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    
     async function loadUserProfile() {
         document.getElementById('fullName').value = currentUser.full_name;
         document.getElementById('profileEmail').value = currentUser.email;
         document.getElementById('profilePhone').value = currentUser.phone;
         document.getElementById('defaultPickup').value = currentUser.default_pickup_address;
-        
-        // Fill step 4 fields if checkbox is checked
-        const checkbox = document.getElementById('useProfileDataCheckbox');
-        if (checkbox && checkbox.checked) {
-            fillWithProfileData();
-        }
-    }
-    
-    // NEW: Fill step 4 with profile data
-    function fillWithProfileData() {
-        if (!currentUser) return;
-        
-        // Split full name into first and last name
-        const fullName = currentUser.full_name || '';
-        const spaceIndex = fullName.indexOf(' ');
-        let firstName = fullName;
-        let lastName = '';
-        if (spaceIndex > 0) {
-            firstName = fullName.substring(0, spaceIndex);
-            lastName = fullName.substring(spaceIndex + 1);
-        } else {
-            lastName = '';
-        }
-        
-        const firstNameInput = document.getElementById('firstName');
-        const lastNameInput = document.getElementById('lastName');
-        const phoneInput = document.getElementById('phone');
-        const emailInput = document.getElementById('email');
-        
-        if (firstNameInput) firstNameInput.value = firstName;
-        if (lastNameInput) lastNameInput.value = lastName;
-        if (phoneInput) phoneInput.value = currentUser.phone || '';
-        if (emailInput) emailInput.value = currentUser.email || '';
-    }
-    
-    // NEW: Clear step 4 fields
-    function clearBookingFormData() {
-        document.getElementById('firstName').value = '';
-        document.getElementById('lastName').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('vat').value = '';
+        document.getElementById('firstName').value = currentUser.full_name.split(' ')[0] || '';
+        document.getElementById('lastName').value = currentUser.full_name.split(' ').slice(1).join(' ') || '';
+        document.getElementById('phone').value = currentUser.phone;
+        document.getElementById('email').value = currentUser.email;
     }
     
     document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const newName = document.getElementById('fullName').value;
-        const newEmail = document.getElementById('profileEmail').value;
-        const newPhone = document.getElementById('profilePhone').value;
-        const newDefaultPickup = document.getElementById('defaultPickup').value;
-        
-        // Update currentUser
-        currentUser.full_name = newName;
-        currentUser.email = newEmail;
-        currentUser.phone = newPhone;
-        currentUser.default_pickup_address = newDefaultPickup;
-        
-        // Save to Supabase
-        if (initSupabase() && supabase) {
-            const { error } = await supabase
-                .from('customers')
-                .upsert({
-                    user_id: currentUser.id,
-                    name: newName,
-                    email: newEmail,
-                    phone: newPhone,
-                    default_pickup_address: newDefaultPickup
-                }, { onConflict: 'user_id' });
-            
-            if (error) {
-                console.error('Save error:', error);
-                alert('Error saving: ' + error.message);
-            } else {
-                alert('Profile saved');
-            }
-        } else {
-            alert('Profile saved locally');
-        }
-        
-        // If checkbox is checked, update step 4
-        const checkbox = document.getElementById('useProfileDataCheckbox');
-        if (checkbox && checkbox.checked) {
-            fillWithProfileData();
-        }
+        currentUser.full_name = document.getElementById('fullName').value;
+        currentUser.email = document.getElementById('profileEmail').value;
+        currentUser.phone = document.getElementById('profilePhone').value;
+        currentUser.default_pickup_address = document.getElementById('defaultPickup').value;
+        alert('Profile saved');
+        loadUserProfile();
     });
     
-    // ============================================
-    // CHECKBOX FOR PROFILE DATA
-    // ============================================
-    function initProfileCheckbox() {
-        const checkbox = document.getElementById('useProfileDataCheckbox');
-        if (!checkbox) return;
-        
-        checkbox.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                fillWithProfileData();
-            } else {
-                clearBookingFormData();
-            }
-            // Save preference to localStorage
-            localStorage.setItem('useProfileDataPref', e.target.checked);
-        });
-    }
-    
-    // ============================================
-    // PAYMENT FUNCTIONS
-    // ============================================
     async function loadPaymentHistory() {
         const tbody = document.querySelector('#paymentsTable tbody');
         if (!tbody) return;
+
         tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+
         try {
             if (!initSupabase()) {
                 tbody.innerHTML = '<tr><td colspan="6">Waiting for initialization...</td></tr>';
                 setTimeout(loadPaymentHistory, 1000);
                 return;
             }
+
             const email = currentUser.email;
             const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
+
             const { data, error } = await supabase
                 .from('payments')
                 .select('*, bookings(id, invoice_id)')
                 .eq('customer_id', customerId)
                 .order('created_at', { ascending: false });
+
             if (error) throw error;
+
             if (!data || data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6">No payments found</td></tr>';
                 return;
             }
+
             tbody.innerHTML = data.map(p => `
                 <tr>
                     <td>${p.booking_id}</td>
@@ -1006,29 +890,31 @@
                     <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
                     <td>${p.payment_method || 'card'}</td>
                     <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status}</span></td>
-                    <td>${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}</td>
+                    <td>
+                        ${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}
+                    </td>
                 </tr>
             `).join('');
+
         } catch (err) {
             console.error('Payment history error:', err);
             tbody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`;
         }
     }
-    
-    // ============================================
-    // DASHBOARD FUNCTIONS
-    // ============================================
+
     async function loadUserBookings() {
         if (!initSupabase()) {
             setTimeout(loadUserBookings, 100);
             return;
         }
+
         try {
             const { data, error } = await supabase
                 .from('bookings')
                 .select('*')
                 .or(`user_id.eq.${currentUser.id},customer_id.eq.CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`)
                 .order('datetime', { ascending: false });
+
             if (error) throw error;
             userBookings = data || [];
             renderDashboard();
@@ -1044,8 +930,8 @@
         const statsGrid = document.getElementById('statsGrid');
         if (statsGrid) {
             statsGrid.innerHTML = `
-                <div class="stat-card"><h3>${upcoming.length}</h3><p>Upcoming trips</p></div>
-                <div class="stat-card"><h3>${completed.length}</h3><p>Completed trips</p></div>
+                <div class="stat-card"><h3>${upcoming.length}</h3><p>Upcoming rides</p></div>
+                <div class="stat-card"><h3>${completed.length}</h3><p>Completed rides</p></div>
                 <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Total spent</p></div>
             `;
         }
@@ -1056,7 +942,7 @@
                     <tr>
                         <td>${b.id}</td>
                         <td>${b.datetime} ${b.time || ''}</td>
-                        <td>${b.pickup?.split(',')[0] || ''} → ${b.destination?.split(',')[0] || ''}</td>
+                        <td>${b.pickup.split(',')[0]} → ${b.destination.split(',')[0]}</td>
                         <td>${b.vehicle}</td>
                         <td>€${b.amount}</td>
                         <td><span class="status-badge" style="background:${b.status==='completed'?'#dcfce7':'#fef3c7'}">${b.status}</span></td>
@@ -1081,7 +967,7 @@
         });
         document.querySelectorAll('.view-fiche').forEach(btn => btn.onclick = () => {
             const b = JSON.parse(btn.getAttribute('data-id'));
-            alert(`Trip record: ${b.id}\n€${b.amount}\nStatus: ${b.status}`);
+            alert(`Ride details: ${b.id}\n€${b.amount}\nStatus: ${b.status}`);
         });
         document.querySelectorAll('.download-pdf').forEach(btn => btn.onclick = () => {
             const b = JSON.parse(btn.getAttribute('data-id'));
@@ -1089,9 +975,6 @@
         });
     }
     
-    // ============================================
-    // ADDRESS AUTOCOMPLETE (OpenStreetMap Nominatim)
-    // ============================================
     async function fetchAddresses(query, wrapId) {
         const wrap = document.getElementById(wrapId);
         if (!wrap) return;
@@ -1174,9 +1057,6 @@
         });
     }
     
-    // ============================================
-    // ROUTE FUNCTIONS
-    // ============================================
     async function calcRoute(lat1, lon1, lat2, lon2) {
         const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
         const res = await fetch(url);
@@ -1251,7 +1131,7 @@
         if (isPast(dt)) { showError(1, '❌ No trips in the past.'); return false; }
         if (document.getElementById('roundtripCheckbox').checked) {
             const returnDt = document.getElementById('returnDatetime').value;
-            if (!returnDt) { showError(1, 'Choose return date/time.'); return false; }
+            if (!returnDt) { showError(1, 'Choose return date/time for round trip.'); return false; }
             if (isPast(returnDt)) { showError(1, '❌ Return trip cannot be in the past.'); return false; }
             if (parseEuroDate(returnDt) <= parseEuroDate(dt)) { showError(1, '❌ Return date/time must be after departure date/time.'); return false; }
             currentReturnDateTime = returnDt;
@@ -1259,7 +1139,7 @@
         const urgent = isWithinNextHour(dt);
         document.getElementById('urgentWhatsApp').classList.toggle('show', urgent);
         const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon);
-        if (!rd) { showError(1, 'Route calculation failed.'); return false; }
+        if (!rd) { showError(1, 'Route failed.'); return false; }
         currentRouteData = rd;
         currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
         await updateMapAndInfo(rd);
@@ -1355,8 +1235,8 @@
                             email: em,
                             amount: totalAmount,
                             paymentMethodType: payment,
-                            successUrl: `${window.location.origin}/klantenportaalpv_eng.html?payment=success&id=${bookingId}`,
-                            cancelUrl: `${window.location.origin}/klantenportaalpv_eng.html?payment=cancelled&id=${bookingId}`
+                            successUrl: `${window.location.origin}/klantenportaal_en.html?payment=success&id=${bookingId}&lang=en`,
+                            cancelUrl: `${window.location.origin}/klantenportaal_en.html?payment=cancelled&id=${bookingId}&lang=en`
                         }
                     });
                     if (error) throw error;
@@ -1447,24 +1327,10 @@
     initMap();
     initVehicleSelection();
     initAutocomplete();
-    initProfileCheckbox();
     showPage(1);
     loadUserProfile();
     loadUserBookings();
     switchToTab('new-booking');
-    
-    function handlePaymentStatus() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const payment = urlParams.get('payment');
-        const bookingId = urlParams.get('id');
-        if (payment === 'success') {
-            alert(`Thank you! Your payment for booking ${bookingId} has been received successfully.`);
-            if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
-            switchToTab('payments');
-        } else if (payment === 'cancelled') {
-            alert(`The payment for booking ${bookingId} was cancelled. You can try again later via 'My Trips'.`);
-        }
-    }
     handlePaymentStatus();
 </script>
 </body>
