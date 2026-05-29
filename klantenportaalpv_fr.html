@@ -277,7 +277,7 @@
             <a href="#" data-nav="home"><i class="fas fa-home"></i> Accueil</a>
             <a href="#" data-nav="portal"><i class="fas fa-user-circle"></i> Mon Portail</a>
             <a href="#" data-nav="contact"><i class="fas fa-envelope"></i> Contact</a>
-            <a href="index.html" id="logoutBtnSidebar"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            <a href="#" id="logoutBtnSidebar"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
         </div>
     </div>
 
@@ -290,7 +290,7 @@
         </div>
     </section>
 
-    <!-- ========== 3 BLOCS DE GRILLE avec LIENS (+ paramètre langue) ========== -->
+    <!-- ========== 3 BLOCS DE GRILLE ========== -->
     <div class="container">
         <div class="uitleg-grid">
             <a href="PV_Exclusieve_Service.html?lang=fr" class="uitleg-item">
@@ -319,7 +319,11 @@
             <button class="tab-btn active" data-tab="new-booking">📝 Nouveau Trajet</button>
             <button class="tab-btn" data-tab="profile">👤 Mon Profil</button>
             <button class="tab-btn" data-tab="dashboard">📊 Tableau de bord & Trajets</button>
-            <a href="index.html" id="logoutTabBtn" class="logout-tab-btn" style="text-decoration:none;"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            <button class="tab-btn" data-tab="payments">💰 Paiements</button>
+            <!-- LOGOUT BUTTON - FIXED! -->
+            <button id="logoutBtn" class="logout-tab-btn" style="background:none; border:none; cursor:pointer; font-weight:600;">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
         </div>
 
         <div id="new-booking-container" class="tab-container">
@@ -412,7 +416,7 @@
             </div>
         </div>
 
-        <!-- ========== 4 BLOCS DE GRILLE avec LIENS (+ paramètre langue) ========== -->
+        <!-- ========== 4 BLOCS DE GRILLE ========== -->
         <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Nos services</h2>
         <div class="services-grid">
             <a href="PV_Luchthavenvervoer.html?lang=fr" class="service-card">
@@ -461,6 +465,18 @@
             <h4>✅ Trajets terminés</h4>
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/heure</th><th>Itinéraire</th><th>Véhicule</th><th>Montant</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </div>
+
+        <div id="payments-container" class="tab-container hidden">
+            <div class="profile-card">
+                <h3>💰 Historique des paiements</h3>
+                <div id="paymentsList" style="margin-top:20px;">
+                    <table class="bookings-table" id="paymentsTable">
+                        <thead><tr><th>ID</th><th>Date</th><th>Montant</th><th>Méthode</th><th>Statut</th><th>Facture</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="footer-dark">
@@ -480,7 +496,44 @@
 </div>
 <div id="ritModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
 
+<script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { comms } from './src/modules/communication/index.js';
+    window.createClient = createClient;
+    window.comms = comms;
+</script>
 <script>
+    // ========== LOGOUT FUNCTION - FIXED! ==========
+    async function handleLogout() {
+        const confirmed = confirm('Êtes-vous sûr de vouloir vous déconnecter ?');
+        if (!confirmed) return;
+        
+        if (!initSupabase()) {
+            window.location.href = 'index.html?logout=success&lang=fr';
+            return;
+        }
+        
+        try {
+            const { error } = await supabase.auth.signOut();
+            
+            if (error) {
+                console.error('Logout error:', error);
+                alert('Erreur lors de la déconnexion: ' + error.message);
+                return;
+            }
+            
+            localStorage.removeItem('supabase.auth.token');
+            sessionStorage.clear();
+            
+            // Redirect to login page with logout parameter - YOU STAY ON THE LOGIN PAGE!
+            window.location.href = 'index.html?logout=success&lang=fr';
+            
+        } catch (err) {
+            console.error('Logout error:', err);
+            window.location.href = 'index.html?logout=success&lang=fr';
+        }
+    }
+    
     // Fonctionnalité du sélecteur de langue
     function setLanguage(lang) {
         // Mettre à jour tous les liens de grille avec le bon paramètre de langue
@@ -509,6 +562,11 @@
         });
 
         document.documentElement.lang = lang;
+        
+        // Mettre à jour l'URL
+        const url = new URL(window.location.href);
+        url.searchParams.set('lang', lang);
+        window.history.pushState({}, '', url);
     }
     
     function getInitialLanguage() {
@@ -529,20 +587,21 @@
         btn.addEventListener('click', () => {
             const lang = btn.getAttribute('data-lang');
             setLanguage(lang);
-            // Mettre à jour le paramètre d'URL
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', lang);
-            window.history.pushState({}, '', url);
         });
     });
-    
-    // Initialiser la langue au chargement
-    const initialLang = getInitialLanguage();
-    setLanguage(initialLang);
     
     // Configuration Supabase
     const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+    
+    let supabase;
+    const initSupabase = () => {
+        if (window.createClient) {
+            if (!supabase) supabase = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            return true;
+        }
+        return false;
+    };
     
     let currentUser = { id: 'demo-user', full_name: 'Utilisateur Démo', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
     let userBookings = [];
@@ -564,6 +623,7 @@
         document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
         if (tabName === 'dashboard') renderDashboard();
         if (tabName === 'profile') loadUserProfile();
+        if (tabName === 'payments') loadPaymentHistory();
     }
     
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
@@ -573,6 +633,20 @@
         if (nav === 'contact') alert('📧 info@fleetconnect.be | 📞 +32 470 12 34 56');
         closeSidebar();
     }));
+    
+    // LOGOUT BUTTON EVENT LISTENER
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    
+    const logoutBtnSidebar = document.getElementById('logoutBtnSidebar');
+    if (logoutBtnSidebar) {
+        logoutBtnSidebar.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleLogout();
+        });
+    }
     
     // Fonctions profil
     async function loadUserProfile() {
@@ -596,13 +670,81 @@
         loadUserProfile();
     });
     
+    // Fonctions paiement
+    async function loadPaymentHistory() {
+        const tbody = document.querySelector('#paymentsTable tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '<tr><td colspan="6">Chargement...</td></tr>';
+
+        try {
+            if (!initSupabase()) {
+                tbody.innerHTML = '<tr><td colspan="6">En attente d\'initialisation...</td></tr>';
+                setTimeout(loadPaymentHistory, 1000);
+                return;
+            }
+
+            const email = currentUser.email;
+            const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
+
+            const { data, error } = await supabase
+                .from('payments')
+                .select('*, bookings(id, invoice_id)')
+                .eq('customer_id', customerId)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">Aucun paiement trouvé</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(p => `
+                <tr>
+                    <td>${p.booking_id}</td>
+                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
+                    <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
+                    <td>${p.payment_method || 'carte'}</td>
+                    <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status}</span></td>
+                    <td>
+                        ${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}
+                    </td>
+                </tr>
+            `).join('');
+
+        } catch (err) {
+            console.error('Payment history error:', err);
+            tbody.innerHTML = `<tr><td colspan="6">Erreur: ${err.message}</td></tr>`;
+        }
+    }
+    
     // Fonctions tableau de bord
     async function loadUserBookings() {
-        userBookings = [
-            { id: "FC-20260515-001", datetime: "15-05-2026", time: "09:00", name: currentUser.full_name, pickup: "Gand, Belgique", destination: "Bruxelles, Belgique", vehicle: "Standard", amount: 67.50, status: "completed", extras: "Meet & Greet", flight_number: "BA398", email: currentUser.email, phone: currentUser.phone, payment: "Cash" },
-            { id: "FC-20260516-002", datetime: "16-05-2026", time: "14:30", name: currentUser.full_name, pickup: "Anvers, Belgique", destination: "Louvain, Belgique", vehicle: "Break", amount: 55.00, status: "pending", extras: "WiFi", email: currentUser.email, phone: currentUser.phone, payment: "Cash" }
-        ];
-        renderDashboard();
+        if (!initSupabase()) {
+            setTimeout(loadUserBookings, 100);
+            return;
+        }
+
+        try {
+            const { data, error } = await supabase
+                .from('bookings')
+                .select('*')
+                .or(`user_id.eq.${currentUser.id},customer_id.eq.CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`)
+                .order('datetime', { ascending: false });
+
+            if (error) throw error;
+            userBookings = data || [];
+            renderDashboard();
+        } catch (err) {
+            console.error('Error loading bookings:', err);
+            // Données de démo en cas d'erreur
+            userBookings = [
+                { id: "FC-20260515-001", datetime: "15-05-2026", time: "09:00", name: currentUser.full_name, pickup: "Gand, Belgique", destination: "Bruxelles, Belgique", vehicle: "Standard", amount: 67.50, status: "completed", extras: "Meet & Greet", flight_number: "BA398", email: currentUser.email, phone: currentUser.phone, payment: "Cash" },
+                { id: "FC-20260516-002", datetime: "16-05-2026", time: "14:30", name: currentUser.full_name, pickup: "Anvers, Belgique", destination: "Louvain, Belgique", vehicle: "Break", amount: 55.00, status: "pending", extras: "WiFi", email: currentUser.email, phone: currentUser.phone, payment: "Cash" }
+            ];
+            renderDashboard();
+        }
     }
     
     function renderDashboard() {
@@ -879,10 +1021,11 @@
         let datePart = "", timePart = "";
         if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
         
-        const customerId = `CUST-${fn.toLowerCase()}${ln.toLowerCase()}`;
+        const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
         
+        const bookingId = generateBookingId();
         const record = {
-            id: generateBookingId(),
+            id: bookingId,
             datetime: datePart,
             time: timePart,
             name: `${fn} ${ln}`,
@@ -895,18 +1038,49 @@
             extras: getExtrasString(),
             amount: totalAmount,
             payment: payment,
-            status: "pending",
+            status: payment === "Cash" ? "pending" : "pending_payment",
             customer_id: customerId,
             form_data: { ai: true, source: "web-portal" },
             assigned_driver_id: null,
-            partner_id: 1
+            partner_id: 1,
+            payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
         };
         
+        if (!initSupabase()) {
+            alert('Supabase non initialisé');
+            return;
+        }
+
         const success = await sendToSupabase(record);
         if (success) {
-            alert(`✅ Réservation confirmée!\n📋 Numéro: ${record.id}\n💰 € ${totalAmount.toFixed(2)}`);
-            resetAll();
-            await loadUserBookings();
+            if (payment === "Card" || payment === "App") {
+                try {
+                    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+                        body: {
+                            bookingId: bookingId,
+                            email: em,
+                            amount: totalAmount,
+                            paymentMethodType: payment,
+                            successUrl: `${window.location.origin}/klantenportaal_fr.html?payment=success&id=${bookingId}&lang=fr`,
+                            cancelUrl: `${window.location.origin}/klantenportaal_fr.html?payment=cancelled&id=${bookingId}&lang=fr`
+                        }
+                    });
+                    if (error) throw error;
+                    if (data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        throw new Error("Aucune URL Stripe reçue");
+                    }
+                } catch (stripeErr) {
+                    console.error('Stripe error:', stripeErr);
+                    alert('Une erreur est survenue lors du démarrage du paiement: ' + stripeErr.message);
+                }
+            } else {
+                alert(`✅ Réservation confirmée!\n📋 Numéro: ${record.id}\n💰 € ${totalAmount.toFixed(2)}`);
+                if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
+                resetAll();
+                await loadUserBookings();
+            }
         }
     }
     
@@ -987,6 +1161,10 @@
     loadUserProfile();
     loadUserBookings();
     switchToTab('new-booking');
+    
+    // Initialiser la langue
+    const initialLang = getInitialLanguage();
+    setLanguage(initialLang);
 </script>
 </body>
 </html>
