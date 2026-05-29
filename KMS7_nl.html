@@ -118,9 +118,9 @@
     .vehicle-card-select.selected { border: 2px solid var(--silver); background: white; }
     .extra-fields { background: rgba(249,248,245,0.7); padding: 1.5rem; border-radius: 24px; margin: 1.5rem 0; }
     .payment-method { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0; }
-    #map { width: 100%; height: 400px; border-radius: 28px; margin-bottom: 1rem; }
+    #map { width: 100%; height: 450px; border-radius: 28px; margin-bottom: 1rem; border: 2px solid var(--silver); box-shadow: var(--shadow-glass); z-index: 1; }
     .info-strip { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
-    .info-card { background: rgba(249,248,245,0.7); padding: 0.8rem; border-radius: 24px; text-align: center; flex: 1; }
+    .info-card { background: rgba(249,248,245,0.7); backdrop-filter: blur(8px); padding: 0.8rem; border-radius: 24px; text-align: center; flex: 1; border: 1px solid rgba(192,192,192,0.4); }
     .info-card .value { font-size: 1.8rem; font-weight: bold; color: var(--silver); }
     footer { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); padding: 55px 0 35px; border-top: 1px solid var(--silver); margin-top: 60px; }
     .footer-col h4 { font-family: 'Playfair Display', serif; font-weight: 700; letter-spacing: 2px; color: var(--silver); margin-bottom: 1.2rem; }
@@ -138,6 +138,7 @@
       .hero-right-content { border-left: none; padding-left: 0; align-items: center; }
       .grid-2cols { grid-template-columns: 1fr; gap: 2rem; }
       .about-image-wrapper { min-height: 240px; }
+      #map { height: 300px; }
     }
   </style>
 </head>
@@ -228,13 +229,48 @@
           <div id="page1Error" class="error"></div>
         </div>
 
-        <div id="page2" class="carousel-page"><div id="map"></div><div class="info-strip"><div class="info-card"><div>📏 Afstand</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div>⏱️ Duur</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div>💰 Prijs</div><div class="value" id="priceVal">—</div><small>€</small></div></div><div id="page2Error" class="error"></div></div>
+        <div id="page2" class="carousel-page">
+          <div id="map"></div>
+          <div class="info-strip">
+            <div class="info-card"><div>📏 Afstand</div><div class="value" id="distVal">—</div><small>km</small></div>
+            <div class="info-card"><div>⏱️ Duur</div><div class="value" id="timeVal">—</div><small>min</small></div>
+            <div class="info-card"><div>💰 Prijs</div><div class="value" id="priceVal">—</div><small>€</small></div>
+          </div>
+          <div id="page2Error" class="error"></div>
+        </div>
 
-        <div id="page3" class="carousel-page"><h3>Kies uw voertuig</h3><div class="vehicle-grid-select" id="vehicleGrid"><div class="vehicle-card-select" data-vehicle="Standard" data-extraprice="0"><i class="fas fa-car"></i><div>Standard</div><div>+0€</div></div><div class="vehicle-card-select" data-vehicle="Break" data-extraprice="5"><i class="fas fa-car-side"></i><div>Break</div><div>+5€</div></div><div class="vehicle-card-select" data-vehicle="Exclusive" data-extraprice="15"><i class="fas fa-car"></i><div>Exclusive</div><div>+15€</div></div><div class="vehicle-card-select" data-vehicle="MiniVan" data-extraprice="10"><i class="fas fa-van-shuttle"></i><div>MiniVan</div><div>+10€</div></div></div><div class="extra-fields"><div><label>👥 Passagiers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Bagage</label><input type="number" id="luggage" min="0" value="0"></div><div><label><input type="checkbox" id="meetGreet"> Persoonlijke ontvangst</label> <label><input type="checkbox" id="waterBottle"> Fles water</label></div><div><label>📝 Speciale wensen</label><textarea id="specialWishes" rows="2"></textarea></div></div><div id="page3Error" class="error"></div></div>
+        <div id="page3" class="carousel-page">
+          <h3>Kies uw voertuig</h3>
+          <div class="vehicle-grid-select" id="vehicleGrid">
+            <div class="vehicle-card-select" data-vehicle="Standard" data-extraprice="0"><i class="fas fa-car"></i><div>Standard</div><div>+0€</div></div>
+            <div class="vehicle-card-select" data-vehicle="Break" data-extraprice="5"><i class="fas fa-car-side"></i><div>Break</div><div>+5€</div></div>
+            <div class="vehicle-card-select" data-vehicle="Exclusive" data-extraprice="15"><i class="fas fa-car"></i><div>Exclusive</div><div>+15€</div></div>
+            <div class="vehicle-card-select" data-vehicle="MiniVan" data-extraprice="10"><i class="fas fa-van-shuttle"></i><div>MiniVan</div><div>+10€</div></div>
+          </div>
+          <div class="extra-fields">
+            <div><label>👥 Passagiers</label><input type="number" id="passengers" min="1" value="1"></div>
+            <div><label>🧳 Bagage</label><input type="number" id="luggage" min="0" value="0"></div>
+            <div><label><input type="checkbox" id="meetGreet"> Persoonlijke ontvangst</label> <label><input type="checkbox" id="waterBottle"> Fles water</label></div>
+            <div><label>📝 Speciale wensen</label><textarea id="specialWishes" rows="2"></textarea></div>
+          </div>
+          <div id="page3Error" class="error"></div>
+        </div>
 
-        <div id="page4" class="carousel-page"><div class="field"><label>Voornaam *</label><input type="text" id="firstName"></div><div class="field"><label>Achternaam *</label><input type="text" id="lastName"></div><div class="field"><label>Mobiel *</label><input type="tel" id="phone"></div><div class="field"><label>E-mail *</label><input type="email" id="email"></div><div id="page4Error" class="error"></div></div>
+        <div id="page4" class="carousel-page">
+          <div class="field"><label>Voornaam *</label><input type="text" id="firstName"></div>
+          <div class="field"><label>Achternaam *</label><input type="text" id="lastName"></div>
+          <div class="field"><label>Mobiel *</label><input type="tel" id="phone"></div>
+          <div class="field"><label>E-mail *</label><input type="email" id="email"></div>
+          <div id="page4Error" class="error"></div>
+        </div>
 
-        <div id="page5" class="carousel-page"><div id="bookingSummary"></div><div class="payment-method"><span>Betaalmethode :</span><label><input type="radio" name="payment" value="Cash" checked> Contant</label><label><input type="radio" name="payment" value="Card"> Kaart</label></div><div id="totalDisplay" class="total-display">Totaal: € 0,00</div><button id="finalConfirmBtn" class="btn-gold">Bevestig boeking</button><div id="page5Error" class="error"></div></div>
+        <div id="page5" class="carousel-page">
+          <div id="bookingSummary"></div>
+          <div class="payment-method"><span>Betaalmethode :</span><label><input type="radio" name="payment" value="Cash" checked> Contant</label><label><input type="radio" name="payment" value="Card"> Kaart</label></div>
+          <div id="totalDisplay" class="total-display">Totaal: € 0,00</div>
+          <button id="finalConfirmBtn" class="btn-gold">Bevestig boeking</button>
+          <div id="page5Error" class="error"></div>
+        </div>
 
         <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
           <button class="nav-btn prev" id="prevBtn" disabled>◀ Vorige</button>
@@ -252,7 +288,7 @@
         <p>Onze belofte: <strong>geen vertraging, geen stress, 100% plezier.</strong></p>
       </div>
       <div class="about-image-wrapper">
-        <img class="about-image" src="assets/images/homepage/picinsidecar.jpg" alt="Interieur KMS7 luxe voertuig" onerror="this.src='https://placehold.co/800x400?text=Afbeelding+niet+gevonden'">
+        <img class="about-image" src="picinsidecar.jpg" alt="Interieur KMS7 luxe voertuig" onerror="this.src='https://placehold.co/800x400?text=Afbeelding+niet+gevonden'">
       </div>
     </div>
   </section>
@@ -328,19 +364,156 @@
     const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
     try { const res = await fetch(url); const data = await res.json(); if(data.code === 'Ok') { const rt = data.routes[0]; return { distanceKm: (rt.distance/1000).toFixed(1), durationMin: Math.round(rt.duration/60), geometry: rt.geometry }; } } catch(e){} return null;
   }
-  async function updateMapAndInfo(rd) { if(!rd) return; if(pickupMarker) map.removeLayer(pickupMarker); if(dropoffMarker) map.removeLayer(dropoffMarker); if(routeLayer) map.removeLayer(routeLayer); pickupMarker = L.marker([pickupCoord.lat, pickupCoord.lon]).addTo(map); dropoffMarker = L.marker([dropoffCoord.lat, dropoffCoord.lon]).addTo(map); routeLayer = L.geoJSON(rd.geometry, { color: '#C0C0C0', weight: 5 }).addTo(map); map.fitBounds([ [pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon] ]); let d = parseFloat(rd.distanceKm); if(currentRoundTrip) d *= 2; const price = d * 1.5; document.getElementById('distVal').innerHTML = d.toFixed(1); document.getElementById('timeVal').innerHTML = rd.durationMin; document.getElementById('priceVal').innerHTML = price.toFixed(2); updateTotalDisplay(); }
-  function updateTotalDisplay() { if(!currentRouteData) return; let dist = parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) dist *= 2; let total = dist * 1.5 + (selectedVehicleExtra || 0); document.getElementById('totalDisplay').innerHTML = `Totaal: € ${total.toFixed(2)}`; if(currentPage === 5) { document.getElementById('bookingSummary').innerHTML = `<div>Ophalen: ${document.getElementById('pickupInput').value}</div><div>Bestemming: ${document.getElementById('dropoffInput').value}</div><div>Voertuig: ${selectedVehicle}</div><div>Totaal: € ${total.toFixed(2)}</div>`; } }
-  async function calculateAndStoreRoute() { if(!pickupCoord || !dropoffCoord) { showError(1, 'Selecteer adressen uit suggesties'); return false; } const dt = document.getElementById('datetime').value; if(!dt) { showError(1, 'Kies datum/tijd'); return false; } if(isPast(dt)) { showError(1, 'Datum in verleden'); return false; } currentDateTime = dt; currentRoundTrip = document.getElementById('roundtripCheckbox').checked; if(currentRoundTrip) { const rdt = document.getElementById('returnDatetime').value; if(!rdt || isPast(rdt)) { showError(1, 'Retour datum ongeldig'); return false; } currentReturnDateTime = rdt; } const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon); if(!rd) { showError(1, 'Route fout'); return false; } currentRouteData = rd; await updateMapAndInfo(rd); return true; }
-  function showError(page, msg) { const e = document.getElementById(`page${page}Error`); if(e) { e.innerText = msg; e.style.display = 'block'; setTimeout(()=> e.style.display='none', 4000); } }
-  function initVehicleSelection() { document.querySelectorAll('.vehicle-card-select').forEach(card => { card.addEventListener('click', () => { document.querySelectorAll('.vehicle-card-select').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedVehicle = card.getAttribute('data-vehicle'); selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0; updateTotalDisplay(); }); }); const first = document.querySelector('.vehicle-card-select'); if(first) { first.classList.add('selected'); selectedVehicle = first.getAttribute('data-vehicle'); selectedVehicleExtra = 0; } }
-  async function finalizeBooking() { const firstName = document.getElementById('firstName').value.trim(); const lastName = document.getElementById('lastName').value.trim(); const email = document.getElementById('email').value.trim(); const phone = document.getElementById('phone').value.trim(); if(!firstName || !lastName || !email || !phone) { alert('Vul alle verplichte velden in'); return; } let total = 0; if(currentRouteData) { let d = parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; total = d*1.5 + selectedVehicleExtra; } const bookingData = { id: generateBookingId(), datetime: currentDateTime.split(' ')[0], time: currentDateTime.split(' ')[1], name: `${firstName} ${lastName}`, email, phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, vehicle: selectedVehicle, amount: total, status: 'pending', created_at: new Date().toISOString() }; const { error } = await supabase.from('bookings').insert([bookingData]); if(error) alert('Fout: '+error.message); else { alert(`Boeking bevestigd! N° ${bookingData.id}`); resetAll(); } }
-  function resetAll() { currentRouteData = null; pickupCoord = null; dropoffCoord = null; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = ''; showPage(1); }
+  
+  async function updateMapAndInfo(rd) {
+    if(!rd) return;
+    if(pickupMarker) map.removeLayer(pickupMarker);
+    if(dropoffMarker) map.removeLayer(dropoffMarker);
+    if(routeLayer) map.removeLayer(routeLayer);
+    
+    const pickupIcon = L.divIcon({ 
+      html: '<div style="background:#4CAF50;width:32px;height:32px;border-radius:50%;border:3px solid white;text-align:center;line-height:28px;font-size:16px;">🚗</div>', 
+      iconSize: [32,32]
+    });
+    const dropoffIcon = L.divIcon({ 
+      html: '<div style="background:#F44336;width:32px;height:32px;border-radius:50%;border:3px solid white;text-align:center;line-height:28px;font-size:16px;">🏁</div>', 
+      iconSize: [32,32]
+    });
+    
+    pickupMarker = L.marker([pickupCoord.lat, pickupCoord.lon], { icon: pickupIcon }).addTo(map);
+    dropoffMarker = L.marker([dropoffCoord.lat, dropoffCoord.lon], { icon: dropoffIcon }).addTo(map);
+    
+    pickupMarker.bindPopup(`<strong>Ophaaladres</strong><br>${document.getElementById('pickupInput').value || 'Geselecteerd adres'}`).openPopup();
+    dropoffMarker.bindPopup(`<strong>Bestemming</strong><br>${document.getElementById('dropoffInput').value || 'Geselecteerd adres'}`);
+    
+    routeLayer = L.geoJSON(rd.geometry, { 
+      color: '#C0C0C0', 
+      weight: 5,
+      opacity: 0.9,
+      lineCap: 'round',
+      lineJoin: 'round'
+    }).addTo(map);
+    
+    const bounds = L.latLngBounds([pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon]);
+    map.fitBounds(bounds, { padding: [80, 80] });
+    
+    let d = parseFloat(rd.distanceKm);
+    if(currentRoundTrip) d *= 2;
+    const price = d * 1.5;
+    document.getElementById('distVal').innerHTML = d.toFixed(1);
+    document.getElementById('timeVal').innerHTML = rd.durationMin;
+    document.getElementById('priceVal').innerHTML = price.toFixed(2);
+    updateTotalDisplay();
+  }
+  
+  function updateTotalDisplay() {
+    if(!currentRouteData) return;
+    let dist = parseFloat(currentRouteData.distanceKm);
+    if(currentRoundTrip) dist *= 2;
+    let total = dist * 1.5 + (selectedVehicleExtra || 0);
+    document.getElementById('totalDisplay').innerHTML = `Totaal: € ${total.toFixed(2)}`;
+    if(currentPage === 5) {
+      document.getElementById('bookingSummary').innerHTML = `<div><strong>Ophalen:</strong> ${document.getElementById('pickupInput').value || '—'}</div><div><strong>Bestemming:</strong> ${document.getElementById('dropoffInput').value || '—'}</div><div><strong>Voertuig:</strong> ${selectedVehicle || '—'}</div><div><strong>Totaal:</strong> € ${total.toFixed(2)}</div>`;
+    }
+  }
+  
+  async function calculateAndStoreRoute() {
+    if(!pickupCoord || !dropoffCoord) { showError(1, 'Selecteer adressen uit de suggesties'); return false; }
+    const dt = document.getElementById('datetime').value;
+    if(!dt) { showError(1, 'Kies de vertrekdatum en -tijd'); return false; }
+    if(isPast(dt)) { showError(1, 'Datum kan niet in het verleden liggen'); return false; }
+    currentDateTime = dt;
+    currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
+    if(currentRoundTrip) {
+      const rdt = document.getElementById('returnDatetime').value;
+      if(!rdt || isPast(rdt)) { showError(1, 'Ongeldige retourdatum'); return false; }
+      currentReturnDateTime = rdt;
+    }
+    const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon);
+    if(!rd) { showError(1, 'Kan route niet berekenen. Controleer de adressen.'); return false; }
+    currentRouteData = rd;
+    await updateMapAndInfo(rd);
+    return true;
+  }
+  
+  function showError(page, msg) { const e = document.getElementById(`page${page}Error`); if(e) { e.innerText = msg; e.style.display = 'block'; setTimeout(()=> e.style.display='none', 5000); } }
+  function initVehicleSelection() {
+    document.querySelectorAll('.vehicle-card-select').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.vehicle-card-select').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedVehicle = card.getAttribute('data-vehicle');
+        selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0;
+        updateTotalDisplay();
+      });
+    });
+    const first = document.querySelector('.vehicle-card-select');
+    if(first) { first.classList.add('selected'); selectedVehicle = first.getAttribute('data-vehicle'); selectedVehicleExtra = 0; }
+  }
+  
+  async function finalizeBooking() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    if(!firstName || !lastName || !email || !phone) { alert('Vul alle verplichte velden in'); return; }
+    let total = 0;
+    if(currentRouteData) { let d = parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; total = d*1.5 + selectedVehicleExtra; }
+    const bookingData = { id: generateBookingId(), datetime: currentDateTime.split(' ')[0], time: currentDateTime.split(' ')[1], name: `${firstName} ${lastName}`, email, phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, vehicle: selectedVehicle, amount: total, status: 'pending', created_at: new Date().toISOString() };
+    const { error } = await supabase.from('bookings').insert([bookingData]);
+    if(error) alert('Fout: '+error.message);
+    else { alert(`✅ Boeking bevestigd!\n\nNummer: ${bookingData.id}\nBedrag: € ${total.toFixed(2)}`); resetAll(); }
+  }
+  
+  function resetAll() {
+    if(routeLayer) map.removeLayer(routeLayer);
+    if(pickupMarker) map.removeLayer(pickupMarker);
+    if(dropoffMarker) map.removeLayer(dropoffMarker);
+    currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0;
+    document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = '';
+    document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = '';
+    document.getElementById('roundtripCheckbox').checked = false; document.getElementById('returnDateContainer').style.display = 'none';
+    document.getElementById('firstName').value = ''; document.getElementById('lastName').value = ''; document.getElementById('phone').value = ''; document.getElementById('email').value = '';
+    document.getElementById('meetGreet').checked = false; document.getElementById('waterBottle').checked = false; document.getElementById('specialWishes').value = '';
+    currentRoundTrip = false; currentReturnDateTime = ''; showPage(1);
+  }
+  
   function updateProgressBar() { document.getElementById('progressFill').style.width = `${(currentPage/5)*100}%`; }
-  function showPage(page) { document.querySelectorAll('.carousel-page').forEach((p,i)=> p.classList.toggle('active-page', i+1===page)); document.querySelectorAll('.step-btn').forEach((b,i)=> { b.classList.toggle('active', i+1===page); if(i+1<page) b.classList.add('done'); else b.classList.remove('done'); }); currentPage = page; updateProgressBar(); document.getElementById('prevBtn').disabled = (page===1); document.getElementById('nextBtn').style.display = (page===5) ? 'none' : 'inline-block'; if(page===5) updateTotalDisplay(); }
-  async function nextPage() { if(currentPage===1) { let ok = await calculateAndStoreRoute(); if(ok) showPage(2); } else if(currentPage===2) { if(currentRouteData) showPage(3); else showError(2,'Bereken route eerst'); } else if(currentPage===3) { if(selectedVehicle) showPage(4); else showError(3,'Kies voertuig'); } else if(currentPage===4) { showPage(5); } else if(currentPage===5) await finalizeBooking(); }
+  function showPage(page) {
+    document.querySelectorAll('.carousel-page').forEach((p,i)=> p.classList.toggle('active-page', i+1===page));
+    document.querySelectorAll('.step-btn').forEach((b,i)=> { b.classList.toggle('active', i+1===page); if(i+1<page) b.classList.add('done'); else b.classList.remove('done'); });
+    currentPage = page; updateProgressBar();
+    document.getElementById('prevBtn').disabled = (page===1);
+    document.getElementById('nextBtn').style.display = (page===5) ? 'none' : 'inline-block';
+    if(page===5) updateTotalDisplay();
+  }
+  
+  async function nextPage() {
+    if(currentPage===1) { let ok = await calculateAndStoreRoute(); if(ok) showPage(2); }
+    else if(currentPage===2) { if(currentRouteData) showPage(3); else showError(2,'Bereken eerst de route'); }
+    else if(currentPage===3) { if(selectedVehicle) showPage(4); else showError(3,'Kies een voertuig'); }
+    else if(currentPage===4) { let fn=document.getElementById('firstName').value.trim(), ln=document.getElementById('lastName').value.trim(), ph=document.getElementById('phone').value.trim(), em=document.getElementById('email').value.trim(); if(fn&&ln&&ph&&em) showPage(5); else showError(4,'Alle velden zijn verplicht'); }
+    else if(currentPage===5) await finalizeBooking();
+  }
   function prevPage() { if(currentPage>1) showPage(currentPage-1); }
-  function initAutocomplete() { const pickup = document.getElementById('pickupInput'); const dropoff = document.getElementById('dropoffInput'); pickup.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'pickupWrap'),400); else clearSuggestions('pickupWrap'); }); dropoff.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'dropoffWrap'),400); else clearSuggestions('dropoffWrap'); }); document.addEventListener('click', (e) => { if(!e.target.closest('.suggest-wrapper')) { clearSuggestions('pickupWrap'); clearSuggestions('dropoffWrap'); } }); }
-  function initMap() { map = L.map('map').setView([50.85,4.35],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); }
+  function initAutocomplete() {
+    const pickup = document.getElementById('pickupInput');
+    const dropoff = document.getElementById('dropoffInput');
+    pickup.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'pickupWrap'),400); else clearSuggestions('pickupWrap'); });
+    dropoff.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'dropoffWrap'),400); else clearSuggestions('dropoffWrap'); });
+    document.addEventListener('click', (e) => { if(!e.target.closest('.suggest-wrapper')) { clearSuggestions('pickupWrap'); clearSuggestions('dropoffWrap'); } });
+  }
+  
+  function initMap() { 
+    map = L.map('map').setView([50.85, 4.35], 13); 
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { 
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+      minZoom: 6
+    }).addTo(map);
+  }
+  
   document.getElementById('roundtripCheckbox')?.addEventListener('change', (e) => { document.getElementById('returnDateContainer').style.display = e.target.checked ? 'block' : 'none'; if(currentRouteData) { currentRoundTrip=e.target.checked; let d=parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; document.getElementById('priceVal').innerHTML=(d*1.5).toFixed(2); updateTotalDisplay(); } });
   document.getElementById('nextBtn').addEventListener('click', nextPage);
   document.getElementById('prevBtn').addEventListener('click', prevPage);
