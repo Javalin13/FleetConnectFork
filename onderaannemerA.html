@@ -443,6 +443,19 @@
         .modal-content {
             -webkit-overflow-scrolling: touch;
         }
+
+        .edit-driver-btn {
+            background: #3b82f6;
+            color: white;
+            margin-left: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .edit-driver-modal .modal-content { max-width: 500px; }
+        .edit-driver-modal .fiche-body input { width: 100%; margin-bottom: 12px; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
     </style>
 </head>
 <body>
@@ -520,6 +533,25 @@
     </div>
     
     <div id="toast" class="toast"></div>
+
+    <!-- Nieuwe Modal voor het Bewerken van een Driver -->
+    <div id="editDriverModal" class="modal edit-driver-modal">
+        <div class="modal-content">
+            <div class="fiche-header"><h3><i class="fas fa-user-edit"></i> Driver Bewerken</h3><button class="close-modal" onclick="app.closeEditDriverModal()">&times;</button></div>
+            <div class="fiche-body">
+                <input type="hidden" id="edit_driver_id">
+                <div class="fiche-row"><span class="fiche-label">Naam:</span><input type="text" id="edit_driver_name" placeholder="Naam" style="flex:1;"></div>
+                <div class="fiche-row"><span class="fiche-label">Email:</span><input type="email" id="edit_driver_email" placeholder="Email" style="flex:1;"></div>
+                <div class="fiche-row"><span class="fiche-label">Voertuig:</span><input type="text" id="edit_driver_vehicle" placeholder="Voertuig" style="flex:1;"></div>
+                <div class="fiche-row"><span class="fiche-label">Kleur:</span><input type="text" id="edit_driver_color" placeholder="Kleur" style="flex:1;"></div>
+                <div class="fiche-row"><span class="fiche-label">Nummerplaat:</span><input type="text" id="edit_driver_plate" placeholder="Nummerplaat" style="flex:1;"></div>
+                <div class="fiche-actions">
+                    <button class="fiche-btn confirm" onclick="app.saveDriverChanges()">Opslaan</button>
+                    <button class="fiche-btn close" onclick="app.closeEditDriverModal()">Annuleren</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -639,6 +671,42 @@
             },
             closeModal() { document.getElementById('bookingModal').style.display = 'none'; },
             closePartnerModal() { document.getElementById('partnerModal').style.display = 'none'; },
+            closeEditDriverModal() { document.getElementById('editDriverModal').style.display = 'none'; },
+
+            openEditDriverModal(driverId) {
+                const driver = this.drivers.find(d => d.id == driverId);
+                if (!driver) { this.showToast('Driver niet gevonden', true); return; }
+                document.getElementById('edit_driver_id').value = driver.id;
+                document.getElementById('edit_driver_name').value = driver.name || '';
+                document.getElementById('edit_driver_email').value = driver.email || '';
+                document.getElementById('edit_driver_vehicle').value = driver.vehicle || '';
+                document.getElementById('edit_driver_color').value = driver.color || '';
+                document.getElementById('edit_driver_plate').value = driver.license_plate || '';
+                document.getElementById('editDriverModal').style.display = 'flex';
+            },
+
+            async saveDriverChanges() {
+                const driverId = document.getElementById('edit_driver_id').value;
+                const updatedData = {
+                    name: document.getElementById('edit_driver_name').value,
+                    email: document.getElementById('edit_driver_email').value,
+                    vehicle: document.getElementById('edit_driver_vehicle').value,
+                    color: document.getElementById('edit_driver_color').value,
+                    license_plate: document.getElementById('edit_driver_plate').value,
+                };
+                if (!updatedData.name) { this.showToast('Naam is verplicht', true); return; }
+                try {
+                    const { error } = await supabase.from('drivers').update(updatedData).eq('id', driverId);
+                    if (error) throw error;
+                    this.showToast('Driver gegevens bijgewerkt');
+                    this.closeEditDriverModal();
+                    await this.loadDrivers();
+                    if (this.currentTab === 'drivers') this.renderDrivers();
+                    if (this.currentTab === 'partners') this.renderPartners();
+                } catch (error) {
+                    this.showToast('Fout bij bijwerken: ' + error.message, true);
+                }
+            },
             
             filterAndSortData() {
                 this.newOrders = this.allBookings.filter(b => b.status === 'pending');
@@ -974,7 +1042,10 @@
                 else myDrivers.forEach(c => {
                     html += `<div style="border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
                         <div><strong>${c.driver_code}</strong> – ${this.escapeHtml(c.name)}<br><small>🚗 ${c.vehicle} | ${c.license_plate}</small></div>
-                        <button class="delete-btn" onclick="app.deleteDriver(${c.id})">Verwijder</button>
+                        <div>
+                            <button class="edit-driver-btn" onclick="app.openEditDriverModal('${c.id}')"><i class="fas fa-edit"></i> Bewerk</button>
+                            <button class="delete-btn" onclick="app.deleteDriver('${c.id}')">Verwijder</button>
+                        </div>
                     </div>`;
                 });
                 html += `</div></div>`;
@@ -2027,6 +2098,9 @@
         window.toggleFlipCard = app.toggleFlipCard.bind(app);
         window.downloadCSV = app.downloadCSV.bind(app);
         window.downloadJSON = app.downloadJSON.bind(app);
+        window.openEditDriverModal = app.openEditDriverModal.bind(app);
+        window.saveDriverChanges = app.saveDriverChanges.bind(app);
+        window.closeEditDriverModal = app.closeEditDriverModal.bind(app);
     </script>
 </body>
 </html>
