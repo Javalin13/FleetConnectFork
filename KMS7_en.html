@@ -5,25 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>KMS7 | Luxury Taxi & Limousine Belgium – Premium VTC Booking</title>
   <meta name="description" content="KMS7: luxury taxi, VTC and limousine service in Belgium. Airport transfers (Zaventem, Charleroi), business trips, ceremonies. Private chauffeur, punctuality guaranteed, online booking.">
-  <meta name="keywords" content="luxury taxi Belgium, limousine Brussels, premium VTC, airport transfer Zaventem, Charleroi shuttle, private chauffeur, KMS7, elegance in motion">
-  <meta name="author" content="KMS7">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://www.kms7.be/en/">
-  <meta property="og:title" content="KMS7 | Luxury Taxi & Limousine Belgium">
-  <meta property="og:description" content="Discover the art of tailor-made travel: airport transfers, ceremony limousines, business VTC. Elegance and punctuality 24/7.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.kms7.be/en/">
-  <meta property="og:image" content="heroKMS7.png">
-  <meta property="og:locale" content="en_GB">
-  <meta name="twitter:card" content="summary_large_image">
-  
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/default.js"></script>
-  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: linear-gradient(180deg, #F4F6F9 0%, #FFFFFF 100%); font-family: 'Montserrat', sans-serif; color: #0A1C2F; line-height: 1.5; scroll-behavior: smooth; }
@@ -32,11 +19,7 @@
       --silver-dim: rgba(192,192,192,0.25); --silver-bright: #E8E8E8;
       --glass-white: rgba(255,255,255,0.65); --glass-form: rgba(255,255,255,0.85);
       --chrome-gradient: linear-gradient(135deg, #E0E0E0 0%, #FFFFFF 25%, #B0B0B0 50%, #F5F5F5 75%, #A0A0A0 100%);
-      --titanium-gradient: linear-gradient(135deg, #C0C0C0 0%, #F0F0F0 40%, #909090 60%, #E8E8E8 100%);
-      --platinum-gradient: linear-gradient(135deg, #A8A8A8 0%, #D0D0D0 35%, #F8F8F8 65%, #C0C0C0 100%);
       --shadow-glass: 0 8px 32px rgba(0,0,0,0.04), 0 0 0 1px rgba(192,192,192,0.2);
-      --shadow-glass-hover: 0 20px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.8);
-      --glow-silver: 0 0 12px rgba(192,192,192,0.4);
     }
     .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
     header { position: sticky; top: 0; background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); z-index: 1000; border-bottom: 1px solid var(--silver); padding: 18px 0; }
@@ -44,211 +27,105 @@
     .logo { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 2.2rem; letter-spacing: 5px; background: var(--chrome-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; flex-wrap: wrap; }
     .nav-links a { text-decoration: none; font-weight: 600; letter-spacing: 1.5px; font-size: 0.85rem; text-transform: uppercase; color: #FDFBF7; transition: all 0.3s; }
-    .nav-links a:hover { color: var(--silver-bright); text-shadow: 0 0 6px rgba(192,192,192,0.6); }
+    .nav-links a:hover { color: var(--silver-bright); }
     .menu-icon { display: none; font-size: 1.8rem; color: #FDFBF7; cursor: pointer; }
     .lang-switch { display: flex; gap: 0.5rem; margin-left: 1rem; }
-    .lang-switch a { color: var(--silver); text-decoration: none; font-size: 0.8rem; font-weight: 600; padding: 4px 8px; border-radius: 20px; transition: 0.2s; }
-    .lang-switch a:hover { background: var(--silver); color: #0A192F; }
-    .lang-switch .active { background: var(--silver); color: #0A192F; }
+    .lang-switch a { color: var(--silver); text-decoration: none; font-size: 0.8rem; font-weight: 600; padding: 4px 8px; border-radius: 20px; }
+    .lang-switch a:hover, .lang-switch .active { background: var(--silver); color: #0A192F; }
     .login-nav-item a { background: var(--silver); padding: 8px 20px; border-radius: 40px; color: #0A192F !important; }
-    .login-nav-item a:hover { background: var(--silver-bright); transform: translateY(-2px); }
     
-    .hero { 
-      min-height: 90vh; 
-      background: linear-gradient(rgba(10, 25, 47, 0.3), rgba(15, 42, 63, 0.35)), url('heroKMS7.png') center/cover no-repeat; 
-      display: flex;  
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 50px;
-    }
-    .hero-split-box {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: flex-end;
-    }
+    .hero { min-height: 90vh; background: linear-gradient(rgba(10,25,47,0.3), rgba(15,42,63,0.35)), url('heroKMS7.png') center/cover no-repeat; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 50px; }
+    .hero-split-box { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: flex-end; }
     .hero-left-content { text-align: left; }
-    .hero h1 { 
-      font-family: 'Playfair Display', serif; 
-      font-size: 3rem; 
-      margin-bottom: 0.1rem; 
-      letter-spacing: 2px; 
-      background: var(--chrome-gradient); 
-      -webkit-background-clip: text; 
-      background-clip: text; 
-      color: transparent; 
-      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .hero-subtitle {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 300;
-      color: #FFFFFF;
-      letter-spacing: 2px;
-      margin-bottom: 1.2rem;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    }
-    .hero-right-content {
-      text-align: left;
-      border-left: 1px solid rgba(192, 192, 192, 0.2);
-      padding-left: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-    .hero-tag {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #E2E8F0;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-      margin: 0;
-    }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; background: var(--chrome-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 0.1rem; }
+    .hero-subtitle { font-size: 1.1rem; font-weight: 300; color: white; margin-bottom: 1.2rem; }
+    .hero-right-content { border-left: 1px solid rgba(192,192,192,0.2); padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .hero-tag { font-size: 0.8rem; text-transform: uppercase; color: #E2E8F0; }
     .hero-tag span { color: var(--silver); font-weight: 600; }
-
-    /* LOGIN BUTTON IN HERO - ADDED */
-    .hero-login-btn {
-      display: inline-block;
-      margin-top: 20px;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--silver-bright);
-      color: white;
-      padding: 10px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      font-size: 0.85rem;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .hero-login-btn i { margin-right: 8px; color: var(--silver); }
-    .hero-login-btn:hover {
-      background: var(--silver);
-      color: #0A192F;
-      border-color: white;
-      transform: translateY(-2px);
-    }
-    .hero-login-btn:hover i { color: #0A192F; }
-
-    @media (max-width: 992px) {
-      .hero-split-box { grid-template-columns: 1fr; gap: 1.5rem; text-align: center; }
-      .hero-left-content, .hero-right-content { text-align: center; }
-      .hero-right-content { border-left: none; padding-left: 0; align-items: center; gap: 0.5rem; }
-    }
     
-    .btn-gold, .btn-outline-gold, .nav-btn { position: relative; overflow: hidden; transition: all 0.3s ease; border-radius: 40px; }
-    .btn-gold::after, .btn-outline-gold::after, .nav-btn::after { content: ''; position: absolute; top: -50%; left: -60%; width: 200%; height: 200%; background: linear-gradient(115deg, rgba(255,255,255,0) 10%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 90%); transform: rotate(25deg); transition: all 0.4s; opacity: 0; }
-    .btn-gold:hover::after, .btn-outline-gold:hover::after, .nav-btn:hover::after { left: 100%; opacity: 1; }
-    .btn-gold { background: var(--platinum-gradient); border: none; color: #0A192F; padding: 10px 24px; font-weight: 700; letter-spacing: 1px; border-radius: 40px; cursor: pointer; font-size: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .btn-gold:hover { background: linear-gradient(135deg, #B0B0B0 0%, #D0D0D0 50%, #F0F0F0 100%); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(192,192,192,0.4); }
-    .btn-outline-gold { background: transparent; border: 1px solid var(--silver); color: var(--silver); padding: 12px 32px; font-weight: 600; letter-spacing: 2px; border-radius: 40px; cursor: pointer; }
-    .btn-outline-gold:hover { background: rgba(192,192,192,0.15); color: #0A192F; border-color: white; }
-    .nav-btn { background: var(--silver); border: none; padding: 10px 24px; border-radius: 40px; font-weight: bold; cursor: pointer; color: #0A192F; }
-    section { padding: 100px 0; position: relative; }
-    .metal-card { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 28px; transition: all 0.4s ease; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.7); padding: 2.5rem; display: flex; flex-direction: column; justify-content: center; height: 100%; color: #0A192F; }
-    .metal-card h3 { color: #0A192F; font-weight: 700; margin-bottom: 1rem; }
-    .metal-card p { color: #1A2E44; margin-bottom: 1rem; }
-    .img-placeholder { border-radius: 28px; height: 360px; background-size: cover; background-position: center; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.6); transition: transform 0.3s; }
-    .img-placeholder:hover { transform: scale(1.01); }
-    .img-tweeluik-left {
-      border-radius: 28px;
-      height: 360px;
-      background-image: url('picgridKMS7.png');
-      background-size: 100% 100%;
-      background-position: 0% 0%;
-      background-repeat: no-repeat;
-      box-shadow: var(--shadow-glass);
-      border: 1px solid rgba(255,255,255,0.6);
-      transition: transform 0.3s;
+    .btn-gold, .btn-outline-gold { position: relative; overflow: hidden; border-radius: 40px; transition: all 0.3s; }
+    .btn-gold { background: var(--chrome-gradient); border: none; color: #0A192F; padding: 10px 24px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-outline-gold { background: transparent; border: 1px solid var(--silver); color: var(--silver); padding: 12px 32px; text-decoration: none; display: inline-block; }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(192,192,192,0.4); }
+    
+    .nav-btn {
+      background: linear-gradient(135deg, #E0E0E0 0%, #FFFFFF 25%, #C0C0C0 50%, #F5F5F5 75%, #A0A0A0 100%);
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: #0A1C2F;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.6);
     }
-    .img-tweeluik-left:hover { transform: scale(1.01); }
-    .img-tweeluik-right {
-      border-radius: 28px;
-      height: 360px;
-      background-image: url('picgridKMS72.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      box-shadow: var(--shadow-glass);
-      border: 1px solid rgba(255,255,255,0.6);
-      transition: transform 0.3s;
+    .nav-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #F0F0F0 0%, #FFFFFF 35%, #D0D0D0 65%, #FFFFFF 100%);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15), inset 0 1px 0 white;
     }
-    .img-tweeluik-right:hover { transform: scale(1.01); }
-    .feature-link { text-decoration: none; display: block; }
-    .feature-icon-container { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 28px; transition: all 0.3s ease; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.7); text-align: center; padding: 2rem; display: flex; flex-direction: column; align-items: center; }
-    .feature-icon-container:hover { transform: translateY(-6px); border-color: white; box-shadow: var(--shadow-glass-hover); }
-    .hexagon-image { width: 130px; height: 130px; object-fit: cover; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); border: 3px solid var(--silver-bright); transition: all 0.3s; filter: drop-shadow(0 12px 15px rgba(0,0,0,0.1)); margin-bottom: 1.8rem; }
-    .hexagon-image:hover { transform: scale(1.05); filter: drop-shadow(0 20px 25px rgba(192,192,192,0.4)); border-color: white; }
-    .feature-icon-container h4 { margin-bottom: 1rem; font-weight: 700; color: #0A192F; letter-spacing: 2px; }
-    .tab-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 55px; background: var(--glass-white); backdrop-filter: blur(20px); padding: 8px 20px; border-radius: 60px; width: fit-content; margin-left: auto; margin-right: auto; border: 1px solid rgba(255,255,255,0.8); }
-    .tab-btn { background: transparent; border: none; padding: 12px 30px; font-weight: 700; letter-spacing: 1.5px; font-size: 0.9rem; color: #4A5568; cursor: pointer; transition: all 0.2s; border-radius: 40px; }
-    .tab-btn.active { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); color: #FDFBF7; box-shadow: 0 6px 14px rgba(10,25,47,0.25); }
-    .vehicle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-    .vehicle-card { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 28px; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.7); padding: 2rem; transition: all 0.3s ease; }
-    .vehicle-card:hover { transform: translateY(-6px); border-color: white; box-shadow: var(--shadow-glass-hover); }
-    .vehicle-card h4 { font-weight: 800; letter-spacing: 2px; color: #0F2A3F; margin-bottom: 1rem; border-left: 4px solid var(--silver); padding-left: 14px; }
-    .booking-carousel-container { background: var(--glass-form); backdrop-filter: blur(20px); border-radius: 32px; padding: 2rem; border: 1px solid rgba(255,255,255,0.9); box-shadow: var(--shadow-glass); }
+    .nav-btn:active:not(:disabled) { transform: translateY(1px); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; background: linear-gradient(135deg, #C0C0C0 0%, #E0E0E0 100%); transform: none; }
+    
+    section { padding: 100px 0; }
+    .metal-card { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 28px; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.7); padding: 2.5rem; height: 100%; }
+    .grid-2cols { display: grid; grid-template-columns: 1fr 0.9fr; gap: 3rem; }
+    .img-placeholder, .img-tweeluik-left, .img-tweeluik-right { border-radius: 28px; height: 360px; background-size: cover; background-position: center; box-shadow: var(--shadow-glass); }
+    .img-tweeluik-left { background-image: url('picgridKMS7.png'); background-size: 100% 100%; }
+    .img-tweeluik-right { background-image: url('picgridKMS72.png'); }
+    .feature-icon-container { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 28px; text-align: center; padding: 2rem; transition: 0.3s; }
+    .hexagon-image { width: 130px; height: 130px; object-fit: cover; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); border: 3px solid var(--silver-bright); margin-bottom: 1.8rem; }
+    .tab-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 55px; background: var(--glass-white); backdrop-filter: blur(20px); padding: 8px 20px; border-radius: 60px; width: fit-content; margin-left: auto; margin-right: auto; }
+    .tab-btn { background: transparent; border: none; padding: 12px 30px; font-weight: 700; border-radius: 40px; cursor: pointer; }
+    .tab-btn.active { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); color: white; }
+    .vehicle-content-wrapper { display: flex; flex-direction: column; gap: 2rem; }
+    .vehicle-image { width: 100%; max-height: 350px; object-fit: cover; border-radius: 28px; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.6); }
+    .vehicle-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 2rem; margin-top: 1rem; }
+    .vehicle-card { background: var(--glass-white); backdrop-filter: blur(20px); border-radius: 28px; padding: 2rem; }
+    .booking-carousel-container { background: var(--glass-form); backdrop-filter: blur(20px); border-radius: 32px; padding: 2rem; }
     .progress-bar-container { background: rgba(10,25,47,0.15); border-radius: 4px; height: 6px; margin-bottom: 2rem; }
-    .progress-fill { width: 20%; height: 100%; background: var(--platinum-gradient); border-radius: 4px; }
+    .progress-fill { width: 20%; height: 100%; background: var(--chrome-gradient); border-radius: 4px; }
     .steps { display: flex; gap: 0.8rem; margin-bottom: 2rem; flex-wrap: wrap; }
-    .step-btn { flex: 1; background: rgba(255,255,255,0.5); backdrop-filter: blur(4px); border: none; padding: 12px 8px; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; color: #4A5568; border-radius: 40px; cursor: pointer; transition: all 0.2s; }
-    .step-btn.active { background: #0F2A3F; color: #FDFBF7; box-shadow: 0 4px 12px rgba(10,25,47,0.3); border-bottom: 2px solid var(--silver-bright); }
-    .step-btn.done { color: var(--silver); text-shadow: 0 0 4px rgba(192,192,192,0.5); }
-    .step-btn.done::after { content: "✓"; margin-left: 6px; font-size: 0.8rem; font-weight: bold; }
+    .step-btn { flex: 1; background: rgba(255,255,255,0.5); border: none; padding: 12px 8px; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; border-radius: 40px; cursor: pointer; }
+    .step-btn.active { background: #0F2A3F; color: white; }
+    .step-btn.done { color: var(--silver); }
     .carousel-page { display: none; padding: 1rem 0; }
     .carousel-page.active-page { display: block; }
     .field { margin-bottom: 1.5rem; position: relative; }
-    .field label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; color: #4A5568; letter-spacing: 1.5px; }
-    input, select, textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.9); border: 1px solid #C0C8D0; border-radius: 28px; color: #0A1C2F; font-family: 'Montserrat', sans-serif; transition: all 0.25s; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--silver); background: white; box-shadow: inset 0 0 0 1px rgba(192,192,192,0.5), 0 0 0 3px rgba(192,192,192,0.2); }
-    .urgent-whatsapp { display: none; background: rgba(234,242,236,0.9); backdrop-filter: blur(8px); border: 1px solid var(--silver); padding: 0.8rem; border-radius: 60px; margin-top: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-    .whatsapp-btn { background: #25D366; padding: 0.4rem 1.2rem; border-radius: 40px; color: white; text-decoration: none; font-weight: bold; }
-    .vehicle-card-select { background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); border: 1px solid rgba(192,192,192,0.5); padding: 1rem; text-align: center; border-radius: 24px; cursor: pointer; transition: all 0.25s; }
-    .vehicle-card-select.selected { border: 2px solid var(--silver); background: rgba(255,255,255,0.9); transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
-    .vehicle-grid-select { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-    .vehicle-card-select i, .rit-item i { font-size: 2.4rem; color: #0F2A3F !important; margin-bottom: 1rem; transition: transform 0.3s ease; }
-    .vehicle-card-select:hover i { transform: scale(1.1); }
-    .extra-fields { background: rgba(249,248,245,0.7); backdrop-filter: blur(8px); padding: 1.5rem; border-radius: 24px; margin: 1.5rem 0; border: 1px solid rgba(192,192,192,0.3); }
-    .checkbox-grid label { display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.7); padding: 6px 14px; border-radius: 40px; cursor: pointer; border: 1px solid #D8D2C5; }
-    .payment-method { display: flex; gap: 1.5rem; background: rgba(249,248,245,0.6); padding: 1rem; border-radius: 60px; margin: 1rem 0; flex-wrap: wrap; }
-    .total-display { background: rgba(245,242,235,0.8); backdrop-filter: blur(8px); padding: 1rem; text-align: center; font-size: 1.5rem; font-weight: bold; border-radius: 40px; border: 1px solid var(--silver); color: #0A192F; }
-    .rit-overzicht { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 1.5rem; margin-bottom: 1rem; background: rgba(249,248,245,0.6); backdrop-filter: blur(8px); border-radius: 24px; border: 1px solid rgba(192,192,192,0.3); }
-    .rit-item { background: rgba(255,255,255,0.7); padding: 0.8rem; border-radius: 20px; text-align: center; border: 1px solid #E3DDD2; }
-    .error { color: #B1613A; background: rgba(177,97,58,0.1); padding: 0.5rem; border-radius: 20px; display: none; }
-    #map { width: 100%; height: 400px; border-radius: 28px; margin-bottom: 1rem; border: 2px solid var(--silver); box-shadow: var(--shadow-glass); }
+    .field label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; }
+    input, select, textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.9); border: 1px solid #C0C8D0; border-radius: 28px; }
+    .suggest-wrapper { position: relative; }
+    .suggestions { position: absolute; background: white; border: 1px solid var(--silver); max-height: 220px; overflow-y: auto; width: 100%; z-index: 10000; display: none; border-radius: 20px; }
+    .suggestion-item { padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #eee; }
+    .suggestion-item:hover { background: #f1f5f9; }
+    .vehicle-card-select { background: rgba(255,255,255,0.7); padding: 1rem; text-align: center; border-radius: 24px; cursor: pointer; }
+    .vehicle-card-select.selected { border: 2px solid var(--silver); background: white; }
+    .extra-fields { background: rgba(249,248,245,0.7); padding: 1.5rem; border-radius: 24px; margin: 1.5rem 0; }
+    .payment-method { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0; }
+    #map { width: 100%; height: 400px; border-radius: 28px; margin-bottom: 1rem; }
     .info-strip { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
-    .info-card { background: rgba(249,248,245,0.7); backdrop-filter: blur(8px); padding: 0.8rem; border-radius: 24px; text-align: center; flex: 1; border: 1px solid rgba(192,192,192,0.4); }
+    .info-card { background: rgba(249,248,245,0.7); padding: 0.8rem; border-radius: 24px; text-align: center; flex: 1; }
     .info-card .value { font-size: 1.8rem; font-weight: bold; color: var(--silver); }
     footer { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); padding: 55px 0 35px; border-top: 1px solid var(--silver); margin-top: 60px; }
     .footer-col h4 { font-family: 'Playfair Display', serif; font-weight: 700; letter-spacing: 2px; color: var(--silver); margin-bottom: 1.2rem; }
     .footer-col a, .footer-col p { display: block; color: #CEC7B8; text-decoration: none; margin-bottom: 0.6rem; font-size: 0.9rem; }
     .footer-col a:hover { color: var(--silver-bright); }
     .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 2.5rem; }
+    .about-image-wrapper { width: 100%; min-height: 320px; border-radius: 28px; overflow: hidden; box-shadow: var(--shadow-glass); }
+    .about-image { width: 100%; height: 100%; object-fit: cover; display: block; }
     @media (max-width: 768px) {
-      .nav-links { display: none; flex-direction: column; background: #0F2A3F; width: 100%; text-align: center; padding: 1rem; border-radius: 20px; margin-top: 1rem; }
+      .nav-links { display: none; flex-direction: column; width: 100%; background: #0F2A3F; padding: 1rem; border-radius: 20px; }
       .nav-links.show { display: flex; }
       .menu-icon { display: block; }
-      .hero h1 { font-size: 2.2rem; }
-      .grid-2cols { grid-template-columns: 1fr !important; }
-      .steps { flex-wrap: wrap; }
-      .step-btn { font-size: 0.6rem; padding: 8px 4px; }
-      .lang-switch { margin-left: 0; width: 100%; justify-content: center; margin-top: 10px; }
-      .login-nav-item { margin-top: 10px; }
+      .hero-split-box { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
+      .hero-left-content, .hero-right-content { text-align: center; }
+      .hero-right-content { border-left: none; padding-left: 0; align-items: center; }
+      .grid-2cols { grid-template-columns: 1fr; gap: 2rem; }
+      .about-image-wrapper { min-height: 240px; }
     }
-    .grid-2cols {
-      display: grid;
-      grid-template-columns: 1fr 0.8fr;
-      gap: 3rem;
-    }
-    .suggest-wrapper { position: relative; }
-    .suggestions { position: absolute; background: white; border: 1px solid var(--silver); max-height: 220px; overflow-y: auto; width: 100%; z-index: 10000; display: none; border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
-    .suggestion-item { padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #eee; }
-    .suggestion-item:hover { background: #f1f5f9; color: #0A192F; }
   </style>
 </head>
 <body>
@@ -267,9 +144,7 @@
         <a href="#" data-lang="en" class="active">EN</a>
         <a href="#" data-lang="fr">FR</a>
       </li>
-      <li class="login-nav-item">
-        <a href="LoginKMS7.html" id="loginNavBtn"><i class="fas fa-user-circle"></i> <span id="loginBtnText">Login</span></a>
-      </li>
+      <li class="login-nav-item"><a href="LoginKMS7.html" id="loginNavBtn"><i class="fas fa-user-circle"></i> <span id="loginBtnText">Login</span></a></li>
     </ul>
   </div>
 </header>
@@ -282,8 +157,6 @@
           <h1>KMS7</h1>
           <div class="hero-subtitle">Elegance in motion</div>
           <a href="#reservation" class="btn-gold">Book a ride <i class="fas fa-arrow-right"></i></a>
-          <!-- LOGIN BUTTON IN HERO - ADDED (only this) -->
-          <a href="LoginKMS7.html" class="hero-login-btn"><i class="fas fa-key"></i> Client Login</a>
         </div>
         <div class="hero-right-content">
           <p class="hero-tag">✦ Service <span>Premium VTC</span></p>
@@ -296,65 +169,18 @@
 
   <div class="container" id="services">
     <div class="grid-2cols" style="margin: 30px 0;">
-      <div class="metal-card">
-        <h3>✨ Seniors & reduced mobility</h3>
-        <p>At KMS7, every journey is a story of gentleness. A bubble of serenity for your elders, patient accompaniment to medical appointments or outings. Adapted vehicles, trained drivers.</p>
-        <p>We are the discreet link that connects generations.</p>
-      </div>
-      <div class="img-tweeluik-left" aria-label="KMS7 chauffeur in suit with notebook in luxury limousine"></div>
+      <div class="metal-card"><h3>✨ Seniors & reduced mobility</h3><p>At KMS7, every journey is a story of gentleness. Adapted vehicles, trained drivers.</p></div>
+      <div class="img-tweeluik-left"></div>
     </div>
-    
     <div class="grid-2cols" style="margin: 60px 0;">
-      <div class="img-tweeluik-right" aria-label="KMS7 central console with mineral water and charger"></div>
-      <div class="metal-card">
-        <h3>💼 Professionals & families</h3>
-        <p><strong>Excellence for your business, gentleness for your family.</strong> Airport transfers (Zaventem, Charleroi, Liège), corporate events, school runs, train station shuttles. Absolute punctuality, discretion, premium fleet.</p>
-      </div>
+      <div class="img-tweeluik-right"></div>
+      <div class="metal-card"><h3>💼 Professionals & families</h3><p>Airport transfers, corporate events, absolute punctuality.</p></div>
     </div>
   </div>
 
-  <section style="background: radial-gradient(circle at 50% 0%, rgba(10,25,47,0.06) 0%, transparent 80%);">
+  <section id="flotte">
     <div class="container">
-      <div class="metal-card" style="text-align: center;">
-        <h3>Your airport transfers: a journey between earth and sky</h3>
-        <p style="color: var(--silver); font-style: italic;">The poetry of departure with KMS7 taxi & limousine.</p>
-        <p><strong>The art of transfer:</strong> precision and infinite care. <strong>A timeless stopover:</strong> In the hushed silence, let yourself be carried away. Flight tracking, welcome with name sign, free waiting time.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="container">
-      <h2 class="section-title"><span>The decision-makers' space</span> & the strategists' lounge</h2>
-      <div class="grid-2cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
-        <div class="metal-card">
-          <h3>The Excellence of the Taxi & the Elegance of the Limousine</h3>
-          <p>KMS7 accompanies CEOs, diplomats. Bubble of confidentiality, mobile office with Wi-Fi, refreshments. Weddings, galas, corporate events: sublimation with our fleet of white and black limousines.</p>
-        </div>
-        <div class="img-placeholder" style="background-image: url('https://images.pexels.com/photos/12491503/pexels-photo-12491503.jpeg?auto=compress&cs=tinysrgb&w=800');" aria-label="KMS7 limousine for ceremony"></div>
-      </div>
-    </div>
-  </section>
-
-  <section style="background: radial-gradient(circle at 30% 30%, #F4F6F9 0%, #FFFFFF 100%);">
-    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem;">
-      <a href="KMS7services.html#pro" class="feature-link"><div class="feature-icon-container"><img class="hexagon-image" src="https://images.pexels.com/photos/1166759/pexels-photo-1166759.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="Professional KMS7 chauffeur in suit"><h4>PROFESSIONALISM</h4><p>Impeccable driving, elegant attire, discreet service, continuous training.</p></div></a>
-      <a href="KMS7services.html#ponctualite" class="feature-link"><div class="feature-icon-container"><img class="hexagon-image" src="https://images.pexels.com/photos/955392/pexels-photo-955392.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="Luxury watch symbolizing punctuality"><h4>PUNCTUALITY COMMITMENT</h4><p>Absolute punctuality, guaranteed on-time arrival. GPS tracking, SMS notification.</p></div></a>
-      <a href="KMS7services.html#services" class="feature-link"><div class="feature-icon-container"><img class="hexagon-image" src="https://images.pexels.com/photos/806183/pexels-photo-806183.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="Premium onboard services: water, chargers, tablet"><h4>PREMIUM ONBOARD SERVICES</h4><p>Mineral water, universal chargers, folding tablet, newspapers, Wi-Fi on request.</p></div></a>
-      <a href="KMS7services.html#dispo" class="feature-link"><div class="feature-icon-container"><img class="hexagon-image" src="https://images.pexels.com/photos/3265486/pexels-photo-3265486.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop" alt="24/7 availability"><h4>24/7 - 7 DAYS A WEEK</h4><p>Total availability, last-minute reservations, night and holiday service.</p></div></a>
-    </div>
-    <div class="container" style="display: flex; justify-content: center; margin-top: 3rem;">
-      <div class="social-proof" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); border-radius: 60px; padding: 1rem 2rem; border: 1px solid rgba(192,192,192,0.4);">
-        <div class="stars" style="color: var(--silver); letter-spacing: 4px;">★★★★★</div>
-        <div class="rating-text">Rating 4.9/5 based on over 500 exceptional journeys</div>
-        <div class="text-muted" style="font-size:0.7rem; margin-top:4px;">Corporate & private clients</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="flotte" style="background: rgba(0,0,0,0.02);">
-    <div class="container">
-      <h2 class="section-title"><span>OUR SERVICES</span> — exceptional fleet</h2>
+      <h2 style="text-align:center; margin-bottom:2rem;">OUR SERVICES — exceptional fleet</h2>
       <div class="tab-buttons" id="vehicleTabs">
         <button class="tab-btn active" data-vehicle="standard">STANDARD</button>
         <button class="tab-btn" data-vehicle="elegance">ÉLÉGANCE</button>
@@ -369,9 +195,9 @@
 
   <section id="reservation">
     <div class="container">
-      <h2 class="section-title"><span>Book a ride</span> – Free quote in 2 minutes</h2>
+      <h2 style="text-align:center; margin-bottom:2rem;">Book a ride – Free quote</h2>
       <div class="booking-carousel-container">
-        <div class="progress-bar-container"><div class="progress-fill" id="progressFill" style="width: 20%;"></div></div>
+        <div class="progress-bar-container"><div class="progress-fill" id="progressFill"></div></div>
         <div class="steps">
           <button class="step-btn active" data-step="1">1. Journey</button>
           <button class="step-btn" data-step="2">2. Route & Price</button>
@@ -381,50 +207,39 @@
         </div>
 
         <div id="page1" class="carousel-page active-page">
-          <div class="field"><label>📍 Pick-up address *</label><div class="suggest-wrapper" id="pickupWrap"><input type="text" id="pickupInput" placeholder="e.g. Brussels-South" autocomplete="off"><div id="pickupSuggest" class="suggestions" style="position:absolute; background:white; border:1px solid var(--silver); display:none;"></div></div></div>
-          <div class="field"><label>🏁 Destination *</label><div class="suggest-wrapper" id="dropoffWrap"><input type="text" id="dropoffInput" placeholder="e.g. Zaventem Airport" autocomplete="off"><div id="dropoffSuggest" class="suggestions" style="position:absolute; background:white; border:1px solid var(--silver); display:none;"></div></div></div>
-          <div class="roundtrip-box" style="display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0;"><input type="checkbox" id="roundtripCheckbox"> <label style="color:#0A1C2F;">🔄 Round trip (price x2)</label></div>
-          <div class="field"><label>✈️ Flight number (optional)</label><input type="text" id="flightNumber" placeholder="e.g. AF1234"></div>
-          <div class="field"><label>📅 Date & time outbound *</label><input type="text" id="datetime" placeholder="Choose date/time" readonly><i class="fas fa-calendar-alt" style="position: absolute; right: 15px; top: 40px; color: var(--silver);"></i></div>
-          <div class="field return-date-field" id="returnDateContainer" style="display: none;"><label>📅 Date & time return</label><input type="text" id="returnDatetime" placeholder="Choose date/time" readonly><i class="fas fa-calendar-alt" style="position: absolute; right: 15px; top: 40px; color: var(--silver);"></i></div>
-          <div id="urgentWhatsApp" class="urgent-whatsapp"><span>⚠️ Departure within the hour – Contact us via WhatsApp</span><a href="https://wa.me/32473300374" class="whatsapp-btn">WhatsApp</a></div>
+          <div class="field"><label>📍 Pick-up address *</label><div class="suggest-wrapper" id="pickupWrap"><input type="text" id="pickupInput" placeholder="e.g. Brussels-South" autocomplete="off"><div id="pickupSuggest" class="suggestions"></div></div></div>
+          <div class="field"><label>🏁 Destination *</label><div class="suggest-wrapper" id="dropoffWrap"><input type="text" id="dropoffInput" placeholder="e.g. Zaventem Airport" autocomplete="off"><div id="dropoffSuggest" class="suggestions"></div></div></div>
+          <div><input type="checkbox" id="roundtripCheckbox"> <label>🔄 Round trip (price x2)</label></div>
+          <div class="field"><label>📅 Date & time outbound *</label><input type="text" id="datetime" placeholder="Choose date/time" readonly></div>
+          <div class="field" id="returnDateContainer" style="display:none;"><label>📅 Date & time return</label><input type="text" id="returnDatetime" placeholder="Choose date/time" readonly></div>
           <div id="page1Error" class="error"></div>
-          <div class="footnote" style="font-size:0.7rem; color:#4A5568;">* Required fields – click on the date field to open the calendar</div>
         </div>
 
-        <div id="page2" class="carousel-page"><div id="map"></div><div class="info-strip"><div class="info-card"><div class="label">📏 Distance</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Duration</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Price</div><div class="value" id="priceVal">—</div><small>€</small></div></div><div id="page2Error" class="error"></div></div>
+        <div id="page2" class="carousel-page"><div id="map"></div><div class="info-strip"><div class="info-card"><div>📏 Distance</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div>⏱️ Duration</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div>💰 Price</div><div class="value" id="priceVal">—</div><small>€</small></div></div><div id="page2Error" class="error"></div></div>
 
-        <div id="page3" class="carousel-page"><h3>Choose your vehicle</h3><div class="vehicle-grid-select" id="vehicleGrid"><div class="vehicle-card-select" data-vehicle="Standard" data-extraprice="0"><i class="fas fa-car"></i><div>Standard</div><div>+0€</div></div><div class="vehicle-card-select" data-vehicle="Break" data-extraprice="5"><i class="fas fa-car-side"></i><div>Break</div><div>+5€</div></div><div class="vehicle-card-select" data-vehicle="Exclusive" data-extraprice="15"><i class="fas fa-car"></i><div>Exclusive</div><div>+15€</div></div><div class="vehicle-card-select" data-vehicle="MiniVan" data-extraprice="10"><i class="fas fa-van-shuttle"></i><div>MiniVan</div><div>+10€</div></div></div><div class="extra-fields"><h4>➕ Extra options</h4><div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;"><div><label>👥 Passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Luggage</label><input type="number" id="luggage" min="0" value="0"></div></div><div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Meet & Greet</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Bottle of water</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div><div><label>📝 Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g. child seat..."></textarea></div></div><div id="page3Error" class="error"></div></div>
+        <div id="page3" class="carousel-page"><h3>Choose your vehicle</h3><div class="vehicle-grid-select" id="vehicleGrid"><div class="vehicle-card-select" data-vehicle="Standard" data-extraprice="0"><i class="fas fa-car"></i><div>Standard</div><div>+0€</div></div><div class="vehicle-card-select" data-vehicle="Break" data-extraprice="5"><i class="fas fa-car-side"></i><div>Break</div><div>+5€</div></div><div class="vehicle-card-select" data-vehicle="Exclusive" data-extraprice="15"><i class="fas fa-car"></i><div>Exclusive</div><div>+15€</div></div><div class="vehicle-card-select" data-vehicle="MiniVan" data-extraprice="10"><i class="fas fa-van-shuttle"></i><div>MiniVan</div><div>+10€</div></div></div><div class="extra-fields"><div><label>👥 Passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Luggage</label><input type="number" id="luggage" min="0" value="0"></div><div><label><input type="checkbox" id="meetGreet"> Meet & Greet</label> <label><input type="checkbox" id="waterBottle"> Bottle of water</label></div><div><label>📝 Special requests</label><textarea id="specialWishes" rows="2"></textarea></div></div><div id="page3Error" class="error"></div></div>
 
-        <div id="page4" class="carousel-page"><div class="field"><label>First name *</label><input type="text" id="firstName"></div><div class="field"><label>Last name *</label><input type="text" id="lastName"></div><div class="field"><label>Mobile *</label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div><div class="field"><label>Email *</label><input type="email" id="email"></div><div class="field"><label>VAT (optional)</label><input type="text" id="vat"></div><div id="page4Error" class="error"></div></div>
+        <div id="page4" class="carousel-page"><div class="field"><label>First name *</label><input type="text" id="firstName"></div><div class="field"><label>Last name *</label><input type="text" id="lastName"></div><div class="field"><label>Mobile *</label><input type="tel" id="phone"></div><div class="field"><label>Email *</label><input type="email" id="email"></div><div id="page4Error" class="error"></div></div>
 
-        <div id="page5" class="carousel-page"><div class="rit-overzicht" id="bookingSummary"></div><div class="payment-method"><span>Payment method :</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Cash</label><label><input type="radio" name="payment" value="Card"> 💳 Card</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div><div id="totalDisplay" class="total-display">Total: € 0,00</div><button id="finalConfirmBtn" class="btn-gold" style="width:100%;">✅ Confirm booking</button><div id="page5Error" class="error"></div><input type="hidden" id="hiddenCustomerId"><input type="hidden" id="hiddenFormData"><input type="hidden" id="hiddenCreatedAt"><input type="hidden" id="hiddenPartnerId" value="1"><input type="hidden" id="hiddenAssignedDriverId"></div>
+        <div id="page5" class="carousel-page"><div id="bookingSummary"></div><div class="payment-method"><span>Payment method :</span><label><input type="radio" name="payment" value="Cash" checked> Cash</label><label><input type="radio" name="payment" value="Card"> Card</label></div><div id="totalDisplay" class="total-display">Total: € 0,00</div><button id="finalConfirmBtn" class="btn-gold">Confirm booking</button><div id="page5Error" class="error"></div></div>
 
-        <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Previous</button><button class="nav-btn next" id="nextBtn">Next ▶</button></div>
+        <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+          <button class="nav-btn prev" id="prevBtn" disabled>◀ Previous</button>
+          <button class="nav-btn next" id="nextBtn">Next ▶</button>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="about">
-    <div class="container grid-2cols" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+    <div class="container grid-2cols">
       <div class="metal-card">
         <h2 style="font-family:'Playfair Display'; font-size:2rem;">ABOUT | KMS7</h2>
         <p><strong>The art of traveling between earth and sky.</strong> KMS7, leader in passenger transport in Belgium (Brussels, Wallonia, Flanders). Discretion, excellence, serenity. English‑speaking drivers, recent air‑conditioned vehicles, all‑risk insurance.</p>
         <p>Our promise: <strong>zero delay, zero stress, 100% pleasure.</strong></p>
       </div>
-      <div class="img-placeholder" style="background-image: url('pixKMS7.png'); background-size: cover; background-position: center; border-radius: 28px; height: 360px; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.6); transition: transform 0.3s;" aria-label="KMS7 fleet: sedans and limousines"></div>
-    </div>
-  </section>
-
-  <section style="background: rgba(0,0,0,0.02);">
-    <div class="container">
-      <h2 class="section-title"><span>FAQ</span> — Frequently asked questions</h2>
-      <div id="faqContainer">
-        <div class="faq-item"><div class="faq-question">How are your prices calculated? <i class="fas fa-plus"></i></div><div class="faq-answer">Prices based on distance, duration and service. Clear and transparent pricing, quote sent within 10 minutes.</div></div>
-        <div class="faq-item"><div class="faq-question">Is the quote free? <i class="fas fa-plus"></i></div><div class="faq-answer">Yes, 100% free and non‑binding.</div></div>
-        <div class="faq-item"><div class="faq-question">Payment methods? <i class="fas fa-plus"></i></div><div class="faq-answer">Cash, card, bank transfer, mobile payment (Payconiq, Apple Pay, Google Pay).</div></div>
-        <div class="faq-item"><div class="faq-question">Cancellation? <i class="fas fa-plus"></i></div><div class="faq-answer">Free up to 4 hours before pick‑up.</div></div>
-        <div class="faq-item"><div class="faq-question">Do you provide child seats? <i class="fas fa-plus"></i></div><div class="faq-answer">Yes, on request free of charge. Seats comply with European standards.</div></div>
+      <div class="about-image-wrapper">
+        <img class="about-image" src="assets/images/homepage/picinsidecar.jpg" alt="KMS7 luxury vehicle interior" onerror="this.src='https://placehold.co/800x400?text=Image+not+found'">
       </div>
     </div>
   </section>
@@ -433,52 +248,21 @@
 <footer>
   <div class="container footer-grid">
     <div class="footer-col"><h4>KMS7</h4><p>Buitenplas 1/14<br>1601 Sint-Pieters-Leeuw</p><p>+32 473 30 03 74</p><p>booking@kms7.be</p><p>VAT: BE 0789.123.456</p></div>
-    <div class="footer-col"><h4>QUICK LINKS</h4><a href="#flotte">Our VTC fleet</a><a href="#services">Our services</a><a href="#reservation">Free quote</a><a href="KMS7services.html">Detailed services</a></div>
-    <div class="footer-col"><h4>INFORMATION</h4><a href="#about">About us</a><a href="#reservation">Booking</a>
-      <a href="Mentions_legales_KMS7.html">Legal notices</a>
-      <a href="Mentions_legales_KMS7.html">Terms & conditions</a>
-    </div>
+    <div class="footer-col"><h4>QUICK LINKS</h4><a href="#flotte">Our VTC fleet</a><a href="#services">Our services</a><a href="#reservation">Free quote</a></div>
+    <div class="footer-col"><h4>INFORMATION</h4><a href="#about">About us</a><a href="#reservation">Booking</a><a href="Mentions_legales_KMS7.html">Legal notices</a></div>
     <div class="footer-col"><h4>CONTACT</h4><a href="#reservation" class="btn-outline-gold" style="display:inline-block;">Book now</a></div>
   </div>
-  <div class="container" style="text-align:center; margin-top: 2.5rem; font-size: 0.8rem;">© 2026 KMS7 — Elegance in motion – Luxury taxi Belgium | All rights reserved</div>
+  <div class="container" style="text-align:center; margin-top: 2.5rem;">© 2026 KMS7 — Elegance in motion</div>
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  import { comms } from './src/modules/communication/index.js';
-
   const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  (async function updateLoginButton() {
-    const loginBtn = document.getElementById('loginNavBtn');
-    const btnTextSpan = document.getElementById('loginBtnText');
-    if (!loginBtn) return;
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      if (btnTextSpan) btnTextSpan.textContent = 'Dashboard';
-      loginBtn.href = 'ClientKMS7_en.html';
-      loginBtn.style.background = 'var(--platinum-gradient)';
-    } else {
-      if (btnTextSpan) btnTextSpan.textContent = 'Login';
-      loginBtn.href = 'LoginKMS7.html';
-      loginBtn.style.background = 'var(--silver)';
-    }
-  })();
-
-  document.querySelectorAll('.lang-switch a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const lang = link.getAttribute('data-lang');
-      if (lang === 'nl') window.location.href = 'KMS7_nl.html';
-      else if (lang === 'en') window.location.href = 'KMS7_en.html';
-      else if (lang === 'fr') window.location.href = 'KMS7.html';
-    });
-  });
-
-  let map, pickupCoord = null, dropoffCoord = null, routeLayer = null, pickupMarker = null, dropoffMarker = null;
+  let map, pickupCoord = null, dropoffCoord = null, routeLayer, pickupMarker, dropoffMarker;
   let currentRouteData = null, currentRoundTrip = false, currentDateTime = "", currentReturnDateTime = "";
   let selectedVehicle = null, selectedVehicleExtra = 0;
   let currentPage = 1;
@@ -491,133 +275,120 @@
     const dd = String(now.getDate()).padStart(2, '0');
     let counter = parseInt(localStorage.getItem('kmsBookingCounter') || '0') + 1;
     localStorage.setItem('kmsBookingCounter', counter);
-    const formatted = String(counter).padStart(3, '0');
-    return `K-MS7-${yyyy}${mm}${dd}-${formatted}`;
+    return `K-MS7-${yyyy}${mm}${dd}-${String(counter).padStart(3,'0')}`;
   }
-
-  function getExtrasString() {
-    const extras = [];
-    if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet");
-    if (document.getElementById('kissRide')?.checked) extras.push("Kiss & Ride");
-    if (document.getElementById('waterBottle')?.checked) extras.push("Bottle of water");
-    if (document.getElementById('wifi')?.checked) extras.push("WiFi");
-    if (document.getElementById('specialWishes')?.value.trim()) extras.push(`Note: ${document.getElementById('specialWishes').value.trim()}`);
-    return extras.join(", ") || "None";
-  }
-
-  function parseEuroDate(str) {
-    if (!str) return null;
-    let [datePart, timePart] = str.split(' ');
-    if (!datePart) return null;
-    let [dd, mm, yyyy] = datePart.split('-');
-    let [hh, min] = timePart ? timePart.split(':') : ['0', '0'];
-    return new Date(parseInt(yyyy), parseInt(mm)-1, parseInt(dd), parseInt(hh), parseInt(min));
-  }
-
-  function isPast(ds) { if (!ds) return false; const p = parseEuroDate(ds); return p ? p < new Date() : false; }
-  function isWithinNextHour(ds) { if (!ds) return false; const diff = parseEuroDate(ds) - new Date(); return diff > 0 && diff < 3600000; }
-
+  function parseEuroDate(str) { if(!str) return null; let parts = str.split(/[- :]/); if(parts.length<3) return null; let [d,m,y,h,min] = parts; return new Date(y, m-1, d, h||0, min||0); }
+  function isPast(ds) { let p = parseEuroDate(ds); return p ? p < new Date() : false; }
+  
   async function fetchAddresses(query, wrapId) {
     if (query.length < 3) { clearSuggestions(wrapId); return; }
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=be&accept-language=en&addressdetails=1`;
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'KMS7/1.0' } });
-      clearTimeout(timeoutId);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const response = await fetch(url, { headers: { 'User-Agent': 'KMS7/1.0' } });
       const data = await response.json();
-      if (!data.length) { showTempMsg(wrapId, 'No address found in Belgium'); return; }
       const wrapper = document.getElementById(wrapId);
       const suggestionsDiv = wrapper.querySelector('.suggestions');
       suggestionsDiv.innerHTML = '';
+      if (!data.length) { suggestionsDiv.innerHTML = '<div class="suggestion-item">No address found</div>'; suggestionsDiv.style.display = 'block'; return; }
       data.forEach(place => {
         const div = document.createElement('div');
         div.className = 'suggestion-item';
         div.setAttribute('data-lat', place.lat);
         div.setAttribute('data-lon', place.lon);
         div.textContent = place.display_name.length > 80 ? place.display_name.substring(0,80)+'…' : place.display_name;
-        div.addEventListener('click', (function(lat, lon, name) {
-          return function() {
-            const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
-            inputField.value = name;
-            if (wrapId === 'pickupWrap') pickupCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
-            else dropoffCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
-            suggestionsDiv.style.display = 'none';
-            if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
-          };
-        })(place.lat, place.lon, place.display_name));
+        div.addEventListener('click', () => {
+          const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
+          inputField.value = place.display_name;
+          if (wrapId === 'pickupWrap') pickupCoord = { lat: parseFloat(place.lat), lon: parseFloat(place.lon) };
+          else dropoffCoord = { lat: parseFloat(place.lat), lon: parseFloat(place.lon) };
+          suggestionsDiv.style.display = 'none';
+          if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
+        });
         suggestionsDiv.appendChild(div);
       });
       suggestionsDiv.style.display = 'block';
-    } catch (error) { showTempMsg(wrapId, 'Network error – please try again'); }
+    } catch(e) { console.error(e); }
   }
-
-  function clearSuggestions(wrapId) { const wrapper = document.getElementById(wrapId); if (wrapper) { const s = wrapper.querySelector('.suggestions'); if (s) s.style.display = 'none'; } }
-  function showTempMsg(wrapId, msg) { const wrapper = document.getElementById(wrapId); if (!wrapper) return; const sd = wrapper.querySelector('.suggestions'); if (!sd) return; sd.innerHTML = `<div class="suggestion-item" style="color:#B1613A;">⚠️ ${msg}</div>`; sd.style.display = 'block'; setTimeout(() => { if (sd.style.display === 'block') sd.style.display = 'none'; }, 5000); }
-  async function calcRoute(lat1, lon1, lat2, lon2) { const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`; try { const res = await fetch(url); const data = await res.json(); if (data.code === 'Ok' && data.routes.length) { const rt = data.routes[0]; return { distanceKm: (rt.distance/1000).toFixed(1), durationMin: Math.round(rt.duration/60), geometry: rt.geometry }; } } catch(e) {} return null; }
-  function showError(page, msg) { const errDiv = document.getElementById(`page${page}Error`); if (errDiv) { errDiv.innerText = msg; errDiv.style.display = 'block'; setTimeout(() => errDiv.style.display = 'none', 5000); } }
-  async function updateMapAndInfo(rd) { if (!rd) return; if (pickupMarker) map.removeLayer(pickupMarker); if (dropoffMarker) map.removeLayer(dropoffMarker); if (routeLayer) map.removeLayer(routeLayer); const pickupIcon = L.divIcon({ html: '<div style="background:#C0C0C0;width:28px;height:28px;border-radius:50%;border:2px solid white;text-align:center;line-height:28px;">📍</div>', iconSize: [28,28] }); const dropoffIcon = L.divIcon({ html: '<div style="background:#C0C0C0;width:28px;height:28px;border-radius:50%;border:2px solid white;text-align:center;line-height:28px;">🏁</div>', iconSize: [28,28] }); pickupMarker = L.marker([pickupCoord.lat, pickupCoord.lon], { icon: pickupIcon }).addTo(map); dropoffMarker = L.marker([dropoffCoord.lat, dropoffCoord.lon], { icon: dropoffIcon }).addTo(map); routeLayer = L.geoJSON(rd.geometry, { color: '#C0C0C0', weight: 5 }).addTo(map); const bounds = L.latLngBounds([pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon]); map.fitBounds(bounds, { padding: [60,60] }); let d = parseFloat(rd.distanceKm), t = rd.durationMin; if (currentRoundTrip) { d *= 2; t *= 2; } const price = d * 1.5; document.getElementById('distVal').innerHTML = d.toFixed(1); document.getElementById('timeVal').innerHTML = t; document.getElementById('priceVal').innerHTML = price.toFixed(2); updateTotalDisplay(); }
-  function updateTotalDisplay() { if (!currentRouteData) return; let dist = parseFloat(currentRouteData.distanceKm); if (currentRoundTrip) dist *= 2; let total = dist * 1.5 + (selectedVehicleExtra || 0); document.getElementById('totalDisplay').innerHTML = `Total: € ${total.toFixed(2)}`; const summaryDiv = document.getElementById('bookingSummary'); if (summaryDiv && currentPage === 5) { summaryDiv.innerHTML = `<div class="rit-item"><i class="fas fa-map-marker-alt"></i><strong>Pick‑up</strong><span>${document.getElementById('pickupInput').value || '—'}</span></div><div class="rit-item"><i class="fas fa-flag-checkered"></i><strong>Destination</strong><span>${document.getElementById('dropoffInput').value || '—'}</span></div><div class="rit-item"><i class="fas fa-calendar-day"></i><strong>Departure</strong><span>${currentDateTime || '—'}</span></div><div class="rit-item ${currentRoundTrip && currentReturnDateTime ? '' : 'hidden'}" id="returnBentoItem"><i class="fas fa-undo-alt"></i><strong>Return</strong><span>${currentReturnDateTime || '—'}</span></div><div class="rit-item"><i class="fas fa-car"></i><strong>Vehicle</strong><span>${selectedVehicle || '—'}</span></div><div class="rit-item"><i class="fas fa-gem"></i><strong>Options</strong><span>${getExtrasString()}</span></div><div class="rit-item"><i class="fas fa-euro-sign"></i><strong>Total</strong><span>€ ${total.toFixed(2)}</span></div>`; const returnItem = document.getElementById('returnBentoItem'); if (returnItem) returnItem.style.display = (currentRoundTrip && currentReturnDateTime) ? 'block' : 'none'; } }
-  async function calculateAndStoreRoute() { if (!pickupCoord || !dropoffCoord) { showError(1, 'Select addresses from the suggestions.'); return false; } const dt = document.getElementById('datetime').value; if (!dt) { showError(1, 'Choose the departure date/time.'); return false; } if (isPast(dt)) { showError(1, '❌ No past reservations.'); return false; } if (currentRoundTrip) { const rdt = document.getElementById('returnDatetime').value; if (!rdt) { showError(1, 'Choose the return date/time.'); return false; } if (isPast(rdt)) { showError(1, '❌ Return cannot be in the past.'); return false; } currentReturnDateTime = rdt; } else currentReturnDateTime = ""; const urgent = isWithinNextHour(dt); const urgentDiv = document.getElementById('urgentWhatsApp'); if (urgentDiv) urgentDiv.style.display = urgent ? 'flex' : 'none'; const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon); if (!rd) { showError(1, 'Cannot calculate route.'); return false; } currentRouteData = rd; currentRoundTrip = document.getElementById('roundtripCheckbox').checked; currentDateTime = dt; await updateMapAndInfo(rd); return true; }
-  function initVehicleSelection() { document.querySelectorAll('.vehicle-card-select').forEach(card => { card.addEventListener('click', () => { document.querySelectorAll('.vehicle-card-select').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedVehicle = card.getAttribute('data-vehicle'); selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0; updateTotalDisplay(); }); }); const first = document.querySelector('.vehicle-card-select'); if (first) { first.classList.add('selected'); selectedVehicle = first.getAttribute('data-vehicle'); selectedVehicleExtra = parseInt(first.getAttribute('data-extraprice')) || 0; } }
-  function fillHiddenSupabaseFields() { const email = document.getElementById('email').value.trim(); const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`; document.getElementById('hiddenCustomerId').value = customerId; document.getElementById('hiddenFormData').value = JSON.stringify({ source: "web-booking-kms7", version: "2.0" }); document.getElementById('hiddenCreatedAt').value = new Date().toISOString(); }
-  async function sendToSupabase(bookingData) { try { const { error } = await supabase.from('bookings').insert([bookingData]); if (error) throw error; return true; } catch (error) { alert(`Error: ${error.message}`); return false; } }
-  async function finalizeBooking() {
-    // PHASE3_DEFERRED_KMS7_PAYMENT_UNIFICATION
-    const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
-    let totalAmount = 0;
-    if (currentRouteData) {
-        let dist = parseFloat(currentRouteData.distanceKm);
-        if (currentRoundTrip) dist *= 2;
-        totalAmount = dist * 1.5 + (selectedVehicleExtra || 0);
-    }
-    const firstName = document.getElementById('firstName').value.trim();
-    const lastName = document.getElementById('lastName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    if (!firstName || !lastName || !email || !phone) {
-        alert('Please fill in all required fields.');
-        return;
-    }
-    fillHiddenSupabaseFields();
-    const customerId = document.getElementById('hiddenCustomerId').value;
-    const formData = JSON.parse(document.getElementById('hiddenFormData').value);
-    const createdAt = document.getElementById('hiddenCreatedAt').value;
-    const partnerId = parseInt(document.getElementById('hiddenPartnerId').value);
-    const assignedDriverId = document.getElementById('hiddenAssignedDriverId').value || null;
-    let datetimeStr = currentDateTime || "";
-    let datePart = datetimeStr.split(' ')[0] || "";
-    let timePart = datetimeStr.split(' ')[1] || "";
-    const bookingData = { id: generateBookingId(), datetime: datePart, time: timePart, name: `${firstName} ${lastName}`, email, phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, flight_number: document.getElementById('flightNumber').value.trim() || "", vehicle: selectedVehicle, extras: getExtrasString(), amount: totalAmount, payment: paymentMethod, status: "pending", customer_id: customerId, form_data: formData, created_at: createdAt, assigned_driver_id: assignedDriverId, partner_id: partnerId };
-    const success = await sendToSupabase(bookingData);
-    if (success) {
-        alert(`✅ Booking confirmed!\n\n📋 Number: ${bookingData.id}\n💰 Amount: € ${totalAmount.toFixed(2)}`);
-        comms.trigger('BOOKING_CONFIRMATION', bookingData.id, supabase);
-        resetAll();
-    } else {
-        alert('❌ An error occurred. Please try again or contact us.');
-    }
+  function clearSuggestions(wrapId) { const w = document.getElementById(wrapId); if(w) { const s = w.querySelector('.suggestions'); if(s) s.style.display = 'none'; } }
+  
+  async function calcRoute(lat1, lon1, lat2, lon2) {
+    const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+    try { const res = await fetch(url); const data = await res.json(); if(data.code === 'Ok') { const rt = data.routes[0]; return { distanceKm: (rt.distance/1000).toFixed(1), durationMin: Math.round(rt.duration/60), geometry: rt.geometry }; } } catch(e){} return null;
   }
-  function resetAll() { if (routeLayer) map.removeLayer(routeLayer); if (pickupMarker) map.removeLayer(pickupMarker); if (dropoffMarker) map.removeLayer(dropoffMarker); currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = ''; document.getElementById('roundtripCheckbox').checked = false; document.getElementById('returnDateContainer').style.display = 'none'; document.getElementById('firstName').value = ''; document.getElementById('lastName').value = ''; document.getElementById('phone').value = ''; document.getElementById('email').value = ''; document.getElementById('vat').value = ''; document.getElementById('flightNumber').value = ''; document.getElementById('meetGreet').checked = false; document.getElementById('kissRide').checked = false; document.getElementById('waterBottle').checked = false; document.getElementById('wifi').checked = false; document.getElementById('specialWishes').value = ''; document.getElementById('passengers').value = 1; document.getElementById('luggage').value = 0; currentRoundTrip = false; currentReturnDateTime = ''; showPage(1); }
-  function updateProgressBar() { const percent = (currentPage / 5) * 100; document.getElementById('progressFill').style.width = `${percent}%`; }
-  function showPage(page) { document.querySelectorAll('.carousel-page').forEach((p, idx) => { p.classList.toggle('active-page', idx+1 === page); }); document.querySelectorAll('.step-btn').forEach((btn, idx) => { btn.classList.toggle('active', idx+1 === page); if (idx+1 < page) btn.classList.add('done'); else btn.classList.remove('done'); }); currentPage = page; updateProgressBar(); document.getElementById('prevBtn').disabled = (page === 1); const nextBtn = document.getElementById('nextBtn'); if (page === 5) nextBtn.style.display = 'none'; else nextBtn.style.display = 'inline-block'; if (page === 5) updateTotalDisplay(); }
-  async function nextPage() { if (currentPage === 1) { const ok = await calculateAndStoreRoute(); if (ok) showPage(2); } else if (currentPage === 2) { if (currentRouteData) showPage(3); else showError(2, 'Calculate the route first'); } else if (currentPage === 3) { if (selectedVehicle) showPage(4); else showError(3, 'Choose a vehicle'); } else if (currentPage === 4) { showPage(5); } else if (currentPage === 5) { await finalizeBooking(); } }
-  function prevPage() { if (currentPage > 1) showPage(currentPage-1); }
-  function initAutocomplete() { const pickupInput = document.getElementById('pickupInput'); const dropoffInput = document.getElementById('dropoffInput'); pickupInput.addEventListener('input', (e) => { clearTimeout(debounceTimer); const q = e.target.value; if (q.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(q, 'pickupWrap'), 400); else clearSuggestions('pickupWrap'); }); dropoffInput.addEventListener('input', (e) => { clearTimeout(debounceTimer); const q = e.target.value; if (q.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(q, 'dropoffWrap'), 400); else clearSuggestions('dropoffWrap'); }); document.addEventListener('click', (e) => { if (!e.target.closest('.suggest-wrapper')) { clearSuggestions('pickupWrap'); clearSuggestions('dropoffWrap'); } }); }
-  function initMap() { map = L.map('map').setView([50.85, 4.35], 13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map); }
-  document.getElementById('roundtripCheckbox')?.addEventListener('change', function(e) { const retContainer = document.getElementById('returnDateContainer'); retContainer.style.display = e.target.checked ? 'block' : 'none'; if (currentRouteData) { currentRoundTrip = e.target.checked; let d = parseFloat(currentRouteData.distanceKm); if (currentRoundTrip) d *= 2; document.getElementById('priceVal').innerHTML = (d * 1.5).toFixed(2); updateTotalDisplay(); } });
+  async function updateMapAndInfo(rd) { if(!rd) return; if(pickupMarker) map.removeLayer(pickupMarker); if(dropoffMarker) map.removeLayer(dropoffMarker); if(routeLayer) map.removeLayer(routeLayer); pickupMarker = L.marker([pickupCoord.lat, pickupCoord.lon]).addTo(map); dropoffMarker = L.marker([dropoffCoord.lat, dropoffCoord.lon]).addTo(map); routeLayer = L.geoJSON(rd.geometry, { color: '#C0C0C0', weight: 5 }).addTo(map); map.fitBounds([ [pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon] ]); let d = parseFloat(rd.distanceKm); if(currentRoundTrip) d *= 2; const price = d * 1.5; document.getElementById('distVal').innerHTML = d.toFixed(1); document.getElementById('timeVal').innerHTML = rd.durationMin; document.getElementById('priceVal').innerHTML = price.toFixed(2); updateTotalDisplay(); }
+  function updateTotalDisplay() { if(!currentRouteData) return; let dist = parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) dist *= 2; let total = dist * 1.5 + (selectedVehicleExtra || 0); document.getElementById('totalDisplay').innerHTML = `Total: € ${total.toFixed(2)}`; if(currentPage === 5) { document.getElementById('bookingSummary').innerHTML = `<div>Pick-up: ${document.getElementById('pickupInput').value}</div><div>Destination: ${document.getElementById('dropoffInput').value}</div><div>Vehicle: ${selectedVehicle}</div><div>Total: € ${total.toFixed(2)}</div>`; } }
+  async function calculateAndStoreRoute() { if(!pickupCoord || !dropoffCoord) { showError(1, 'Select addresses from suggestions'); return false; } const dt = document.getElementById('datetime').value; if(!dt) { showError(1, 'Choose date/time'); return false; } if(isPast(dt)) { showError(1, 'Past date'); return false; } currentDateTime = dt; currentRoundTrip = document.getElementById('roundtripCheckbox').checked; if(currentRoundTrip) { const rdt = document.getElementById('returnDatetime').value; if(!rdt || isPast(rdt)) { showError(1, 'Invalid return date'); return false; } currentReturnDateTime = rdt; } const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon); if(!rd) { showError(1, 'Route error'); return false; } currentRouteData = rd; await updateMapAndInfo(rd); return true; }
+  function showError(page, msg) { const e = document.getElementById(`page${page}Error`); if(e) { e.innerText = msg; e.style.display = 'block'; setTimeout(()=> e.style.display='none', 4000); } }
+  function initVehicleSelection() { document.querySelectorAll('.vehicle-card-select').forEach(card => { card.addEventListener('click', () => { document.querySelectorAll('.vehicle-card-select').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedVehicle = card.getAttribute('data-vehicle'); selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0; updateTotalDisplay(); }); }); const first = document.querySelector('.vehicle-card-select'); if(first) { first.classList.add('selected'); selectedVehicle = first.getAttribute('data-vehicle'); selectedVehicleExtra = 0; } }
+  async function finalizeBooking() { const firstName = document.getElementById('firstName').value.trim(); const lastName = document.getElementById('lastName').value.trim(); const email = document.getElementById('email').value.trim(); const phone = document.getElementById('phone').value.trim(); if(!firstName || !lastName || !email || !phone) { alert('Please fill in all required fields'); return; } let total = 0; if(currentRouteData) { let d = parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; total = d*1.5 + selectedVehicleExtra; } const bookingData = { id: generateBookingId(), datetime: currentDateTime.split(' ')[0], time: currentDateTime.split(' ')[1], name: `${firstName} ${lastName}`, email, phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, vehicle: selectedVehicle, amount: total, status: 'pending', created_at: new Date().toISOString() }; const { error } = await supabase.from('bookings').insert([bookingData]); if(error) alert('Error: '+error.message); else { alert(`Booking confirmed! N° ${bookingData.id}`); resetAll(); } }
+  function resetAll() { currentRouteData = null; pickupCoord = null; dropoffCoord = null; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = ''; showPage(1); }
+  function updateProgressBar() { document.getElementById('progressFill').style.width = `${(currentPage/5)*100}%`; }
+  function showPage(page) { document.querySelectorAll('.carousel-page').forEach((p,i)=> p.classList.toggle('active-page', i+1===page)); document.querySelectorAll('.step-btn').forEach((b,i)=> { b.classList.toggle('active', i+1===page); if(i+1<page) b.classList.add('done'); else b.classList.remove('done'); }); currentPage = page; updateProgressBar(); document.getElementById('prevBtn').disabled = (page===1); document.getElementById('nextBtn').style.display = (page===5) ? 'none' : 'inline-block'; if(page===5) updateTotalDisplay(); }
+  async function nextPage() { if(currentPage===1) { let ok = await calculateAndStoreRoute(); if(ok) showPage(2); } else if(currentPage===2) { if(currentRouteData) showPage(3); else showError(2,'Calculate route first'); } else if(currentPage===3) { if(selectedVehicle) showPage(4); else showError(3,'Choose vehicle'); } else if(currentPage===4) { showPage(5); } else if(currentPage===5) await finalizeBooking(); }
+  function prevPage() { if(currentPage>1) showPage(currentPage-1); }
+  function initAutocomplete() { const pickup = document.getElementById('pickupInput'); const dropoff = document.getElementById('dropoffInput'); pickup.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'pickupWrap'),400); else clearSuggestions('pickupWrap'); }); dropoff.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'dropoffWrap'),400); else clearSuggestions('dropoffWrap'); }); document.addEventListener('click', (e) => { if(!e.target.closest('.suggest-wrapper')) { clearSuggestions('pickupWrap'); clearSuggestions('dropoffWrap'); } }); }
+  function initMap() { map = L.map('map').setView([50.85,4.35],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); }
+  document.getElementById('roundtripCheckbox')?.addEventListener('change', (e) => { document.getElementById('returnDateContainer').style.display = e.target.checked ? 'block' : 'none'; if(currentRouteData) { currentRoundTrip=e.target.checked; let d=parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; document.getElementById('priceVal').innerHTML=(d*1.5).toFixed(2); updateTotalDisplay(); } });
   document.getElementById('nextBtn').addEventListener('click', nextPage);
   document.getElementById('prevBtn').addEventListener('click', prevPage);
   document.getElementById('finalConfirmBtn').addEventListener('click', finalizeBooking);
   flatpickr("#datetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
   flatpickr("#returnDatetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
-
-  const vehiclesData = { standard: { name:"STANDARD", desc:"Efficiency & reliability", options:"Saloon or Van. Certified driver. 4/7 pers.", model:"BMW 3 Series", features:"PROFESSIONALISM + Punctuality", onboard:"Water, chargers, tablet"}, elegance: { name:"ÉLÉGANCE", desc:"Refinement & comfort", options:"Executive Saloon, 4 pers.", model:"BMW 5 Series", features:"Personalised welcome, discretion", onboard:"Premium water, press"}, premium: { name:"PREMIUM", desc:"Top‑class excellence", options:"Luxury Saloon, 4 pers.", model:"BMW 7 Series", features:"Exclusivity, confidentiality", onboard:"Wi-Fi, refreshments"}, first: { name:"FIRST", desc:"Tailor‑made journey", options:"Exclusive Prestige Saloon", model:"Mercedes S-Class", features:"Exceptional service", onboard:"VIP welcome"}, limousine: { name:"LIMOUSINE", desc:"Ceremonies & prestige", options:"Exclusive Limousine", model:"Limo Premium", features:"Unforgettable ride", onboard:"Bar, crystal atmosphere"}, minivan: { name:"MINI-VAN", desc:"Generous space", options:"Premium Van up to 8 pers.", model:"Mercedes V-Class", features:"Modular, family‑friendly", onboard:"Multi‑zone, sockets"} };
-  function renderVehicle(vk){ let v=vehiclesData[vk]; let html=`<div style="text-align:center; margin-bottom:1.5rem;"><h3 style="color:#0A192F; font-size:1.8rem;">${v.name}</h3><p style="color:#1A2E44;">${v.desc}</p><p><i class="fas fa-car"></i> ${v.model}</p></div><div class="vehicle-grid"><div class="vehicle-card"><h4>OPTIONS</h4><p>${v.options}</p><button class="btn-outline-gold" style="margin-top:1.2rem;" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">BOOK</button></div><div class="vehicle-card"><h4>COMMITMENT</h4><p>${v.features}</p><p><i class="fas fa-clock"></i> 24/7</p></div><div class="vehicle-card"><h4>ONBOARD SERVICES</h4><p>${v.onboard}</p><button class="btn-gold" style="margin-top:1.2rem; width:100%;" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">BOOK</button></div></div>`; document.getElementById("vehicleContent").innerHTML=html; }
-  document.querySelectorAll(".tab-btn").forEach(btn=>{ btn.addEventListener("click",()=>{ document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); renderVehicle(btn.getAttribute("data-vehicle")); }); }); renderVehicle("standard");
-  document.querySelectorAll(".faq-item").forEach(i=>{ i.querySelector(".faq-question").addEventListener("click",()=>{ i.classList.toggle("active"); let ic=i.querySelector(".faq-question i"); ic.className=i.classList.contains("active")?"fas fa-minus":"fas fa-plus"; }); });
-  document.getElementById("mobileMenuBtn").addEventListener("click",()=>{ document.getElementById("navLinks").classList.toggle("show"); });
+  
+  const vehiclesData = {
+    standard: { name: "STANDARD", desc: "Efficiency & reliability", options: "Saloon or Van. Certified driver. 4/7 persons.", model: "BMW 3 Series", features: "PROFESSIONALISM + Punctuality", onboard: "Water, chargers, tablet", img: "assets/images/homepage/standard.jpg" },
+    elegance: { name: "ÉLÉGANCE", desc: "Refinement & comfort", options: "Executive Saloon, 4 persons.", model: "BMW 5 Series", features: "Personalised welcome, discretion", onboard: "Premium water, press", img: "assets/images/homepage/elegance.jpg" },
+    premium: { name: "PREMIUM", desc: "Top-class excellence", options: "Luxury Saloon, 4 persons.", model: "BMW 7 Series", features: "Exclusivity, confidentiality", onboard: "Wi-Fi, refreshments", img: "assets/images/homepage/premium.jpg" },
+    first: { name: "FIRST", desc: "Tailor-made journey", options: "Exclusive Prestige Saloon", model: "Mercedes S-Class", features: "Exceptional service", onboard: "VIP welcome", img: "assets/images/homepage/first.jpg" },
+    limousine: { name: "LIMOUSINE", desc: "Ceremonies & prestige", options: "Exclusive Limousine", model: "Limo Premium", features: "Unforgettable ride", onboard: "Bar, crystal atmosphere", img: "assets/images/homepage/limousine.jpg" },
+    minivan: { name: "MINI-VAN", desc: "Generous space", options: "Premium Van up to 8 persons.", model: "Mercedes V-Class", features: "Modular, family-friendly", onboard: "Multi-zone, sockets", img: "assets/images/homepage/minivan.jpg" }
+  };
+  
+  function renderVehicle(vk) {
+    let v = vehiclesData[vk];
+    let html = `
+      <div class="vehicle-content-wrapper">
+        <img class="vehicle-image" src="${v.img}" alt="${v.name}" onerror="this.src='https://placehold.co/800x400?text=Image+not+found'">
+        <div style="text-align:center; margin-top:1rem;">
+          <h3 style="color:#0A192F; font-size:1.8rem;">${v.name}</h3>
+          <p style="color:#1A2E44;">${v.desc}</p>
+          <p><i class="fas fa-car"></i> ${v.model}</p>
+        </div>
+        <div class="vehicle-details">
+          <div class="vehicle-card">
+            <h4>OPTIONS</h4>
+            <p>${v.options}</p>
+            <button class="btn-outline-gold" style="margin-top:1.2rem;" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">BOOK</button>
+          </div>
+          <div class="vehicle-card">
+            <h4>COMMITMENT</h4>
+            <p>${v.features}</p>
+            <p><i class="fas fa-clock"></i> 24/7</p>
+          </div>
+          <div class="vehicle-card">
+            <h4>ONBOARD SERVICES</h4>
+            <p>${v.onboard}</p>
+            <button class="btn-gold" style="margin-top:1.2rem; width:100%;" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">BOOK</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.getElementById("vehicleContent").innerHTML = html;
+  }
+  
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderVehicle(btn.getAttribute("data-vehicle"));
+    });
+  });
+  renderVehicle("standard");
+  
+  document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+    document.getElementById("navLinks").classList.toggle("show");
+  });
+  
   initMap(); initAutocomplete(); initVehicleSelection(); showPage(1);
 </script>
 </body>
