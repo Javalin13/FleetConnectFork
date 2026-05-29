@@ -1065,7 +1065,10 @@
                             ${partnerDrivers.length === 0 ? '<div><small>Geen drivers</small></div>' : partnerDrivers.map(c => `
                                 <div class="driver-item">
                                     <span>${c.driver_code} – ${this.escapeHtml(c.name)} (${c.vehicle}, ${c.color || 'onbekende kleur'}) <br> <small>${c.email || 'Geen email'}</small></span>
-                                    <button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver(${c.id})">✖</button>
+                                    <div>
+                                        <button class="edit-driver-btn" onclick="app.openEditDriverModal('${c.id}')">✏️</button>
+                                        <button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver('${c.id}')">✖</button>
+                                    </div>
                                 </div>
                             `).join('')}
                             <div class="add-driver-form">

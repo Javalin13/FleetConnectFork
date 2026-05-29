@@ -44,7 +44,7 @@
             border-color: #2c6e9e;
         }
     </style>
-    
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -491,10 +491,10 @@
                 link.setAttribute('href', `${cleanHref}?lang=${lang}`);
             }
         });
-        
+
         // Sauvegarder la langue dans localStorage
         localStorage.setItem('preferredLanguage', lang);
-        
+
         // Mettre à jour le style des boutons actifs
         document.querySelectorAll('.lang-btn').forEach(btn => {
             if (btn.getAttribute('data-lang') === lang) {
@@ -507,7 +507,7 @@
                 btn.style.color = '#1a2a3a';
             }
         });
-        
+
         document.documentElement.lang = lang;
     }
     
@@ -979,7 +979,7 @@
     const bgMap = L.map('background-map').setView([50.8503,4.3517],7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' }).addTo(bgMap);
     bgMap.dragging.disable(); bgMap.touchZoom.disable(); bgMap.doubleClickZoom.disable(); bgMap.scrollWheelZoom.disable();
-    
+
     initMap();
     initVehicleSelection();
     initAutocomplete();

@@ -28,12 +28,20 @@
         .sidebar-header{display:flex;justify-content:space-between;align-items:center;padding:24px 20px;border-bottom:1px solid var(--border-light);background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:20px 0 0 0}
         .sidebar-header h3{color:white;display:flex;align-items:center;gap:8px}
         .close-menu{background:rgba(255,255,255,0.2);border:none;font-size:1.5rem;cursor:pointer;color:white;width:32px;height:32px;border-radius:50%}
-        .sidebar-nav{display:flex;flex-direction:column;padding:20px 16px;gap:8px;flex:1}
+        .sidebar-nav{display:flex;flex-direction:column;padding:20px 16px;gap:8px;flex:1;overflow-y:auto}
         .sidebar-nav a{color:var(--text-dark);text-decoration:none;padding:14px 16px;border-radius:14px;font-weight:500;display:flex;align-items:center;gap:14px;background:white;border:1px solid var(--border-light)}
         .sidebar-nav a i{width:24px;color:var(--primary)}
         .sidebar-nav a:hover{background:#eef2fa;border-color:var(--primary)}
         .login-section{padding:16px;border-top:1px solid var(--border-light);margin-top:auto}
         .login-btn{background:linear-gradient(135deg,var(--accent-gold),#b8860b);color:white;text-decoration:none;padding:14px 16px;border-radius:14px;font-weight:600;display:flex;align-items:center;gap:12px}
+        .register-section{padding:16px;border-top:1px solid var(--border-light)}
+        .register-section h4{font-size:0.85rem;margin-bottom:10px;color:var(--text-light);text-transform:uppercase}
+        .register-section input{width:100%;margin-bottom:10px;padding:10px 14px;border-radius:10px}
+        .register-btn{background:var(--primary);color:white;width:100%;border:none;padding:12px;border-radius:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+        .register-btn:hover{background:var(--primary-dark)}
+        .register-feedback{font-size:0.75rem;margin-top:8px;display:none}
+        .register-feedback.success{color:#059669;display:block}
+        .register-feedback.error{color:#dc2626;display:block}
         .hero{padding:80px 0 40px;text-align:center}
         .hero-card{background:var(--card-bg);backdrop-filter:blur(8px);max-width:700px;margin:0 auto;padding:40px 30px;border-radius:48px;border:1px solid var(--border-light)}
         .hero-card h1{font-size:2.6rem;font-weight:800;color:var(--primary)}
@@ -137,6 +145,12 @@
             <a href="PV_Koeriersdienst.html?lang=en"><i class="fas fa-file-signature"></i><span> Courier service</span></a>
             <a href="#contact"><i class="fas fa-envelope"></i><span> Contact</span></a>
             <a href="#booking"><i class="fas fa-calendar-alt"></i><span> Book now</span></a>
+        </div>
+        <div class="register-section">
+            <h4>New customer? Register</h4>
+            <input type="email" id="registerEmail" placeholder="Your email">
+            <button class="register-btn" id="registerBtn"><i class="fas fa-user-plus"></i> <span>Register</span></button>
+            <div id="registerFeedback" class="register-feedback"></div>
         </div>
         <div class="login-section"><a href="index.html" class="login-btn"><i class="fas fa-sign-in-alt"></i><span>LOGIN</span><i class="fas fa-arrow-right"></i></a></div>
     </div>
@@ -827,6 +841,26 @@
     document.getElementById('finalConfirmBtn')?.addEventListener('click', () => {
         window.showOverlay();
     });
+
+    async function handleRegister() {
+        const email = document.getElementById('registerEmail').value.trim();
+        const feedback = document.getElementById('registerFeedback');
+        if (!email) return;
+        try {
+            const { error } = await supabase.auth.signInWithOtp({
+                email: email,
+                options: { emailRedirectTo: window.location.origin + '/klantenportaalpv.html?lang=en' }
+            });
+            if (error) throw error;
+            feedback.innerText = "Check your email to complete registration.";
+            feedback.className = "register-feedback success";
+            document.getElementById('registerEmail').value = '';
+        } catch (err) {
+            feedback.innerText = "Error: " + err.message;
+            feedback.className = "register-feedback error";
+        }
+    }
+    document.getElementById('registerBtn')?.addEventListener('click', handleRegister);
 </script>
 
 <div id="summaryOverlay" class="overlay">

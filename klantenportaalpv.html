@@ -50,6 +50,7 @@
         }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 24px; width: 100%; }
         
+        /* HAMBURGER MENU KNOB - LINKSBOVEN */
         .hamburger-btn {
             position: fixed;
             top: 20px;
@@ -76,6 +77,7 @@
             font-size: 1.5rem;
         }
         
+        /* SIDEBAR OVERLAY */
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -93,6 +95,7 @@
             opacity: 1;
         }
         
+        /* SIDEBAR ZELF - VAN LINKS UITKLAPPEND */
         .sidebar {
             position: fixed;
             top: 0;
@@ -111,6 +114,7 @@
             left: 0;
         }
         
+        /* SIDEBAR HEADER */
         .sidebar-header {
             display: flex;
             justify-content: space-between;
@@ -144,6 +148,7 @@
             background: rgba(255,255,255,0.3);
         }
         
+        /* SIDEBAR NAVIGATIE */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -173,6 +178,7 @@
             border-color: var(--border-light);
         }
         
+        /* TAAL SECTIE IN SIDEBAR */
         .language-section {
             padding: 16px;
             border-top: 1px solid var(--border-light);
@@ -211,12 +217,13 @@
             border-color: var(--primary);
         }
         
+        /* LOGIN SECTIE IN SIDEBAR */
         .login-section {
             padding: 16px;
             margin-top: auto;
         }
-        .logout-btn-sidebar {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        .login-btn {
+            background: linear-gradient(135deg, var(--accent-gold), #b8860b);
             color: white;
             text-decoration: none;
             padding: 14px 16px;
@@ -227,14 +234,12 @@
             justify-content: center;
             gap: 12px;
             transition: transform 0.2s;
-            cursor: pointer;
-            border: none;
-            width: 100%;
         }
-        .logout-btn-sidebar:hover {
+        .login-btn:hover {
             transform: translateY(-2px);
         }
         
+        /* REST VAN DE STIJLEN (origineel, ongewijzigd) */
         .tabs-container {
             display: flex;
             gap: 8px;
@@ -259,6 +264,7 @@
         .logout-tab-btn:hover { color: #7f1d1d; border-bottom-color: #b91c1c; }
         .tab-container.hidden { display: none; }
         
+        /* Grid blokken stijlen */
         .uitleg-grid {
             display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;
             padding: 50px 0 30px;
@@ -398,10 +404,12 @@
 <body>
 <div id="background-map"></div>
 
+<!-- HAMBURGER MENU KNOB - LINKSBOVEN -->
 <button class="hamburger-btn" id="hamburgerBtn">
     <i class="fas fa-bars"></i>
 </button>
 
+<!-- SIDEBAR OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay">
     <div class="sidebar">
         <div class="sidebar-header">
@@ -409,12 +417,13 @@
             <button class="close-menu" id="closeMenuBtn">&times;</button>
         </div>
         
+        <!-- TAALKEUZE IN SIDEBAR -->
         <div class="language-section">
             <div class="language-title"><i class="fas fa-globe"></i> Taal / Language</div>
             <div class="language-buttons">
-                <a href="#" class="lang-sidebar-btn active" data-lang="nl">NL</a>
-                <a href="#" class="lang-sidebar-btn" data-lang="fr">FR</a>
-                <a href="#" class="lang-sidebar-btn" data-lang="en">EN</a>
+                <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl">NL</a>
+                <a href="klantenportaal_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
+                <a href="klantenportaal_en.html?lang=en" class="lang-sidebar-btn" data-lang="en">EN</a>
             </div>
         </div>
         
@@ -433,10 +442,10 @@
         </div>
         
         <div class="login-section">
-            <button id="logoutSidebarBtn" class="logout-btn-sidebar">
-                <i class="fas fa-sign-out-alt"></i> UITLOGGEN
+            <a href="index.html" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> INLOGGEN
                 <i class="fas fa-arrow-right"></i>
-            </button>
+            </a>
         </div>
     </div>
 </div>
@@ -451,6 +460,7 @@
         </div>
     </section>
 
+    <!-- ========== 3 GRIDBLOKKEN ========== -->
     <div class="container">
         <div class="uitleg-grid">
             <a href="PV_Exclusieve_Service.html?lang=nl" class="uitleg-item">
@@ -480,7 +490,7 @@
             <button class="tab-btn" data-tab="profile">👤 Mijn Profiel</button>
             <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Ritten</button>
             <button class="tab-btn" data-tab="payments">💰 Betalingen</button>
-            <button id="logoutTabBtn" class="logout-tab-btn"><i class="fas fa-sign-out-alt"></i> Uitloggen</button>
+            <a href="index.html" id="logoutTabBtn" class="logout-tab-btn" style="text-decoration:none;"><i class="fas fa-sign-out-alt"></i> Uitloggen</a>
         </div>
 
         <div id="new-booking-container" class="tab-container">
@@ -573,6 +583,7 @@
             </div>
         </div>
 
+        <!-- ========== 4 GRIDBLOKKEN ========== -->
         <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Onze diensten</h2>
         <div class="services-grid">
             <a href="PV_Luchthavenvervoer.html?lang=nl" class="service-card">
@@ -659,85 +670,7 @@
     window.comms = comms;
 </script>
 <script>
-    // ============================================
-    // SUPABASE INITIALISATIE
-    // ============================================
-    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
-    
-    let supabase;
-    const initSupabase = () => {
-        if (window.createClient) {
-            if (!supabase) supabase = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            return true;
-        }
-        return false;
-    };
-
-    // ============================================
-    // UITLOGFUNCTIE - VOLLEDIGE SESSIE WISSEN
-    // ============================================
-    async function performLogout() {
-        try {
-            // 1. Supabase auth uitloggen
-            if (supabase) {
-                await supabase.auth.signOut();
-            }
-            
-            // 2. Alle lokale storage wissen
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            // 3. Cookies verwijderen
-            document.cookie.split(";").forEach(c => {
-                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-            });
-            
-            // 4. Doorsturen naar login pagina met logout parameter
-            window.location.replace('index.html?logout=success');
-            
-        } catch (err) {
-            console.error('Logout error:', err);
-            // Forceer doorsturen
-            window.location.replace('index.html?logout=success');
-        }
-    }
-    
-    // ============================================
-    // AUTH GUARD
-    // ============================================
-    let currentUser = { id: 'demo-user', full_name: 'Demo Gebruiker', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
-    let userBookings = [];
-    let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
-    let selectedVehicle = 'Standaard', selectedVehicleExtra = 0, currentPage = 1;
-    let debounceTimer;
-    
-    async function checkAuth() {
-        if (!initSupabase()) {
-            setTimeout(checkAuth, 100);
-            return;
-        }
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            window.location.replace('index.html');
-        } else {
-            currentUser.id = session.user.id;
-            currentUser.email = session.user.email;
-            const { data: customer } = await supabase.from('customers').select('*').eq('user_id', session.user.id).maybeSingle();
-            if (customer) {
-                currentUser.full_name = customer.name;
-                currentUser.phone = customer.phone;
-                currentUser.default_pickup_address = customer.default_pickup_address || '';
-            }
-            loadUserProfile();
-            loadUserBookings();
-        }
-    }
-    checkAuth();
-    
-    // ============================================
-    // HAMBURGER MENU
-    // ============================================
+    // HAMBURGER MENU FUNCTIONALITEIT
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
@@ -761,58 +694,119 @@
         if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu();
     });
     
-    // ============================================
-    // UITLOGGEN KNOBBEN
-    // ============================================
-    document.getElementById('logoutTabBtn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        performLogout();
-    });
-    document.getElementById('logoutSidebarBtn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        performLogout();
-    });
-    
-    // ============================================
-    // TAAL FUNCTIONALITEIT
-    // ============================================
-    function setActiveLanguageButton() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentLang = urlParams.get('lang') || 'nl';
-        document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
-            const btnLang = btn.getAttribute('data-lang');
-            if (btnLang === currentLang) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
+    // TAAL FUNCTIONALITEIT VOOR GRID LINKS
+    function updateGridLinks(lang) {
+        document.querySelectorAll('.uitleg-grid a, .services-grid a, .footer-legal a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && (href.includes('.html') || href.includes('PV_'))) {
+                const cleanHref = href.split('?')[0];
+                link.setAttribute('href', `${cleanHref}?lang=${lang}`);
             }
         });
     }
-    setActiveLanguageButton();
     
-    document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const lang = btn.getAttribute('data-lang');
-            window.location.href = `klantenportaalpv.html?lang=${lang}`;
+    function getLanguageFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
+            return langParam;
+        }
+        return 'nl';
+    }
+
+    function handlePaymentStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const payment = urlParams.get('payment');
+        const bookingId = urlParams.get('id');
+
+        if (payment === 'success') {
+            alert(`Bedankt! Uw betaling voor booking ${bookingId} is succesvol ontvangen.`);
+            // Email trigger (non-blocking) for Stripe success
+            if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
+            switchToTab('payments');
+        } else if (payment === 'cancelled') {
+            alert(`De betaling voor booking ${bookingId} is geannuleerd. U kunt het later opnieuw proberen via 'Mijn Ritten'.`);
+        }
+    }
+
+    // Markeer actieve taal in sidebar
+    function setActiveLanguageButton() {
+        const currentLang = getLanguageFromURL();
+        document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
+            if (btn.getAttribute('href')?.includes(`?lang=${currentLang}`)) {
+                btn.classList.add('active');
+                btn.style.background = '#2c6e9e';
+                btn.style.color = 'white';
+            } else {
+                btn.classList.remove('active');
+                btn.style.background = '#f1f5f9';
+                btn.style.color = '#1a2a3a';
+            }
         });
-    });
+    }
+
+    // Initialiseer taal bij laden
+    const currentLang = getLanguageFromURL();
+    updateGridLinks(currentLang);
+    setActiveLanguageButton();
+    document.documentElement.lang = currentLang;
     
-    // ============================================
-    // TAB FUNCTIES
-    // ============================================
+    // Supabase configuratie
+    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+    
+    let supabase;
+    const initSupabase = () => {
+        if (window.createClient) {
+            if (!supabase) supabase = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            return true;
+        }
+        return false;
+    };
+
+    // AUTH GUARD
+    async function checkAuth() {
+        if (!initSupabase()) {
+            setTimeout(checkAuth, 100);
+            return;
+        }
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            window.location.href = 'index.html';
+        } else {
+            currentUser.id = session.user.id;
+            currentUser.email = session.user.email;
+            // Optionally load profile from customers table
+            const { data: customer } = await supabase.from('customers').select('*').eq('user_id', session.user.id).maybeSingle();
+            if (customer) {
+                currentUser.full_name = customer.name;
+                currentUser.phone = customer.phone;
+                currentUser.default_pickup_address = customer.default_pickup_address || '';
+            }
+            loadUserProfile();
+            loadUserBookings();
+        }
+    }
+    checkAuth();
+
+    let currentUser = { id: 'demo-user', full_name: 'Demo Gebruiker', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
+    let userBookings = [];
+    let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
+    let selectedVehicle = 'Standaard', selectedVehicleExtra = 0, currentPage = 1;
+    let debounceTimer;
+
+    // Tab functies
     function switchToTab(tabName) {
         document.querySelectorAll('.tab-container').forEach(c => c.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`${tabName}-container`).classList.remove('hidden');
-        const tabBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-        if (tabBtn) tabBtn.classList.add('active');
+        document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
         if (tabName === 'dashboard') renderDashboard();
         if (tabName === 'profile') loadUserProfile();
         if (tabName === 'payments') loadPaymentHistory();
     }
     
-    document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', (e) => {
         const nav = e.currentTarget.getAttribute('data-nav');
         if (nav === 'home' || nav === 'portal') switchToTab('new-booking');
@@ -820,9 +814,7 @@
         closeMenu();
     }));
     
-    // ============================================
-    // PROFIEL FUNCTIES
-    // ============================================
+    // Profiel functies
     async function loadUserProfile() {
         document.getElementById('fullName').value = currentUser.full_name;
         document.getElementById('profileEmail').value = currentUser.email;
@@ -844,31 +836,36 @@
         loadUserProfile();
     });
     
-    // ============================================
-    // BETALINGEN FUNCTIES
-    // ============================================
+    // Betalingen functies
     async function loadPaymentHistory() {
         const tbody = document.querySelector('#paymentsTable tbody');
         if (!tbody) return;
+
         tbody.innerHTML = '<tr><td colspan="6">Laden...</td></tr>';
+
         try {
             if (!initSupabase()) {
                 tbody.innerHTML = '<tr><td colspan="6">Wacht op initialisatie...</td></tr>';
                 setTimeout(loadPaymentHistory, 1000);
                 return;
             }
+
             const email = currentUser.email;
             const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
+
             const { data, error } = await supabase
                 .from('payments')
                 .select('*, bookings(id, invoice_id)')
                 .eq('customer_id', customerId)
                 .order('created_at', { ascending: false });
+
             if (error) throw error;
+
             if (!data || data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="6">Geen betalingen gevonden</td></tr>';
                 return;
             }
+
             tbody.innerHTML = data.map(p => `
                 <tr>
                     <td>${p.booking_id}</td>
@@ -876,29 +873,32 @@
                     <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
                     <td>${p.payment_method || 'card'}</td>
                     <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status}</span></td>
-                    <td>${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}</td>
+                    <td>
+                        ${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}
+                    </td>
                 </tr>
             `).join('');
+
         } catch (err) {
             console.error('Payment history error:', err);
             tbody.innerHTML = `<tr><td colspan="6">Fout: ${err.message}</td></tr>`;
         }
     }
-    
-    // ============================================
-    // DASHBOARD FUNCTIES
-    // ============================================
+
+    // Dashboard functies
     async function loadUserBookings() {
         if (!initSupabase()) {
             setTimeout(loadUserBookings, 100);
             return;
         }
+
         try {
             const { data, error } = await supabase
                 .from('bookings')
                 .select('*')
                 .or(`user_id.eq.${currentUser.id},customer_id.eq.CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`)
                 .order('datetime', { ascending: false });
+
             if (error) throw error;
             userBookings = data || [];
             renderDashboard();
@@ -926,7 +926,7 @@
                     <tr>
                         <td>${b.id}</td>
                         <td>${b.datetime} ${b.time || ''}</td>
-                        <td>${b.pickup?.split(',')[0] || ''} → ${b.destination?.split(',')[0] || ''}</td>
+                        <td>${b.pickup.split(',')[0]} → ${b.destination.split(',')[0]}</td>
                         <td>${b.vehicle}</td>
                         <td>€${b.amount}</td>
                         <td><span class="status-badge" style="background:${b.status==='completed'?'#dcfce7':'#fef3c7'}">${b.status}</span></td>
@@ -959,9 +959,7 @@
         });
     }
     
-    // ============================================
-    // ADRES AUTOCOMPLETE (OpenStreetMap Nominatim)
-    // ============================================
+    // ========== AUTOCOMPLETE - WERKT! ==========
     async function fetchAddresses(query, wrapId) {
         const wrap = document.getElementById(wrapId);
         if (!wrap) return;
@@ -1044,9 +1042,7 @@
         });
     }
     
-    // ============================================
-    // ROUTE FUNCTIES
-    // ============================================
+    // Route functies
     async function calcRoute(lat1, lon1, lat2, lon2) {
         const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
         const res = await fetch(url);
@@ -1241,6 +1237,7 @@
                 }
             } else {
                 alert(`✅ Boeking bevestigd!\n📋 Nummer: ${record.id}\n💰 € ${totalAmount.toFixed(2)}`);
+                // Email trigger (non-blocking)
                 if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
                 resetAll();
                 await loadUserBookings();
@@ -1321,19 +1318,6 @@
     loadUserProfile();
     loadUserBookings();
     switchToTab('new-booking');
-    
-    function handlePaymentStatus() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const payment = urlParams.get('payment');
-        const bookingId = urlParams.get('id');
-        if (payment === 'success') {
-            alert(`Bedankt! Uw betaling voor booking ${bookingId} is succesvol ontvangen.`);
-            if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
-            switchToTab('payments');
-        } else if (payment === 'cancelled') {
-            alert(`De betaling voor booking ${bookingId} is geannuleerd. U kunt het later opnieuw proberen via 'Mijn Ritten'.`);
-        }
-    }
     handlePaymentStatus();
 </script>
 </body>
