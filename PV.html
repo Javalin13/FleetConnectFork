@@ -36,8 +36,7 @@
         .login-btn{background:linear-gradient(135deg,var(--accent-gold),#b8860b);color:white;text-decoration:none;padding:14px 16px;border-radius:14px;font-weight:600;display:flex;align-items:center;gap:12px}
         .register-section{padding:16px;border-top:1px solid var(--border-light)}
         .register-section h4{font-size:0.85rem;margin-bottom:10px;color:var(--text-light);text-transform:uppercase}
-        .register-section input{width:100%;margin-bottom:10px;padding:10px 14px;border-radius:10px}
-        .register-btn{background:var(--primary);color:white;width:100%;border:none;padding:12px;border-radius:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+        .register-btn{background:var(--primary);color:white;width:100%;border:none;padding:12px;border-radius:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
         .register-btn:hover{background:var(--primary-dark)}
         .register-feedback{font-size:0.75rem;margin-top:8px;display:none}
         .register-feedback.success{color:#059669;display:block}
@@ -150,10 +149,12 @@
             <a href="#contact"><i class="fas fa-envelope"></i><span> Contact</span></a>
             <a href="#booking"><i class="fas fa-calendar-alt"></i><span> Reserveer nu</span></a>
         </div>
+        <!-- REGISTRATIE SECTIE: Knop linkt nu direct naar register.html -->
         <div class="register-section">
             <h4>Nieuwe klant? Registreer</h4>
-            <input type="email" id="registerEmail" placeholder="Uw e-mail">
-            <button class="register-btn" id="registerBtn"><i class="fas fa-user-plus"></i> <span>Registreer</span></button>
+            <a href="register.html" class="register-btn" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; background:var(--primary); color:white; border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">
+                <i class="fas fa-user-plus"></i> <span>Registreer</span>
+            </a>
             <div id="registerFeedback" class="register-feedback"></div>
         </div>
         <div class="login-section"><a href="index.html" class="login-btn"><i class="fas fa-sign-in-alt"></i><span>LOGIN</span><i class="fas fa-arrow-right"></i></a></div>
@@ -382,7 +383,6 @@
         const success = await sendToSupabase(bookingData);
         if (success) {
             if (paymentMethod === "Kaart" || paymentMethod === "App") {
-                // Trigger Stripe Checkout
                 try {
                     const { data, error } = await supabase.functions.invoke('create-checkout-session', {
                         body: {
@@ -395,20 +395,15 @@
                         }
                     });
                     if (error) throw error;
-                    if (data.url) {
-                        window.location.href = data.url;
-                    } else {
-                        throw new Error("Geen Stripe URL ontvangen");
-                    }
+                    if (data.url) { window.location.href = data.url; } 
+                    else { throw new Error("Geen Stripe URL ontvangen"); }
                 } catch (stripeErr) {
                     console.error('Stripe error:', stripeErr);
                     alert('Er ging iets mis bij het opstarten van de betaling: ' + stripeErr.message);
                 }
             } else {
                 alert(`✅ Boeking bevestigd!\n\n📋 Boekingsnummer: ${bookingData.id}\n💰 Totaalbedrag: € ${totalAmount.toFixed(2)}\n\nEen bevestiging is opgeslagen in de database.`);
-                // Email trigger (non-blocking)
                 comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
-
                 window.resetAll();
                 window.hideOverlay();
             }
@@ -421,26 +416,6 @@
     document.getElementById('closeOverlayBtn')?.addEventListener('click', () => window.hideOverlay());
     document.getElementById('cancelOverlayBtn')?.addEventListener('click', () => window.hideOverlay());
     document.getElementById('finalConfirmBtn')?.addEventListener('click', () => { window.showOverlay(); });
-
-    async function handleRegister() {
-        const email = document.getElementById('registerEmail').value.trim();
-        const feedback = document.getElementById('registerFeedback');
-        if (!email) return;
-        try {
-            const { error } = await supabase.auth.signInWithOtp({
-                email: email,
-                options: { emailRedirectTo: window.location.origin + '/klantenportaalpv.html' }
-            });
-            if (error) throw error;
-            feedback.innerText = "Controleer uw e-mail om de registratie te voltooien.";
-            feedback.className = "register-feedback success";
-            document.getElementById('registerEmail').value = '';
-        } catch (err) {
-            feedback.innerText = "Fout: " + err.message;
-            feedback.className = "register-feedback error";
-        }
-    }
-    document.getElementById('registerBtn')?.addEventListener('click', handleRegister);
 </script>
 
 <div id="summaryOverlay" class="overlay">
