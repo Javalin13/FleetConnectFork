@@ -146,10 +146,12 @@
             <a href="#contact"><i class="fas fa-envelope"></i><span> Contact</span></a>
             <a href="#booking"><i class="fas fa-calendar-alt"></i><span> Book now</span></a>
         </div>
+        <!-- REGISTRATION SECTION: Button now links directly to register.html (EN version) -->
         <div class="register-section">
             <h4>New customer? Register</h4>
-            <input type="email" id="registerEmail" placeholder="Your email">
-            <button class="register-btn" id="registerBtn"><i class="fas fa-user-plus"></i> <span>Register</span></button>
+            <a href="register.html" class="register-btn" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; background:var(--primary); color:white; border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">
+                <i class="fas fa-user-plus"></i> <span>Register</span>
+            </a>
             <div id="registerFeedback" class="register-feedback"></div>
         </div>
         <div class="login-section"><a href="index.html" class="login-btn"><i class="fas fa-sign-in-alt"></i><span>LOGIN</span><i class="fas fa-arrow-right"></i></a></div>
@@ -252,7 +254,6 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- GLOBALE FUNCTIES (geen module) -->
 <script>
     // HAMBURGER MENU
     const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -267,7 +268,7 @@
     if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) { if (e.target === sidebarOverlay) closeMenu(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu(); });
     
-    // KAART INIT
+    // MAP INIT
     let map, pickupCoord = null, dropoffCoord = null, routeLayer = null, pickupMarker = null, dropoffMarker = null;
     let currentRouteData = null, currentRoundTrip = false, currentFlight = "", currentDateTime = "", currentReturnDateTime = "";
     let selectedVehicle = null, selectedVehicleExtra = 0;
@@ -280,7 +281,7 @@
     }
     initMap();
     
-    // HULPFUNCTIES
+    // HELPER FUNCTIONS
     function parseEuroDate(str) {
         if (!str) return null;
         let [datePart, timePart] = str.split(' ');
@@ -353,7 +354,6 @@
         document.getElementById('overviewTotal').innerHTML = `€ ${total.toFixed(2)}`;
     }
     
-    // ROUTE BEREKENING
     async function calcRoute(lat1, lon1, lat2, lon2) {
         const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
         try {
@@ -394,25 +394,16 @@
     
     // AUTOCOMPLETE (English)
     async function fetchAddresses(query, wrapId) {
-        if (query.length < 3) {
-            clearSuggestions(wrapId);
-            return;
-        }
+        if (query.length < 3) { clearSuggestions(wrapId); return; }
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=be&accept-language=en&addressdetails=1`;
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 5000);
-            const response = await fetch(url, { 
-                signal: controller.signal,
-                headers: { 'User-Agent': 'Fleetconnect/2.0' }
-            });
+            const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'Fleetconnect/2.0' } });
             clearTimeout(timeoutId);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-            if (!data.length) {
-                showTempMsg(wrapId, 'No addresses found in Belgium');
-                return;
-            }
+            if (!data.length) { showTempMsg(wrapId, 'No addresses found in Belgium'); return; }
             const wrapper = document.getElementById(wrapId);
             const suggestionsDiv = wrapper.querySelector('.suggestions');
             suggestionsDiv.innerHTML = '';
@@ -422,36 +413,24 @@
                 div.setAttribute('data-lat', place.lat);
                 div.setAttribute('data-lon', place.lon);
                 div.textContent = place.display_name.length > 80 ? place.display_name.substring(0, 80) + '…' : place.display_name;
-                div.addEventListener('click', (function(lat, lon, name) {
-                    return function() {
-                        const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
-                        inputField.value = name;
-                        if (wrapId === 'pickupWrap') {
-                            pickupCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
-                        } else {
-                            dropoffCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
-                        }
-                        suggestionsDiv.style.display = 'none';
-                        if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
-                    };
-                })(place.lat, place.lon, place.display_name));
+                div.addEventListener('click', (function(lat, lon, name) { return function() {
+                    const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
+                    inputField.value = name;
+                    if (wrapId === 'pickupWrap') pickupCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
+                    else dropoffCoord = { lat: parseFloat(lat), lon: parseFloat(lon) };
+                    suggestionsDiv.style.display = 'none';
+                    if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
+                }; })(place.lat, place.lon, place.display_name));
                 suggestionsDiv.appendChild(div);
             });
             suggestionsDiv.style.display = 'block';
-        } catch (error) {
-            console.error('Autocomplete error:', error);
-            showTempMsg(wrapId, 'Network error - try again later');
-        }
+        } catch (error) { console.error('Autocomplete error:', error); showTempMsg(wrapId, 'Network error - try again later'); }
     }
     
     function clearSuggestions(wrapId) {
         const wrapper = document.getElementById(wrapId);
-        if (wrapper) {
-            const suggestionsDiv = wrapper.querySelector('.suggestions');
-            if (suggestionsDiv) suggestionsDiv.style.display = 'none';
-        }
+        if (wrapper) { const suggestionsDiv = wrapper.querySelector('.suggestions'); if (suggestionsDiv) suggestionsDiv.style.display = 'none'; }
     }
-    
     function showTempMsg(wrapId, msg) {
         const wrapper = document.getElementById(wrapId);
         if (!wrapper) return;
@@ -459,9 +438,7 @@
         if (!suggestionsDiv) return;
         suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ ${msg}</div>`;
         suggestionsDiv.style.display = 'block';
-        setTimeout(() => {
-            if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none';
-        }, 5000);
+        setTimeout(() => { if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none'; }, 5000);
     }
     
     async function calculateAndStoreRoute() {
@@ -507,24 +484,8 @@
         document.querySelectorAll('.step-btn').forEach((s, idx) => { s.classList.remove('active'); if (idx + 1 === page) s.classList.add('active'); if (idx + 1 < page) s.classList.add('done'); else s.classList.remove('done'); });
         document.getElementById('prevBtn').disabled = (page === 1);
         currentPage = page;
-        if (page === 2 && map) {
-            setTimeout(() => {
-                map.invalidateSize();
-                if (currentRouteData && pickupCoord && dropoffCoord) {
-                    const bounds = L.latLngBounds([pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon]);
-                    map.fitBounds(bounds, { padding: [80, 80] });
-                }
-            }, 150);
-        }
-        if (page === 5) {
-            updateRitOverzicht();
-            updateTotalDisplay();
-            const nextBtn = document.getElementById('nextBtn');
-            if (nextBtn) nextBtn.style.display = 'none';
-        } else {
-            const nextBtn = document.getElementById('nextBtn');
-            if (nextBtn) nextBtn.style.display = 'flex';
-        }
+        if (page === 2 && map) { setTimeout(() => { map.invalidateSize(); if (currentRouteData && pickupCoord && dropoffCoord) { const bounds = L.latLngBounds([pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon]); map.fitBounds(bounds, { padding: [80, 80] }); } }, 150); }
+        if (page === 5) { updateRitOverzicht(); updateTotalDisplay(); const nextBtn = document.getElementById('nextBtn'); if (nextBtn) nextBtn.style.display = 'none'; } else { const nextBtn = document.getElementById('nextBtn'); if (nextBtn) nextBtn.style.display = 'flex'; }
     }
     
     function addOkButtonToFlatpickr(instance) {
@@ -554,7 +515,6 @@
             updateRitOverzicht();
             updateTotalDisplay();
         } else if (currentPage === 5) { 
-            // Overlay tonen - wordt afgehandeld in module
             const showOverlayEvent = new CustomEvent('showBookingOverlay');
             window.dispatchEvent(showOverlayEvent);
         }
@@ -566,74 +526,22 @@
         let pickupTimeout, dropoffTimeout;
         const pickupInput = document.getElementById('pickupInput');
         const dropoffInput = document.getElementById('dropoffInput');
-        if (pickupInput) {
-            pickupInput.addEventListener('input', (e) => {
-                clearTimeout(pickupTimeout);
-                const q = e.target.value;
-                if (q.length >= 3) {
-                    pickupTimeout = setTimeout(() => fetchAddresses(q, 'pickupWrap'), 300);
-                } else {
-                    clearSuggestions('pickupWrap');
-                }
-            });
-        }
-        if (dropoffInput) {
-            dropoffInput.addEventListener('input', (e) => {
-                clearTimeout(dropoffTimeout);
-                const q = e.target.value;
-                if (q.length >= 3) {
-                    dropoffTimeout = setTimeout(() => fetchAddresses(q, 'dropoffWrap'), 300);
-                } else {
-                    clearSuggestions('dropoffWrap');
-                }
-            });
-        }
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.suggest-wrapper')) {
-                clearSuggestions('pickupWrap');
-                clearSuggestions('dropoffWrap');
-            }
-        });
+        if (pickupInput) { pickupInput.addEventListener('input', (e) => { clearTimeout(pickupTimeout); const q = e.target.value; if (q.length >= 3) { pickupTimeout = setTimeout(() => fetchAddresses(q, 'pickupWrap'), 300); } else { clearSuggestions('pickupWrap'); } }); }
+        if (dropoffInput) { dropoffInput.addEventListener('input', (e) => { clearTimeout(dropoffTimeout); const q = e.target.value; if (q.length >= 3) { dropoffTimeout = setTimeout(() => fetchAddresses(q, 'dropoffWrap'), 300); } else { clearSuggestions('dropoffWrap'); } }); }
+        document.addEventListener('click', (e) => { if (!e.target.closest('.suggest-wrapper')) { clearSuggestions('pickupWrap'); clearSuggestions('dropoffWrap'); } });
     }
     
-    // EVENT LISTENERS
     document.getElementById('nextBtn').addEventListener('click', nextPage);
     document.getElementById('prevBtn').addEventListener('click', prevPage);
-    
-    document.getElementById('roundtripCheckbox')?.addEventListener('change', function (e) {
-        const returnContainer = document.getElementById('returnDateContainer');
-        e.target.checked ? returnContainer.classList.add('visible') : returnContainer.classList.remove('visible');
-        if (currentRouteData) {
-            currentRoundTrip = e.target.checked;
-            let d = parseFloat(currentRouteData.distanceKm), t = currentRouteData.durationMin;
-            if (currentRoundTrip) { d *= 2; t *= 2; }
-            document.getElementById('distVal').innerHTML = d.toFixed(1);
-            document.getElementById('timeVal').innerHTML = t;
-            document.getElementById('priceVal').innerHTML = (d * 1.5).toFixed(2);
-            updateTotalDisplay();
-        }
-    });
-    
+    document.getElementById('roundtripCheckbox')?.addEventListener('change', function (e) { const returnContainer = document.getElementById('returnDateContainer'); e.target.checked ? returnContainer.classList.add('visible') : returnContainer.classList.remove('visible'); if (currentRouteData) { currentRoundTrip = e.target.checked; let d = parseFloat(currentRouteData.distanceKm), t = currentRouteData.durationMin; if (currentRoundTrip) { d *= 2; t *= 2; } document.getElementById('distVal').innerHTML = d.toFixed(1); document.getElementById('timeVal').innerHTML = t; document.getElementById('priceVal').innerHTML = (d * 1.5).toFixed(2); updateTotalDisplay(); } });
     document.getElementById('verstuurBerichtBtn')?.addEventListener('click', () => alert('Thank you! We will contact you soon.'));
-    
-    // INIT
     initAutocomplete();
     initVehicleSelection();
     showPage(1);
     
-    // FLATPICKR
-    flatpickr("#datetime", {
-        locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true,
-        defaultDate: (() => { let d = new Date(); d.setHours(d.getHours() + 1); return d; })(),
-        minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst)
-    });
+    flatpickr("#datetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, defaultDate: (() => { let d = new Date(); d.setHours(d.getHours() + 1); return d; })(), minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
+    returnFlatpickrInstance = flatpickr("#returnDatetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
     
-    returnFlatpickrInstance = flatpickr("#returnDatetime", {
-        locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true,
-        minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst)
-    });
-    
-    // EXPORTEER GLOBALE VARIABELEN VOOR MODULE
     window.getCurrentRouteData = () => currentRouteData;
     window.getCurrentRoundTrip = () => currentRoundTrip;
     window.getSelectedVehicleExtra = () => selectedVehicleExtra;
@@ -641,66 +549,14 @@
     window.getCurrentDateTime = () => currentDateTime;
     window.getCurrentReturnDateTime = () => currentReturnDateTime;
     window.getCurrentFlight = () => currentFlight;
-    window.generateBookingId = () => {
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        let counter = parseInt(localStorage.getItem('bookingCounter') || '0');
-        counter++;
-        localStorage.setItem('bookingCounter', counter);
-        return `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3, '0')}`;
-    };
+    window.generateBookingId = () => { const now = new Date(); const yyyy = now.getFullYear(); const mm = String(now.getMonth() + 1).padStart(2, '0'); const dd = String(now.getDate()).padStart(2, '0'); let counter = parseInt(localStorage.getItem('bookingCounter') || '0'); counter++; localStorage.setItem('bookingCounter', counter); return `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3, '0')}`; };
     window.getExtrasString = getExtrasString;
-    window.resetAll = function() {
-        if (routeLayer) map.removeLayer(routeLayer);
-        if (pickupMarker) map.removeLayer(pickupMarker);
-        if (dropoffMarker) map.removeLayer(dropoffMarker);
-        currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0;
-        document.getElementById('distVal').innerHTML = '—';
-        document.getElementById('timeVal').innerHTML = '—';
-        document.getElementById('priceVal').innerHTML = '—';
-        document.getElementById('pickupInput').value = '';
-        document.getElementById('dropoffInput').value = '';
-        document.getElementById('firstName').value = '';
-        document.getElementById('lastName').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('vat').value = '';
-        document.getElementById('flightNumber').value = '';
-        document.getElementById('roundtripCheckbox').checked = false;
-        document.getElementById('meetGreet').checked = false;
-        document.getElementById('kissRide').checked = false;
-        document.getElementById('waterBottle').checked = false;
-        document.getElementById('wifi').checked = false;
-        document.getElementById('specialWishes').value = '';
-        document.getElementById('returnDatetime').value = '';
-        currentRoundTrip = false;
-        currentReturnDateTime = '';
-        document.getElementById('returnDateContainer').classList.remove('visible');
-        showPage(1);
-        if (document.getElementById('totalDisplay')) document.getElementById('totalDisplay').innerHTML = 'Total: € 0.00';
-    };
+    window.resetAll = function() { if (routeLayer) map.removeLayer(routeLayer); if (pickupMarker) map.removeLayer(pickupMarker); if (dropoffMarker) map.removeLayer(dropoffMarker); currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0; document.getElementById('distVal').innerHTML = '—'; document.getElementById('timeVal').innerHTML = '—'; document.getElementById('priceVal').innerHTML = '—'; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('firstName').value = ''; document.getElementById('lastName').value = ''; document.getElementById('phone').value = ''; document.getElementById('email').value = ''; document.getElementById('vat').value = ''; document.getElementById('flightNumber').value = ''; document.getElementById('roundtripCheckbox').checked = false; document.getElementById('meetGreet').checked = false; document.getElementById('kissRide').checked = false; document.getElementById('waterBottle').checked = false; document.getElementById('wifi').checked = false; document.getElementById('specialWishes').value = ''; document.getElementById('returnDatetime').value = ''; currentRoundTrip = false; currentReturnDateTime = ''; document.getElementById('returnDateContainer').classList.remove('visible'); showPage(1); if (document.getElementById('totalDisplay')) document.getElementById('totalDisplay').innerHTML = 'Total: € 0.00'; };
     window.hideOverlay = function() { document.getElementById('summaryOverlay').classList.remove('active'); };
-    window.buildSummaryHTML = function() {
-        const fn = document.getElementById('firstName').value.trim(), ln = document.getElementById('lastName').value.trim();
-        const ph = document.getElementById('phone').value.trim(), em = document.getElementById('email').value.trim();
-        const pu = document.getElementById('pickupInput').value, doff = document.getElementById('dropoffInput').value;
-        let d = parseFloat(currentRouteData.distanceKm), t = currentRouteData.durationMin;
-        if (currentRoundTrip) { d *= 2; t *= 2; }
-        const base = d * 1.5, total = base + selectedVehicleExtra;
-        return `<div class="summary-section"><h3>🚖 Trip</h3><div class="summary-line"><strong>📍</strong> ${pu}</div><div class="summary-line"><strong>🏁</strong> ${doff}</div><div class="summary-line"><strong>📅 Outbound:</strong> ${currentDateTime}</div><div class="summary-line"><strong>✈️</strong> ${currentFlight || "none"}</div></div>
-                <div class="summary-section"><h3>👤 Customer</h3><div class="summary-line"><strong>Name:</strong> ${fn} ${ln}</div><div class="summary-line"><strong>Mobile:</strong> ${ph}</div><div class="summary-line"><strong>Email:</strong> ${em}</div></div>
-                <div class="summary-section"><h3>🚘 Vehicle</h3><div class="summary-line"><strong>Type:</strong> ${selectedVehicle} (+€${selectedVehicleExtra})</div></div>
-                <div class="summary-section"><h3>💰 Price</h3><div class="summary-line"><strong>Distance:</strong> ${d.toFixed(1)} km</div><div class="summary-line"><strong>Base:</strong> € ${base.toFixed(2)}</div><div class="summary-line"><strong>Total:</strong> € ${total.toFixed(2)}</div></div>`;
-    };
-    window.showOverlay = function() { 
-        document.getElementById('overlaySummary').innerHTML = window.buildSummaryHTML(); 
-        document.getElementById('summaryOverlay').classList.add('active'); 
-    };
+    window.buildSummaryHTML = function() { const fn = document.getElementById('firstName').value.trim(), ln = document.getElementById('lastName').value.trim(); const ph = document.getElementById('phone').value.trim(), em = document.getElementById('email').value.trim(); const pu = document.getElementById('pickupInput').value, doff = document.getElementById('dropoffInput').value; let d = parseFloat(currentRouteData.distanceKm), t = currentRouteData.durationMin; if (currentRoundTrip) { d *= 2; t *= 2; } const base = d * 1.5, total = base + selectedVehicleExtra; return `<div class="summary-section"><h3>🚖 Trip</h3><div class="summary-line"><strong>📍</strong> ${pu}</div><div class="summary-line"><strong>🏁</strong> ${doff}</div><div class="summary-line"><strong>📅 Outbound:</strong> ${currentDateTime}</div><div class="summary-line"><strong>✈️</strong> ${currentFlight || "none"}</div></div><div class="summary-section"><h3>👤 Customer</h3><div class="summary-line"><strong>Name:</strong> ${fn} ${ln}</div><div class="summary-line"><strong>Mobile:</strong> ${ph}</div><div class="summary-line"><strong>Email:</strong> ${em}</div></div><div class="summary-section"><h3>🚘 Vehicle</h3><div class="summary-line"><strong>Type:</strong> ${selectedVehicle} (+€${selectedVehicleExtra})</div></div><div class="summary-section"><h3>💰 Price</h3><div class="summary-line"><strong>Distance:</strong> ${d.toFixed(1)} km</div><div class="summary-line"><strong>Base:</strong> € ${base.toFixed(2)}</div><div class="summary-line"><strong>Total:</strong> € ${total.toFixed(2)}</div></div>`; };
+    window.showOverlay = function() { document.getElementById('overlaySummary').innerHTML = window.buildSummaryHTML(); document.getElementById('summaryOverlay').classList.add('active'); };
 </script>
 
-<!-- MODULE VOOR SUPABASE (ES6) -->
 <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     import { comms } from './src/modules/communication/index.js';
@@ -785,7 +641,7 @@
         };
         const success = await sendToSupabase(bookingData);
         if (success) {
-            if (paymentMethod === "Kaart" || paymentMethod === "App") {
+            if (paymentMethod === "Card" || paymentMethod === "App") {
                 try {
                     const { data, error } = await supabase.functions.invoke('create-checkout-session', {
                         body: {
@@ -798,11 +654,8 @@
                         }
                     });
                     if (error) throw error;
-                    if (data.url) {
-                        window.location.href = data.url;
-                    } else {
-                        throw new Error("No Stripe URL received");
-                    }
+                    if (data.url) { window.location.href = data.url; } 
+                    else { throw new Error("No Stripe URL received"); }
                 } catch (stripeErr) {
                     console.error('Stripe error:', stripeErr);
                     alert('Something went wrong starting the payment: ' + stripeErr.message);
@@ -818,49 +671,14 @@
         }
     }
     
-    // KOPPEL GLOBALE FUNCTIES
-    window.getCurrentVehicle = () => {
-        const selected = document.querySelector('.vehicle-card.selected');
-        return selected ? selected.getAttribute('data-vehicle') : null;
-    };
-    window.getCurrentVehicleExtra = () => {
-        const selected = document.querySelector('.vehicle-card.selected');
-        return selected ? parseInt(selected.getAttribute('data-extraprice')) || 0 : 0;
-    };
+    window.getCurrentVehicle = () => { const selected = document.querySelector('.vehicle-card.selected'); return selected ? selected.getAttribute('data-vehicle') : null; };
+    window.getCurrentVehicleExtra = () => { const selected = document.querySelector('.vehicle-card.selected'); return selected ? parseInt(selected.getAttribute('data-extraprice')) || 0 : 0; };
     
-    // OVERLAY EVENTS
-    window.addEventListener('showBookingOverlay', () => {
-        window.showOverlay();
-    });
-    
+    window.addEventListener('showBookingOverlay', () => { window.showOverlay(); });
     document.getElementById('confirmBookingBtn')?.addEventListener('click', finalizeBooking);
     document.getElementById('closeOverlayBtn')?.addEventListener('click', () => window.hideOverlay());
     document.getElementById('cancelOverlayBtn')?.addEventListener('click', () => window.hideOverlay());
-    
-    // FINAL CONFIRM BUTTON IN PAGE 5
-    document.getElementById('finalConfirmBtn')?.addEventListener('click', () => {
-        window.showOverlay();
-    });
-
-    async function handleRegister() {
-        const email = document.getElementById('registerEmail').value.trim();
-        const feedback = document.getElementById('registerFeedback');
-        if (!email) return;
-        try {
-            const { error } = await supabase.auth.signInWithOtp({
-                email: email,
-                options: { emailRedirectTo: window.location.origin + '/klantenportaalpv.html?lang=en' }
-            });
-            if (error) throw error;
-            feedback.innerText = "Check your email to complete registration.";
-            feedback.className = "register-feedback success";
-            document.getElementById('registerEmail').value = '';
-        } catch (err) {
-            feedback.innerText = "Error: " + err.message;
-            feedback.className = "register-feedback error";
-        }
-    }
-    document.getElementById('registerBtn')?.addEventListener('click', handleRegister);
+    document.getElementById('finalConfirmBtn')?.addEventListener('click', () => { window.showOverlay(); });
 </script>
 
 <div id="summaryOverlay" class="overlay">
