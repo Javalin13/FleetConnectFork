@@ -1,0 +1,24 @@
+Error parsing translations: Unexpected non-whitespace character after JSON at position 285017 (line 4055 column 2)
+--- RESIDUAL SCAN ---
+0
+--- NAVIGATION PERSISTENCE MATRIX ---
+Testing: URL lang propagation...
+   - PV.html?lang=fr -> currentLang: nl ❌
+Testing: localStorage restoration...
+   - PV.html (refresh) -> currentLang: nl ❌
+Testing: Internal link decoration...
+   - i18n.link("klantenportaalpv.html") -> klantenportaalpv.html?lang=nl ❌
+Testing: NL fallback integrity...
+   - No locale set -> currentLang: nl ✅
+Testing: Deep-link locale preservation...
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+page.evaluate: ReferenceError: i18n is not defined
+    at eval (eval at evaluate (:302:30), <anonymous>:1:12)
+    at UtilityScript.evaluate (<anonymous>:304:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at /app/tests/navigation-verification.js:40:23
+
+Node.js v22.22.1

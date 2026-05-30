@@ -6,6 +6,7 @@
     <title>Fleetconnect Taxi | Inloggen</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="translations.js"></script>
     <style>
         :root {
             --primary: #2c7da0;
@@ -22,7 +23,7 @@
             font-family: 'Inter', sans-serif;
             background: var(--bg-body);
             color: var(--text-dark);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -30,7 +31,7 @@
         }
         .login-card {
             background: var(--white);
-            max-width: 420px;
+            max-width: 400px;
             width: 100%;
             padding: 40px;
             border-radius: 32px;
@@ -111,41 +112,7 @@
             margin-bottom: 20px;
             display: none;
         }
-        .success-msg {
-            background: #dcfce7;
-            color: #166534;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            display: none;
-        }
-        .language-selector {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-light);
-        }
-        .lang-btn {
-            background: #f1f5f9;
-            border: 1px solid var(--border-light);
-            padding: 8px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.8rem;
-            transition: 0.2s;
-            color: var(--text-dark);
-            text-decoration: none;
-            display: inline-block;
-        }
-        .lang-btn:hover, .lang-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+        /* Forgot Password Modal */
         .modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -188,44 +155,38 @@
 <body>
 
     <div class="login-card">
-        <div class="language-selector">
-            <a href="#" class="lang-btn active" data-lang="nl">Nederlands</a>
-            <a href="#" class="lang-btn" data-lang="fr">Français</a>
-            <a href="#" class="lang-btn" data-lang="en">English</a>
-        </div>
-
         <i class="fas fa-taxi" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 16px;"></i>
-        <h1 id="title">Inloggen</h1>
-        <p id="subtitle">Toegang tot het klantenportaal</p>
+        <h1 data-i18n="auth_login_btn">Inloggen</h1>
+        <p data-i18n="auth_login_title">Toegang tot het klantenportaal</p>
 
         <div id="errorBox" class="error-msg"></div>
-        <div id="successBox" class="success-msg"></div>
 
         <div class="field">
-            <label id="emailLabel">E-mailadres</label>
-            <input type="email" id="emailInput" placeholder="uw@email.be">
+            <label data-i18n="auth_email">E-mailadres</label>
+            <input type="email" id="emailInput" data-i18n-placeholder="placeholder_email" placeholder="uw@email.be">
         </div>
         <div class="field">
-            <label id="passwordLabel">Wachtwoord</label>
+            <label data-i18n="auth_password">Wachtwoord</label>
             <input type="password" id="passInput" placeholder="••••••••">
         </div>
 
-        <button class="btn-login" id="loginBtn">Inloggen</button>
+        <button class="btn-login" id="loginBtn" data-i18n="auth_login_btn">Inloggen</button>
 
-        <a href="#" class="forgot-password" id="forgotBtn">Wachtwoord vergeten?</a>
+        <a href="#" class="forgot-password" id="forgotBtn" data-i18n="auth_reset_password">Wachtwoord vergeten?</a>
     </div>
 
+    <!-- Forgot Password Modal -->
     <div class="modal" id="forgotModal">
         <div class="modal-content">
-            <h2 id="modalTitle">Wachtwoord vergeten</h2>
-            <p id="modalText" style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">Voer uw e-mailadres in om een magische link te ontvangen.</p>
+            <h2 data-i18n="auth_forgot_password_title">Wachtwoord vergeten</h2>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;" data-i18n="auth_forgot_password_desc">Voer uw e-mailadres in om een magische link te ontvangen.</p>
             <div class="field">
-                <label id="modalEmailLabel">E-mailadres</label>
-                <input type="email" id="forgotEmail" placeholder="uw@email.be">
+                <label data-i18n="auth_email">E-mailadres</label>
+                <input type="email" id="forgotEmail" data-i18n-placeholder="placeholder_email" placeholder="uw@email.be">
             </div>
             <div class="modal-buttons">
-                <button class="btn-secondary" id="closeModal">Annuleren</button>
-                <button class="btn-login" id="sendMagicBtn" style="margin-top:0;">Stuur magische link</button>
+                <button class="btn-secondary" id="closeModal" data-i18n="fp_close">Annuleren</button>
+                <button class="btn-login" id="sendMagicBtn" style="margin-top:0;" data-i18n="auth_send_magic_link">Stuur magische link</button>
             </div>
         </div>
     </div>
@@ -237,186 +198,30 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const translations = {
-            nl: {
-                title: 'Inloggen',
-                subtitle: 'Toegang tot het klantenportaal',
-                emailLabel: 'E-mailadres',
-                passwordLabel: 'Wachtwoord',
-                loginBtn: 'Inloggen',
-                forgotBtn: 'Wachtwoord vergeten?',
-                modalTitle: 'Wachtwoord vergeten',
-                modalText: 'Voer uw e-mailadres in om een magische link te ontvangen.',
-                modalEmailLabel: 'E-mailadres',
-                cancelBtn: 'Annuleren',
-                sendBtn: 'Stuur magische link',
-                emailPlaceholder: 'uw@email.be',
-                passwordPlaceholder: '••••••••',
-                errorEmpty: 'Voer uw e-mailadres en wachtwoord in.',
-                errorInvalid: 'Ongeldige inloggegevens.',
-                errorGeneric: 'Er is een fout opgetreden. Probeer het later opnieuw.',
-                resetSuccess: 'Herstel-instructies gestuurd naar',
-                resetError: 'Fout:',
-                enterEmail: 'Voer een geldig e-mailadres in.',
-                logoutSuccess: '✓ U bent succesvol uitgelogd.',
-                sessionExpired: '⏰ Uw sessie is verlopen. Log opnieuw in.',
-                loginSuccess: '✓ Ingelogd! Doorverwijzen...'
-            },
-            fr: {
-                title: 'Connexion',
-                subtitle: 'Accéder au portail client',
-                emailLabel: 'Adresse e-mail',
-                passwordLabel: 'Mot de passe',
-                loginBtn: 'Se connecter',
-                forgotBtn: 'Mot de passe oublié ?',
-                modalTitle: 'Mot de passe oublié',
-                modalText: 'Entrez votre adresse e-mail pour recevoir un lien magique.',
-                modalEmailLabel: 'Adresse e-mail',
-                cancelBtn: 'Annuler',
-                sendBtn: 'Envoyer le lien magique',
-                emailPlaceholder: 'votre@email.fr',
-                passwordPlaceholder: '••••••••',
-                errorEmpty: 'Veuillez entrer votre e-mail et mot de passe.',
-                errorInvalid: 'Identifiants invalides.',
-                errorGeneric: 'Une erreur est survenue. Veuillez réessayer plus tard.',
-                resetSuccess: 'Instructions de récupération envoyées à',
-                resetError: 'Erreur :',
-                enterEmail: 'Veuillez entrer une adresse e-mail valide.',
-                logoutSuccess: '✓ Vous êtes déconnecté avec succès.',
-                sessionExpired: '⏰ Votre session a expiré. Veuillez vous reconnecter.',
-                loginSuccess: '✓ Connecté ! Redirection...'
-            },
-            en: {
-                title: 'Login',
-                subtitle: 'Access the customer portal',
-                emailLabel: 'Email address',
-                passwordLabel: 'Password',
-                loginBtn: 'Login',
-                forgotBtn: 'Forgot password?',
-                modalTitle: 'Forgot password',
-                modalText: 'Enter your email address to receive a magic link.',
-                modalEmailLabel: 'Email address',
-                cancelBtn: 'Cancel',
-                sendBtn: 'Send magic link',
-                emailPlaceholder: 'your@email.com',
-                passwordPlaceholder: '••••••••',
-                errorEmpty: 'Please enter your email and password.',
-                errorInvalid: 'Invalid login credentials.',
-                errorGeneric: 'An error occurred. Please try again later.',
-                resetSuccess: 'Recovery instructions sent to',
-                resetError: 'Error:',
-                enterEmail: 'Please enter a valid email address.',
-                logoutSuccess: '✓ You have been successfully logged out.',
-                sessionExpired: '⏰ Your session has expired. Please login again.',
-                loginSuccess: '✓ Logged in! Redirecting...'
-            }
-        };
+        const loginBtn = document.getElementById('loginBtn');
+        const emailInput = document.getElementById('emailInput');
+        const passInput = document.getElementById('passInput');
+        const errorBox = document.getElementById('errorBox');
+        const forgotBtn = document.getElementById('forgotBtn');
+        const forgotModal = document.getElementById('forgotModal');
+        const closeModal = document.getElementById('closeModal');
+        const sendMagicBtn = document.getElementById('sendMagicBtn');
 
-        let currentLang = 'nl';
-        let isRedirecting = false;
-
-        function getLanguageFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const langParam = urlParams.get('lang');
-            if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
-                return langParam;
-            }
-            const savedLang = localStorage.getItem('preferred_lang');
-            if (savedLang && (savedLang === 'nl' || savedLang === 'fr' || savedLang === 'en')) {
-                return savedLang;
-            }
-            return 'nl';
-        }
-
-        function applyLanguage(lang) {
-            currentLang = lang;
-            const t = translations[lang];
-            
-            document.getElementById('title').textContent = t.title;
-            document.getElementById('subtitle').textContent = t.subtitle;
-            document.getElementById('emailLabel').textContent = t.emailLabel;
-            document.getElementById('passwordLabel').textContent = t.passwordLabel;
-            document.getElementById('loginBtn').textContent = t.loginBtn;
-            document.getElementById('forgotBtn').textContent = t.forgotBtn;
-            document.getElementById('modalTitle').textContent = t.modalTitle;
-            document.getElementById('modalText').textContent = t.modalText;
-            document.getElementById('modalEmailLabel').textContent = t.modalEmailLabel;
-            document.getElementById('closeModal').textContent = t.cancelBtn;
-            document.getElementById('sendMagicBtn').textContent = t.sendBtn;
-            
-            document.getElementById('emailInput').placeholder = t.emailPlaceholder;
-            document.getElementById('passInput').placeholder = t.passwordPlaceholder;
-            document.getElementById('forgotEmail').placeholder = t.emailPlaceholder;
-            
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                if (btn.getAttribute('data-lang') === lang) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            localStorage.setItem('preferred_lang', lang);
-            
-            const url = new URL(window.location);
-            url.searchParams.set('lang', lang);
-            window.history.pushState({}, '', url);
-        }
-
-        function showMessage(msg, type) {
-            const box = type === 'error' ? document.getElementById('errorBox') : document.getElementById('successBox');
-            box.textContent = msg;
-            box.style.display = 'block';
-            setTimeout(() => {
-                box.style.display = 'none';
-            }, 4000);
-        }
-
-        function checkLogoutStatus() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const logoutReason = urlParams.get('logout');
-            
-            if (logoutReason === 'success') {
-                showMessage(translations[currentLang].logoutSuccess, 'success');
-                const url = new URL(window.location);
-                url.searchParams.delete('logout');
-                window.history.pushState({}, '', url);
-            } else if (logoutReason === 'expired') {
-                showMessage(translations[currentLang].sessionExpired, 'error');
-                const url = new URL(window.location);
-                url.searchParams.delete('logout');
-                window.history.pushState({}, '', url);
-            }
-        }
-
-        // BELANGRIJK: Deze functie checkt of er een sessie is,
-        // maar doet ALLEEN een redirect als er GEEN logout parameter is
+        // Check for existing session
         async function checkSession() {
-            // Kijk of we net zijn uitgelogd via de URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const isLogoutRedirect = urlParams.get('logout') === 'success' || urlParams.get('logout') === 'expired';
-            
-            if (isLogoutRedirect) {
-                // Blijf op de inlogpagina! Geen redirect naar portaal
-                console.log('Uitlog redirect - blijven op inlogpagina');
-                return;
-            }
-            
             const { data: { session } } = await supabase.auth.getSession();
-            
-            // Alleen redirecten als er een sessie IS en we NIET bezig zijn met uitloggen
-            if (session && !isLogoutRedirect && !isRedirecting) {
-                isRedirecting = true;
-                window.location.href = `klantenportaalpv.html?lang=${currentLang}`;
+            if (session) {
+                window.location.href = 'klantenportaalpv.html';
             }
         }
+        checkSession();
 
         async function handleLogin() {
             const email = emailInput.value.trim();
             const password = passInput.value.trim();
 
             if (!email || !password) {
-                showMessage(translations[currentLang].errorEmpty, 'error');
+                showError(i18n.t('alert_fill_fields'));
                 return;
             }
 
@@ -427,42 +232,26 @@
                 });
 
                 if (error) {
-                    showMessage(error.message === 'Invalid login credentials' ? translations[currentLang].errorInvalid : error.message, 'error');
+                    showError(error.message === 'Invalid login credentials' ? i18n.t('auth_invalid_credentials') : error.message);
                     return;
                 }
 
                 if (data.session) {
-                    showMessage(translations[currentLang].loginSuccess, 'success');
                     sessionStorage.setItem('loggedInEmail', email);
-                    setTimeout(() => {
-                        window.location.href = `klantenportaalpv.html?lang=${currentLang}`;
-                    }, 1000);
+                    window.location.href = 'klantenportaalpv.html';
                 }
             } catch (err) {
-                showMessage(translations[currentLang].errorGeneric, 'error');
+                showError(i18n.t('auth_error_generic'));
             }
         }
 
-        // Event listeners
-        const loginBtn = document.getElementById('loginBtn');
-        const emailInput = document.getElementById('emailInput');
-        const passInput = document.getElementById('passInput');
-        const forgotBtn = document.getElementById('forgotBtn');
-        const forgotModal = document.getElementById('forgotModal');
-        const closeModal = document.getElementById('closeModal');
-        const sendMagicBtn = document.getElementById('sendMagicBtn');
-
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const lang = btn.getAttribute('data-lang');
-                applyLanguage(lang);
-            });
-        });
+        function showError(msg) {
+            errorBox.innerText = msg;
+            errorBox.style.display = 'block';
+        }
 
         loginBtn.addEventListener('click', handleLogin);
         emailInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); });
-        passInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); });
 
         forgotBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -473,39 +262,22 @@
             forgotModal.style.display = 'none';
         });
 
-        forgotModal.addEventListener('click', (e) => {
-            if (e.target === forgotModal) {
-                forgotModal.style.display = 'none';
-            }
-        });
-
         sendMagicBtn.addEventListener('click', async () => {
             const email = document.getElementById('forgotEmail').value.trim();
             if (email) {
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: `${window.location.origin}/reset-password.html?lang=${currentLang}`,
+                    redirectTo: `${window.location.origin}/reset-password.html`,
                 });
                 if (error) {
-                    showMessage(`${translations[currentLang].resetError} ${error.message}`, 'error');
+                    alert(i18n.t('auth_error_generic') + ': ' + error.message);
                 } else {
-                    showMessage(`${translations[currentLang].resetSuccess} ${email}`, 'success');
+                    alert(i18n.t('auth_magic_link_sent').replace('{email}', email));
                     forgotModal.style.display = 'none';
-                    document.getElementById('forgotEmail').value = '';
                 }
             } else {
-                showMessage(translations[currentLang].enterEmail, 'error');
+                alert(i18n.t('alert_fill_fields'));
             }
         });
-
-        // Initialiseer
-        const initialLang = getLanguageFromURL();
-        applyLanguage(initialLang);
-        checkLogoutStatus();
-        
-        // Wacht even voordat we de sessie checken
-        setTimeout(() => {
-            checkSession();
-        }, 500);
     </script>
 </body>
 </html>

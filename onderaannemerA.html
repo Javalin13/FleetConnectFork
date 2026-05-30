@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="translations.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f1f5f9; height: 100vh; display: flex; }
@@ -443,19 +444,6 @@
         .modal-content {
             -webkit-overflow-scrolling: touch;
         }
-
-        .edit-driver-btn {
-            background: #3b82f6;
-            color: white;
-            margin-left: 8px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        .edit-driver-modal .modal-content { max-width: 500px; }
-        .edit-driver-modal .fiche-body input { width: 100%; margin-bottom: 12px; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; }
     </style>
 </head>
 <body>
@@ -464,42 +452,42 @@
             <i class="fas fa-bars"></i>
             <div class="logo-text">
                 <i class="fas fa-taxi"></i> Fleet Connect
-                <br><small>Onderaannemer Paneel</small>
+                <br><small data-i18n="op_sidebar_info">Onderaannemer Paneel</small>
             </div>
         </div>
         <div class="nav-menu">
-            <div class="nav-section"><div class="nav-section-title">📋 BOEKINGEN</div>
-                <div class="nav-item active" data-tab="neworders" onclick="app.switchTab('neworders')"><i class="fas fa-clipboard-list"></i><span> New Orders</span></div>
-                <div class="nav-item" data-tab="orders" onclick="app.switchTab('orders')"><i class="fas fa-box"></i><span> Orders</span></div>
-                <div class="nav-item" data-tab="history" onclick="app.switchTab('history')"><i class="fas fa-history"></i><span> History</span></div>
-                <div class="nav-item" data-tab="agenda" onclick="app.switchTab('agenda')"><i class="fas fa-calendar-alt"></i><span> Agenda</span></div>
+            <div class="nav-section"><div class="nav-section-title" data-i18n="op_sidebar_bookings">📋 BOEKINGEN</div>
+                <div class="nav-item active" data-tab="neworders" onclick="app.switchTab('neworders')"><i class="fas fa-clipboard-list"></i><span data-i18n="op_sidebar_new"> New Orders</span></div>
+                <div class="nav-item" data-tab="orders" onclick="app.switchTab('orders')"><i class="fas fa-box"></i><span data-i18n="op_sidebar_orders"> Orders</span></div>
+                <div class="nav-item" data-tab="history" onclick="app.switchTab('history')"><i class="fas fa-history"></i><span data-i18n="op_sidebar_history"> History</span></div>
+                <div class="nav-item" data-tab="agenda" onclick="app.switchTab('agenda')"><i class="fas fa-calendar-alt"></i><span data-i18n="op_sidebar_agenda"> Agenda</span></div>
             </div>
-            <div class="nav-section"><div class="nav-section-title">👥 BEHEER</div>
-                <div class="nav-item" data-tab="drivers" onclick="app.switchTab('drivers')"><i class="fas fa-id-card"></i><span> Drivers</span></div>
-                <div class="nav-item" data-tab="partners" onclick="app.switchTab('partners')"><i class="fas fa-handshake"></i><span> Mijn Partners</span></div>
+            <div class="nav-section"><div class="nav-section-title" data-i18n="op_sidebar_management">👥 BEHEER</div>
+                <div class="nav-item" data-tab="drivers" onclick="app.switchTab('drivers')"><i class="fas fa-id-card"></i><span data-i18n="op_sidebar_drivers"> Drivers</span></div>
+                <div class="nav-item" data-tab="partners" onclick="app.switchTab('partners')"><i class="fas fa-handshake"></i><span data-i18n="op_sidebar_partners"> Mijn Partners</span></div>
             </div>
-            <div class="nav-section"><div class="nav-section-title">💰 FINANCIËN</div>
-                <div class="nav-item" data-tab="financieel" onclick="app.switchTab('financieel')"><i class="fas fa-chart-line"></i><span> Financieel</span></div>
-                <div class="nav-item" data-tab="settlements" onclick="app.switchTab('settlements')"><i class="fas fa-university"></i><span> Settlements</span></div>
+            <div class="nav-section"><div class="nav-section-title" data-i18n="op_sidebar_finance">💰 FINANCIËN</div>
+                <div class="nav-item" data-tab="financieel" onclick="app.switchTab('financieel')"><i class="fas fa-chart-line"></i><span data-i18n="op_sidebar_financial"> Financieel</span></div>
+                <div class="nav-item" data-tab="settlements" onclick="app.switchTab('settlements')"><i class="fas fa-university"></i><span data-i18n="op_sidebar_settlements"> Settlements</span></div>
             </div>
-            <div class="nav-section"><div class="nav-section-title">ℹ️ INFORMATIE</div>
-                <div class="nav-item" data-tab="wiki" onclick="app.switchTab('wiki')"><i class="fas fa-robot"></i><span> Wiki Agent</span></div>
+            <div class="nav-section"><div class="nav-section-title" data-i18n="op_sidebar_info">ℹ️ INFORMATIE</div>
+                <div class="nav-item" data-tab="wiki" onclick="app.switchTab('wiki')"><i class="fas fa-robot"></i><span data-i18n="op_sidebar_wiki"> Wiki Agent</span></div>
             </div>
-            <div class="nav-item switch-item" onclick="app.switchToWoningen()"><i class="fas fa-home"></i><span> Switch naar Woningen</span></div>
-            <div class="nav-item switch-item" onclick="app.switchToAutoDealer()"><i class="fas fa-exchange-alt"></i><span> Switch naar Auto Dealer</span></div>
-            <div class="nav-item logout-item" onclick="app.logout()"><i class="fas fa-sign-out-alt"></i><span> Uitloggen</span></div>
+            <div class="nav-item switch-item" onclick="app.switchToWoningen()"><i class="fas fa-home"></i><span data-i18n="op_header_switch_woningen"> Switch naar Woningen</span></div>
+            <div class="nav-item switch-item" onclick="app.switchToAutoDealer()"><i class="fas fa-exchange-alt"></i><span data-i18n="op_header_switch_dealer"> Switch naar Auto Dealer</span></div>
+            <div class="nav-item logout-item" onclick="app.logout()"><i class="fas fa-sign-out-alt"></i><span data-i18n="auth_logout_btn"> Uitloggen</span></div>
         </div>
     </div>
     <div class="main">
         <div id="errorMsg" class="hidden" style="background:#fee2e2; color:#b91c1c; padding:12px; text-align:center; font-weight:600;"></div>
         <div class="header">
-            <h1 id="pageTitle">New Orders</h1>
+            <h1 id="pageTitle" data-i18n="op_sidebar_new">New Orders</h1>
             <div class="header-right">
-                <button class="back-btn" onclick="window.location.href='admin-index.html'"><i class="fas fa-home"></i> Terug naar overzicht</button>
-                <button class="switch-woningen-btn" onclick="app.switchToWoningen()"><i class="fas fa-home"></i> Woningen Paneel</button>
-                <button class="switch-btn" onclick="app.switchToAutoDealer()"><i class="fas fa-exchange-alt"></i> Switch naar Auto Dealer</button>
-                <button class="refresh-btn" onclick="app.refreshAllData()"><i class="fas fa-sync-alt"></i> Vernieuwen</button>
-                <span class="user-info" id="userEmail"><i class="fas fa-user-circle"></i> Gekoppeld aan Supabase</span>
+                <button class="back-btn" onclick="window.location.href='admin-index.html'"><i class="fas fa-home"></i> <span data-i18n="op_header_back">Terug naar overzicht</span></button>
+                <button class="switch-woningen-btn" onclick="app.switchToWoningen()"><i class="fas fa-home"></i> <span data-i18n="op_header_switch_woningen">Woningen Paneel</span></button>
+                <button class="switch-btn" onclick="app.switchToAutoDealer()"><i class="fas fa-exchange-alt"></i> <span data-i18n="op_header_switch_dealer">Switch naar Auto Dealer</span></button>
+                <button class="refresh-btn" onclick="app.refreshAllData()"><i class="fas fa-sync-alt"></i> <span data-i18n="op_header_refresh">Vernieuwen</span></button>
+                <span class="user-info" id="userEmail"><i class="fas fa-user-circle"></i> <span data-i18n="nav_language">Taal</span></span>
             </div>
         </div>
         <div class="content" id="contentArea"></div>
@@ -507,51 +495,32 @@
 
     <div id="bookingModal" class="modal">
         <div class="modal-content">
-            <div class="fiche-header"><h3><i class="fas fa-file-invoice"></i> Rit Fiche</h3><button class="close-modal" onclick="app.closeModal()">&times;</button></div>
+            <div class="fiche-header"><h3><i class="fas fa-file-invoice"></i> <span data-i18n="op_fiche_title">Rit Fiche</span></h3><button class="close-modal" onclick="app.closeModal()">&times;</button></div>
             <div class="fiche-body" id="ficheBody"></div>
         </div>
     </div>
 
     <div id="partnerModal" class="modal">
         <div class="modal-content" style="max-width: 500px;">
-            <div class="fiche-header"><h3><i class="fas fa-handshake"></i> Partner Beheer</h3><button class="close-modal" onclick="app.closePartnerModal()">&times;</button></div>
+            <div class="fiche-header"><h3><i class="fas fa-handshake"></i> <span data-i18n="op_partner_mgmt">Partner Beheer</span></h3><button class="close-modal" onclick="app.closePartnerModal()">&times;</button></div>
             <div class="fiche-body">
                 <div class="add-driver-form" style="flex-direction: column; gap: 15px;">
-                    <input type="text" id="p_name" placeholder="Bedrijfsnaam">
-                    <input type="text" id="p_contact" placeholder="Contactpersoon">
+                    <input type="text" id="p_name" data-i18n-placeholder="op_partner_name" placeholder="Bedrijfsnaam">
+                    <input type="text" id="p_contact" data-i18n-placeholder="op_partner_contact" placeholder="Contactpersoon">
                     <input type="text" id="p_email" placeholder="Email">
                     <input type="text" id="p_phone" placeholder="Telefoon">
-                    <input type="text" id="p_prefix" placeholder="Prefix (bv. AA)">
+                    <input type="text" id="p_prefix" data-i18n-placeholder="op_partner_prefix" placeholder="Prefix (bv. AA)">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <input type="checkbox" id="p_is_hoofd" class="compact-checkbox">
-                        <label for="p_is_hoofd" style="font-size: 0.85rem; cursor: pointer;">Dit is de Hoofdpartner</label>
+                        <label for="p_is_hoofd" style="font-size: 0.85rem; cursor: pointer;" data-i18n="op_partner_is_hoofd">Dit is de Hoofdpartner</label>
                     </div>
-                    <button class="add-btn" style="width: 100%; margin: 0;" onclick="app.savePartner()">Partner Opslaan</button>
+                    <button class="add-btn" style="width: 100%; margin: 0;" onclick="app.savePartner()" data-i18n="op_partner_save">Partner Opslaan</button>
                 </div>
             </div>
         </div>
     </div>
     
     <div id="toast" class="toast"></div>
-
-    <!-- Nieuwe Modal voor het Bewerken van een Driver -->
-    <div id="editDriverModal" class="modal edit-driver-modal">
-        <div class="modal-content">
-            <div class="fiche-header"><h3><i class="fas fa-user-edit"></i> Driver Bewerken</h3><button class="close-modal" onclick="app.closeEditDriverModal()">&times;</button></div>
-            <div class="fiche-body">
-                <input type="hidden" id="edit_driver_id">
-                <div class="fiche-row"><span class="fiche-label">Naam:</span><input type="text" id="edit_driver_name" placeholder="Naam" style="flex:1;"></div>
-                <div class="fiche-row"><span class="fiche-label">Email:</span><input type="email" id="edit_driver_email" placeholder="Email" style="flex:1;"></div>
-                <div class="fiche-row"><span class="fiche-label">Voertuig:</span><input type="text" id="edit_driver_vehicle" placeholder="Voertuig" style="flex:1;"></div>
-                <div class="fiche-row"><span class="fiche-label">Kleur:</span><input type="text" id="edit_driver_color" placeholder="Kleur" style="flex:1;"></div>
-                <div class="fiche-row"><span class="fiche-label">Nummerplaat:</span><input type="text" id="edit_driver_plate" placeholder="Nummerplaat" style="flex:1;"></div>
-                <div class="fiche-actions">
-                    <button class="fiche-btn confirm" onclick="app.saveDriverChanges()">Opslaan</button>
-                    <button class="fiche-btn close" onclick="app.closeEditDriverModal()">Annuleren</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -560,6 +529,11 @@
 
         // ========== SESSIECHECK (BEVEILIGING TEGEN TERUGNAVIGEREN) ==========
         (function checkAuthentication() {
+        // Ensure i18n is updated when the page loads
+        if (window.i18n && window.i18n.updateContent) {
+            window.i18n.updateContent();
+        }
+
             const isLoggedIn = sessionStorage.getItem('horizon_logged_in') === 'true';
             if (!isLoggedIn) {
                 window.location.replace('admin-index.html');
@@ -607,7 +581,7 @@
                     .select('*')
                     .order('is_hoofd', { ascending: false });
                 if (error) {
-                    this.showToast('Fout bij laden partners: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_partners').replace('{error}', error.message), true);
                     return;
                 }
                 this.partners = data;
@@ -632,7 +606,7 @@
                         return this.drivers;
                     } catch (error) {
                         console.error('❌ loadDrivers Error:', error.message);
-                        this.showToast('Fout bij laden drivers: ' + error.message, true);
+                        this.showToast(i18n.t('op_toast_err_drivers').replace('{error}', error.message), true);
                         this.drivers = [];
                         return [];
                     } finally {
@@ -671,42 +645,6 @@
             },
             closeModal() { document.getElementById('bookingModal').style.display = 'none'; },
             closePartnerModal() { document.getElementById('partnerModal').style.display = 'none'; },
-            closeEditDriverModal() { document.getElementById('editDriverModal').style.display = 'none'; },
-
-            openEditDriverModal(driverId) {
-                const driver = this.drivers.find(d => d.id == driverId);
-                if (!driver) { this.showToast('Driver niet gevonden', true); return; }
-                document.getElementById('edit_driver_id').value = driver.id;
-                document.getElementById('edit_driver_name').value = driver.name || '';
-                document.getElementById('edit_driver_email').value = driver.email || '';
-                document.getElementById('edit_driver_vehicle').value = driver.vehicle || '';
-                document.getElementById('edit_driver_color').value = driver.color || '';
-                document.getElementById('edit_driver_plate').value = driver.license_plate || '';
-                document.getElementById('editDriverModal').style.display = 'flex';
-            },
-
-            async saveDriverChanges() {
-                const driverId = document.getElementById('edit_driver_id').value;
-                const updatedData = {
-                    name: document.getElementById('edit_driver_name').value,
-                    email: document.getElementById('edit_driver_email').value,
-                    vehicle: document.getElementById('edit_driver_vehicle').value,
-                    color: document.getElementById('edit_driver_color').value,
-                    license_plate: document.getElementById('edit_driver_plate').value,
-                };
-                if (!updatedData.name) { this.showToast('Naam is verplicht', true); return; }
-                try {
-                    const { error } = await supabase.from('drivers').update(updatedData).eq('id', driverId);
-                    if (error) throw error;
-                    this.showToast('Driver gegevens bijgewerkt');
-                    this.closeEditDriverModal();
-                    await this.loadDrivers();
-                    if (this.currentTab === 'drivers') this.renderDrivers();
-                    if (this.currentTab === 'partners') this.renderPartners();
-                } catch (error) {
-                    this.showToast('Fout bij bijwerken: ' + error.message, true);
-                }
-            },
             
             filterAndSortData() {
                 this.newOrders = this.allBookings.filter(b => b.status === 'pending');
@@ -803,22 +741,22 @@
                     <div class="dashboard-grid">
                         <div class="info-card" onclick="app.toggleFlipCard('omzet')">
                             <div class="mini-flip-container"><div class="mini-flip-card ${this.flipStates.omzet ? 'flipped' : ''}">
-                                <div class="mini-flip-front"><i class="fas fa-euro-sign" style="font-size:1.5rem;"></i><div class="value">€ ${stats.total.toFixed(2)}</div><div class="label">Dagelijkse Omzet</div></div>
-                                <div class="mini-flip-back"><i class="fas fa-percent" style="font-size:1.5rem;"></i><div class="value">€ ${stats.commission.toFixed(2)}</div><div class="label">10% Commissie</div></div>
+                                <div class="mini-flip-front"><i class="fas fa-euro-sign" style="font-size:1.5rem;"></i><div class="value">€ ${stats.total.toFixed(2)}</div><div class="label">${i18n.t('op_stats_omzet')}</div></div>
+                                <div class="mini-flip-back"><i class="fas fa-percent" style="font-size:1.5rem;"></i><div class="value">€ ${stats.commission.toFixed(2)}</div><div class="label">${i18n.t('op_stats_commission')}</div></div>
                             </div></div>
                         </div>
                         <div class="info-card">
                             <div class="mini-flip-container"><div class="mini-flip-card">
-                                <div class="mini-flip-front"><i class="fas fa-money-bill-wave" style="font-size:1.5rem;"></i><div class="value">€ ${stats.cash.toFixed(2)}</div><div class="label">Cash Betalingen</div></div>
+                                <div class="mini-flip-front"><i class="fas fa-money-bill-wave" style="font-size:1.5rem;"></i><div class="value">€ ${stats.cash.toFixed(2)}</div><div class="label">${i18n.t('op_stats_cash')}</div></div>
                             </div></div>
                         </div>
                         <div class="info-card" onclick="app.toggleFlipCard('orders')">
                             <div class="mini-flip-container"><div class="mini-flip-card ${this.flipStates.orders ? 'flipped' : ''}">
-                                <div class="mini-flip-front"><i class="fas fa-check-circle" style="font-size:1.5rem;"></i><div class="value">${stats.completed}</div><div class="label">Uitgevoerde Orders</div></div>
-                                <div class="mini-flip-back"><i class="fas fa-ban" style="font-size:1.5rem;"></i><div class="value">${stats.canceled}</div><div class="label">Geannuleerde Ritten</div></div>
+                                <div class="mini-flip-front"><i class="fas fa-check-circle" style="font-size:1.5rem;"></i><div class="value">${stats.completed}</div><div class="label">${i18n.t('op_stats_completed')}</div></div>
+                                <div class="mini-flip-back"><i class="fas fa-ban" style="font-size:1.5rem;"></i><div class="value">${stats.canceled}</div><div class="label">${i18n.t('op_stats_cancelled')}</div></div>
                             </div></div>
                         </div>
-                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-clock" style="font-size:1.5rem;"></i><div class="value">${stats.futureRides}</div><div class="label">Toekomstige ritten</div></div></div></div></div>
+                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-clock" style="font-size:1.5rem;"></i><div class="value">${stats.futureRides}</div><div class="label">${i18n.t('op_stats_future')}</div></div></div></div></div>
                     </div>
                 `;
             },
@@ -831,7 +769,7 @@
                 let daysInMonth = new Date(year, month + 1, 0).getDate();
                 let prevMonthDays = new Date(year, month, 0).getDate();
                 let adjustedStart = startDay === 0 ? 6 : startDay - 1;
-                let html = `<div class="calendar-container"><div class="calendar-header"><h2>${firstDay.toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' })}</h2><div class="calendar-nav"><button onclick="app.changeMonth(-1)"><i class="fas fa-chevron-left"></i></button><button onclick="app.goToToday()">Vandaag</button><button onclick="app.changeMonth(1)"><i class="fas fa-chevron-right"></i></button></div></div><div class="calendar-weekdays"><div>Ma</div><div>Di</div><div>Wo</div><div>Do</div><div>Vr</div><div>Za</div><div>Zo</div></div><div class="calendar-days">`;
+                let html = `<div class="calendar-container"><div class="calendar-header"><h2>${firstDay.toLocaleDateString(document.documentElement.lang || 'nl', { month: 'long', year: 'numeric' })}</h2><div class="calendar-nav"><button onclick="app.changeMonth(-1)"><i class="fas fa-chevron-left"></i></button><button onclick="app.goToToday()">${i18n.t('fp_today')}</button><button onclick="app.changeMonth(1)"><i class="fas fa-chevron-right"></i></button></div></div><div class="calendar-weekdays"><div>${i18n.t('cal_mo') || 'Ma'}</div><div>${i18n.t('cal_tu') || 'Di'}</div><div>${i18n.t('cal_we') || 'Wo'}</div><div>${i18n.t('cal_th') || 'Do'}</div><div>${i18n.t('cal_fr') || 'Vr'}</div><div>${i18n.t('cal_sa') || 'Za'}</div><div>${i18n.t('cal_su') || 'Zo'}</div></div><div class="calendar-days">`;
                 for (let i = adjustedStart - 1; i >= 0; i--) html += `<div class="calendar-day other-month" onclick="app.selectDate(${prevMonthDays - i}, ${month-1}, ${year})">${prevMonthDays - i}</div>`;
                 for (let day = 1; day <= daysInMonth; day++) {
                     let dateStr = `${day.toString().padStart(2,'0')}-${(month+1).toString().padStart(2,'0')}-${year}`;
@@ -856,25 +794,25 @@
             renderPlanning() {
                 let dateStr = `${this.selectedDate.getDate().toString().padStart(2,'0')}-${(this.selectedDate.getMonth()+1).toString().padStart(2,'0')}-${this.selectedDate.getFullYear()}`;
                 let rides = this.getRidesByDate(dateStr).sort((a,b) => a.time.localeCompare(b.time));
-                let formattedDate = this.selectedDate.toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                let ridesHtml = rides.length === 0 ? '<div class="empty-planning">Geen ritten op deze dag</div>' : rides.map(r => {
+                let formattedDate = this.selectedDate.toLocaleDateString(document.documentElement.lang || 'nl', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                let ridesHtml = rides.length === 0 ? `<div class="empty-planning">${i18n.t('op_agenda_no_rides')}</div>` : rides.map(r => {
                     const driver = this.getDriverForBooking(r);
                     const driverText = driver ? `${driver.name} (${driver.vehicle})` : null;
                     const isExpired = r.status === 'accepted' && this.isExpired(r.datetime, r.time);
                     const expiredClass = isExpired ? 'expired' : '';
                     let statusBadge = '';
-                    if (r.status === 'pending') statusBadge = '<span class="status-badge status-pending">⏳ Nieuw</span>';
-                    else if (r.status === 'accepted') statusBadge = isExpired ? '<span class="status-badge status-cancelled">⏰ Verlopen</span>' : '<span class="status-badge status-accepted">✅ Geaccepteerd</span>';
-                    else if (r.status === 'assigned') statusBadge = isExpired ? '<span class="status-badge status-cancelled">⏰ Verlopen</span>' : '<span class="status-badge status-assigned">👨‍✈️ Toegewezen</span>';
-                    else if (r.status === 'completed') statusBadge = '<span class="status-badge status-completed">✓ Voltooid</span>';
-                    else if (r.status === 'cancelled') statusBadge = '<span class="status-badge status-cancelled">✗ Geannuleerd</span>';
-                    else if (r.status === 'declined') statusBadge = '<span class="status-badge status-cancelled">✗ Geweigerd</span>';
+                    if (r.status === 'pending') statusBadge = `<span class="status-badge status-pending">⏳ ${i18n.t('op_status_new')}</span>`;
+                    else if (r.status === 'accepted') statusBadge = isExpired ? `<span class="status-badge status-cancelled">⏰ ${i18n.t('op_status_expired')}</span>` : `<span class="status-badge status-accepted">✅ ${i18n.t('op_status_accepted')}</span>`;
+                    else if (r.status === 'assigned') statusBadge = isExpired ? `<span class="status-badge status-cancelled">⏰ ${i18n.t('op_status_expired')}</span>` : `<span class="status-badge status-assigned">👨‍✈️ ${i18n.t('op_status_assigned')}</span>`;
+                    else if (r.status === 'completed') statusBadge = `<span class="status-badge status-completed">✓ ${i18n.t('op_status_completed')}</span>`;
+                    else if (r.status === 'cancelled') statusBadge = `<span class="status-badge status-cancelled">✗ ${i18n.t('op_status_cancelled')}</span>`;
+                    else if (r.status === 'declined') statusBadge = `<span class="status-badge status-cancelled">✗ ${i18n.t('op_status_declined')}</span>`;
                     return `
                     <div class="planning-item ${expiredClass}">
                         <div class="planning-time"><i class="fas fa-clock"></i> ${r.time} uur ${statusBadge}</div>
                         <div class="planning-ride"><strong>${this.escapeHtml(r.name)}</strong> - ${this.escapeHtml(r.pickup)} → ${this.escapeHtml(r.destination)}</div>
                         <div class="planning-ride"><i class="fas fa-car"></i> ${r.vehicle}</div>
-                        ${driverText ? `<div class="planning-ride"><i class="fas fa-user-check"></i> Driver: ${driverText}</div>` : '<div class="planning-ride"><i class="fas fa-user-clock"></i> Nog geen driver</div>'}
+                        ${driverText ? `<div class="planning-ride"><i class="fas fa-user-check"></i> Driver: ${driverText}</div>` : `<div class="planning-ride"><i class="fas fa-user-clock"></i> ${i18n.t('op_status_unassigned')}</div>`}
                     </div>
                 `;}).join('');
                 return `<div class="planning-container"><h3><i class="fas fa-calendar-day"></i> ${formattedDate}</h3><div class="planning-list">${ridesHtml}</div></div>`;
@@ -884,13 +822,13 @@
             changeMonth(delta) { this.currentMonth.setMonth(this.currentMonth.getMonth() + delta); if(this.currentTab === 'agenda') this.renderAgenda(); },
             goToToday() { this.currentMonth = new Date(); this.selectedDate = new Date(); if(this.currentTab === 'agenda') this.renderAgenda(); },
             
-            renderEmptyTable() { return `<div class="alert-no-data"><i class="fas fa-database"></i> Geen ritten gevonden</div>`; },
+            renderEmptyTable() { return `<div class="alert-no-data"><i class="fas fa-database"></i> ${i18n.t('op_agenda_no_rides')}</div>`; },
             
             renderNewOrders() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoek op ID"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></tr></thead><tbody id="newOrdersTable"></tbody>}</div>`;
+                let html = `<div class="filter-bar"><div class="filter-group"><label>${i18n.t('op_filter_order_id')}</label><input type="text" id="filterOrderNew" placeholder="${i18n.t('op_btn_search')}"></div><div class="filter-group"><label>${i18n.t('op_filter_name')}</label><input type="text" id="filterNameNew" placeholder="${i18n.t('op_table_customer')}"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">${i18n.t('op_btn_search')}</button><button class="btn-reset" onclick="app.resetFiltersNew()">${i18n.t('op_btn_reset')}</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>${i18n.t('op_table_id')}</th><th>${i18n.t('op_table_datetime')}</th><th>${i18n.t('op_table_customer')}</th><th>${i18n.t('op_table_route')}</th><th>${i18n.t('op_table_vehicle')}</th><th>${i18n.t('op_table_amount')}</th><th>${i18n.t('op_table_action')}</th></tr></thead><tbody id="newOrdersTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderNewOrdersTable(this.newOrders);
-                document.getElementById('pageTitle').innerHTML = `New Orders <span class="order-count">${this.newOrders.length}</span>`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_sidebar_new')} <span class="order-count">${this.newOrders.length}</span>`;
             },
             
             renderNewOrdersTable(orders) {
@@ -901,17 +839,17 @@
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         let payStatus = o.payment_status || 'unpaid';
-                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : 'status-pending'}">${payStatus.toUpperCase()}</small>`;
+                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : 'status-pending'}">${i18n.t('payment_' + payStatus)}</small>`;
 
                         return `
                         <tr>
-                            <td><strong>${o.id}</strong><br><span class="status-badge status-pending">Nieuw</span>${payBadge}</td>
+                            <td><strong>${o.id}</strong><br><span class="status-badge status-pending">${i18n.t('op_status_new')}</span>${payBadge}</td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
-                            <td>${o.vehicle}</span></td>
+                            <td>${i18n.t('vehicle_' + (o.vehicle || 'standaard').toLowerCase().replace(' ', ''))}</span></td>
                             <td>€${(o.amount || 0).toFixed(2)}</span></td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
+                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${i18n.t('op_btn_view_fiche')}</button></td>
                         </tr>
                     `;}).join('');
                 }
@@ -919,20 +857,20 @@
             
             renderOrders() {
                 let html = `<div class="filter-bar">
-                    <div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderOrders" placeholder="Zoek op ID"></div>
-                    <div class="filter-group"><label>Naam</label><input type="text" id="filterNameOrders" placeholder="Klant"></div>
-                    <div class="filter-group"><label>Driver</label>
+                    <div class="filter-group"><label>${i18n.t('op_filter_order_id')}</label><input type="text" id="filterOrderOrders" placeholder="${i18n.t('op_btn_search')}"></div>
+                    <div class="filter-group"><label>${i18n.t('op_filter_name')}</label><input type="text" id="filterNameOrders" placeholder="${i18n.t('op_table_customer')}"></div>
+                    <div class="filter-group"><label>${i18n.t('op_filter_driver')}</label>
                         <select id="filterDriverOrders" style="padding: 6px 0; background: transparent; border: none; font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none;">
-                            <option value="">-- Alle drivers --</option>
+                            <option value="">-- ${i18n.t('op_btn_search')} --</option>
                             ${this.getDriverFilterOptions()}
                         </select>
                     </div>
-                    <div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersOrders()">Zoek</button><button class="btn-reset" onclick="app.resetFiltersOrders()">Reset</button></div>
+                    <div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersOrders()">${i18n.t('op_btn_search')}</button><button class="btn-reset" onclick="app.resetFiltersOrders()">${i18n.t('op_btn_reset')}</button></div>
                 </div>
-                <div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="ordersTable"></tbody></table></div>`;
+                <div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>${i18n.t('op_table_id')}</th><th>${i18n.t('op_table_datetime')}</th><th>${i18n.t('op_table_customer')}</th><th>${i18n.t('op_table_route')}</th><th>${i18n.t('op_table_vehicle')}</th><th>${i18n.t('op_table_amount')}</th><th>${i18n.t('op_filter_driver')}</th><th>${i18n.t('op_table_action')}</th></tr></thead><tbody id="ordersTable"></tbody></table></div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderOrdersTable(this.ordersList);
-                document.getElementById('pageTitle').innerHTML = `Orders <span class="order-count">${this.ordersList.length}</span>`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_sidebar_orders')} <span class="order-count">${this.ordersList.length}</span>`;
             },
             
             renderOrdersTable(orders) {
@@ -943,18 +881,18 @@
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.getDriverForBooking(o);
-                        const driverText = driver ? `${driver.name} (${driver.vehicle})` : '<span style="color:#f59e0b;">Niet toegewezen</span>';
+                        const driverText = driver ? `${driver.name} (${driver.vehicle})` : `<span style="color:#f59e0b;">${i18n.t('op_status_unassigned')}</span>`;
 
                         let statusBadgeClass = o.status === 'assigned' ? 'status-assigned' : 'status-accepted';
-                        let statusBadgeText = o.status === 'assigned' ? 'Toegewezen' : 'Geaccepteerd';
+                        let statusBadgeText = o.status === 'assigned' ? i18n.t('op_status_assigned') : i18n.t('op_status_accepted');
 
                         if (o._is_assignment_expired) {
                             statusBadgeClass = 'status-cancelled';
-                            statusBadgeText = 'Verlopen';
+                            statusBadgeText = i18n.t('op_status_expired');
                         }
 
                         let payStatus = o.payment_status || 'unpaid';
-                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : 'status-pending'}">${payStatus.toUpperCase()}</small>`;
+                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : 'status-pending'}">${i18n.t('payment_' + payStatus)}</small>`;
 
                         return `
                         <tr>
@@ -962,10 +900,10 @@
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
-                            <td>${o.vehicle}</span></td>
+                            <td>${i18n.t('vehicle_' + (o.vehicle || 'standaard').toLowerCase().replace(' ', ''))}</span></td>
                             <td>€${(o.amount || 0).toFixed(2)}</span></td>
                             <td>${driverText}</span></td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
+                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${i18n.t('op_btn_view_fiche')}</button></td>
                         </tr>
                     `;}).join('');
                 }
@@ -973,25 +911,25 @@
             
             renderHistory() {
                 let html = `<div class="filter-bar">
-                    <div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderHistory" placeholder="Zoek op ID"></div>
-                    <div class="filter-group"><label>Naam</label><input type="text" id="filterNameHistory" placeholder="Klant"></div>
-                    <div class="filter-group"><label>Driver</label>
+                    <div class="filter-group"><label>${i18n.t('op_filter_order_id')}</label><input type="text" id="filterOrderHistory" placeholder="${i18n.t('op_btn_search')}"></div>
+                    <div class="filter-group"><label>${i18n.t('op_filter_name')}</label><input type="text" id="filterNameHistory" placeholder="${i18n.t('op_table_customer')}"></div>
+                    <div class="filter-group"><label>${i18n.t('op_filter_driver')}</label>
                         <select id="filterDriverHistory" style="padding: 6px 0; background: transparent; border: none; font-family: 'Inter', sans-serif; font-size: 0.8rem; outline: none;">
-                            <option value="">-- Alle drivers --</option>
+                            <option value="">-- ${i18n.t('op_btn_search')} --</option>
                             ${this.getDriverFilterOptions()}
                         </select>
                     </div>
                     <div class="filter-actions">
-                        <button class="btn-filter" onclick="app.applyFiltersHistory()">Zoek</button>
-                        <button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button>
-                        <button class="btn-filter" style="background: #10b981;" onclick="app.downloadHistoryCSV()"><i class="fas fa-file-csv"></i> CSV</button>
-                        <button class="btn-filter" style="background: #3b82f6;" onclick="app.downloadHistoryJSON()"><i class="fas fa-file-code"></i> JSON</button>
+                        <button class="btn-filter" onclick="app.applyFiltersHistory()">${i18n.t('op_btn_search')}</button>
+                        <button class="btn-reset" onclick="app.resetFiltersHistory()">${i18n.t('op_btn_reset')}</button>
+                        <button class="btn-filter" style="background: #10b981;" onclick="app.downloadHistoryCSV()"><i class="fas fa-file-csv"></i> ${i18n.t('op_btn_csv') || 'CSV'}</button>
+                        <button class="btn-filter" style="background: #3b82f6;" onclick="app.downloadHistoryJSON()"><i class="fas fa-file-code"></i> ${i18n.t('op_btn_json') || 'JSON'}</button>
                     </div>
                 </div>
-                <div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>Order ID</th><th>Datum & Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="historyTable"></tbody></table></div>`;
+                <div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>${i18n.t('op_table_id')}</th><th>${i18n.t('op_table_datetime')}</th><th>${i18n.t('op_table_customer')}</th><th>${i18n.t('op_table_route')}</th><th>${i18n.t('op_table_vehicle')}</th><th>${i18n.t('op_table_amount')}</th><th>${i18n.t('op_filter_driver')}</th><th>${i18n.t('op_table_action')}</th></tr></thead><tbody id="historyTable"></tbody></table></div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderHistoryTable(this.historyOrders);
-                document.getElementById('pageTitle').innerHTML = `History <span class="order-count">${this.historyOrders.length}</span>`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_sidebar_history')} <span class="order-count">${this.historyOrders.length}</span>`;
             },
             
             renderHistoryTable(orders) {
@@ -1002,26 +940,26 @@
                 } else {
                     tbody.innerHTML = orders.map(o => {
                         const driver = this.getDriverForBooking(o);
-                        const driverText = driver ? `${driver.name} (${driver.vehicle})` : 'Niet toegewezen';
+                        const driverText = driver ? `${driver.name} (${driver.vehicle})` : i18n.t('op_status_unassigned');
 
                         let statusBadge = '';
-                        if (o.status === 'completed') statusBadge = '<br><span class="status-badge status-completed">Voltooid</span>';
-                        else if (o.status === 'cancelled') statusBadge = '<br><span class="status-badge status-cancelled">Geannuleerd</span>';
-                        else if (o.status === 'declined') statusBadge = '<br><span class="status-badge status-cancelled">Geweigerd</span>';
-                        else if (this.isExpired(o.datetime, o.time)) statusBadge = '<br><span class="status-badge status-cancelled">Verlopen</span>';
+                        if (o.status === 'completed') statusBadge = `<br><span class="status-badge status-completed">${i18n.t('op_status_completed')}</span>`;
+                        else if (o.status === 'cancelled') statusBadge = `<br><span class="status-badge status-cancelled">${i18n.t('op_status_cancelled')}</span>`;
+                        else if (o.status === 'declined') statusBadge = `<br><span class="status-badge status-cancelled">${i18n.t('op_status_declined')}</span>`;
+                        else if (this.isExpired(o.datetime, o.time)) statusBadge = `<br><span class="status-badge status-cancelled">${i18n.t('op_status_expired')}</span>`;
 
                         let payStatus = o.payment_status || 'unpaid';
-                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : (payStatus === 'refunded' ? 'status-cancelled' : 'status-pending')}">${payStatus.toUpperCase()}</small>`;
+                        let payBadge = `<br><small class="status-badge ${payStatus === 'paid' ? 'status-completed' : (payStatus === 'refunded' ? 'status-cancelled' : 'status-pending')}">${i18n.t('payment_' + payStatus)}</small>`;
 
                         return `<tr>
                             <td><strong>${o.id}</strong>${statusBadge}${payBadge}</td>
                             <td>${o.datetime} ${o.time}</td>
                             <td>${this.escapeHtml(o.name)}</span></td>
                             <td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</span></td>
-                            <td>${o.vehicle}</span></td>
+                            <td>${i18n.t('vehicle_' + (o.vehicle || 'standaard').toLowerCase().replace(' ', ''))}</span></td>
                             <td>€${(o.amount || 0).toFixed(2)}</span></td>
                             <td>${driverText}</span></td>
-                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td>
+                            <td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${i18n.t('op_btn_view_fiche')}</button></td>
                         </tr>`;
                     }).join('');
                 }
@@ -1029,7 +967,7 @@
             
             renderAgenda() {
                 document.getElementById('contentArea').innerHTML = `${this.renderDashboardGrid()}${this.renderCalendar()}${this.renderPlanning()}`;
-                document.getElementById('pageTitle').innerHTML = `Agenda`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_sidebar_agenda')}`;
             },
             
             renderDrivers() {
@@ -1037,54 +975,48 @@
                     let partner = this.partners.find(p => p.id === c.partner_id);
                     return partner && partner.is_hoofd === true;
                 });
-                let html = `<div class="people-card"><h3><i class="fas fa-id-card"></i> Drivers</h3><button class="add-btn" onclick="app.showAddDriverForm()">➕ Nieuwe Driver</button><div style="margin-top:20px;">`;
-                if (myDrivers.length === 0) html += `<div class="empty-planning">Geen drivers gevonden</div>`;
+                let html = `<div class="people-card"><h3><i class="fas fa-id-card"></i> ${i18n.t('op_sidebar_drivers')}</h3><button class="add-btn" onclick="app.showAddDriverForm()">➕ ${i18n.t('op_btn_new_driver') || 'Nieuwe Driver'}</button><div style="margin-top:20px;">`;
+                if (myDrivers.length === 0) html += `<div class="empty-planning">${i18n.t('op_no_drivers') || 'Geen drivers gevonden'}</div>`;
                 else myDrivers.forEach(c => {
                     html += `<div style="border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
                         <div><strong>${c.driver_code}</strong> – ${this.escapeHtml(c.name)}<br><small>🚗 ${c.vehicle} | ${c.license_plate}</small></div>
-                        <div>
-                            <button class="edit-driver-btn" onclick="app.openEditDriverModal('${c.id}')"><i class="fas fa-edit"></i> Bewerk</button>
-                            <button class="delete-btn" onclick="app.deleteDriver('${c.id}')">Verwijder</button>
-                        </div>
+                        <button class="delete-btn" onclick="app.deleteDriver(${c.id})">${i18n.t('op_btn_cancel')}</button>
                     </div>`;
                 });
                 html += `</div></div>`;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = `Drivers`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_sidebar_drivers')}`;
             },
             
             renderPartners() {
-                let html = `<div class="people-card"><h3><i class="fas fa-handshake"></i> Mijn Partners</h3><button class="add-btn" onclick="app.showAddPartnerForm()">➕ Nieuwe Partner</button><div style="margin-top:20px;">`;
-                if (this.partners.length === 0) html += `<div class="empty-planning">Geen partners gevonden</div>`;
+                let html = `<div class="people-card"><h3><i class="fas fa-handshake"></i> ${i18n.t('op_sidebar_partners')}</h3><button class="add-btn" onclick="app.showAddPartnerForm()">➕ ${i18n.t('op_btn_new_partner') || 'Nieuwe Partner'}</button><div style="margin-top:20px;">`;
+                if (this.partners.length === 0) html += `<div class="empty-planning">${i18n.t('op_no_partners') || 'Geen partners gevonden'}</div>`;
                 else this.partners.forEach(p => {
                     let partnerDrivers = this.drivers.filter(c => c.partner_id === p.id);
                     html += `<div class="partner-card">
-                        <div class="partner-header"><div class="partner-name">${this.escapeHtml(p.name)}</div><button class="delete-btn" onclick="app.deletePartner(${p.id})">Verwijder Partner</button></div>
+                        <div class="partner-header"><div class="partner-name">${this.escapeHtml(p.name)}</div><button class="delete-btn" onclick="app.deletePartner(${p.id})">${i18n.t('op_btn_cancel')}</button></div>
                         <div><small>Contact: ${this.escapeHtml(p.contact)} | ${p.email} | ${p.phone}</small></div>
                         <div class="driver-list"><strong>Drivers:</strong>
                             ${partnerDrivers.length === 0 ? '<div><small>Geen drivers</small></div>' : partnerDrivers.map(c => `
                                 <div class="driver-item">
                                     <span>${c.driver_code} – ${this.escapeHtml(c.name)} (${c.vehicle}, ${c.color || 'onbekende kleur'}) <br> <small>${c.email || 'Geen email'}</small></span>
-                                    <div>
-                                        <button class="edit-driver-btn" onclick="app.openEditDriverModal('${c.id}')">✏️</button>
-                                        <button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver('${c.id}')">✖</button>
-                                    </div>
+                                    <button class="delete-btn" style="padding:2px 8px;" onclick="app.deleteDriver(${c.id})">✖</button>
                                 </div>
                             `).join('')}
                             <div class="add-driver-form">
-                                <input type="text" id="driverName_${p.id}" placeholder="Naam">
-                                <input type="text" id="driverEmail_${p.id}" placeholder="Email">
-                                <input type="text" id="driverVoertuig_${p.id}" placeholder="Voertuig">
-                                <input type="text" id="driverKleur_${p.id}" placeholder="Kleur">
-                                <input type="text" id="driverPlaat_${p.id}" placeholder="Nummerplaat">
-                                <button class="action-btn" onclick="app.addDriverForPartner(${p.id})">+ Driver</button>
+                                <input type="text" id="driverName_${p.id}" data-i18n-placeholder="op_fiche_name" placeholder="Naam">
+                                <input type="text" id="driverEmail_${p.id}" data-i18n-placeholder="op_fiche_email" placeholder="Email">
+                                <input type="text" id="driverVoertuig_${p.id}" data-i18n-placeholder="op_fiche_vehicle" placeholder="Voertuig">
+                                <input type="text" id="driverKleur_${p.id}" data-i18n-placeholder="op_prompt_vehicle_color" placeholder="Kleur">
+                                <input type="text" id="driverPlaat_${p.id}" data-i18n-placeholder="op_prompt_plate" placeholder="Nummerplaat">
+                                <button class="action-btn" onclick="app.addDriverForPartner(${p.id})">+ ${i18n.t('op_filter_driver')}</button>
                             </div>
                         </div>
                     </div>`;
                 });
                 html += `</div></div>`;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = `Mijn Partners`;
+                document.getElementById('pageTitle').innerHTML = i18n.t('op_title_partners');
             },
             
             async addDriverForPartner(partnerId) {
@@ -1093,18 +1025,18 @@
                 let vehicle = document.getElementById(`driverVoertuig_${partnerId}`)?.value;
                 let color = document.getElementById(`driverKleur_${partnerId}`)?.value;
                 let plate = document.getElementById(`driverPlaat_${partnerId}`)?.value;
-                if (!name) { this.showToast('Vul een naam in', true); return; }
-                if (!email) { this.showToast('Email is verplicht voor assignment flow', true); return; }
+                if (!name) { this.showToast(i18n.t('op_toast_err_name_req'), true); return; }
+                if (!email) { this.showToast(i18n.t('op_toast_err_email_req'), true); return; }
 
                 const partner = this.partners.find(p => p.id == partnerId);
-                if (!partner) { this.showToast('Partner niet gevonden', true); return; }
+                if (!partner) { this.showToast(i18n.t('op_toast_err_partner_not_found'), true); return; }
 
                 const { count, error: countError } = await supabase
                     .from('drivers')
                     .select('*', { count: 'exact', head: true })
                     .eq('partner_id', partnerId);
                 if (countError) {
-                    this.showToast('Fout bij tellen drivers', true);
+                    this.showToast(i18n.t('op_toast_err_driver_count'), true);
                     return;
                 }
                 const nextNumber = (count || 0) + 1;
@@ -1123,11 +1055,11 @@
                     });
 
                 if (error) {
-                    this.showToast('Fout bij toevoegen driver: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_driver_add').replace('{error}', error.message), true);
                     return;
                 }
 
-                this.showToast(`Driver ${name} toegevoegd (code: ${driverCode})`);
+                this.showToast(i18n.t('op_toast_driver_added').replace('{name}', name).replace('{code}', driverCode));
                 await this.loadDrivers();
                 this.renderPartners();
 
@@ -1141,33 +1073,33 @@
                 if (!targetPartner) {
                     if (this.partners.length > 0) {
                         const firstPartner = this.partners[0];
-                        if (confirm(`Geen hoofdpartner gevonden. Wilt u de driver toevoegen aan partner '${firstPartner.name}'?`)) {
+                        if (confirm(i18n.t('op_confirm_no_hoofdpartner').replace('{name}', firstPartner.name))) {
                             targetPartner = firstPartner;
                         } else {
                             return;
                         }
                     } else {
-                        this.showToast('Maak eerst een (hoofd)partner aan bij "Mijn Partners"', true);
+                        this.showToast(i18n.t('op_toast_err_no_partner'), true);
                         this.switchTab('partners');
                         return;
                     }
                 }
                 const partnerId = targetPartner.id;
 
-                let name = prompt('Naam driver:');
+                let name = prompt(i18n.t('op_prompt_driver_name'));
                 if (!name) return;
-                let email = prompt('Email driver (verplicht):');
-                if (!email) { this.showToast('Email is verplicht', true); return; }
-                let vehicle = prompt('Type voertuig:') || 'Standaard';
-                let color = prompt('Kleur voertuig:') || 'Zwart';
-                let plate = prompt('Nummerplaat:') || 'Onbekend';
+                let email = prompt(i18n.t('op_prompt_driver_email'));
+                if (!email) { this.showToast(i18n.t('op_toast_err_email_req'), true); return; }
+                let vehicle = prompt(i18n.t('op_prompt_vehicle_type')) || 'Standaard';
+                let color = prompt(i18n.t('op_prompt_vehicle_color')) || 'Zwart';
+                let plate = prompt(i18n.t('op_prompt_plate')) || 'Onbekend';
 
                 const { count, error: countError } = await supabase
                     .from('drivers')
                     .select('*', { count: 'exact', head: true })
                     .eq('partner_id', partnerId);
                 if (countError) {
-                    this.showToast('Fout bij tellen drivers', true);
+                    this.showToast(i18n.t('op_toast_err_driver_count'), true);
                     return;
                 }
                 const nextNumber = (count || 0) + 1;
@@ -1186,9 +1118,9 @@
                     });
 
                 if (error) {
-                    this.showToast('Fout bij toevoegen driver: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_driver_add').replace('{error}', error.message), true);
                 } else {
-                    this.showToast(`Driver ${name} toegevoegd (code: ${driverCode})`);
+                    this.showToast(i18n.t('op_toast_driver_added').replace('{name}', name).replace('{code}', driverCode));
                     await this.loadDrivers();
                     if (this.currentTab === 'drivers') this.renderDrivers();
                     if (this.currentTab === 'partners') this.renderPartners();
@@ -1213,7 +1145,7 @@
                 const prefix = document.getElementById('p_prefix').value;
                 const isHoofd = document.getElementById('p_is_hoofd').checked;
 
-                if (!name) { this.showToast('Bedrijfsnaam is verplicht', true); return; }
+                if (!name) { this.showToast(i18n.t('op_toast_err_name_req'), true); return; }
 
                 let parent_id = null;
                 if (!isHoofd) {
@@ -1236,9 +1168,9 @@
                     });
 
                 if (error) {
-                    this.showToast('Fout bij opslaan partner: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_partner_save').replace('{error}', error.message), true);
                 } else {
-                    this.showToast(`Partner ${name} opgeslagen`);
+                    this.showToast(i18n.t('op_toast_partner_saved').replace('{name}', name));
                     this.closePartnerModal();
                     await this.loadPartners();
                     if (this.currentTab === 'partners') this.renderPartners();
@@ -1246,30 +1178,30 @@
             },
             
             async deleteDriver(driverId) {
-                if (!confirm('Weet u zeker dat u deze driver wilt verwijderen?')) return;
+                if (!confirm(i18n.t('op_confirm_delete_driver'))) return;
                 const { error } = await supabase
                     .from('drivers')
                     .delete()
                     .eq('id', driverId);
                 if (error) {
-                    this.showToast('Fout bij verwijderen driver: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_driver_delete').replace('{error}', error.message), true);
                 } else {
-                    this.showToast('Driver verwijderd');
+                    this.showToast(i18n.t('op_toast_driver_deleted'));
                     await this.loadDrivers();
                     if (this.currentTab === 'drivers' || this.currentTab === 'partners') this.refreshCurrentTab();
                 }
             },
             
             async deletePartner(partnerId) {
-                if (!confirm('Weet u zeker dat u deze partner wilt verwijderen? Alle drivers van deze partner worden ook verwijderd.')) return;
+                if (!confirm(i18n.t('op_confirm_delete_partner'))) return;
                 const { error } = await supabase
                     .from('partners')
                     .delete()
                     .eq('id', partnerId);
                 if (error) {
-                    this.showToast('Fout bij verwijderen partner: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_partner_delete').replace('{error}', error.message), true);
                 } else {
-                    this.showToast('Partner verwijderd');
+                    this.showToast(i18n.t('op_toast_partner_deleted'));
                     await this.loadPartners();
                     await this.loadDrivers();
                     if (this.currentTab === 'partners') this.refreshCurrentTab();
@@ -1294,7 +1226,7 @@
                 let cashRevenue = filteredBookings.filter(b => b.payment === 'Cash').reduce((sum, b) => sum + (b.amount || 0), 0);
                 let factuurRevenue = filteredBookings.filter(b => b.payment === 'Factuur').reduce((sum, b) => sum + (b.amount || 0), 0);
                 let commission = totalRevenue * 0.10;
-                let periodLabel = { today: 'Vandaag', month: 'Deze Maand', year: 'Dit Jaar' }[this.financePeriod];
+                let periodLabel = { today: i18n.t('fp_today'), month: i18n.t('op_finance_month') || 'Deze Maand', year: i18n.t('op_finance_year') || 'Dit Jaar' }[this.financePeriod];
                 
                 let monthlyData = {};
                 this.allBookings.forEach(b => {
@@ -1308,9 +1240,9 @@
                 
                 let html = `
                     <div class="finance-toolbar"><div class="period-buttons">
-                        <button class="period-btn ${this.financePeriod === 'today' ? 'active' : ''}" onclick="app.setFinancePeriod('today')">Vandaag</button>
-                        <button class="period-btn ${this.financePeriod === 'month' ? 'active' : ''}" onclick="app.setFinancePeriod('month')">Deze Maand</button>
-                        <button class="period-btn ${this.financePeriod === 'year' ? 'active' : ''}" onclick="app.setFinancePeriod('year')">Dit Jaar</button>
+                        <button class="period-btn ${this.financePeriod === 'today' ? 'active' : ''}" onclick="app.setFinancePeriod('today')">${i18n.t('fp_today')}</button>
+                        <button class="period-btn ${this.financePeriod === 'month' ? 'active' : ''}" onclick="app.setFinancePeriod('month')">${i18n.t('op_finance_month')}</button>
+                        <button class="period-btn ${this.financePeriod === 'year' ? 'active' : ''}" onclick="app.setFinancePeriod('year')">${i18n.t('op_finance_year')}</button>
                     </div></div>
                     <div class="kpi-grid">
                         <div class="kpi-card"><div class="value">${this.formatPrice(totalRevenue)}</div><div class="label">${periodLabel} - Omzet</div></div>
@@ -1327,7 +1259,7 @@
                     <div class="chart-container"><canvas id="revenueChart" width="400" height="200"></canvas></div>
                 `;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = `Financieel Overzicht - ${periodLabel}`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_title_financial')} - ${periodLabel}`;
                 
                 let ctx = document.getElementById('revenueChart')?.getContext('2d');
                 if (ctx) {
@@ -1344,8 +1276,8 @@
             setFinancePeriod(period) { this.financePeriod = period; this.renderFinance(); },
 
             async renderSettlements() {
-                document.getElementById('pageTitle').innerHTML = `Financiële Afwikkeling (Settlements)`;
-                this.showToast('Settlements laden...');
+                document.getElementById('pageTitle').innerHTML = i18n.t('op_title_settlements');
+                this.showToast(i18n.t('op_toast_loading_settlements'));
 
                 try {
                     const { data: payments, error: pError } = await supabase.from('payments').select('*').order('created_at', { ascending: false });
@@ -1360,24 +1292,24 @@
 
                     let html = `
                         <div class="stats-grid">
-                            <div class="stat-card"><h4>Bruto Omzet</h4><div class="value">€ ${grossRevenue.toFixed(2)}</div><small>${payments.length} betalingen</small></div>
-                            <div class="stat-card"><h4>Teruggestort</h4><div class="value">€ ${totalRefunded.toFixed(2)}</div><small>${refunds.length} refunds</small></div>
-                            <div class="stat-card"><h4>Stripe Fee (Schatting)</h4><div class="value">€ ${stripeFeeEstimate.toFixed(2)}</div><small>2.9% + €0.25</small></div>
-                            <div class="stat-card"><h4>Netto Afwikkeling</h4><div class="value">€ ${netSettlement.toFixed(2)}</div><small>Exclusief fees</small></div>
+                            <div class="stat-card"><h4>${i18n.t('op_settlements_gross')}</h4><div class="value">€ ${grossRevenue.toFixed(2)}</div><small>${payments.length} ${i18n.t('portal_tab_payments')}</small></div>
+                            <div class="stat-card"><h4>${i18n.t('op_settlements_refunded')}</h4><div class="value">€ ${totalRefunded.toFixed(2)}</div><small>${refunds.length} refunds</small></div>
+                            <div class="stat-card"><h4>Stripe Fee (${i18n.t('op_fee_estimate') || 'Schatting'})</h4><div class="value">€ ${stripeFeeEstimate.toFixed(2)}</div><small>2.9% + €0.25</small></div>
+                            <div class="stat-card"><h4>${i18n.t('op_settlements_net')}</h4><div class="value">€ ${netSettlement.toFixed(2)}</div><small>${i18n.t('op_excl_fees') || 'Exclusief fees'}</small></div>
                         </div>
 
                         <div class="orders-table-wrapper" style="margin-bottom: 24px;">
-                            <h3><i class="fas fa-credit-card"></i> Recente Betalingen (Stripe)</h3>
+                            <h3><i class="fas fa-credit-card"></i> ${i18n.t('op_recent_payments') || 'Recente Betalingen'} (Stripe)</h3>
                             <table class="orders-table">
-                                <thead><tr><th>Booking</th><th>Datum</th><th>Bedrag</th><th>Methode</th><th>Status</th></tr></thead>
+                                <thead><tr><th>Booking</th><th>${i18n.t('op_table_date') || 'Datum'}</th><th>${i18n.t('op_table_amount')}</th><th>${i18n.t('portal_table_method')}</th><th>Status</th></tr></thead>
                                 <tbody>
-                                    ${payments.length === 0 ? '<tr><td colspan="5">Geen betalingen gevonden</td></tr>' : payments.map(p => `
+                                    ${payments.length === 0 ? `<tr><td colspan="5">${i18n.t('op_no_payments') || 'Geen betalingen gevonden'}</td></tr>` : payments.map(p => `
                                         <tr>
                                             <td>${p.booking_id}</td>
-                                            <td>${new Date(p.created_at).toLocaleString()}</td>
+                                            <td>${new Date(p.created_at).toLocaleString(document.documentElement.lang || 'nl')}</td>
                                             <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
-                                            <td>${p.payment_method || 'card'}</td>
-                                            <td><span class="status-badge ${p.status === 'succeeded' ? 'status-completed' : 'status-cancelled'}">${p.status}</span></td>
+                                            <td>${i18n.t('payment_' + (p.payment_method || 'card').toLowerCase())}</td>
+                                            <td><span class="status-badge ${p.status === 'succeeded' ? 'status-completed' : 'status-cancelled'}">${i18n.t('op_status_' + (p.status === 'succeeded' ? 'completed' : 'cancelled'))}</span></td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
@@ -1385,16 +1317,16 @@
                         </div>
 
                         <div class="orders-table-wrapper">
-                            <h3><i class="fas fa-undo"></i> Recente Refunds</h3>
+                            <h3><i class="fas fa-undo"></i> ${i18n.t('op_recent_refunds') || 'Recente Refunds'}</h3>
                             <table class="orders-table">
-                                <thead><tr><th>Booking</th><th>Datum</th><th>Bedrag</th><th>Status</th></tr></thead>
+                                <thead><tr><th>Booking</th><th>${i18n.t('op_table_date') || 'Datum'}</th><th>${i18n.t('op_table_amount')}</th><th>Status</th></tr></thead>
                                 <tbody>
-                                    ${refunds.length === 0 ? '<tr><td colspan="4">Geen refunds gevonden</td></tr>' : refunds.map(r => `
+                                    ${refunds.length === 0 ? `<tr><td colspan="4">${i18n.t('op_no_refunds_found')}</td></tr>` : refunds.map(r => `
                                         <tr>
                                             <td>${r.booking_id}</td>
                                             <td>${new Date(r.created_at).toLocaleString()}</td>
                                             <td>€ ${parseFloat(r.amount).toFixed(2)}</td>
-                                            <td><span class="status-badge status-completed">${r.status}</span></td>
+                                            <td><span class="status-badge status-completed">${i18n.t('op_status_' + (r.status || 'completed'))}</span></td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
@@ -1403,7 +1335,7 @@
                     `;
                     document.getElementById('contentArea').innerHTML = html;
                 } catch (err) {
-                    this.showToast('Fout bij laden settlements: ' + err.message, true);
+                    this.showToast(i18n.t('op_toast_err_settlements').replace('{error}', err.message), true);
                 }
             },
             
@@ -1411,21 +1343,21 @@
                 document.getElementById('contentArea').innerHTML = `
                     <div class="wiki-container">
                         <div class="wiki-content">
-                            <h2><i class="fas fa-robot"></i> Wiki Agent - Gebruikershandleiding</h2>
-                            <p>Welkom bij het <strong>Fleet Connect Onderaannemer Paneel</strong>.</p>
-                            <h3>📋 1. Nieuwe Orders</h3><p>Hier verschijnen ritten met status 'pending'. Klik op "Bekijk Fiche" en daarna op "Accepteren" om de rit naar Orders te verplaatsen.</p>
-                            <h3>📦 2. Orders</h3><p>Geaccepteerde ritten die nog in de toekomst liggen. U kunt hier een driver toewijzen. <strong>Ritten blijven in Orders totdat de datum en tijd verstreken zijn!</strong> Daarna gaan ze automatisch naar History.</p>
-                            <h3>📜 3. History</h3><p>Voltooide, geannuleerde of verlopen ritten. U kunt exporteren naar CSV of JSON via de console (F12 -> type app.downloadCSV()).</p>
-                            <h3>📅 4. Agenda</h3><p>Kalender met flipcard dashboard. Klik op een dag voor de planning. Rode stippen = verlopen ritten.</p>
-                            <h3>👥 5. Drivers</h3><p>Beheer uw eigen drivers: toevoegen en verwijderen.</p>
-                            <h3>🤝 6. Mijn Partners</h3><p>Beheer partners (onderaannemers onder u). U kunt partners toevoegen, verwijderen en voor hen drivers aanmaken.</p>
-                            <h3>💰 7. Financieel Overzicht</h3><p>Filters: Vandaag / Deze Maand / Dit Jaar. Toont omzet, cash/factuur, aantal ritten, commissie en grafiek.</p>
-                            <h3>🔄 Switch naar Auto Dealer / Woningen</h3><p>Gebruik de switch knoppen om naar andere panelen te gaan.</p>
+                            <h2 data-i18n="op_wiki_title"><i class="fas fa-robot"></i> Wiki Agent - Gebruikershandleiding</h2>
+                            <p data-i18n="op_wiki_welcome">Welkom bij het <strong>Fleet Connect Onderaannemer Paneel</strong>.</p>
+                            <h3 data-i18n="op_sidebar_new">📋 1. Nieuwe Orders</h3><p data-i18n="op_wiki_new">Hier verschijnen ritten met status 'pending'. Klik op "Bekijk Fiche" en daarna op "Accepteren" om de rit naar Orders te verplaatsen.</p>
+                            <h3 data-i18n="op_sidebar_orders">📦 2. Orders</h3><p data-i18n="op_wiki_orders">Geaccepteerde ritten die nog in de toekomst liggen. U kunt hier een driver toewijzen. <strong>Ritten blijven in Orders totdat de datum en tijd verstreken zijn!</strong> Daarna gaan ze automatisch naar History.</p>
+                            <h3 data-i18n="op_sidebar_history">📜 3. History</h3><p data-i18n="op_wiki_history">Voltooide, geannuleerde of verlopen ritten. U kunt exporteren naar CSV of JSON via de console (F12 -> type app.downloadCSV()).</p>
+                            <h3 data-i18n="op_sidebar_agenda">📅 4. Agenda</h3><p data-i18n="op_wiki_agenda">Kalender met flipcard dashboard. Klik op een dag voor de planning. Rode stippen = verlopen ritten.</p>
+                            <h3 data-i18n="op_sidebar_drivers">👥 5. Drivers</h3><p data-i18n="op_wiki_drivers">Beheer uw eigen drivers: toevoegen en verwijderen.</p>
+                            <h3 data-i18n="op_sidebar_partners">🤝 6. Mijn Partners</h3><p data-i18n="op_wiki_partners">Beheer partners (onderaannemers onder u). U kunt partners toevoegen, verwijderen en voor hen drivers aanmaken.</p>
+                            <h3 data-i18n="op_sidebar_financial">💰 7. Financieel Overzicht</h3><p data-i18n="op_wiki_financial">Filters: Vandaag / Deze Maand / Dit Jaar. Toont omzet, cash/factuur, aantal ritten, commissie en grafiek.</p>
+                            <h3 data-i18n="op_header_switch_woningen">🔄 Switch naar Auto Dealer / Woningen</h3><p data-i18n="op_wiki_switch">Gebruik de switch knoppen om naar andere panelen te gaan.</p>
                             <hr><p style="text-align:center;"><i class="fas fa-code-branch"></i> Fleet Connect - Gekoppeld aan Supabase</p>
                         </div>
                     </div>
                 `;
-                document.getElementById('pageTitle').innerHTML = `Wiki Agent`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_sidebar_wiki')}`;
             },
             
             applyFiltersNew() {
@@ -1530,7 +1462,7 @@
                 availableDrivers.forEach(d => {
                     // Use loose equality for assigned_driver_id comparison
                     const isSelected = booking.assigned_driver_id == d.id ? 'selected' : '';
-                    driverOptions += `<option value="${d.id}" ${isSelected}>${this.escapeHtml(d.name)} (${d.vehicle})</option>`;
+                    driverOptions += `<option value="${d.id}" ${isSelected}>${this.escapeHtml(d.name)} (${i18n.t('vehicle_' + (d.vehicle || 'standaard').toLowerCase().replace(' ', ''))})</option>`;
                 });
                 let ficheBody = document.getElementById('ficheBody');
                 const isExpired = this.isExpired(booking.datetime, booking.time);
@@ -1580,8 +1512,8 @@
                         <div class="fiche-row"><span class="fiche-label">Extra's:</span><span class="fiche-value">${booking.extras || '-'}</span></div>
                     </div>
                     ${this.getDriverForBooking(booking) ? `
-                    <div class="fiche-section"><h4>👨‍✈️ Driver</h4>
-                        <div class="fiche-row"><span class="fiche-label">Toegewezen driver:</span><span class="fiche-value">${this.getDriverForBooking(booking).name} (${this.getDriverForBooking(booking).vehicle})</span></div>
+                    <div class="fiche-section"><h4>${i18n.t('op_fiche_driver')}</h4>
+                        <div class="fiche-row"><span class="fiche-label">${i18n.t('op_fiche_assigned_driver')}</span><span class="fiche-value">${this.getDriverForBooking(booking).name} (${i18n.t('vehicle_' + (this.getDriverForBooking(booking).vehicle || 'standaard').toLowerCase().replace(' ', ''))})</span></div>
                     </div>
                     ` : ''}
 
@@ -1595,17 +1527,17 @@
 
                     <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
                     <div class="fiche-actions">
-                        ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                        ${booking._is_assignment_expired ? `<button class="fiche-btn confirm" onclick="app.resetExpiredAssignment('${booking.id}')">Reset & Vrijgeven</button>` : ''}
-                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired && !booking._is_assignment_expired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Driver Toewijzen</button>` : ''}
-                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">Annuleren</button>` : ''}
+                        ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">${i18n.t('op_btn_accept')}</button>` : ''}
+                        ${booking._is_assignment_expired ? `<button class="fiche-btn confirm" onclick="app.resetExpiredAssignment('${booking.id}')">${i18n.t('op_btn_reset_assignment')}</button>` : ''}
+                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired && !booking._is_assignment_expired ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${i18n.t('op_btn_assign')}</button>` : ''}
+                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !isExpired ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">${i18n.t('op_btn_cancel')}</button>` : ''}
 
                         ${booking.payment_status === 'paid' && booking.status !== 'cancelled' && booking.status !== 'completed' ? `<button class="fiche-btn" style="background:#f97316; color:white;" onclick="app.refundBooking('${booking.id}')">Refund via Stripe</button>` : ''}
 
-                        ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ Uitgevoerd</button>` : ''}
-                        ${booking.status === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ Geannuleerd</button>` : ''}
-                        ${booking.status === 'declined' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✋ Geweigerd</button>` : ''}
-                        <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
+                        ${booking.status === 'completed' ? `<button class="fiche-btn confirm" style="background:#10b981; color:white;" disabled>✓ ${i18n.t('op_status_completed')}</button>` : ''}
+                        ${booking.status === 'cancelled' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✗ ${i18n.t('op_status_cancelled')}</button>` : ''}
+                        ${booking.status === 'declined' ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" disabled>✋ ${i18n.t('op_status_declined')}</button>` : ''}
+                        <button class="fiche-btn close" onclick="app.closeModal()">${i18n.t('fp_close')}</button>
                     </div>
                 `;
                 document.getElementById('bookingModal').style.display = 'flex';
@@ -1618,7 +1550,7 @@
                     .order('datetime', { ascending: false });
                 if (error) {
                     console.error('Supabase fout:', error);
-                    this.showToast('Fout bij laden van ritten: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_bookings_load').replace('{error}', error.message), true);
                     return [];
                 }
                 return this.normalizeBookings(data);
@@ -1634,7 +1566,7 @@
 
                     if (error) throw error;
 
-                    this.showToast(`Rit ${bookingId} geaccepteerd`);
+                    this.showToast(`${i18n.t('op_status_accepted')}: ${bookingId}`);
 
                     // Email trigger (non-blocking)
                     comms.trigger('BOOKING_ACCEPTED', bookingId, supabase);
@@ -1661,21 +1593,21 @@
                     }
                 } catch (error) {
                     console.error('❌ confirmBooking Error:', error.message);
-                    this.showToast('Fout bij accepteren: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_accept').replace('{error}', error.message), true);
                 }
                 this.closeModal();
             },
 
             async cancelBooking(bookingId) {
-                if (!confirm('Weet u zeker dat u deze rit wilt annuleren?')) return;
+                if (!confirm(i18n.t('op_confirm_cancel_ride'))) return;
                 const { error } = await supabase
                     .from('bookings')
                     .update({ status: 'cancelled' })
                     .eq('id', bookingId);
                 if (error) {
-                    this.showToast('Fout bij annuleren: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_cancel').replace('{error}', error.message), true);
                 } else {
-                    this.showToast(`Rit ${bookingId} geannuleerd`);
+                    this.showToast(`${i18n.t('op_status_cancelled')}: ${bookingId}`);
 
                     // Email trigger (non-blocking)
                     comms.trigger('BOOKING_CANCELLED', bookingId, supabase);
@@ -1705,7 +1637,7 @@
 
                     if (error) throw error;
 
-                    this.showToast(`Rit ${bookingId} is weer vrijgegeven voor toewijzing`);
+                    this.showToast(`${i18n.t('op_btn_reset_assignment')}: ${bookingId}`);
 
                     this.allBookings = await this.fetchBookingsFromSupabase();
                     this.filterAndSortData();
@@ -1713,15 +1645,15 @@
 
                 } catch (error) {
                     console.error('❌ resetExpiredAssignment Error:', error.message);
-                    this.showToast('Fout bij resetten: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_reset').replace('{error}', error.message), true);
                 }
                 this.closeModal();
             },
             
             async refundBooking(bookingId) {
-                if (!confirm(`Weet u zeker dat u een volledige terugbetaling wilt uitvoeren voor booking ${bookingId} via Stripe?`)) return;
+                if (!confirm(i18n.t('op_confirm_refund').replace('{id}', bookingId))) return;
 
-                this.showToast('Bezig met refund...');
+                this.showToast(i18n.t('op_toast_refunding'));
                 try {
                     const { data, error } = await supabase.functions.invoke('process-refund', {
                         body: { bookingId: bookingId }
@@ -1730,7 +1662,7 @@
                     if (error) throw error;
 
                     if (data.success) {
-                        this.showToast('Refund succesvol uitgevoerd');
+                        this.showToast(i18n.t('op_toast_refund_success'));
 
                         // Trigger email (non-blocking)
                         comms.trigger('PAYMENT_REFUND_CONFIRMATION', bookingId, supabase);
@@ -1742,7 +1674,7 @@
                     }
                 } catch (err) {
                     console.error('Refund error:', err);
-                    this.showToast('Fout bij refund: ' + err.message, true);
+                    this.showToast(i18n.t('op_toast_err_refund').replace('{error}', err.message), true);
                 }
             },
 
@@ -1754,19 +1686,19 @@
                 const driverId = select?.value;
 
                 if (!driverId) {
-                    this.showToast('Selecteer een driver', true);
+                    this.showToast(i18n.t('op_toast_err_select_driver'), true);
                     return;
                 }
 
                 if (assignBtn) {
                     assignBtn.disabled = true;
-                    assignBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Bezig...';
+                    assignBtn.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> ${i18n.t('dr_processing')}`;
                 }
 
                 const driver = this.drivers.find(c => String(c.id) === String(driverId));
                 if (!driver) {
                     console.error('TRACE: Driver mismatch', { driverId, ids: this.drivers.map(d => d.id) });
-                    this.showToast('Driver niet gevonden', true);
+                    this.showToast(i18n.t('op_toast_err_driver_not_found'), true);
                     return;
                 }
                 
@@ -1792,13 +1724,13 @@
                     
                 if (error) {
                     console.error('TRACE: Assignment DB Error', error);
-                    this.showToast('Fout bij toewijzen driver: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_assign').replace('{error}', error.message), true);
                     if (assignBtn) {
                         assignBtn.disabled = false;
-                        assignBtn.innerHTML = 'Driver Toewijzen';
+                        assignBtn.innerHTML = i18n.t('op_btn_assign');
                     }
                 } else {
-                    this.showToast(`Aanvraag verzonden naar ${driver.name}`);
+                    this.showToast(i18n.t('op_toast_request_sent').replace('{name}', driver.name));
 
                     // Email trigger (non-blocking) - REQUEST instead of direct ASSIGNED
                     comms.trigger('DRIVER_ASSIGNMENT_REQUEST', bookingId, supabase);
@@ -1816,13 +1748,13 @@
                 let csvContent = [headers, ...rows].map(row => row.map(cell => `"${cell || ''}"`).join(";")).join("\n");
                 let blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
                 let link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `fleet_history_${new Date().toISOString().slice(0,10)}.csv`; link.click();
-                this.showToast("CSV geëxporteerd!");
+                this.showToast(i18n.t('op_toast_csv_exported'));
             },
             
             downloadJSON() {
                 let blob = new Blob([JSON.stringify(this.historyOrders, null, 2)], { type: "application/json" });
                 let link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `fleet_history_${new Date().toISOString().slice(0,10)}.json`; link.click();
-                this.showToast("JSON geëxporteerd!");
+                this.showToast(i18n.t('op_toast_json_exported'));
             },
 
             // Download de HUIDIGE (gefilterde) history data als CSV
@@ -1831,7 +1763,7 @@
                 let currentData = [];
                 const rows = document.querySelectorAll('#historyTable tr');
 
-                if (rows.length === 0 || (rows.length === 1 && rows[0].innerText.includes('Geen ritten'))) {
+                if (rows.length === 0 || (rows.length === 1 && (rows[0].innerText.includes('Geen ritten') || rows[0].classList.contains('empty-planning')))) {
                     // Gebruik de historyOrders array als fallback
                     currentData = this.historyOrders;
                 } else {
@@ -1860,7 +1792,7 @@
                 }
 
                 if (currentData.length === 0) {
-                    this.showToast('Geen data om te exporteren', true);
+                    this.showToast(i18n.t('op_toast_err_no_export_data'), true);
                     return;
                 }
 
@@ -1890,7 +1822,7 @@
                 link.click();
                 URL.revokeObjectURL(link.href);
 
-                this.showToast(`CSV geëxporteerd! (${currentData.length} ritten)`);
+                this.showToast(`${i18n.t('op_toast_csv_exported')} (${currentData.length} ${i18n.t('op_finance_rides')})`);
             },
 
             // Download de HUIDIGE (gefilterde) history data als JSON
@@ -1899,7 +1831,7 @@
                 let currentData = [];
                 const rows = document.querySelectorAll('#historyTable tr');
 
-                if (rows.length === 0 || (rows.length === 1 && rows[0].innerText.includes('Geen ritten'))) {
+                if (rows.length === 0 || (rows.length === 1 && (rows[0].innerText.includes('Geen ritten') || rows[0].classList.contains('empty-planning')))) {
                     currentData = this.historyOrders;
                 } else {
                     rows.forEach(row => {
@@ -1926,7 +1858,7 @@
                 }
 
                 if (currentData.length === 0) {
-                    this.showToast('Geen data om te exporteren', true);
+                    this.showToast(i18n.t('op_toast_err_no_export_data'), true);
                     return;
                 }
 
@@ -1938,7 +1870,7 @@
                 link.click();
                 URL.revokeObjectURL(link.href);
 
-                this.showToast(`JSON geëxporteerd! (${currentData.length} ritten)`);
+                this.showToast(`${i18n.t('op_toast_json_exported')} (${currentData.length} ${i18n.t('op_finance_rides')})`);
             },
 
             // Helper functie om status badge text te extraheren
@@ -1981,7 +1913,7 @@
             },
             
             async refreshAllData() {
-                this.showToast('Data wordt vernieuwd...');
+                this.showToast(i18n.t('op_toast_refreshing'));
 
                 try {
                     // 1. Haal verse booking data van Supabase
@@ -1998,16 +1930,16 @@
                     // 4. Vernieuw de huidige tab in de UI
                     this.refreshCurrentTab();
 
-                    this.showToast('Data succesvol vernieuwd!');
+                    this.showToast(i18n.t('op_toast_refreshed'));
                 } catch (error) {
                     console.error('❌ Refresh fout:', error);
-                    this.showToast('Fout bij vernieuwen: ' + error.message, true);
+                    this.showToast(i18n.t('op_toast_err_refresh').replace('{error}', error.message), true);
                 }
             },
             
             // ========== AANGEPASTE LOGOUT (MET SESSIEVERWIJDERING EN REPLACE) ==========
             async logout() { 
-                if(confirm('Weet u zeker dat u wilt uitloggen?')) { 
+                if(confirm(i18n.t('op_confirm_logout'))) {
                     await supabase.auth.signOut();
                     sessionStorage.removeItem('horizon_logged_in');
                     window.location.replace('admin-index.html');
@@ -2041,7 +1973,7 @@
                     if (this.currentTab === 'orders' || this.currentTab === 'history' || this.currentTab === 'agenda') {
                         this.refreshCurrentTab();
                     }
-                    this.showToast(`${expiredRides.length} verlopen ritten zijn naar History verplaatst`);
+                    this.showToast(i18n.t('op_toast_expired_archived').replace('{count}', expiredRides.length));
                 }
             },
             
@@ -2062,7 +1994,7 @@
                     
                 } catch (err) {
                     console.error('Initialisatie fout:', err);
-                    document.getElementById('errorMsg').textContent = 'Fout bij het laden van de applicatie. Controleer de console.';
+                    document.getElementById('errorMsg').textContent = i18n.t('error_app_load');
                     document.getElementById('errorMsg').classList.remove('hidden');
                 }
             }
@@ -2101,9 +2033,6 @@
         window.toggleFlipCard = app.toggleFlipCard.bind(app);
         window.downloadCSV = app.downloadCSV.bind(app);
         window.downloadJSON = app.downloadJSON.bind(app);
-        window.openEditDriverModal = app.openEditDriverModal.bind(app);
-        window.saveDriverChanges = app.saveDriverChanges.bind(app);
-        window.closeEditDriverModal = app.closeEditDriverModal.bind(app);
     </script>
 </body>
 </html>
