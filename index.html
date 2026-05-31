@@ -6,6 +6,7 @@
     <title>Fleetconnect Taxi | Inloggen</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="translations.js"></script>
     <style>
         :root {
             --primary: #2c7da0;
@@ -155,37 +156,37 @@
 
     <div class="login-card">
         <i class="fas fa-taxi" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 16px;"></i>
-        <h1>Inloggen</h1>
-        <p>Toegang tot het klantenportaal</p>
+        <h1 data-i18n="auth_login_btn">Inloggen</h1>
+        <p data-i18n="auth_login_title">Toegang tot het klantenportaal</p>
 
         <div id="errorBox" class="error-msg"></div>
 
         <div class="field">
-            <label>E-mailadres</label>
-            <input type="email" id="emailInput" placeholder="uw@email.be">
+            <label data-i18n="auth_email">E-mailadres</label>
+            <input type="email" id="emailInput" data-i18n-placeholder="placeholder_email" placeholder="uw@email.be">
         </div>
         <div class="field">
-            <label>Wachtwoord</label>
+            <label data-i18n="auth_password">Wachtwoord</label>
             <input type="password" id="passInput" placeholder="••••••••">
         </div>
 
-        <button class="btn-login" id="loginBtn">Inloggen</button>
+        <button class="btn-login" id="loginBtn" data-i18n="auth_login_btn">Inloggen</button>
 
-        <a href="#" class="forgot-password" id="forgotBtn">Wachtwoord vergeten?</a>
+        <a href="#" class="forgot-password" id="forgotBtn" data-i18n="auth_reset_password">Wachtwoord vergeten?</a>
     </div>
 
     <!-- Forgot Password Modal -->
     <div class="modal" id="forgotModal">
         <div class="modal-content">
-            <h2>Wachtwoord vergeten</h2>
-            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">Voer uw e-mailadres in om een magische link te ontvangen.</p>
+            <h2 data-i18n="auth_forgot_password_title">Wachtwoord vergeten</h2>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;" data-i18n="auth_forgot_password_desc">Voer uw e-mailadres in om een magische link te ontvangen.</p>
             <div class="field">
-                <label>E-mailadres</label>
-                <input type="email" id="forgotEmail" placeholder="uw@email.be">
+                <label data-i18n="auth_email">E-mailadres</label>
+                <input type="email" id="forgotEmail" data-i18n-placeholder="placeholder_email" placeholder="uw@email.be">
             </div>
             <div class="modal-buttons">
-                <button class="btn-secondary" id="closeModal">Annuleren</button>
-                <button class="btn-login" id="sendMagicBtn" style="margin-top:0;">Stuur magische link</button>
+                <button class="btn-secondary" id="closeModal" data-i18n="fp_close">Annuleren</button>
+                <button class="btn-login" id="sendMagicBtn" style="margin-top:0;" data-i18n="auth_send_magic_link">Stuur magische link</button>
             </div>
         </div>
     </div>
@@ -220,7 +221,7 @@
             const password = passInput.value.trim();
 
             if (!email || !password) {
-                showError('Voer uw e-mailadres en wachtwoord in.');
+                showError(i18n.t('alert_fill_fields'));
                 return;
             }
 
@@ -231,7 +232,7 @@
                 });
 
                 if (error) {
-                    showError(error.message === 'Invalid login credentials' ? 'Ongeldige inloggegevens.' : error.message);
+                    showError(error.message === 'Invalid login credentials' ? i18n.t('auth_invalid_credentials') : error.message);
                     return;
                 }
 
@@ -240,7 +241,7 @@
                     window.location.href = 'klantenportaalpv.html';
                 }
             } catch (err) {
-                showError('Er is een fout opgetreden. Probeer het later opnieuw.');
+                showError(i18n.t('auth_error_generic'));
             }
         }
 
@@ -268,13 +269,13 @@
                     redirectTo: `${window.location.origin}/reset-password.html`,
                 });
                 if (error) {
-                    alert('Fout: ' + error.message);
+                    alert(i18n.t('auth_error_generic') + ': ' + error.message);
                 } else {
-                    alert(`Herstel-instructies gestuurd naar ${email}`);
+                    alert(i18n.t('auth_magic_link_sent').replace('{email}', email));
                     forgotModal.style.display = 'none';
                 }
             } else {
-                alert('Voer een geldig e-mailadres in.');
+                alert(i18n.t('alert_fill_fields'));
             }
         });
     </script>

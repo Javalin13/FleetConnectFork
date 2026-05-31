@@ -2,6 +2,7 @@ import { CommunicationConfig } from '../core/config.js';
 import { EmailComponents } from './components/base.js';
 import { LanguageEngine } from '../l10n/engine.js';
 import { RouteBuilder } from '../core/routes.js';
+import { ReviewConfig } from '../core/review.js';
 
 /**
  * TemplateRenderer
@@ -39,7 +40,7 @@ export class TemplateRenderer {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <title>FleetConnect Update</title>
+                <title>${labels.titleUpdate}</title>
                 <style>
                     body { margin: 0; padding: 0; background-color: ${CommunicationConfig.theme.backgroundColor}; -webkit-font-smoothing: antialiased; }
                     table { border-collapse: collapse !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
@@ -94,14 +95,14 @@ export class TemplateRenderer {
     /**
      * Helper to get customer name safely
      */
-    static getCustomerName(data) {
-        return data.customer?.name || data.name || 'Valued Customer';
+    static getCustomerName(data, labels) {
+        return data.customer?.name || data.name || (labels ? labels.valuedCustomer : 'Valued Customer');
     }
 
     static renderBookingConfirmation(data, labels, subjects, lang) {
         const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
-        const distance = data.form_data?.distance_km || data.metadata?.distance_km || data.distance || '...';
-        const customerName = this.getCustomerName(data);
+        const distance = data.distance_km || data.form_data?.distance_km || data.metadata?.distance_km || data.distance || '...';
+        const customerName = this.getCustomerName(data, labels);
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_CONFIRMATION}</h2>
@@ -124,7 +125,7 @@ export class TemplateRenderer {
     }
 
     static renderBookingAccepted(data, labels, subjects, lang) {
-        const customerName = this.getCustomerName(data);
+        const customerName = this.getCustomerName(data, labels);
 
         // CTA Routing Decision
         const ctaUrl = data.is_registered
@@ -191,8 +192,8 @@ export class TemplateRenderer {
 
     static renderDriverAssigned(data, labels, subjects, lang) {
         const d = data.driver || {};
-        const customerName = this.getCustomerName(data);
-        const driverFirstName = d.name ? d.name.split(' ')[0] : 'Your FleetConnect Driver';
+        const customerName = this.getCustomerName(data, labels);
+        const driverFirstName = d.name ? d.name.split(' ')[0] : (labels.driver || 'Your FleetConnect Driver');
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
@@ -221,7 +222,7 @@ export class TemplateRenderer {
     }
 
     static renderBookingCancelled(data, labels, subjects, lang) {
-        const customerName = this.getCustomerName(data);
+        const customerName = this.getCustomerName(data, labels);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_CANCELLED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -232,13 +233,13 @@ export class TemplateRenderer {
     }
 
     static renderBookingCompleted(data, labels, subjects, lang) {
-        const customerName = this.getCustomerName(data);
+        const customerName = this.getCustomerName(data, labels);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_COMPLETED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.completedBody}
             </p>
-            ${EmailComponents.cta(labels.writeReview, RouteBuilder.build('review', { id: data.id }))}
+            ${EmailComponents.cta(labels.writeReview, ReviewConfig.googleReviewUrl)}
             <div style="text-align: center; margin-top: 10px;">
                 <a href="${RouteBuilder.build('book-new')}" style="color: ${CommunicationConfig.theme.primaryColor}; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none;">
                     &rarr; ${labels.bookNew}
@@ -248,7 +249,7 @@ export class TemplateRenderer {
     }
 
     static renderAccountWelcome(data, labels, subjects, lang) {
-        const customerName = this.getCustomerName(data);
+        const customerName = this.getCustomerName(data, labels);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.ACCOUNT_WELCOME}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
@@ -259,7 +260,7 @@ export class TemplateRenderer {
     }
 
     static renderPaymentRefundConfirmation(data, labels, subjects, lang) {
-        const customerName = this.getCustomerName(data);
+        const customerName = this.getCustomerName(data, labels);
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.PAYMENT_REFUND_CONFIRMATION}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">

@@ -86,7 +86,7 @@ export const EmailComponents = {
                     </p>
                     <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 12px; line-height: 20px; color: #94a3b8;">
                         ${CommunicationConfig.brand.email} | ${CommunicationConfig.brand.website}<br>
-                        Premium Chauffeur Services & Executive Transport
+                        ${labels.footerTagline}
                     </p>
                     <table border="0" cellpadding="0" cellspacing="0">
                         <tr>
@@ -99,7 +99,7 @@ export const EmailComponents = {
                         </tr>
                     </table>
                     <p style="margin: 40px 0 0 0; font-family: 'Inter', sans-serif; font-size: 11px; color: #cbd5e1;">
-                        © ${new Date().getFullYear()} FleetConnect. All rights reserved.
+                        © ${new Date().getFullYear()} FleetConnect. ${labels.copyright}
                     </p>
                 </td>
             </tr>

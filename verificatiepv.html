@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificatie | FleetConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="translations.js"></script>
+    <style>
+        :root { --primary: #2c7da0; --bg: #f4f7fc; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 32px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
+        .icon { font-size: 4rem; color: var(--primary); margin-bottom: 24px; }
+        .spinner { animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div id="loading">
+            <div class="icon"><i class="fas fa-circle-notch spinner"></i></div>
+            <h1 data-i18n="auth_verify_loading">Uw verificatie wordt verwerkt...</h1>
+        </div>
+        <div id="success" style="display:none;">
+            <div class="icon" style="color:#10b981;"><i class="fas fa-check-circle"></i></div>
+            <h1 data-i18n="auth_verify_success">Geverifieerd!</h1>
+            <p data-i18n="auth_verify_redirecting">U wordt doorverwezen naar uw portaal...</p>
+        </div>
+        <div id="error" style="display:none;">
+            <div class="icon" style="color:#ef4444;"><i class="fas fa-times-circle"></i></div>
+            <h1 data-i18n="auth_verify_failed">Verificatie mislukt</h1>
+            <p id="errorMsg"></p>
+            <a href="index.html" style="color:var(--primary); font-weight:600; text-decoration:none;" data-i18n="auth_back_to_login">Terug naar inloggen</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function verify() {
+            const { data: { session }, error } = await supabase.auth.getSession();
+
+            if (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('errorMsg').innerText = error.message;
+                return;
+            }
+
+            if (session) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('success').style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = 'klantenportaalpv.html';
+                }, 2000);
+            } else {
+                // If no session but landed here, might be a direct link or hash
+                // Supabase handled the auth via the URL hash already if successful
+                setTimeout(async () => {
+                    const { data: { session: retrySession } } = await supabase.auth.getSession();
+                    if (retrySession) {
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('success').style.display = 'block';
+                        window.location.href = 'klantenportaalpv.html';
+                    } else {
+                         window.location.href = 'index.html';
+                    }
+                }, 1000);
+            }
+        }
+
+        verify();
+    </script>
+</body>
+</html>
