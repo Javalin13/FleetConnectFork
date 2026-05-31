@@ -399,7 +399,8 @@
             created_at: createdAt,
             partner_id: partnerId,
             assigned_driver_id: assignedDriverId,
-            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid"
+            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid",
+            distance_km: currentRouteData ? parseFloat(currentRouteData.distanceKm) * (currentRoundTrip ? 2 : 1) : 0
         };
 
         const success = await sendToSupabase(bookingData);

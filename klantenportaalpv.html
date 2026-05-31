@@ -825,6 +825,9 @@
         document.getElementById('lastName').value = currentUser.full_name.split(' ').slice(1).join(' ') || '';
         document.getElementById('phone').value = currentUser.phone;
         document.getElementById('email').value = currentUser.email;
+        if (currentUser.default_pickup_address) {
+            document.getElementById('pickupInput').value = currentUser.default_pickup_address;
+        }
     }
     
     document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
@@ -1209,7 +1212,9 @@
             form_data: { ai: true, source: "web-portal" },
             assigned_driver_id: null,
             partner_id: 1,
-            payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
+            payment_status: payment === "Cash" ? "cash_pending" : "unpaid",
+            distance_km: dist,
+            user_id: currentUser?.id || null
         };
         
         if (!initSupabase()) {

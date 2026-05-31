@@ -89,6 +89,7 @@ export class DataNormalizer {
                 status: booking.status,
                 flight_number: booking.flight_number,
                 extras: booking.extras,
+                distance_km: booking.distance_km || 0,
                 preferred_language: booking.preferred_language || customer?.preferred_language || 'nl',
                 customer: customer ? {
                     name: customer.full_name || customer.name || booking.name,

@@ -2,6 +2,7 @@ import { CommunicationConfig } from '../core/config.js';
 import { EmailComponents } from './components/base.js';
 import { LanguageEngine } from '../l10n/engine.js';
 import { RouteBuilder } from '../core/routes.js';
+import { ReviewConfig } from '../core/review.js';
 
 /**
  * TemplateRenderer
@@ -100,7 +101,12 @@ export class TemplateRenderer {
 
     static renderBookingConfirmation(data, labels, subjects, lang) {
         const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
-        const distance = data.form_data?.distance_km || data.metadata?.distance_km || data.distance || '...';
+        const distance =
+  data.distance_km ||
+  data.form_data?.distance_km ||
+  data.metadata?.distance_km ||
+  data.distance ||
+  '...';
         const customerName = this.getCustomerName(data, labels);
 
         return `
@@ -238,7 +244,7 @@ export class TemplateRenderer {
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.completedBody}
             </p>
-            ${EmailComponents.cta(labels.writeReview, RouteBuilder.build('review', { id: data.id }))}
+            ${EmailComponents.cta(labels.writeReview, ReviewConfig.googleReviewUrl)}
             <div style="text-align: center; margin-top: 10px;">
                 <a href="${RouteBuilder.build('book-new')}" style="color: ${CommunicationConfig.theme.primaryColor}; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none;">
                     &rarr; ${labels.bookNew}

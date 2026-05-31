@@ -8,12 +8,23 @@ import { Resend } from "npm:resend@2.0.0"
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'))
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+const ALLOWED_ORIGINS = [
+  'https://fleetconnect.be',
+  'https://www.fleetconnect.be',
+  'http://localhost:3000',
+  'http://127.0.0.1:5500'
+]
 
 serve(async (req) => {
+  const origin = req.headers.get('origin')
+  const isAllowedOrigin = origin && ALLOWED_ORIGINS.includes(origin)
+
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': isAllowedOrigin ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+  }
+
   // 1. Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })

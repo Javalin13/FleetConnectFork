@@ -2,356 +2,123 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>FleetConnect · Registreren</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Aanmaken | FleetConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="translations.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #2c6e9e;
-            --primary-dark: #1e4a6e;
-            --primary-light: #4a8abf;
-            --accent-gold: #c9a03d;
-            --accent-green: #6b8c42;
-            --text-dark: #1a2a3a;
-            --text-light: #4a627a;
-            --text-muted: #7a8c9e;
-            --white: #ffffff;
-            --error: #dc2626;
-            --success: #10b981;
-            --border-light: #e2edf7;
-            --shadow: 0 8px 30px rgba(0,0,0,0.08);
-            --shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #e8f0f8 0%, #d4e2f0 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-        }
-
-        /* Achtergrond decoratie */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path fill="%232c6e9e" d="M20,20 L80,20 L80,80 L20,80 Z"/><circle cx="50" cy="50" r="15" fill="none" stroke="%232c6e9e" stroke-width="2"/></svg>') repeat;
-            pointer-events: none;
-        }
-
-        .register-container {
-            width: 100%;
-            max-width: 500px;
-            z-index: 1;
-        }
-
-        .register-card {
-            background: var(--white);
-            border-radius: 32px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .register-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .register-header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            padding: 32px 28px;
-            text-align: center;
-            color: white;
-        }
-
-        .register-header i {
-            font-size: 3rem;
-            margin-bottom: 16px;
-        }
-
-        .register-header h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .register-header p {
-            font-size: 0.85rem;
-            opacity: 0.85;
-        }
-
-        .register-body {
-            padding: 32px 28px;
-        }
-
-        .language-switcher {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        .lang-btn {
-            background: #f1f5f9;
-            border: 1px solid var(--border-light);
-            padding: 6px 14px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.75rem;
-            transition: all 0.2s;
-            color: var(--text-dark);
-        }
-
-        .lang-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .lang-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-light);
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group label .required {
-            color: var(--accent-gold);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid var(--border-light);
-            border-radius: 14px;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-            background: var(--white);
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(44,110,158,0.1);
-        }
-
-        .form-group input.error {
-            border-color: var(--error);
-        }
-
-        .error-message {
-            color: var(--error);
-            font-size: 0.7rem;
-            margin-top: 6px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .info-text {
-            background: #f0f9ff;
-            border-left: 3px solid var(--primary);
-            padding: 14px 16px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 24px;
-        }
-
-        .info-text i {
-            color: var(--primary);
-            margin-right: 8px;
-        }
-
-        .register-btn {
-            width: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .register-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(44,110,158,0.3);
-        }
-
-        .register-btn:disabled {
-            opacity: 0.6;
-            transform: none;
-            cursor: not-allowed;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-light);
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        .login-link a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .success-message {
-            background: #dcfce7;
-            border-left: 3px solid var(--success);
-            padding: 14px 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: none;
-            color: #166534;
-            font-size: 0.85rem;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        .footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
+        :root { --primary: #2c7da0; --primary-dark: #1a5c8c; --bg: #f4f7fc; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .card { background: white; padding: 40px; border-radius: 32px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); width: 100%; max-width: 450px; text-align: center; }
+        h1 { color: var(--primary); margin-bottom: 8px; font-size: 1.8rem; }
+        p { color: #4a627a; font-size: 0.9rem; margin-bottom: 32px; }
+        .field { text-align: left; margin-bottom: 20px; }
+        label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; color: #4a627a; letter-spacing: 0.5px; }
+        input { width: 100%; padding: 14px 18px; border: 1px solid #e2edf7; border-radius: 12px; font-size: 0.95rem; outline: none; transition: 0.2s; box-sizing: border-box; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1); }
+        .btn-register { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-register:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .footer-link { display: inline-block; margin-top: 24px; font-size: 0.85rem; color: var(--primary); text-decoration: none; font-weight: 600; }
+        .error-msg { background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; display: none; text-align: left; }
     </style>
 </head>
 <body>
-    <div class="register-container">
-        <div class="register-card">
-            <div class="register-header">
-                <i class="fas fa-user-plus"></i>
-                <h1 id="title">Registreren</h1>
-                <p id="subtitle">Maak een account aan voor FleetConnect</p>
+    <div class="card">
+        <i class="fas fa-user-plus" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 16px;"></i>
+        <h1 data-i18n="auth_register_title">Account aanmaken</h1>
+        <p data-i18n="auth_register_subtitle">Registreer voor een snellere boekingervaring</p>
+
+        <div id="errorBox" class="error-msg"></div>
+
+        <form id="registerForm">
+            <div class="field">
+                <label data-i18n="auth_fullname">Volledige naam</label>
+                <input type="text" id="nameInput" placeholder="Jan Janssen" required>
             </div>
-            <div class="register-body">
-                <div class="language-switcher">
-                    <button class="lang-btn" data-lang="nl">🇳🇱 NL</button>
-                    <button class="lang-btn" data-lang="fr">🇫🇷 FR</button>
-                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
-                </div>
-
-                <div id="successMessage" class="success-message">
-                    <i class="fas fa-envelope"></i> 
-                    <span id="successText">Controleer uw e-mail voor de inloglink!</span>
-                </div>
-
-                <div class="info-text" id="infoText">
-                    <i class="fas fa-magic"></i>
-                    <span>U ontvangt een magische link per e-mail. Geen wachtwoord nodig!</span>
-                </div>
-
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label id="nameLabel">Volledige naam <span class="required">*</span></label>
-                        <input type="text" id="fullName" placeholder="Jan Janssens" autocomplete="name">
-                        <div id="nameError" class="error-message">Voer uw volledige naam in</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label id="emailLabel">E-mailadres <span class="required">*</span></label>
-                        <input type="email" id="email" placeholder="jan@voorbeeld.be" autocomplete="email">
-                        <div id="emailError" class="error-message">Voer een geldig e-mailadres in</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label id="phoneLabel">Telefoonnummer <span class="required">*</span></label>
-                        <input type="tel" id="phone" placeholder="+32 4xx xx xx xx" autocomplete="tel">
-                        <div id="phoneError" class="error-message">Voer een geldig telefoonnummer in</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label id="addressLabel">Standaard ophaallocatie (optioneel)</label>
-                        <input type="text" id="defaultPickup" placeholder="bv. Antwerpen, Brussel, ..." autocomplete="off">
-                    </div>
-
-                    <button type="submit" id="registerBtn" class="register-btn">
-                        <i class="fas fa-paper-plane"></i>
-                        <span id="btnText">Registreren & Inloggen</span>
-                    </button>
-                </form>
-
-                <div class="login-link">
-                    <span id="loginText">Hebt u al een account?</span>
-                    <a id="loginLink" href="index.html">Inloggen</a>
-                </div>
+            <div class="field">
+                <label data-i18n="auth_email">E-mailadres</label>
+                <input type="email" id="emailInput" placeholder="uw@email.be" required>
             </div>
-        </div>
-        <div class="footer">
-            <p>© 2026 FleetConnect – <a href="PVprivacy.html">Privacy</a> | <a href="PValgemene-voorwaarden.html">Voorwaarden</a></p>
-        </div>
+            <div class="field">
+                <label data-i18n="auth_phone">Telefoonnummer</label>
+                <input type="tel" id="phoneInput" placeholder="+32 4xx xx xx xx" required>
+            </div>
+            <div class="field">
+                <label data-i18n="portal_label_pickup">Standaard ophaallocatie</label>
+                <input type="text" id="pickupInput" placeholder="Straat 1, Stad">
+            </div>
+            <div class="field">
+                <label data-i18n="auth_password">Wachtwoord</label>
+                <input type="password" id="passInput" placeholder="••••••••" required minlength="6">
+            </div>
+            <button type="submit" class="btn-register" id="regBtn" data-i18n="auth_register_btn">Registreren</button>
+        </form>
+
+        <a href="index.html" class="footer-link" data-i18n="auth_already_account">Heeft u al een account? Inloggen</a>
     </div>
 
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+     
+        const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const registerForm = document.getElementById('registerForm');
+        const errorBox = document.getElementById('errorBox');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('nameInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim();
+            const phone = document.getElementById('phoneInput').value.trim();
+            const pickup = document.getElementById('pickupInput').value.trim();
+            const password = document.getElementById('passInput').value;
+
+            try {
+                // 1. Sign up user
+                const { data, error: signUpError } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: { full_name: fullName, phone: phone },
+                        emailRedirectTo: `${window.location.origin}/verificatiepv.html`
+                    }
+                });
+
+                if (signUpError) throw signUpError;
+
+                if (data.user) {
+                    // 2. Create customer record (linking to user_id)
+                    const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
+                    const { error: dbError } = await supabase
+                        .from('customers')
+                        .insert([{
+                            id: customerId,
+                            user_id: data.user.id,
+                            name: fullName,
+                            email: email,
+                            phone: phone,
+                            default_pickup_address: pickup,
+                            created_at: new Date().toISOString()
+                        }]);
+
+                    if (dbError) {
+                         console.warn('Customer record insertion delayed or failed:', dbError.message);
+                    }
+
+                    alert(i18n.t('auth_magic_link_sent').replace('{email}', email));
+                    window.location.href = 'index.html';
+                }
+            } catch (err) {
+                errorBox.innerText = err.message;
+                errorBox.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
         
         // Supabase configuratie
         const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
