@@ -385,6 +385,8 @@ const translations = {
     "op_title_partners": "Mijn Partners",
     "op_title_financial": "Financieel Overzicht",
     "op_title_settlements": "Financiële Afwikkeling (Settlements)",
+    "op_btn_close": "Sluiten",
+    "op_header_refresh": "Vernieuwen",
     "op_no_upcoming_rides": "Geen komende ritten gevonden",
     "op_no_completed_rides": "Geen voltooide ritten gevonden",
     "portal_summary_type": "Type",
@@ -1212,6 +1214,8 @@ const translations = {
     "op_title_partners": "My Partners",
     "op_title_financial": "Financial Overview",
     "op_title_settlements": "Financial Settlements",
+    "op_btn_close": "Close",
+    "op_header_refresh": "Refresh",
     "op_no_upcoming_rides": "No upcoming rides found",
     "op_no_completed_rides": "No completed rides found",
     "portal_summary_type": "Type",
@@ -2039,6 +2043,8 @@ const translations = {
     "op_title_partners": "Mes Partenaires",
     "op_title_financial": "Aperçu Financier",
     "op_title_settlements": "Règlements Financiers",
+    "op_btn_close": "Fermer",
+    "op_header_refresh": "Actualiser",
     "op_no_upcoming_rides": "Aucun trajet à venir trouvé",
     "op_no_completed_rides": "Aucun trajet terminé trouvé",
     "portal_summary_type": "Type",
@@ -4156,6 +4162,21 @@ const translations = {
         if (modal) modal.style.display = 'none';
     }
 
+    function link(url) {
+        if (!url || url.startsWith('http') || url.startsWith('javascript') || url.startsWith('#')) return url;
+        const separator = url.includes('?') ? '&' : '?';
+        return `${url}${separator}lang=${currentLang}`;
+    }
+
+    function updateAllLinks() {
+        document.querySelectorAll('a[href]').forEach(el => {
+            const url = el.getAttribute('href');
+            if (url && !url.includes('lang=') && !url.startsWith('http') && !url.startsWith('javascript') && !url.startsWith('#')) {
+                el.href = link(url);
+            }
+        });
+    }
+
     // Expose to window
     window.i18n = {
         setLanguage,
@@ -4163,6 +4184,10 @@ const translations = {
         closeLanguageModal,
         updateContent,
         t: (key) => translations[currentLang][key] || key
+        link,
+        updateAllLinks,
+        get currentLang() { return currentLang; },
+        t: (key) => (translations[currentLang] && translations[currentLang][key]) ? translations[currentLang][key] : (translations['nl'][key] || key)
     };
 
     // Initialize when DOM is ready
@@ -4213,6 +4238,11 @@ const translations = {
         document.body.appendChild(modal);
 
         updateContent();
+        updateAllLinks();
+
+        // Observe DOM changes to update new links
+        const observer = new MutationObserver(() => updateAllLinks());
+        observer.observe(document.body, { childList: true, subtree: true });
     });
 
     // Special handling for dynamic content in the booking script

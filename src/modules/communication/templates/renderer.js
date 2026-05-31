@@ -101,7 +101,12 @@ export class TemplateRenderer {
 
     static renderBookingConfirmation(data, labels, subjects, lang) {
         const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
-        const distance = data.distance_km || data.form_data?.distance_km || data.metadata?.distance_km || data.distance || '...';
+        const distance =
+  data.distance_km ||
+  data.form_data?.distance_km ||
+  data.metadata?.distance_km ||
+  data.distance ||
+  '...';
         const customerName = this.getCustomerName(data, labels);
 
         return `

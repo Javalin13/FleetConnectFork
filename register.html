@@ -60,7 +60,7 @@
 
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
+     
         const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -116,6 +116,332 @@
                 errorBox.style.display = 'block';
             }
         });
+    </script>
+</body>
+</html>
+        
+        // Supabase configuratie
+        const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+        
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // ============================================
+        // TAAL VERTALINGEN
+        // ============================================
+        const translations = {
+            nl: {
+                title: "Registreren",
+                subtitle: "Maak een account aan voor FleetConnect",
+                infoText: "U ontvangt een magische link per e-mail. Geen wachtwoord nodig!",
+                nameLabel: "Volledige naam",
+                emailLabel: "E-mailadres",
+                phoneLabel: "Telefoonnummer",
+                addressLabel: "Standaard ophaallocatie (optioneel)",
+                btnText: "Registreren & Inloggen",
+                loginText: "Hebt u al een account?",
+                loginLink: "Inloggen",
+                successText: "Controleer uw e-mail voor de inloglink!",
+                nameError: "Voer uw volledige naam in",
+                emailError: "Voer een geldig e-mailadres in",
+                phoneError: "Voer een geldig telefoonnummer in",
+                loading: "Bezig met verzenden...",
+                successTitle: "Check uw e-mail!",
+                errorTitle: "Er ging iets mis",
+                emailExists: "Dit e-mailadres is al geregistreerd. Probeer in te loggen.",
+                invalidEmail: "Ongeldig e-mailadres"
+            },
+            fr: {
+                title: "S'inscrire",
+                subtitle: "Créez un compte FleetConnect",
+                infoText: "Vous recevrez un lien magique par e-mail. Pas besoin de mot de passe!",
+                nameLabel: "Nom complet",
+                emailLabel: "Adresse e-mail",
+                phoneLabel: "Numéro de téléphone",
+                addressLabel: "Adresse de prise en charge par défaut (optionnel)",
+                btnText: "S'inscrire & Se connecter",
+                loginText: "Vous avez déjà un compte?",
+                loginLink: "Se connecter",
+                successText: "Vérifiez votre e-mail pour le lien de connexion!",
+                nameError: "Entrez votre nom complet",
+                emailError: "Entrez une adresse e-mail valide",
+                phoneError: "Entrez un numéro de téléphone valide",
+                loading: "Envoi en cours...",
+                successTitle: "Vérifiez vos e-mails!",
+                errorTitle: "Une erreur s'est produite",
+                emailExists: "Cette adresse e-mail est déjà enregistrée. Essayez de vous connecter.",
+                invalidEmail: "Adresse e-mail invalide"
+            },
+            en: {
+                title: "Register",
+                subtitle: "Create a FleetConnect account",
+                infoText: "You will receive a magic link via email. No password needed!",
+                nameLabel: "Full name",
+                emailLabel: "Email address",
+                phoneLabel: "Phone number",
+                addressLabel: "Default pickup address (optional)",
+                btnText: "Register & Login",
+                loginText: "Already have an account?",
+                loginLink: "Login",
+                successText: "Check your email for the login link!",
+                nameError: "Enter your full name",
+                emailError: "Enter a valid email address",
+                phoneError: "Enter a valid phone number",
+                loading: "Sending...",
+                successTitle: "Check your email!",
+                errorTitle: "Something went wrong",
+                emailExists: "This email is already registered. Try logging in.",
+                invalidEmail: "Invalid email address"
+            }
+        };
+        
+        let currentLang = 'nl';
+        
+        // ============================================
+        // TAAL FUNCTIE
+        // ============================================
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            document.getElementById('title').innerText = t.title;
+            document.getElementById('subtitle').innerText = t.subtitle;
+            document.getElementById('infoText').querySelector('span').innerText = t.infoText;
+            document.getElementById('nameLabel').innerHTML = `${t.nameLabel} <span class="required">*</span>`;
+            document.getElementById('emailLabel').innerHTML = `${t.emailLabel} <span class="required">*</span>`;
+            document.getElementById('phoneLabel').innerHTML = `${t.phoneLabel} <span class="required">*</span>`;
+            document.getElementById('addressLabel').innerHTML = t.addressLabel;
+            document.getElementById('btnText').innerText = t.btnText;
+            document.getElementById('loginText').innerText = t.loginText;
+            document.getElementById('loginLink').innerText = t.loginLink;
+            document.getElementById('successText').innerText = t.successText;
+            
+            // Update error messages
+            document.getElementById('nameError').innerText = t.nameError;
+            document.getElementById('emailError').innerText = t.emailError;
+            document.getElementById('phoneError').innerText = t.phoneError;
+            
+            // Save to localStorage
+            localStorage.setItem('registerLanguage', lang);
+            
+            // Update active button styling
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // Load saved language preference
+        function loadLanguagePreference() {
+            const savedLang = localStorage.getItem('registerLanguage');
+            if (savedLang && translations[savedLang]) {
+                setLanguage(savedLang);
+            } else {
+                // Detect browser language or default to Dutch
+                const browserLang = navigator.language.split('-')[0];
+                if (browserLang === 'fr') setLanguage('fr');
+                else if (browserLang === 'en') setLanguage('en');
+                else setLanguage('nl');
+            }
+        }
+        
+        // Language button event listeners
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                setLanguage(lang);
+            });
+        });
+        
+        // ============================================
+        // VALIDATIE FUNCTIES
+        // ============================================
+        function validateEmail(email) {
+            const re = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+            return re.test(email);
+        }
+        
+        function validatePhone(phone) {
+            // Accepteer: +32 4xx xx xx xx, 04xx xx xx xx, +324xxxxxxxx, 04xxxxxxxx
+            const re = /^(\+32|0)[4]\d{7,9}$/;
+            return re.test(phone.replace(/\s/g, ''));
+        }
+        
+        function showError(inputId, errorId, show) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            if (show) {
+                input.classList.add('error');
+                error.classList.add('show');
+            } else {
+                input.classList.remove('error');
+                error.classList.remove('show');
+            }
+        }
+        
+        // ============================================
+        // REGISTRATIE FUNCTIE (Magic Link)
+        // ============================================
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const defaultPickup = document.getElementById('defaultPickup').value.trim();
+            
+            const t = translations[currentLang];
+            
+            // Validatie
+            let isValid = true;
+            
+            if (!fullName) {
+                showError('fullName', 'nameError', true);
+                isValid = false;
+            } else {
+                showError('fullName', 'nameError', false);
+            }
+            
+            if (!email || !validateEmail(email)) {
+                showError('email', 'emailError', true);
+                isValid = false;
+            } else {
+                showError('email', 'emailError', false);
+            }
+            
+            if (!phone || !validatePhone(phone)) {
+                showError('phone', 'phoneError', true);
+                isValid = false;
+            } else {
+                showError('phone', 'phoneError', false);
+            }
+            
+            if (!isValid) return;
+            
+            // UI state: loading
+            const btn = document.getElementById('registerBtn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loading-spinner"></span> ${t.loading}`;
+            
+            // Verberg vorige success message
+            const successDiv = document.getElementById('successMessage');
+            successDiv.classList.remove('show');
+            
+            try {
+                // 1. Stuur magic link naar de gebruiker
+                const redirectUrl = `${window.location.origin}/klantenportaalpv.html`;
+                const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
+                    email: email,
+                    options: {
+                        emailRedirectTo: redirectUrl,
+                        data: {
+                            full_name: fullName,
+                            phone: phone,
+                            default_pickup_address: defaultPickup
+                        }
+                    }
+                });
+                
+                if (authError) {
+                    if (authError.message.includes('already registered')) {
+                        alert(`${t.emailExists}\n\n${t.loginLink}: klik op "Inloggen"`);
+                    } else {
+                        throw authError;
+                    }
+                    return;
+                }
+                
+                // 2. Wacht even om de gebruiker de kans te geven om in te loggen
+                // De magic link zal automatisch de klant naar het portaal leiden na verificatie
+                
+                // Toon success message
+                successDiv.classList.add('show');
+                
+                // Reset form
+                document.getElementById('registerForm').reset();
+                
+                // Optional: redirect after a few seconds
+                setTimeout(() => {
+                    successDiv.classList.remove('show');
+                }, 10000);
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert(`${t.errorTitle}: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        
+        // ============================================
+        // CHECK OF GEBRUIKER AL INGELOGD IS
+        // ============================================
+        async function checkExistingSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                // Gebruiker is al ingelogd, stuur door naar portaal
+                window.location.replace('klantenportaalpv.html');
+            }
+        }
+        
+        // Initialize
+        loadLanguagePreference();
+        checkExistingSession();
+        
+        // Event listener
+        document.getElementById('registerForm').addEventListener('submit', handleRegister);
+        
+        // Real-time validatie
+        document.getElementById('fullName').addEventListener('input', (e) => {
+            if (e.target.value.trim()) {
+                showError('fullName', 'nameError', false);
+            }
+        });
+        
+        document.getElementById('email').addEventListener('input', (e) => {
+            if (validateEmail(e.target.value.trim())) {
+                showError('email', 'emailError', false);
+            }
+        });
+        
+        document.getElementById('phone').addEventListener('input', (e) => {
+            if (validatePhone(e.target.value.trim())) {
+                showError('phone', 'phoneError', false);
+            }
+        });
+        
+        // Adres autocomplete (optioneel)
+        let debounceTimer;
+        const addressInput = document.getElementById('defaultPickup');
+        if (addressInput) {
+            addressInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                const query = e.target.value;
+                if (query.length < 3) return;
+                
+                debounceTimer = setTimeout(async () => {
+                    try {
+                        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=be&addressdetails=0&accept-language=${currentLang}`;
+                        const response = await fetch(url, {
+                            headers: { 'User-Agent': 'FleetConnect/2.0' }
+                        });
+                        const data = await response.json();
+                        // Simple suggestion display (can be enhanced)
+                        if (data.length) {
+                            // For simplicity, we're not creating a dropdown here
+                            // But the user can type manually
+                        }
+                    } catch (err) {
+                        console.error('Autocomplete error:', err);
+                    }
+                }, 500);
+            });
+        }
     </script>
 </body>
 </html>

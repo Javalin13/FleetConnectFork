@@ -75,5 +75,330 @@
 
         verify();
     </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Fleetconnect | Magic Link verificatie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .magic-card {
+            background: white;
+            max-width: 480px;
+            width: 100%;
+            padding: 40px 32px;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border: 1px solid #e2edf7;
+            text-align: center;
+        }
+        .magic-card i {
+            font-size: 3rem;
+            color: #2c7da0;
+            margin-bottom: 20px;
+        }
+        h1 { font-size: 1.7rem; margin-bottom: 8px; color: #1a2a3a; }
+        .sub { color: #4a627a; font-size: 0.9rem; margin-bottom: 24px; }
+        .email-display {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 28px;
+            word-break: break-all;
+            color: #1e4a6e;
+        }
+        .btn {
+            background: #2c7da0;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .btn:hover { background: #1a5c8c; transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .resend-link {
+            background: none;
+            border: none;
+            color: #2c7da0;
+            font-weight: 600;
+            text-decoration: underline;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin: 20px 0;
+            display: none;
+        }
+        .error { background: #fee2e2; color: #b91c1c; }
+        .success { background: #dcfce7; color: #166534; }
+        .timer { font-size: 0.8rem; color: #4a627a; margin-top: 16px; }
+        .language-selector {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2edf7;
+        }
+        .lang-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2edf7;
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1a2a3a;
+            text-decoration: none;
+        }
+        .lang-btn.active {
+            background: #2c7da0;
+            color: white;
+            border-color: #2c7da0;
+        }
+        @media (max-width: 500px) {
+            .magic-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="magic-card">
+    <div class="language-selector">
+        <a href="#" class="lang-btn" data-lang="nl">Nederlands</a>
+        <a href="#" class="lang-btn" data-lang="fr">Français</a>
+        <a href="#" class="lang-btn" data-lang="en">English</a>
+    </div>
+
+    <i class="fas fa-envelope-open-text"></i>
+    <h1 id="title">Controleer uw e‑mail</h1>
+    <p id="subtitle" class="sub">Klik op de Magic Link om in te loggen</p>
+
+    <div id="emailDisplay" class="email-display"></div>
+
+    <div id="messageBox" class="message"></div>
+
+    <button class="btn" id="sendMagicBtn">Stuur Magic Link</button>
+    <div id="timerText" class="timer"></div>
+
+    <button id="logoutBtn" class="resend-link">← Terug naar inloggen</button>
+</div>
+
+<script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    // Supabase configuratie (gelijk aan uw andere pagina's)
+    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ------------------------------ TAAL & VERTALINGEN ------------------------------
+    const translations = {
+        nl: {
+            title: "Controleer uw e‑mail",
+            subtitle: "Klik op de Magic Link om in te loggen",
+            sendBtn: "Stuur Magic Link",
+            sending: "Verzenden...",
+            success: "Magic Link verzonden naar",
+            errorGeneric: "Er is een fout opgetreden. Probeer opnieuw.",
+            errorNoEmail: "Geen e‑mailadres gevonden. Log opnieuw in.",
+            timerText: "Vraag over {seconds} seconden opnieuw een link aan",
+            backToLogin: "Terug naar inloggen"
+        },
+        fr: {
+            title: "Vérifiez votre e‑mail",
+            subtitle: "Cliquez sur le Magic Link pour vous connecter",
+            sendBtn: "Envoyer le Magic Link",
+            sending: "Envoi...",
+            success: "Magic Link envoyé à",
+            errorGeneric: "Une erreur est survenue. Réessayez.",
+            errorNoEmail: "Adresse e‑mail introuvable. Reconnectez-vous.",
+            timerText: "Redemander dans {seconds} secondes",
+            backToLogin: "Retour à la connexion"
+        },
+        en: {
+            title: "Check your email",
+            subtitle: "Click the Magic Link to sign in",
+            sendBtn: "Send Magic Link",
+            sending: "Sending...",
+            success: "Magic Link sent to",
+            errorGeneric: "An error occurred. Please try again.",
+            errorNoEmail: "Email address not found. Please log in again.",
+            timerText: "Request a new link in {seconds} seconds",
+            backToLogin: "Back to login"
+        }
+    };
+
+    let currentLang = 'nl';
+    let resendTimer = null;
+    let timerSeconds = 0;
+    let currentEmail = "";
+
+    function getLanguageFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && ['nl','fr','en'].includes(langParam)) return langParam;
+        const saved = localStorage.getItem('preferred_lang');
+        if (saved && ['nl','fr','en'].includes(saved)) return saved;
+        return 'nl';
+    }
+
+    function applyLanguage(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+        document.getElementById('title').innerText = t.title;
+        document.getElementById('subtitle').innerText = t.subtitle;
+        document.getElementById('sendMagicBtn').innerText = t.sendBtn;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.dataset.lang === lang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        localStorage.setItem('preferred_lang', lang);
+        const url = new URL(window.location);
+        url.searchParams.set('lang', lang);
+        window.history.pushState({}, '', url);
+    }
+
+    function showMessage(msg, type) {
+        const box = document.getElementById('messageBox');
+        box.innerText = msg;
+        box.className = `message ${type === 'error' ? 'error' : 'success'}`;
+        box.style.display = 'block';
+        setTimeout(() => box.style.display = 'none', 6000);
+    }
+
+    function startResendTimer() {
+        if (resendTimer) clearInterval(resendTimer);
+        timerSeconds = 60;
+        const btn = document.getElementById('sendMagicBtn');
+        const timerSpan = document.getElementById('timerText');
+        const t = translations[currentLang];
+        
+        btn.disabled = true;
+        const originalText = btn.innerText;
+        
+        const updateTimer = () => {
+            if (timerSeconds <= 0) {
+                clearInterval(resendTimer);
+                btn.disabled = false;
+                btn.innerText = t.sendBtn;
+                timerSpan.innerText = '';
+            } else {
+                btn.innerText = `${t.sending} (${timerSeconds}s)`;
+                timerSpan.innerText = t.timerText.replace('{seconds}', timerSeconds);
+                timerSeconds--;
+            }
+        };
+        updateTimer();
+        resendTimer = setInterval(updateTimer, 1000);
+    }
+
+    // ------------------------------ MAGIC LINK FUNCTIE ------------------------------
+    async function sendMagicLink(email) {
+        if (!email) {
+            showMessage(translations[currentLang].errorNoEmail, 'error');
+            return false;
+        }
+        
+        // De redirect URL na klikken op de magic link:
+        // Deze moet verwijzen naar een pagina die de sessie afhandelt,
+        // bijvoorbeeld de klantenportaal-pagina.
+        const redirectTo = `${window.location.origin}/klantenportaalpv.html?lang=${currentLang}`;
+        
+        try {
+            const { data, error } = await supabase.auth.signInWithOtp({
+                email: email,
+                options: {
+                    emailRedirectTo: redirectTo,
+                }
+            });
+            
+            if (error) {
+                console.error("Magic link error:", error);
+                showMessage(error.message || translations[currentLang].errorGeneric, 'error');
+                return false;
+            }
+            
+            showMessage(`${translations[currentLang].success} ${email}`, 'success');
+            startResendTimer();
+            return true;
+        } catch (err) {
+            console.error(err);
+            showMessage(translations[currentLang].errorGeneric, 'error');
+            return false;
+        }
+    }
+
+    // ------------------------------ INITIALISATIE ------------------------------
+    async function init() {
+        // Haal e-mail uit URL of sessionStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        let email = urlParams.get('email');
+        const storedEmail = sessionStorage.getItem('loggedInEmail');
+        if (!email && storedEmail) email = storedEmail;
+        
+        if (!email) {
+            showMessage(translations[currentLang].errorNoEmail, 'error');
+            setTimeout(() => {
+                window.location.href = `index.html?lang=${currentLang}&logout=expired`;
+            }, 2000);
+            return;
+        }
+        
+        currentEmail = email;
+        sessionStorage.setItem('loggedInEmail', email);
+        document.getElementById('emailDisplay').innerHTML = `<i class="fas fa-at"></i> ${email}`;
+        
+        // Verstuur automatisch de eerste magic link
+        await sendMagicLink(email);
+    }
+
+    // Terug naar login + sessie wissen
+    async function handleLogout() {
+        await supabase.auth.signOut();
+        sessionStorage.removeItem('loggedInEmail');
+        sessionStorage.removeItem('verified');
+        window.location.href = `index.html?lang=${currentLang}&logout=success`;
+    }
+
+    // Event listeners
+    document.getElementById('sendMagicBtn').addEventListener('click', () => sendMagicLink(currentEmail));
+    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    
+    // Taal buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            applyLanguage(btn.dataset.lang);
+            // Verander ook de knoptekst als die bezig is met timer
+            const btnEl = document.getElementById('sendMagicBtn');
+            if (!btnEl.disabled) btnEl.innerText = translations[btn.dataset.lang].sendBtn;
+        });
+    });
+
+    // Start
+    const initialLang = getLanguageFromURL();
+    applyLanguage(initialLang);
+    init();
+</script>
 </body>
 </html>

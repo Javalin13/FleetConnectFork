@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>FleetConnect · Klantenportaal</title>
+    <title>FleetConnect · Customer Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/nl.js"></script>
-    <script src="translations.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/en.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
@@ -51,7 +50,6 @@
         }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 24px; width: 100%; }
         
-        /* HAMBURGER MENU KNOB - LINKSBOVEN */
         .hamburger-btn {
             position: fixed;
             top: 20px;
@@ -78,7 +76,6 @@
             font-size: 1.5rem;
         }
         
-        /* SIDEBAR OVERLAY */
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -96,7 +93,6 @@
             opacity: 1;
         }
         
-        /* SIDEBAR ZELF - VAN LINKS UITKLAPPEND */
         .sidebar {
             position: fixed;
             top: 0;
@@ -115,7 +111,6 @@
             left: 0;
         }
         
-        /* SIDEBAR HEADER */
         .sidebar-header {
             display: flex;
             justify-content: space-between;
@@ -149,7 +144,6 @@
             background: rgba(255,255,255,0.3);
         }
         
-        /* SIDEBAR NAVIGATIE */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -179,7 +173,6 @@
             border-color: var(--border-light);
         }
         
-        /* TAAL SECTIE IN SIDEBAR */
         .language-section {
             padding: 16px;
             border-top: 1px solid var(--border-light);
@@ -218,7 +211,6 @@
             border-color: var(--primary);
         }
         
-        /* LOGIN SECTIE IN SIDEBAR */
         .login-section {
             padding: 16px;
             margin-top: auto;
@@ -240,7 +232,6 @@
             transform: translateY(-2px);
         }
         
-        /* REST VAN DE STIJLEN (origineel, ongewijzigd) */
         .tabs-container {
             display: flex;
             gap: 8px;
@@ -265,7 +256,6 @@
         .logout-tab-btn:hover { color: #7f1d1d; border-bottom-color: #b91c1c; }
         .tab-container.hidden { display: none; }
         
-        /* Grid blokken stijlen */
         .uitleg-grid {
             display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;
             padding: 50px 0 30px;
@@ -405,46 +395,43 @@
 <body>
 <div id="background-map"></div>
 
-<!-- HAMBURGER MENU KNOB - LINKSBOVEN -->
 <button class="hamburger-btn" id="hamburgerBtn">
     <i class="fas fa-bars"></i>
 </button>
 
-<!-- SIDEBAR OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay">
     <div class="sidebar">
         <div class="sidebar-header">
-            <h3><i class="fas fa-car"></i> <span data-i18n="hero_title">FleetConnect</span></h3>
+            <h3><i class="fas fa-car"></i> FleetConnect</h3>
             <button class="close-menu" id="closeMenuBtn">&times;</button>
         </div>
         
-        <!-- TAALKEUZE IN SIDEBAR -->
         <div class="language-section">
-            <div class="language-title"><i class="fas fa-globe"></i> Taal / Language</div>
+            <div class="language-title"><i class="fas fa-globe"></i> Language</div>
             <div class="language-buttons">
                 <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl">NL</a>
                 <a href="klantenportaal_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
-                <a href="klantenportaal_en.html?lang=en" class="lang-sidebar-btn" data-lang="en">EN</a>
+                <a href="klantenportaal_en.html?lang=en" class="lang-sidebar-btn active" data-lang="en">EN</a>
             </div>
         </div>
         
         <div class="sidebar-nav">
-            <a href="#" data-nav="home"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></a>
-            <a href="#" data-nav="portal"><i class="fas fa-user-circle"></i> <span data-i18n="portal_tab_dashboard">Mijn Portaal</span></a>
-            <a href="#" data-nav="contact"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact</span></a>
-            <a href="PV.html"><i class="fas fa-taxi"></i> <span data-i18n="nav_bookings">Boekingen</span></a>
-            <a href="PV_Exclusieve_Service.html"><i class="fas fa-gem"></i> <span data-i18n="nav_exclusief">Exclusieve service</span></a>
-            <a href="PV-vaste-prijzen.html"><i class="fas fa-euro-sign"></i> <span data-i18n="nav_prijzen">Vaste prijzen</span></a>
-            <a href="PV-premium-vloot.html"><i class="fas fa-car-side"></i> <span data-i18n="nav_vloot">Premium vloot</span></a>
-            <a href="PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i> <span data-i18n="nav_luchthaven">Luchthavenvervoer</span></a>
-            <a href="PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i> <span data-i18n="nav_zakelijk">Zakelijk vervoer</span></a>
-            <a href="PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i> <span data-i18n="nav_events">Events & Gala</span></a>
-            <a href="PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i> <span data-i18n="nav_koerier">Koeriersdienst</span></a>
+            <a href="#" data-nav="home"><i class="fas fa-home"></i> Home</a>
+            <a href="#" data-nav="portal"><i class="fas fa-user-circle"></i> My Portal</a>
+            <a href="#" data-nav="contact"><i class="fas fa-envelope"></i> Contact</a>
+            <a href="PV.html?lang=en"><i class="fas fa-taxi"></i> Bookings</a>
+            <a href="PV_Exclusieve_Service.html?lang=en"><i class="fas fa-gem"></i> Exclusive Service</a>
+            <a href="PV_Vaste_Prijzen.html?lang=en"><i class="fas fa-euro-sign"></i> Fixed Prices</a>
+            <a href="PV_Premium_Vloot.html?lang=en"><i class="fas fa-car-side"></i> Premium Fleet</a>
+            <a href="PV_Luchthavenvervoer.html?lang=en"><i class="fas fa-plane-departure"></i> Airport Transfer</a>
+            <a href="PV_Zakelijk_Vervoer.html?lang=en"><i class="fas fa-briefcase"></i> Business Transport</a>
+            <a href="PV_Events_Gala.html?lang=en"><i class="fas fa-glass-cheers"></i> Events & Gala</a>
+            <a href="PV_Koeriersdienst.html?lang=en"><i class="fas fa-file-signature"></i> Courier Service</a>
         </div>
         
         <div class="login-section">
-            <a href="index.html" class="login-btn">
-                <i class="fas fa-sign-in-alt"></i> <span data-i18n="auth_login_btn">INLOGGEN</span>
+            <a href="index.html?lang=en" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> LOGIN
                 <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -455,191 +442,192 @@
     <section class="hero" style="padding: 40px 0 20px; text-align: center;">
         <div class="container">
             <div class="hero-card" style="background: var(--card-bg); backdrop-filter: blur(8px); max-width:700px; margin:0 auto; padding:30px; border-radius:48px;">
-                <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> <span data-i18n="hero_title">FleetConnect</span></h1>
-                <p style="color:var(--text-light);" data-i18n="hero_subtitle">Professioneel wagenparkbeheer – Stipt, betrouwbaar & slim verbonden</p>
+                <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> FleetConnect</h1>
+                <p style="color:var(--text-light);">Professional fleet management – Punctual, reliable & smart connected</p>
             </div>
         </div>
     </section>
 
-    <!-- ========== 3 GRIDBLOKKEN ========== -->
     <div class="container">
         <div class="uitleg-grid">
-            <a href="PV_Exclusieve_Service.html" class="uitleg-item">
+            <a href="PV_Exclusieve_Service.html?lang=en" class="uitleg-item">
                 <i class="fas fa-gem"></i>
-                <h3 data-i18n="service_exclusief_title">Exclusieve service</h3>
-                <p data-i18n="service_exclusief_desc">Persoonlijke chauffeur, altijd op tijd</p>
-                <div class="service-summary" data-i18n="service_exclusief_summary">Ontdek onze exclusieve service met persoonlijke chauffeur en luxe voertuigen.</div>
+                <h3>Exclusive Service</h3>
+                <p>Personal chauffeur, always on time</p>
+                <div class="service-summary">Discover our exclusive service with personal chauffeur and luxury vehicles.</div>
             </a>
-            <a href="PV-vaste-prijzen.html" class="uitleg-item">
+            <a href="PV_Vaste_Prijzen.html?lang=en" class="uitleg-item">
                 <i class="fas fa-euro-sign"></i>
-                <h3 data-i18n="service_prijzen_title">Vaste prijzen</h3>
-                <p data-i18n="service_prijzen_desc">Transparant, geen meters</p>
-                <div class="service-summary" data-i18n="service_prijzen_summary">Geen verrassingen achteraf. Onze vaste prijzen zijn transparant en duidelijk.</div>
+                <h3>Fixed Prices</h3>
+                <p>Transparent, no meters</p>
+                <div class="service-summary">No surprises afterwards. Our fixed prices are transparent and clear.</div>
             </a>
-            <a href="PV-premium-vloot.html" class="uitleg-item">
+            <a href="PV_Premium_Vloot.html?lang=en" class="uitleg-item">
                 <i class="fas fa-car-side"></i>
-                <h3 data-i18n="service_vloot_title">Premium vloot</h3>
-                <p data-i18n="service_vloot_desc">Mercedes, BMW & luxe minivans</p>
-                <div class="service-summary" data-i18n="service_vloot_summary">Rij in stijl met onze premium vloot. Ontdek Mercedes, BMW en luxe minivans.</div>
+                <h3>Premium Fleet</h3>
+                <p>Mercedes, BMW & luxury minivans</p>
+                <div class="service-summary">Ride in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div>
             </a>
         </div>
     </div>
 
     <div class="container">
         <div class="tabs-container">
-            <button class="tab-btn active" data-tab="new-booking" data-i18n="portal_tab_new_booking">📝 Nieuwe Rit</button>
-            <button class="tab-btn" data-tab="profile" data-i18n="portal_tab_profile">👤 Mijn Profiel</button>
-            <button class="tab-btn" data-tab="dashboard" data-i18n="portal_tab_dashboard">📊 Dashboard & Ritten</button>
-            <button class="tab-btn" data-tab="payments" data-i18n="portal_tab_payments">💰 Betalingen</button>
-            <a href="index.html" id="logoutTabBtn" class="logout-tab-btn" style="text-decoration:none;"><i class="fas fa-sign-out-alt"></i> <span data-i18n="auth_logout_btn">Uitloggen</span></a>
+            <button class="tab-btn active" data-tab="new-booking">📝 New Ride</button>
+            <button class="tab-btn" data-tab="profile">👤 My Profile</button>
+            <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Rides</button>
+            <button class="tab-btn" data-tab="payments">💰 Payments</button>
+            <!-- LOGOUT BUTTON - FIXED! -->
+            <button id="logoutBtn" class="logout-tab-btn" style="background:none; border:none; cursor:pointer; font-weight:600;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
 
         <div id="new-booking-container" class="tab-container">
             <div class="one-grid-block">
                 <div class="carousel">
                     <div class="steps">
-                        <button class="step-btn active" data-page="1" data-i18n="step_1">1. Ritgegevens</button>
-                        <button class="step-btn" data-page="2" data-i18n="step_2">2. Route & Prijs</button>
-                        <button class="step-btn" data-page="3" data-i18n="step_3">3. Voertuig & Opties</button>
-                        <button class="step-btn" data-page="4" data-i18n="step_4">4. Klantgegevens</button>
-                        <button class="step-btn" data-page="5" data-i18n="step_5">5. Afrekenen</button>
+                        <button class="step-btn active" data-page="1">1. Trip Details</button>
+                        <button class="step-btn" data-page="2">2. Route & Price</button>
+                        <button class="step-btn" data-page="3">3. Vehicle & Options</button>
+                        <button class="step-btn" data-page="4">4. Customer Info</button>
+                        <button class="step-btn" data-page="5">5. Checkout</button>
                     </div>
                     <div id="page1" class="carousel-page active-page">
-                        <h1 data-i18n="booking_header_1">🚖 Ritgegevens</h1>
-                        <div class="sub" data-i18n="booking_sub_1">België – €1,50/km | spoedritten via WhatsApp</div>
-                        <div class="field"><label data-i18n="label_pickup">📍 Ophaaladres <span class="required-star">*</span></label>
+                        <h1>🚖 Trip Details</h1>
+                        <div class="sub">Belgium – €1.50/km | urgent rides via WhatsApp</div>
+                        <div class="field"><label>📍 Pickup Address <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="pickupWrap">
-                                <input type="text" id="pickupInput" data-i18n-placeholder="placeholder_pickup" placeholder="bv. Antwerpen" autocomplete="off">
+                                <input type="text" id="pickupInput" placeholder="e.g., Antwerp" autocomplete="off">
                                 <div id="pickupSuggest" class="suggestions"></div>
                             </div>
                         </div>
-                        <div class="field"><label data-i18n="label_dropoff">🏁 Afzetadres <span class="required-star">*</span></label>
+                        <div class="field"><label>🏁 Drop-off Address <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="dropoffWrap">
-                                <input type="text" id="dropoffInput" data-i18n-placeholder="placeholder_dropoff" placeholder="bv. Brussel" autocomplete="off">
+                                <input type="text" id="dropoffInput" placeholder="e.g., Brussels" autocomplete="off">
                                 <div id="dropoffSuggest" class="suggestions"></div>
                             </div>
                         </div>
-                        <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label data-i18n="label_roundtrip">🔄 Heen en terug rit (prijs x2)</label></div>
-                        <div class="field"><label data-i18n="label_flight">✈️ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber" data-i18n-placeholder="placeholder_flight"></div>
+                        <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label>🔄 Round trip (price x2)</label></div>
+                        <div class="field"><label>✈️ Flight number (optional)</label><input type="text" id="flightNumber"></div>
                         <div class="field">
-                            <label data-i18n="label_datetime">📅 Heen datum & tijd <span class="required-star">*</span></label>
-                            <input type="text" id="datetime" data-i18n-placeholder="placeholder_datetime" placeholder="Klik om datum & tijd te kiezen" readonly>
+                            <label>📅 Departure date & time <span class="required-star">*</span></label>
+                            <input type="text" id="datetime" placeholder="Click to select date & time" readonly>
                             <i class="fas fa-calendar-alt date-icon"></i>
                         </div>
                         <div class="field return-date-field" id="returnDateContainer">
-                            <label data-i18n="label_return_datetime">📅 Terug datum & tijd</label>
-                            <input type="text" id="returnDatetime" data-i18n-placeholder="placeholder_datetime" placeholder="Klik om datum & tijd te kiezen" readonly>
+                            <label>📅 Return date & time</label>
+                            <input type="text" id="returnDatetime" placeholder="Click to select date & time" readonly>
                             <i class="fas fa-calendar-alt date-icon"></i>
                         </div>
-                        <div id="urgentWhatsApp" class="urgent-whatsapp"><span data-i18n="urgent_whatsapp">⚠️ Vertrekt binnen het uur – WhatsApp</span><a href="https://wa.me/32470123456" class="whatsapp-btn" data-i18n="btn_whatsapp">📱 WhatsApp nu</a></div>
+                        <div id="urgentWhatsApp" class="urgent-whatsapp"><span>⚠️ Departure within the hour – WhatsApp</span><a href="https://wa.me/32470123456" class="whatsapp-btn">📱 WhatsApp now</a></div>
                         <div id="page1Error" class="error"></div>
                     </div>
                     <div id="page2" class="carousel-page">
-                        <h2 data-i18n="booking_header_2">🗺️ Route & Prijs</h2>
+                        <h2>🗺️ Route & Price</h2>
                         <div id="map"></div>
-                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span data-i18n="legend_pickup">🟢 Ophalen</span></div><div class="legend-item"><div class="legend-color red"></div><span data-i18n="legend_dropoff">🔴 Afzetten</span></div><div class="legend-item"><div class="legend-color blue"></div><span data-i18n="legend_route">🟡 Route</span></div></div>
-                        <div class="info-strip"><div class="info-card"><div class="label" data-i18n="label_distance">📏 Afstand</div><div class="value" id="distVal">—</div><small data-i18n="unit_km">km</small></div><div class="info-card"><div class="label" data-i18n="label_duration">⏱️ Reistijd</div><div class="value" id="timeVal">—</div><small data-i18n="unit_min">min</small></div><div class="info-card"><div class="label" data-i18n="label_price">💰 Prijs</div><div class="value" id="priceVal">—</div><small>€</small></div></div>
+                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>🟢 Pickup</span></div><div class="legend-item"><div class="legend-color red"></div><span>🔴 Drop-off</span></div><div class="legend-item"><div class="legend-color blue"></div><span>🟡 Route</span></div></div>
+                        <div class="info-strip"><div class="info-card"><div class="label">📏 Distance</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Travel time</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Price</div><div class="value" id="priceVal">—</div><small>€</small></div></div>
                         <div id="page2Error" class="error"></div>
                     </div>
                     <div id="page3" class="carousel-page">
-                        <h2 data-i18n="booking_header_3">🚘 Kies uw voertuig</h2>
+                        <h2>🚘 Choose your vehicle</h2>
                         <div class="vehicle-grid" id="vehicleGrid">
-                            <div class="vehicle-card selected" data-vehicle="Standaard" data-extraprice="0"><div class="vehicle-emoji">🚗</div><div class="vehicle-name" data-i18n="vehicle_standaard">Standaard</div><div class="vehicle-price" data-i18n="no_extra_price">geen meerprijs</div></div>
-                            <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name" data-i18n="vehicle_break">Break</div><div class="vehicle-price">+ €5</div></div>
-                            <div class="vehicle-card" data-vehicle="Exclusieve" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name" data-i18n="vehicle_exclusieve">Exclusieve</div><div class="vehicle-price">+ €15</div></div>
-                            <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">🚐</div><div class="vehicle-name" data-i18n="vehicle_minivan">Mini Van</div><div class="vehicle-price">+ €10</div></div>
+                            <div class="vehicle-card selected" data-vehicle="Standard" data-extraprice="0"><div class="vehicle-emoji">🚗</div><div class="vehicle-name">Standard</div><div class="vehicle-price">no extra charge</div></div>
+                            <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name">Break</div><div class="vehicle-price">+ €5</div></div>
+                            <div class="vehicle-card" data-vehicle="Exclusive" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name">Exclusive</div><div class="vehicle-price">+ €15</div></div>
+                            <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">🚐</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ €10</div></div>
                         </div>
-                        <div class="extra-fields"><h3 data-i18n="extra_options">➕ Extra opties</h3><div class="extra-grid"><div><label data-i18n="label_passengers">👥 Aantal passagiers</label><input type="number" id="passengers" min="1" value="1"></div><div><label data-i18n="label_luggage">🧳 Bagagestuks</label><input type="number" id="luggage" min="0" value="0"></div></div>
-                        <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> <span data-i18n="label_meet_greet">🤝 Meet & Greet</span></label><label><input type="checkbox" id="kissRide"> <span data-i18n="label_kiss_ride">💋 Kiss & Ride</span></label><label><input type="checkbox" id="waterBottle"> <span data-i18n="label_water">💧 Waterfles</span></label><label><input type="checkbox" id="wifi"> <span data-i18n="label_wifi">📶 WiFi</span></label></div>
-                        <div><label data-i18n="label_special_wishes">📝 Speciale wensen</label><textarea id="specialWishes" rows="2" data-i18n-placeholder="placeholder_special_wishes" placeholder="bv. kinderzitje"></textarea></div></div>
+                        <div class="extra-fields"><h3>➕ Extra options</h3><div class="extra-grid"><div><label>👥 Number of passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Luggage pieces</label><input type="number" id="luggage" min="0" value="0"></div></div>
+                        <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Meet & Greet</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Water bottle</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div>
+                        <div><label>📝 Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g., child seat"></textarea></div></div>
                         <div id="page3Error" class="error"></div>
                     </div>
                     <div id="page4" class="carousel-page">
-                        <h1 data-i18n="booking_header_4">📋 Uw gegevens</h1><div class="sub" data-i18n="booking_sub_4">Vul uw contactgegevens in</div>
-                        <div class="field"><label data-i18n="label_firstname">Voornaam <span class="required-star">*</span></label><input type="text" id="firstName"></div>
-                        <div class="field"><label data-i18n="label_lastname">Achternaam <span class="required-star">*</span></label><input type="text" id="lastName"></div>
-                        <div class="field"><label data-i18n="label_phone">GSM <span class="required-star">*</span></label><input type="tel" id="phone" data-i18n-placeholder="placeholder_phone" placeholder="+32 4xx xx xx xx"></div>
-                        <div class="field"><label data-i18n="label_email">E-mail <span class="required-star">*</span></label><input type="email" id="email" data-i18n-placeholder="placeholder_email" placeholder="info@voorbeeld.be"></div>
-                        <div class="field"><label data-i18n="label_vat">BTW (optioneel)</label><input type="text" id="vat"></div>
+                        <h1>📋 Your details</h1><div class="sub">Enter your contact information</div>
+                        <div class="field"><label>First name <span class="required-star">*</span></label><input type="text" id="firstName"></div>
+                        <div class="field"><label>Last name <span class="required-star">*</span></label><input type="text" id="lastName"></div>
+                        <div class="field"><label>Mobile <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
+                        <div class="field"><label>Email <span class="required-star">*</span></label><input type="email" id="email" placeholder="info@example.be"></div>
+                        <div class="field"><label>VAT (optional)</label><input type="text" id="vat"></div>
                         <div id="page4Error" class="error"></div>
                     </div>
                     <div id="page5" class="carousel-page">
-                        <h1 data-i18n="booking_header_5">💰 Afrekenen</h1><div class="sub" data-i18n="booking_sub_5">Kies betaalmethode & bevestig</div>
-                        <div class="rit-overzicht"><h3 data-i18n="overview_title">📋 Uw ritoverzicht</h3>
-                            <div class="rit-overzicht-detail"><strong data-i18n="overview_pickup">📍 Ophalen:</strong> <span id="overviewPickup">—</span></div>
-                            <div class="rit-overzicht-detail"><strong data-i18n="overview_destination">🏁 Afzetten:</strong> <span id="overviewDestination">—</span></div>
-                            <div class="rit-overzicht-detail"><strong data-i18n="overview_heen">📅 Heen datum/tijd:</strong> <span id="overviewHeen">—</span></div>
-                            <div id="overviewReturnContainer" style="display:none;"><strong data-i18n="overview_return">🔄 Terug datum/tijd:</strong> <span id="overviewReturn">—</span></div>
-                            <div class="rit-overzicht-detail"><strong data-i18n="overview_vehicle">🚘 Voertuig:</strong> <span id="overviewVehicle">—</span></div>
-                            <div class="rit-overzicht-detail"><strong data-i18n="overview_extras">➕ Extra opties:</strong> <span id="overviewExtras">—</span></div>
-                            <div class="rit-overzicht-totaal"><strong data-i18n="overview_total">💰 Totaalprijs:</strong> <span id="overviewTotal">€ 0,00</span></div>
+                        <h1>💰 Checkout</h1><div class="sub">Choose payment method & confirm</div>
+                        <div class="rit-overzicht"><h3>📋 Your trip summary</h3>
+                            <div class="rit-overzicht-detail"><strong>📍 Pickup:</strong> <span id="overviewPickup">—</span></div>
+                            <div class="rit-overzicht-detail"><strong>🏁 Destination:</strong> <span id="overviewDestination">—</span></div>
+                            <div class="rit-overzicht-detail"><strong>📅 Departure date/time:</strong> <span id="overviewHeen">—</span></div>
+                            <div id="overviewReturnContainer" style="display:none;"><strong>🔄 Return date/time:</strong> <span id="overviewReturn">—</span></div>
+                            <div class="rit-overzicht-detail"><strong>🚘 Vehicle:</strong> <span id="overviewVehicle">—</span></div>
+                            <div class="rit-overzicht-detail"><strong>➕ Extra options:</strong> <span id="overviewExtras">—</span></div>
+                            <div class="rit-overzicht-totaal"><strong>💰 Total price:</strong> <span id="overviewTotal">€ 0.00</span></div>
                         </div>
-                        <div class="payment-method"><span data-i18n="label_payment_method">Betaalmethode:</span><label><input type="radio" name="payment" value="Cash" checked> <span data-i18n="payment_cash">💵 Cash</span></label><label><input type="radio" name="payment" value="Kaart"> <span data-i18n="payment_kaart">💳 Kaart</span></label><label><input type="radio" name="payment" value="App"> <span data-i18n="payment_app">📱 App</span></label></div>
-                        <div id="totalDisplay" class="total-display"><span data-i18n="total_display">Totaal:</span> € 0,00</div>
-                        <button id="finalConfirmBtn" class="nav-btn" style="background:#10b981; width:100%;"><span data-i18n="btn_confirm">✅ Bevestig boeking</span></button>
+                        <div class="payment-method"><span>Payment method:</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Cash</label><label><input type="radio" name="payment" value="Card"> 💳 Card</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div>
+                        <div id="totalDisplay" class="total-display">Total: € 0.00</div>
+                        <button id="finalConfirmBtn" class="nav-btn" style="background:#10b981; width:100%;">✅ Confirm booking</button>
                         <div id="page5Error" class="error"></div>
                     </div>
-                    <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled data-i18n="btn_prev">◀ Vorige</button><button class="nav-btn next" id="nextBtn" data-i18n="btn_next">Volgende ▶</button></div>
+                    <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Previous</button><button class="nav-btn next" id="nextBtn">Next ▶</button></div>
                 </div>
             </div>
         </div>
 
-        <!-- ========== 4 GRIDBLOKKEN ========== -->
-        <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Onze diensten</h2>
+        <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Our services</h2>
         <div class="services-grid">
-            <a href="PV_Luchthavenvervoer.html" class="service-card">
+            <a href="PV_Luchthavenvervoer.html?lang=en" class="service-card">
                 <i class="fas fa-plane-departure"></i>
-                <h3 data-i18n="service_luchthaven_title">Luchthavenvervoer</h3>
-                <p data-i18n="service_luchthaven_desc">Vaste prijs, vluchtmonitoring</p>
-                <div class="service-summary" data-i18n="service_luchthaven_summary">Stress-free naar de luchthaven. Wij volgen uw vlucht en wachten op u.</div>
+                <h3>Airport Transfer</h3>
+                <p>Fixed price, flight monitoring</p>
+                <div class="service-summary">Stress-free to the airport. We track your flight and wait for you.</div>
             </a>
-            <a href="PV_Zakelijk_Vervoer.html" class="service-card">
+            <a href="PV_Zakelijk_Vervoer.html?lang=en" class="service-card">
                 <i class="fas fa-briefcase"></i>
-                <h3 data-i18n="service_zakelijk_title">Zakelijk vervoer</h3>
-                <p data-i18n="service_zakelijk_desc">Executive class, facturatie</p>
-                <div class="service-summary" data-i18n="service_zakelijk_summary">Maak indruk met executive class vervoer. Facturatie achteraf mogelijk.</div>
+                <h3>Business Transport</h3>
+                <p>Executive class, invoicing</p>
+                <div class="service-summary">Impress with executive class transport. Post-booking invoicing possible.</div>
             </a>
-            <a href="PV_Events_Gala.html" class="service-card">
+            <a href="PV_Events_Gala.html?lang=en" class="service-card">
                 <i class="fas fa-glass-cheers"></i>
-                <h3 data-i18n="service_events_title">Events & Gala</h3>
-                <p data-i18n="service_events_desc">Luxe wagen met chauffeur</p>
-                <div class="service-summary" data-i18n="service_events_summary">Maak uw speciale avond compleet met een luxe chauffeur.</div>
+                <h3>Events & Gala</h3>
+                <p>Luxury car with chauffeur</p>
+                <div class="service-summary">Complete your special evening with a luxury chauffeur.</div>
             </a>
-            <a href="PV_Koeriersdienst.html" class="service-card">
+            <a href="PV_Koeriersdienst.html?lang=en" class="service-card">
                 <i class="fas fa-file-signature"></i>
-                <h3 data-i18n="service_koerier_title">Koeriersdienst</h3>
-                <p data-i18n="service_koerier_desc">Snelle documentleveringen</p>
-                <div class="service-summary" data-i18n="service_koerier_summary">Snelle en betrouwbare documentleveringen in heel België.</div>
+                <h3>Courier Service</h3>
+                <p>Fast document delivery</p>
+                <div class="service-summary">Fast and reliable document delivery throughout Belgium.</div>
             </a>
         </div>
 
         <div id="profile-container" class="tab-container hidden">
             <div class="profile-card">
-                <h3 data-i18n="portal_profile_title">Mijn gegevens</h3>
+                <h3>My details</h3>
                 <form id="profileForm">
-                    <div class="field"><label data-i18n="portal_label_fullname">Volledige naam</label><input type="text" id="fullName" required></div>
-                    <div class="field"><label data-i18n="label_email">E-mail</label><input type="email" id="profileEmail" required></div>
-                    <div class="field"><label data-i18n="portal_label_phone">Telefoon</label><input type="tel" id="profilePhone" required></div>
-                    <div class="field"><label data-i18n="portal_label_pickup">Standaard ophaallocatie</label><input type="text" id="defaultPickup"></div>
-                    <button type="submit" class="nav-btn" style="background:var(--primary);" data-i18n="portal_btn_save">Opslaan</button>
+                    <div class="field"><label>Full name</label><input type="text" id="fullName" required></div>
+                    <div class="field"><label>Email</label><input type="email" id="profileEmail" required></div>
+                    <div class="field"><label>Phone</label><input type="tel" id="profilePhone" required></div>
+                    <div class="field"><label>Default pickup location</label><input type="text" id="defaultPickup"></div>
+                    <button type="submit" class="nav-btn" style="background:var(--primary);">Save</button>
                 </form>
             </div>
         </div>
 
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
-            <h4 data-i18n="portal_dashboard_upcoming">📅 Komende ritten</h4>
-            <table class="bookings-table" id="upcomingTable"><thead><tr><th data-i18n="op_table_id">ID</th><th data-i18n="op_table_datetime">Datum/tijd</th><th data-i18n="op_table_route">Route</th><th data-i18n="op_table_vehicle">Voertuig</th><th data-i18n="label_price">Bedrag</th><th data-i18n="op_table_status">Status</th><th data-i18n="op_table_actions">Acties</th></tr></thead><tbody></tbody></table>
-            <h4 data-i18n="portal_dashboard_completed">✅ Voltooide ritten</h4>
-            <table class="bookings-table" id="completedTable"><thead><tr><th data-i18n="op_table_id">ID</th><th data-i18n="op_table_datetime">Datum/tijd</th><th data-i18n="op_table_route">Route</th><th data-i18n="op_table_vehicle">Voertuig</th><th data-i18n="label_price">Bedrag</th><th data-i18n="op_table_status">Status</th><th data-i18n="op_table_actions">Acties</th></tr></thead><tbody></tbody></table>
+            <h4>📅 Upcoming rides</h4>
+            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
+            <h4>✅ Completed rides</h4>
+            <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </div>
 
         <div id="payments-container" class="tab-container hidden">
             <div class="profile-card">
-                <h3 data-i18n="portal_tab_payments">💰 Betalingsgeschiedenis</h3>
+                <h3>💰 Payment history</h3>
                 <div id="paymentsList" style="margin-top:20px;">
                     <table class="bookings-table" id="paymentsTable">
-                        <thead><tr><th data-i18n="op_table_id">ID</th><th data-i18n="op_table_date">Datum</th><th data-i18n="label_price">Bedrag</th><th data-i18n="portal_table_method">Methode</th><th data-i18n="op_table_status">Status</th><th data-i18n="portal_table_invoice">Factuur</th></tr></thead>
+                        <thead><tr><th>ID</th><th>Date</th><th>Amount</th><th>Method</th><th>Status</th><th>Invoice</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -649,15 +637,15 @@
 
     <footer class="footer-dark">
         <div class="footer-grid">
-            <div><h4><span data-i18n="hero_title">FleetConnect</span></h4><p data-i18n="hero_subtitle">Professioneel wagenparkbeheer</p></div>
-            <div><h4 data-i18n="footer_links">Ryz3n</h4><a href="#" data-i18n="footer_control">Control Panel</a></div>
-            <div><h4 data-i18n="footer_juridisch">Juridisch</h4>
-                <a href="PVfaq.html">❓ FAQ</a><br>
-                <a href="PVprivacy.html">🔒 Privacy</a><br>
-                <a href="PVcookiebeleid.html">🍪 Cookiebeleid</a><br>
-                <a href="PValgemene-voorwaarden.html" data-i18n="footer_voorwaarden">📜 Algemene voorwaarden</a>
+            <div><h4>FleetConnect</h4><p>Professional fleet management</p></div>
+            <div><h4>Ryz3n</h4><a href="#">Control Panel</a></div>
+            <div><h4>Legal</h4>
+                <a href="PVfaq.html?lang=en">❓ FAQ</a><br>
+                <a href="PVprivacy.html?lang=en">🔒 Privacy</a><br>
+                <a href="PVcookiebeleid.html?lang=en">🍪 Cookie Policy</a><br>
+                <a href="PValgemene-voorwaarden.html?lang=en">📜 Terms & Conditions</a>
             </div>
-            <div><h4 data-i18n="footer_partners">Partners</h4><a href="#">Horizon Of Infinity</a></div>
+            <div><h4>Partners</h4><a href="#">Horizon Of Infinity</a></div>
         </div>
         <div class="footer-bottom">© 2026 FleetConnect – Ryz3n</div>
     </footer>
@@ -671,7 +659,7 @@
     window.comms = comms;
 </script>
 <script>
-    // HAMBURGER MENU FUNCTIONALITEIT
+    // HAMBURGER MENU FUNCTIONALITY
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
@@ -695,7 +683,38 @@
         if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu();
     });
     
-    // TAAL FUNCTIONALITEIT VOOR GRID LINKS
+    // ========== LOGOUT FUNCTION - FIXED! ==========
+    async function handleLogout() {
+        const confirmed = confirm('Are you sure you want to logout?');
+        if (!confirmed) return;
+        
+        if (!initSupabase()) {
+            window.location.href = 'index.html?logout=success&lang=en';
+            return;
+        }
+        
+        try {
+            const { error } = await supabase.auth.signOut();
+            
+            if (error) {
+                console.error('Logout error:', error);
+                alert('Logout error: ' + error.message);
+                return;
+            }
+            
+            localStorage.removeItem('supabase.auth.token');
+            sessionStorage.clear();
+            
+            // Redirect to login page with logout parameter - YOU STAY ON THE LOGIN PAGE!
+            window.location.href = 'index.html?logout=success&lang=en';
+            
+        } catch (err) {
+            console.error('Logout error:', err);
+            window.location.href = 'index.html?logout=success&lang=en';
+        }
+    }
+    
+    // LANGUAGE FUNCTIONALITY FOR GRID LINKS
     function updateGridLinks(lang) {
         document.querySelectorAll('.uitleg-grid a, .services-grid a, .footer-legal a').forEach(link => {
             const href = link.getAttribute('href');
@@ -712,25 +731,23 @@
         if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
             return langParam;
         }
-        return 'nl';
+        return 'en';
     }
-    
+
     function handlePaymentStatus() {
         const urlParams = new URLSearchParams(window.location.search);
         const payment = urlParams.get('payment');
         const bookingId = urlParams.get('id');
 
         if (payment === 'success') {
-            alert(i18n.t('payment_success_alert').replace('{id}', bookingId));
-            // Email trigger (non-blocking) for Stripe success
+            alert(`Thank you! Your payment for booking ${bookingId} has been received successfully.`);
             if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
             switchToTab('payments');
         } else if (payment === 'cancelled') {
-            alert(i18n.t('payment_cancelled_alert').replace('{id}', bookingId));
+            alert(`The payment for booking ${bookingId} was cancelled. You can try again later via 'My Rides'.`);
         }
     }
 
-    // Markeer actieve taal in sidebar
     function setActiveLanguageButton() {
         const currentLang = getLanguageFromURL();
         document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
@@ -745,14 +762,12 @@
             }
         });
     }
-    
-    // Initialiseer taal bij laden
+
     const currentLang = getLanguageFromURL();
     updateGridLinks(currentLang);
     setActiveLanguageButton();
     document.documentElement.lang = currentLang;
     
-    // Supabase configuratie
     const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
     
@@ -765,7 +780,6 @@
         return false;
     };
 
-    // AUTH GUARD
     async function checkAuth() {
         if (!initSupabase()) {
             setTimeout(checkAuth, 100);
@@ -773,11 +787,10 @@
         }
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
-            window.location.href = 'index.html';
+            window.location.href = 'index.html?lang=' + currentLang;
         } else {
             currentUser.id = session.user.id;
             currentUser.email = session.user.email;
-            // Optionally load profile from customers table
             const { data: customer } = await supabase.from('customers').select('*').eq('user_id', session.user.id).maybeSingle();
             if (customer) {
                 currentUser.full_name = customer.name;
@@ -790,13 +803,12 @@
     }
     checkAuth();
 
-    let currentUser = { id: 'demo-user', full_name: 'Demo Gebruiker', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
+    let currentUser = { id: 'demo-user', full_name: 'Demo User', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
     let userBookings = [];
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
-    let selectedVehicle = 'Standaard', selectedVehicleExtra = 0, currentPage = 1;
+    let selectedVehicle = 'Standard', selectedVehicleExtra = 0, currentPage = 1;
     let debounceTimer;
-    
-    // Tab functies
+
     function switchToTab(tabName) {
         document.querySelectorAll('.tab-container').forEach(c => c.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -811,11 +823,16 @@
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', (e) => {
         const nav = e.currentTarget.getAttribute('data-nav');
         if (nav === 'home' || nav === 'portal') switchToTab('new-booking');
-        if (nav === 'contact') alert(i18n.t('contact_info_alert'));
+        if (nav === 'contact') alert('📧 info@fleetconnect.be | 📞 +32 470 12 34 56');
         closeMenu();
     }));
     
-    // Profiel functies
+    // LOGOUT BUTTON EVENT LISTENER
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    
     async function loadUserProfile() {
         document.getElementById('fullName').value = currentUser.full_name;
         document.getElementById('profileEmail').value = currentUser.email;
@@ -825,9 +842,6 @@
         document.getElementById('lastName').value = currentUser.full_name.split(' ').slice(1).join(' ') || '';
         document.getElementById('phone').value = currentUser.phone;
         document.getElementById('email').value = currentUser.email;
-        if (currentUser.default_pickup_address) {
-            document.getElementById('pickupInput').value = currentUser.default_pickup_address;
-        }
     }
     
     document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
@@ -836,20 +850,19 @@
         currentUser.email = document.getElementById('profileEmail').value;
         currentUser.phone = document.getElementById('profilePhone').value;
         currentUser.default_pickup_address = document.getElementById('defaultPickup').value;
-        alert(i18n.t('profile_saved_alert'));
+        alert('Profile saved');
         loadUserProfile();
     });
     
-    // Betalingen functies
     async function loadPaymentHistory() {
         const tbody = document.querySelector('#paymentsTable tbody');
         if (!tbody) return;
 
-        tbody.innerHTML = `<tr><td colspan="6">${i18n.t('op_loading')}</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
 
         try {
             if (!initSupabase()) {
-                tbody.innerHTML = `<tr><td colspan="6">${i18n.t('op_waiting_init')}</td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="6">Waiting for initialization...</td></tr>';
                 setTimeout(loadPaymentHistory, 1000);
                 return;
             }
@@ -866,17 +879,17 @@
             if (error) throw error;
 
             if (!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6">${i18n.t('op_no_payments')}</td></tr>`;
+                tbody.innerHTML = '<tr><td colspan="6">No payments found</td></tr>';
                 return;
             }
 
             tbody.innerHTML = data.map(p => `
                 <tr>
                     <td>${p.booking_id}</td>
-                    <td>${new Date(p.created_at).toLocaleDateString(document.documentElement.lang || 'nl')}</td>
+                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
                     <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
-                    <td>${i18n.t('payment_' + (p.payment_method || 'kaart').toLowerCase())}</td>
-                    <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${i18n.t('op_status_' + (p.status === 'succeeded' ? 'completed' : 'cancelled'))}</span></td>
+                    <td>${p.payment_method || 'card'}</td>
+                    <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status}</span></td>
                     <td>
                         ${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}
                     </td>
@@ -885,11 +898,10 @@
 
         } catch (err) {
             console.error('Payment history error:', err);
-            tbody.innerHTML = `<tr><td colspan="6">Fout: ${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`;
         }
     }
 
-    // Dashboard functies
     async function loadUserBookings() {
         if (!initSupabase()) {
             setTimeout(loadUserBookings, 100);
@@ -914,31 +926,26 @@
     function renderDashboard() {
         const upcoming = userBookings.filter(b => b.status !== 'completed');
         const completed = userBookings.filter(b => b.status === 'completed');
-        const totalSpent = completed.reduce((s,b)=>s+(parseFloat(b.amount)||0),0);
+        const totalSpent = completed.reduce((s,b)=>s+b.amount,0);
         const statsGrid = document.getElementById('statsGrid');
         if (statsGrid) {
             statsGrid.innerHTML = `
-                <div class="stat-card"><h3>${upcoming.length}</h3><p>${i18n.t('portal_dashboard_upcoming')}</p></div>
-                <div class="stat-card"><h3>${completed.length}</h3><p>${i18n.t('portal_dashboard_completed')}</p></div>
-                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>${i18n.t('portal_dashboard_total_spent') || 'Totaal besteed'}</p></div>
+                <div class="stat-card"><h3>${upcoming.length}</h3><p>Upcoming rides</p></div>
+                <div class="stat-card"><h3>${completed.length}</h3><p>Completed rides</p></div>
+                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Total spent</p></div>
             `;
         }
         const renderTable = (tableId, bookings) => {
             const tbody = document.querySelector(`#${tableId} tbody`);
             if (tbody) {
-                if (bookings.length === 0) {
-                    const emptyKey = tableId === 'upcomingTable' ? 'op_no_upcoming_rides' : 'op_no_completed_rides';
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px; color: var(--text-light);">${i18n.t(emptyKey)}</td></tr>`;
-                    return;
-                }
                 tbody.innerHTML = bookings.map(b => `
                     <tr>
                         <td>${b.id}</td>
                         <td>${b.datetime} ${b.time || ''}</td>
                         <td>${b.pickup.split(',')[0]} → ${b.destination.split(',')[0]}</td>
-                        <td>${i18n.t('vehicle_' + (b.vehicle || 'standaard').toLowerCase().replace(' ', ''))}</td>
-                        <td>€${(parseFloat(b.amount)||0).toFixed(2)}</td>
-                        <td><span class="status-badge" style="background:${b.status==='completed'?'#dcfce7':'#fef3c7'}">${i18n.t('op_status_' + b.status)}</span></td>
+                        <td>${b.vehicle}</td>
+                        <td>€${b.amount}</td>
+                        <td><span class="status-badge" style="background:${b.status==='completed'?'#dcfce7':'#fef3c7'}">${b.status}</span></td>
                         <td>
                             <button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button>
                             <button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button>
@@ -960,15 +967,14 @@
         });
         document.querySelectorAll('.view-fiche').forEach(btn => btn.onclick = () => {
             const b = JSON.parse(btn.getAttribute('data-id'));
-            alert(i18n.t('ride_fiche_alert').replace('{id}', b.id).replace('{amount}', b.amount).replace('{status}', b.status));
+            alert(`Ride details: ${b.id}\n€${b.amount}\nStatus: ${b.status}`);
         });
         document.querySelectorAll('.download-pdf').forEach(btn => btn.onclick = () => {
             const b = JSON.parse(btn.getAttribute('data-id'));
-            alert(i18n.t('pdf_download_alert').replace('{id}', b.id));
+            alert(`PDF download: ${b.id}`);
         });
     }
     
-    // ========== AUTOCOMPLETE - WERKT! ==========
     async function fetchAddresses(query, wrapId) {
         const wrap = document.getElementById(wrapId);
         if (!wrap) return;
@@ -980,11 +986,11 @@
             return;
         }
         
-        suggestionsDiv.innerHTML = `<div class="suggestion-item">${i18n.t('op_loading')}</div>`;
+        suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Searching...</div>';
         suggestionsDiv.style.display = 'block';
         
         try {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=nl`;
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=en`;
             const response = await fetch(url, {
                 headers: { 'User-Agent': 'FleetConnect/2.0' }
             });
@@ -993,7 +999,7 @@
             const data = await response.json();
             
             if (!data.length) {
-                suggestionsDiv.innerHTML = `<div class="suggestion-item">${i18n.t('error_no_addresses_found')}</div>`;
+                suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ No addresses found in Belgium</div>';
                 return;
             }
             
@@ -1022,7 +1028,7 @@
             });
         } catch (err) {
             console.error('Autocomplete error:', err);
-            suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ ${i18n.t('error_network')}</div>`;
+            suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Network error – try again later</div>';
         }
     }
     
@@ -1051,7 +1057,6 @@
         });
     }
     
-    // Route functies
     async function calcRoute(lat1, lon1, lat2, lon2) {
         const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
         const res = await fetch(url);
@@ -1082,7 +1087,7 @@
         let dist = parseFloat(currentRouteData.distanceKm);
         if (currentRoundTrip) dist*=2;
         let total = dist * 1.5 + selectedVehicleExtra;
-        document.getElementById('totalDisplay').innerHTML = `${i18n.t('total_display')} € ${total.toFixed(2)}`;
+        document.getElementById('totalDisplay').innerHTML = `Total: € ${total.toFixed(2)}`;
         document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value;
         document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value;
         document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value;
@@ -1098,9 +1103,9 @@
         let extras = [];
         if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet");
         if (document.getElementById('kissRide')?.checked) extras.push("Kiss & Ride");
-        if (document.getElementById('waterBottle')?.checked) extras.push("Waterfles");
+        if (document.getElementById('waterBottle')?.checked) extras.push("Water bottle");
         if (document.getElementById('wifi')?.checked) extras.push("WiFi");
-        return extras.join(", ") || "Geen";
+        return extras.join(", ") || "None";
     }
     
     function parseEuroDate(str) {
@@ -1120,21 +1125,21 @@
     }
     
     async function calculateAndStoreRoute() {
-        if (!pickupCoord || !dropoffCoord) { showError(1, i18n.t('error_select_addresses')); return false; }
+        if (!pickupCoord || !dropoffCoord) { showError(1, 'Select addresses from suggestions'); return false; }
         const dt = document.getElementById('datetime').value;
-        if (!dt) { showError(1, i18n.t('error_choose_heen')); return false; }
-        if (isPast(dt)) { showError(1, i18n.t('error_past_date')); return false; }
+        if (!dt) { showError(1, 'Choose departure date/time.'); return false; }
+        if (isPast(dt)) { showError(1, '❌ No trips in the past.'); return false; }
         if (document.getElementById('roundtripCheckbox').checked) {
             const returnDt = document.getElementById('returnDatetime').value;
-            if (!returnDt) { showError(1, i18n.t('error_choose_return')); return false; }
-            if (isPast(returnDt)) { showError(1, i18n.t('error_return_past')); return false; }
-            if (parseEuroDate(returnDt) <= parseEuroDate(dt)) { showError(1, i18n.t('error_return_after_heen')); return false; }
+            if (!returnDt) { showError(1, 'Choose return date/time for round trip.'); return false; }
+            if (isPast(returnDt)) { showError(1, '❌ Return trip cannot be in the past.'); return false; }
+            if (parseEuroDate(returnDt) <= parseEuroDate(dt)) { showError(1, '❌ Return date/time must be after departure date/time.'); return false; }
             currentReturnDateTime = returnDt;
         }
         const urgent = isWithinNextHour(dt);
         document.getElementById('urgentWhatsApp').classList.toggle('show', urgent);
         const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon);
-        if (!rd) { showError(1, i18n.t('error_route_failed')); return false; }
+        if (!rd) { showError(1, 'Route failed.'); return false; }
         currentRouteData = rd;
         currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
         await updateMapAndInfo(rd);
@@ -1152,7 +1157,7 @@
     
     async function sendToSupabase(record) {
         try {
-            console.log('Verzenden:', record);
+            console.log('Sending:', record);
             const response = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
                 method: 'POST',
                 headers: {
@@ -1164,22 +1169,22 @@
                 body: JSON.stringify(record)
             });
             if (!response.ok) throw new Error(await response.text());
-            console.log('Succes!');
+            console.log('Success!');
             return true;
         } catch (err) {
-            console.error('Fout:', err);
-            alert(i18n.t('error_generic').replace('{error}', err.message));
+            console.error('Error:', err);
+            alert('Error: ' + err.message);
             return false;
         }
     }
     
     async function finalizeBooking() {
-        if (!currentRouteData) { showError(5, i18n.t('error_no_trip_calculated')); return; }
+        if (!currentRouteData) { showError(5,'No route calculated'); return; }
         const fn = document.getElementById('firstName').value.trim();
         const ln = document.getElementById('lastName').value.trim();
         const ph = document.getElementById('phone').value.trim();
         const em = document.getElementById('email').value.trim();
-        if (!fn || !ln || !ph || !em) { showError(5, i18n.t('error_fill_all_client')); return; }
+        if (!fn || !ln || !ph || !em) { showError(5,'Please fill in all customer details'); return; }
         
         const payment = document.querySelector('input[name="payment"]:checked').value;
         let dist = parseFloat(currentRouteData.distanceKm);
@@ -1212,19 +1217,17 @@
             form_data: { ai: true, source: "web-portal" },
             assigned_driver_id: null,
             partner_id: 1,
-            payment_status: payment === "Cash" ? "cash_pending" : "unpaid",
-            distance_km: dist,
-            user_id: currentUser?.id || null
+            payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
         };
         
         if (!initSupabase()) {
-            alert(i18n.t('error_no_supabase'));
+            alert('Supabase not initialized');
             return;
         }
 
         const success = await sendToSupabase(record);
         if (success) {
-            if (payment === "Kaart" || payment === "App") {
+            if (payment === "Card" || payment === "App") {
                 try {
                     const { data, error } = await supabase.functions.invoke('create-checkout-session', {
                         body: {
@@ -1232,23 +1235,22 @@
                             email: em,
                             amount: totalAmount,
                             paymentMethodType: payment,
-                            successUrl: `${window.location.origin}/klantenportaalpv.html?payment=success&id=${bookingId}`,
-                            cancelUrl: `${window.location.origin}/klantenportaalpv.html?payment=cancelled&id=${bookingId}`
+                            successUrl: `${window.location.origin}/klantenportaal_en.html?payment=success&id=${bookingId}&lang=en`,
+                            cancelUrl: `${window.location.origin}/klantenportaal_en.html?payment=cancelled&id=${bookingId}&lang=en`
                         }
                     });
                     if (error) throw error;
                     if (data.url) {
                         window.location.href = data.url;
                     } else {
-                        throw new Error("Geen Stripe URL ontvangen");
+                        throw new Error("No Stripe URL received");
                     }
                 } catch (stripeErr) {
                     console.error('Stripe error:', stripeErr);
-                    alert(i18n.t('error_payment_start').replace('{error}', stripeErr.message));
+                    alert('Something went wrong starting the payment: ' + stripeErr.message);
                 }
             } else {
-                alert(i18n.t('booking_confirm_alert_short').replace('{id}', record.id).replace('{amount}', totalAmount.toFixed(2)));
-                // Email trigger (non-blocking)
+                alert(`✅ Booking confirmed!\n📋 Number: ${record.id}\n💰 € ${totalAmount.toFixed(2)}`);
                 if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
                 resetAll();
                 await loadUserBookings();
@@ -1279,8 +1281,8 @@
     
     async function nextPage() {
         if (currentPage === 1) { const ok = await calculateAndStoreRoute(); if (ok) showPage(2); }
-        else if (currentPage === 2) { if (currentRouteData) showPage(3); else showError(2, i18n.t('error_no_route_step2')); }
-        else if (currentPage === 3) { if (selectedVehicle) showPage(4); else showError(3, i18n.t('error_select_vehicle')); }
+        else if (currentPage === 2) { if (currentRouteData) showPage(3); else showError(2,'Calculate route first'); }
+        else if (currentPage === 3) { if (selectedVehicle) showPage(4); else showError(3,'Choose a vehicle'); }
         else if (currentPage === 4) { showPage(5); updateTotalDisplay(); }
         else if (currentPage === 5) { await finalizeBooking(); }
     }
@@ -1319,8 +1321,8 @@
     document.getElementById('prevBtn')?.addEventListener('click', prevPage);
     document.getElementById('finalConfirmBtn')?.addEventListener('click', finalizeBooking);
     
-    flatpickr("#datetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
-    flatpickr("#returnDatetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true });
+    flatpickr("#datetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
+    flatpickr("#returnDatetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true });
     
     initMap();
     initVehicleSelection();

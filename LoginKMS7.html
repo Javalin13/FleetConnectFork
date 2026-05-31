@@ -240,7 +240,7 @@
     }
   });
 
-  // REGISTRATION
+  // REGISTRATION - AANGEPAST: redirect naar verificatiepagina
   const registerForm = document.getElementById('registerForm');
   const registerBtn = document.getElementById('registerBtn');
   const registerOriginalText = registerBtn.innerHTML;
@@ -282,9 +282,8 @@
       if (error) throw error;
       if (data.user) {
         try { await createCustomerRecord(data.user.id, email, fullName, phone); } catch (dbError) { console.warn(dbError); }
-        showMessage('✅ Compte créé avec succès ! Vous pouvez maintenant vous connecter.', 'success');
-        registerForm.reset();
-        loginTabBtn.click();
+        // 🔁 Doorsturen naar verificatiepagina met e-mailadres als parameter
+        window.location.href = 'VerificatieKMS7.html?email=' + encodeURIComponent(email);
       }
     } catch (error) {
       console.error('Registration error:', error);
@@ -293,7 +292,6 @@
       } else {
         showMessage(`❌ ${error.message || 'Erreur lors de la création du compte.'}`, 'error');
       }
-    } finally {
       setLoading(registerBtn, false, registerOriginalText);
     }
   });

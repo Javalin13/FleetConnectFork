@@ -1016,7 +1016,7 @@
                 });
                 html += `</div></div>`;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = `Mijn Partners`;
+                document.getElementById('pageTitle').innerHTML = i18n.t('op_title_partners');
             },
             
             async addDriverForPartner(partnerId) {
@@ -1059,7 +1059,7 @@
                     return;
                 }
 
-                this.showToast(`Driver ${name} toegevoegd (code: ${driverCode})`);
+                this.showToast(i18n.t('op_toast_driver_added').replace('{name}', name).replace('{code}', driverCode));
                 await this.loadDrivers();
                 this.renderPartners();
 
@@ -1120,7 +1120,7 @@
                 if (error) {
                     this.showToast(i18n.t('op_toast_err_driver_add').replace('{error}', error.message), true);
                 } else {
-                    this.showToast(`Driver ${name} toegevoegd (code: ${driverCode})`);
+                    this.showToast(i18n.t('op_toast_driver_added').replace('{name}', name).replace('{code}', driverCode));
                     await this.loadDrivers();
                     if (this.currentTab === 'drivers') this.renderDrivers();
                     if (this.currentTab === 'partners') this.renderPartners();
@@ -1170,7 +1170,7 @@
                 if (error) {
                     this.showToast(i18n.t('op_toast_err_partner_save').replace('{error}', error.message), true);
                 } else {
-                    this.showToast(`Partner ${name} opgeslagen`);
+                    this.showToast(i18n.t('op_toast_partner_saved').replace('{name}', name));
                     this.closePartnerModal();
                     await this.loadPartners();
                     if (this.currentTab === 'partners') this.renderPartners();
@@ -1259,7 +1259,7 @@
                     <div class="chart-container"><canvas id="revenueChart" width="400" height="200"></canvas></div>
                 `;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = `Financieel Overzicht - ${periodLabel}`;
+                document.getElementById('pageTitle').innerHTML = `${i18n.t('op_title_financial')} - ${periodLabel}`;
                 
                 let ctx = document.getElementById('revenueChart')?.getContext('2d');
                 if (ctx) {
@@ -1276,7 +1276,7 @@
             setFinancePeriod(period) { this.financePeriod = period; this.renderFinance(); },
 
             async renderSettlements() {
-                document.getElementById('pageTitle').innerHTML = `Financiële Afwikkeling (Settlements)`;
+                document.getElementById('pageTitle').innerHTML = i18n.t('op_title_settlements');
                 this.showToast(i18n.t('op_toast_loading_settlements'));
 
                 try {
@@ -1858,7 +1858,7 @@
                 }
 
                 if (currentData.length === 0) {
-                    this.showToast('Geen data om te exporteren', true);
+                    this.showToast(i18n.t('op_toast_err_no_export_data'), true);
                     return;
                 }
 
@@ -1973,7 +1973,7 @@
                     if (this.currentTab === 'orders' || this.currentTab === 'history' || this.currentTab === 'agenda') {
                         this.refreshCurrentTab();
                     }
-                    this.showToast(`${expiredRides.length} verlopen ritten zijn naar History verplaatst`);
+                    this.showToast(i18n.t('op_toast_expired_archived').replace('{count}', expiredRides.length));
                 }
             },
             
