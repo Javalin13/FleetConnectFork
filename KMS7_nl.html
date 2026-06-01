@@ -407,7 +407,6 @@
     pickupMarker = L.marker([pickupCoord.lat, pickupCoord.lon], { icon: pickupIcon }).addTo(map);
     dropoffMarker = L.marker([dropoffCoord.lat, dropoffCoord.lon], { icon: dropoffIcon }).addTo(map);
 
-    // Route lijn in blauwe kleur
     routeLayer = L.geoJSON(rd.geometry, { color: '#3b82f6', weight: 5, opacity: 0.9 }).addTo(map);
 
     map.fitBounds([ [pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon] ]);
