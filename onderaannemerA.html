@@ -92,67 +92,18 @@
         .lang-btn:hover { background: #334155; color: white; }
         .lang-btn.active { background: #2dd4bf; color: #0f172a; }
         
-        /* Route kolom styling met 300ms vertraging voor tooltip */
+        /* Route kolom styling - eenvoudige browser tooltip */
         .route-cell {
-            max-width: 280px;
+            max-width: 250px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             cursor: help;
             border-bottom: 1px dotted #cbd5e1;
-            position: relative;
         }
-        
-        /* Custom tooltip die na 300ms verschijnt */
-        .route-cell::after {
-            content: attr(data-fullroute);
-            position: absolute;
-            left: 0;
-            top: 100%;
-            background: #1e293b;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            white-space: normal;
-            word-break: break-word;
-            max-width: 400px;
-            z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: 1px solid #334155;
-            margin-top: 4px;
-            pointer-events: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0s linear 0.3s;
+        .route-cell:hover {
+            background-color: #f1f5f9;
         }
-        
-        /* Pijltje voor de tooltip met dezelfde vertraging */
-        .route-cell::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 100%;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid #1e293b;
-            margin-top: -4px;
-            z-index: 1001;
-            pointer-events: none;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0s linear 0.3s;
-        }
-        
-        /* Toon tooltip bij hover - na 300ms */
-        .route-cell:hover::after,
-        .route-cell:hover::before {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 0.2s ease, visibility 0s linear 0s;
-        }
-        
-        .route-cell:hover { background-color: #f1f5f9; }
         
         .main { flex: 1; display: flex; flex-direction: column; overflow: auto; }
         .header {
@@ -575,7 +526,7 @@
                 let tbody = document.getElementById('newOrdersTable');
                 if (!tbody) return;
                 if (orders.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty-planning">${t.planningNoRides}</td></tr>`; return; }
-                tbody.innerHTML = orders.map(o => { const shortRoute = this.shortenRoute(o.pickup, o.destination); const fullRoute = this.getFullRoute(o.pickup, o.destination); return `<tr><td style="white-space: nowrap;"><strong>${o.id}</strong><br><span class="status-badge status-pending">${t.statusNew}</span></td><td style="white-space: nowrap;">${o.datetime} ${o.time}</td><td style="white-space: nowrap;">${this.escapeHtml(o.name)}</td><td class="route-cell" data-fullroute="${this.escapeHtml(fullRoute)}" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(shortRoute)}</td><td style="white-space: nowrap;">${o.vehicle}</td><td style="white-space: nowrap;">€${(o.amount || 0).toFixed(2)}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td>`; }).join('');
+                tbody.innerHTML = orders.map(o => { const shortRoute = this.shortenRoute(o.pickup, o.destination); const fullRoute = this.getFullRoute(o.pickup, o.destination); return `<tr><td style="white-space: nowrap;"><strong>${o.id}</strong><br><span class="status-badge status-pending">${t.statusNew}</span></td><td style="white-space: nowrap;">${o.datetime} ${o.time}</td><td style="white-space: nowrap;">${this.escapeHtml(o.name)}</td><td class="route-cell" title="${this.escapeHtml(fullRoute)}" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(shortRoute)}</span></td><td style="white-space: nowrap;">${o.vehicle}</td><td style="white-space: nowrap;">€${(o.amount || 0).toFixed(2)}</span></td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td>`; }).join('');
             },
             renderOrders() {
                 let t = translations[currentLang];
@@ -588,8 +539,8 @@
                 let t = translations[currentLang];
                 let tbody = document.getElementById('ordersTable');
                 if (!tbody) return;
-                if (orders.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${t.planningNoRides}</td></tr>`; return; }
-                tbody.innerHTML = orders.map(o => { const driver = this.getDriverForBooking(o); const driverText = driver ? `${driver.name} (${driver.vehicle})` : `<span style="color:#f59e0b;">${t.statusUnassigned}</span>`; const shortRoute = this.shortenRoute(o.pickup, o.destination); const fullRoute = this.getFullRoute(o.pickup, o.destination); return `<tr><td style="white-space: nowrap;"><strong>${o.id}</strong><br><span class="status-badge status-accepted">${t.statusAccepted}</span></td><td style="white-space: nowrap;">${o.datetime} ${o.time}</td><td style="white-space: nowrap;">${this.escapeHtml(o.name)}</td><td class="route-cell" data-fullroute="${this.escapeHtml(fullRoute)}" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(shortRoute)}</td><td style="white-space: nowrap;">${o.vehicle}</td><td style="white-space: nowrap;">€${(o.amount || 0).toFixed(2)}</td><td style="white-space: nowrap;">${driverText}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td>`; }).join('');
+                if (orders.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${t.planningNoRides}<td></td>`; return; }
+                tbody.innerHTML = orders.map(o => { const driver = this.getDriverForBooking(o); const driverText = driver ? `${driver.name} (${driver.vehicle})` : `<span style="color:#f59e0b;">${t.statusUnassigned}</span>`; const shortRoute = this.shortenRoute(o.pickup, o.destination); const fullRoute = this.getFullRoute(o.pickup, o.destination); return `<tr><td style="white-space: nowrap;"><strong>${o.id}</strong><br><span class="status-badge status-accepted">${t.statusAccepted}</span></td><td style="white-space: nowrap;">${o.datetime} ${o.time}</td><td style="white-space: nowrap;">${this.escapeHtml(o.name)}</td><td class="route-cell" title="${this.escapeHtml(fullRoute)}" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(shortRoute)}</span></td><td style="white-space: nowrap;">${o.vehicle}</td><td style="white-space: nowrap;">€${(o.amount || 0).toFixed(2)}</span></td><td style="white-space: nowrap;">${driverText}</span></td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td>`; }).join('');
             },
             renderHistory() {
                 let t = translations[currentLang];
@@ -602,8 +553,8 @@
                 let t = translations[currentLang];
                 let tbody = document.getElementById('historyTable');
                 if (!tbody) return;
-                if (orders.length === 0) { tbody.innerHTML = `<td><td colspan="8" class="empty-planning">${t.planningNoRides}</td>`; return; }
-                tbody.innerHTML = orders.map(o => { const driver = this.getDriverForBooking(o); const driverText = driver ? `${driver.name} (${driver.vehicle})` : t.statusUnassigned; let statusBadge = ''; if (o.status === 'completed') statusBadge = `<br><span class="status-badge status-completed">${t.statusCompleted}</span>`; else if (o.status === 'cancelled') statusBadge = `<br><span class="status-badge status-cancelled">${t.statusCancelled}</span>`; const shortRoute = this.shortenRoute(o.pickup, o.destination); const fullRoute = this.getFullRoute(o.pickup, o.destination); return `<tr><td style="white-space: nowrap;"><strong>${o.id}</strong>${statusBadge}</td><td style="white-space: nowrap;">${o.datetime} ${o.time}</td><td style="white-space: nowrap;">${this.escapeHtml(o.name)}</td><td class="route-cell" data-fullroute="${this.escapeHtml(fullRoute)}" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(shortRoute)}</td><td style="white-space: nowrap;">${o.vehicle}</td><td style="white-space: nowrap;">€${(o.amount || 0).toFixed(2)}</td><td style="white-space: nowrap;">${driverText}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td>`; }).join('');
+                if (orders.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${t.planningNoRides}</td></tr>`; return; }
+                tbody.innerHTML = orders.map(o => { const driver = this.getDriverForBooking(o); const driverText = driver ? `${driver.name} (${driver.vehicle})` : t.statusUnassigned; let statusBadge = ''; if (o.status === 'completed') statusBadge = `<br><span class="status-badge status-completed">${t.statusCompleted}</span>`; else if (o.status === 'cancelled') statusBadge = `<br><span class="status-badge status-cancelled">${t.statusCancelled}</span>`; const shortRoute = this.shortenRoute(o.pickup, o.destination); const fullRoute = this.getFullRoute(o.pickup, o.destination); return `<tr><td style="white-space: nowrap;"><strong>${o.id}</strong>${statusBadge}</td><td style="white-space: nowrap;">${o.datetime} ${o.time}</td><td style="white-space: nowrap;">${this.escapeHtml(o.name)}</td><td class="route-cell" title="${this.escapeHtml(fullRoute)}" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(shortRoute)}</span></td><td style="white-space: nowrap;">${o.vehicle}</td><td style="white-space: nowrap;">€${(o.amount || 0).toFixed(2)}</span></td><td style="white-space: nowrap;">${driverText}</span></td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td>`; }).join('');
             },
             renderAgenda() {
                 let t = translations[currentLang];
