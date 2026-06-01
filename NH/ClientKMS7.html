@@ -36,7 +36,7 @@
     /* ============================================================ */
     .hero-portal { 
       min-height: 50vh; 
-      background: linear-gradient(rgba(10, 25, 47, 0.3), rgba(15, 42, 63, 0.35)), url('heroKMS7.png') center/cover no-repeat; 
+      background: linear-gradient(rgba(10, 25, 47, 0.3), rgba(15, 42, 63, 0.35)), url('RPK/NH/heroKMS7.png') center/cover no-repeat; 
       display: flex;  
       align-items: flex-end;
       justify-content: center;
@@ -394,10 +394,10 @@
           <table class="invoice-table">
             <thead><tr><th>Description</th><th>Quantité</th><th>Prix unitaire</th><th>Total</th></tr></thead>
             <tbody>
-              <tr><td>Course VTC: ${booking.pickup} → ${booking.destination}</td><td>1</td><td>€ ${formatPrice(booking.amount - (booking.extras?.includes('+')?15:0))}</td><td>€ ${formatPrice(booking.amount - (booking.extras?.includes('+')?15:0))}</td></tr>
-              ${booking.vehicle !== 'Standard' ? `<tr><td>Supplément véhicule (${booking.vehicle})</td><td>1</td><td>€ ${booking.vehicle === 'Break' ? '5,00' : booking.vehicle === 'Exclusive' ? '15,00' : '10,00'}</td><td>€ ${booking.vehicle === 'Break' ? '5,00' : booking.vehicle === 'Exclusive' ? '15,00' : '10,00'}</td></tr>` : ''}
-              <tr><td>Date & heure: ${booking.datetime} ${booking.time || ''}</td><td></td><td></td><td></td></tr>
-              <tr><td>Options: ${booking.extras || 'Aucune'}</td><td></td><td></td><td></td></tr>
+              <tr><td colspan="4"><small>Course VTC: ${booking.pickup} → ${booking.destination}</small></td></tr>
+              <tr><td colspan="4"><small>Date & heure: ${booking.datetime} ${booking.time || ''}</small></td></tr>
+              <tr><td colspan="4"><small>Options: ${booking.extras || 'Aucune'}</small></td></tr>
+              <tr><td colspan="4"><strong>Total: € ${formatPrice(booking.amount)}</strong></td></tr>
             </tbody>
           </table>
           <div class="invoice-total">
@@ -502,7 +502,7 @@
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=fr`; 
       const controller = new AbortController(); 
       const timeoutId = setTimeout(() => controller.abort(), 8000); 
-      const response = await fetch(url, { headers: { 'User-Agent': 'C-KMS-7-Portal/1.0' }, signal: controller.signal }); 
+      const response = await fetch(url, { headers: { 'User-Agent': 'NH-Portal/1.0' }, signal: controller.signal }); 
       clearTimeout(timeoutId); 
       if (!response.ok) throw new Error(`HTTP ${response.status}`); 
       const data = await response.json(); 
