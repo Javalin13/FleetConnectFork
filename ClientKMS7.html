@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>C-NH-7 | Portail Client - Taxi de Luxe & VTC Belgique</title>
-  <meta name="description" content="Portail client C-NH-7 : gérez vos réservations, consultez vos trajets, téléchargez vos factures et planifiez vos courses luxe avec votre compte personnel.">
+  <title>C-NH | Portail Client - Taxi de Luxe & VTC Belgique</title>
+  <meta name="description" content="Portail client C-NH : gérez vos réservations, consultez vos trajets, téléchargez vos factures et planifiez vos courses luxe avec votre compte personnel.">
   <meta name="robots" content="noindex, nofollow">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -36,7 +36,7 @@
     /* ============================================================ */
     .hero-portal { 
       min-height: 50vh; 
-      background: linear-gradient(rgba(10, 25, 47, 0.3), rgba(15, 42, 63, 0.35)), url('heroNH7.png') center/cover no-repeat; 
+      background: linear-gradient(rgba(10, 25, 47, 0.3), rgba(15, 42, 63, 0.35)), url('heroKMS7.png') center/cover no-repeat; 
       display: flex;  
       align-items: flex-end;
       justify-content: center;
@@ -225,13 +225,13 @@
 
 <header>
   <div class="container navbar">
-    <div class="logo">C-NH-7</div>
+    <div class="logo">C-NH</div>
     <div class="menu-icon" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
     <ul class="nav-links" id="navLinks">
       <li><a href="#reserveren">Nouvelle course</a></li>
       <li><a href="#dashboard">Mes courses</a></li>
       <li><a href="#profiel">Profil</a></li>
-      <li><a href="NH7.html" target="_blank">Page d'accueil</a></li>
+      <li><a href="KMS7.html" target="_blank">Page d'accueil</a></li>
       <li class="lang-switch">
         <a href="#" data-lang="nl">NL</a>
         <a href="#" data-lang="en">EN</a>
@@ -247,7 +247,7 @@
     <div class="container">
       <div class="hero-split-box">
         <div class="hero-left-content">
-          <h1><i class="fas fa-user-circle"></i> C-NH-7</h1>
+          <h1><i class="fas fa-user-circle"></i> C-NH</h1>
           <div class="hero-subtitle">Portail Client | L'élégance en mouvement</div>
         </div>
         <div class="hero-right-content">
@@ -318,12 +318,12 @@
 
 <footer>
   <div class="container footer-grid">
-    <div class="footer-col"><h4>C-NH-7</h4><p>Buitenplas 1/14<br>1601 Sint-Pieters-Leeuw</p><p>+32 473 30 03 74</p><p>booking@nh7.be</p><p>TVA: BE 0789.123.456</p></div>
-    <div class="footer-col"><h4>LIENS RAPIDES</h4><a href="#reserveren">Nouvelle course</a><a href="#dashboard">Mes courses</a><a href="NH7.html">Page d'accueil</a></div>
-    <div class="footer-col"><h4>INFORMATIONS</h4><a href="Mentions_legales_NH7.html">Mentions légales</a><a href="Mentions_legales_NH7.html">CGV</a><a href="#">Confidentialité</a></div>
+    <div class="footer-col"><h4>C-NH</h4><p>Buitenplas 1/14<br>1601 Sint-Pieters-Leeuw</p><p>+32 473 30 03 74</p><p>booking@kms7.be</p><p>TVA: BE 0789.123.456</p></div>
+    <div class="footer-col"><h4>LIENS RAPIDES</h4><a href="#reserveren">Nouvelle course</a><a href="#dashboard">Mes courses</a><a href="KMS7.html">Page d'accueil</a></div>
+    <div class="footer-col"><h4>INFORMATIONS</h4><a href="Mentions_legales_KMS7.html">Mentions légales</a><a href="Mentions_legales_KMS7.html">CGV</a><a href="#">Confidentialité</a></div>
     <div class="footer-col"><h4>CONTACT</h4><a href="#reserveren" class="btn-outline-gold" style="display:inline-block;">Réserver maintenant</a></div>
   </div>
-  <div class="container" style="text-align:center; margin-top: 2.5rem; font-size: 0.8rem;">© 2026 C-NH-7 — L'élégance en mouvement – Portail Client | Tous droits réservés</div>
+  <div class="container" style="text-align:center; margin-top: 2.5rem; font-size: 0.8rem;">© 2026 C-NH — L'élégance en mouvement – Portail Client | Tous droits réservés</div>
 </footer>
 
 <div id="invoiceModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
@@ -345,20 +345,20 @@
     
     if (!session) {
       console.log('No session, redirecting to login');
-      window.location.replace('LoginNH7.html');
+      window.location.replace('LoginKMS7.html');
       return;
     }
     
-    sessionStorage.setItem('nh7_user_email', session.user.email);
+    sessionStorage.setItem('kms7_user_email', session.user.email);
     console.log('👤 User logged in:', session.user.email);
   })();
 
   // ============================================================
   // 📍 VARIABLES
   // ============================================================
-  let currentUserEmail = sessionStorage.getItem('nh7_user_email') || '';
+  let currentUserEmail = sessionStorage.getItem('kms7_user_email') || '';
   function generateCustomerId(email) { return "CUST-"+email.toLowerCase().replace(/[^a-z0-9]/g,""); }
-  let currentUser = { id: generateCustomerId(currentUserEmail), full_name: 'Client C-NH-7', email: currentUserEmail, phone: '+32 470 12 34 56' };
+  let currentUser = { id: generateCustomerId(currentUserEmail), full_name: 'Client C-NH', email: currentUserEmail, phone: '+32 470 12 34 56' };
   
   let map, pickupCoord=null, dropoffCoord=null, routeLayer=null, currentRouteData=null, currentRoundTrip=false, currentReturnDateTime="";
   let selectedVehicle='Standard', selectedVehicleExtra=0, currentPage=1;
@@ -374,7 +374,7 @@
   function updateSummary(total){ let sumDiv=document.getElementById('bookingSummary'); if(sumDiv&&currentPage===5){ sumDiv.innerHTML=`<div><i class="fas fa-map-marker-alt"></i> Prise en charge: ${document.getElementById('pickupInput').value}</div><div><i class="fas fa-flag-checkered"></i> Destination: ${document.getElementById('dropoffInput').value}</div><div><i class="fas fa-calendar"></i> Aller: ${document.getElementById('datetime').value}</div>${currentRoundTrip&&currentReturnDateTime?`<div><i class="fas fa-undo-alt"></i> Retour: ${currentReturnDateTime}</div>`:''}<div><i class="fas fa-car"></i> Véhicule: ${selectedVehicle}</div><div><i class="fas fa-gem"></i> Options: ${getExtrasString()}</div><div><strong>Total: € ${formatPrice(total)}</strong></div>`; } }
   async function calcRoute(lat1,lon1,lat2,lon2){ const url=`https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`; const res=await fetch(url); const data=await res.json(); if(data.code==='Ok'&&data.routes.length){ let rt=data.routes[0]; return { distanceKm: (rt.distance/1000).toFixed(1), durationMin: Math.round(rt.duration/60), geometry: rt.geometry }; } return null; }
   async function calculateAndStoreRoute(){ if(!pickupCoord||!dropoffCoord){ showError(1,'Sélectionnez des adresses dans les suggestions'); return false; } let dt=document.getElementById('datetime').value; if(!dt){ showError(1,'Choisissez la date/heure'); return false; } if(isPast(dt)){ showError(1,'Pas de réservation dans le passé'); return false; } if(document.getElementById('roundtripCheckbox').checked){ let rdt=document.getElementById('returnDatetime').value; if(!rdt||isPast(rdt)){ showError(1,'Date/heure de retour valide requise'); return false; } currentReturnDateTime=rdt; } else currentReturnDateTime=""; let urgent=isWithinNextHour(dt); document.getElementById('urgentWhatsApp').style.display=urgent?'flex':'none'; let rd=await calcRoute(pickupCoord.lat,pickupCoord.lon,dropoffCoord.lat,dropoffCoord.lon); if(!rd){ showError(1,'Itinéraire non trouvé'); return false; } currentRouteData=rd; currentRoundTrip=document.getElementById('roundtripCheckbox').checked; let d=parseFloat(rd.distanceKm), t=rd.durationMin; if(currentRoundTrip){ d*=2; t*=2; } let price=d*1.5; document.getElementById('distVal').innerHTML=d.toFixed(1); document.getElementById('timeVal').innerHTML=t; document.getElementById('priceVal').innerHTML=formatPrice(price); if(routeLayer) routeLayer.remove(); routeLayer=L.geoJSON(rd.geometry,{color:'#C0C0C0',weight:5}).addTo(map); let bounds=L.latLngBounds([pickupCoord.lat,pickupCoord.lon],[dropoffCoord.lat,dropoffCoord.lon]); map.fitBounds(bounds,{padding:[60,60]}); updateTotalDisplay(); return true; }
-  function generateBookingId(){ const d=new Date(), y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); let c=parseInt(localStorage.getItem('nh7BookingCounter')||'0')+1; localStorage.setItem('nh7BookingCounter',c); return `C-NH-7-${y}${m}${dd}-${String(c).padStart(3,'0')}`; }
+  function generateBookingId(){ const d=new Date(), y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0'); let c=parseInt(localStorage.getItem('kms7BookingCounter')||'0')+1; localStorage.setItem('kms7BookingCounter',c); return `C-KMS-7-${y}${m}${dd}-${String(c).padStart(3,'0')}`; }
   
   function generateInvoiceHTML(booking) {
       const subtotal = booking.amount;
@@ -383,7 +383,7 @@
       return `
         <div style="font-family: 'Montserrat', sans-serif;">
           <div class="invoice-header">
-            <div><h2>C-NH-7 SPRL</h2><p>Buitenplas 1/14, 1601 Sint-Pieters-Leeuw<br>TVA: BE 0789.123.456<br>+32 473 30 03 74</p></div>
+            <div><h2>C-NH SPRL</h2><p>Buitenplas 1/14, 1601 Sint-Pieters-Leeuw<br>TVA: BE 0789.123.456<br>+32 473 30 03 74</p></div>
             <div style="text-align:right;"><h3>FACTURE</h3><p>N°: ${booking.id}<br>Date: ${new Date().toLocaleDateString('fr-FR')}</p></div>
           </div>
           <div class="invoice-details">
@@ -407,7 +407,7 @@
             <p><em>Moyen de paiement: ${booking.payment === 'Cash' ? 'Espèces' : booking.payment === 'Card' ? 'Carte bancaire' : 'Application mobile'}</em></p>
           </div>
           <div style="margin-top:30px; font-size:12px; text-align:center; border-top:1px solid #ccc; padding-top:10px;">
-            <p>Merci pour votre confiance ! Paiement à bord ou par virement. Pour toute question, contactez booking@nh7.be</p>
+            <p>Merci pour votre confiance ! Paiement à bord ou par virement. Pour toute question, contactez booking@kms7.be</p>
           </div>
         </div>
       `;
@@ -450,8 +450,8 @@
   document.getElementById('logoutTabBtn').addEventListener('click', async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
-      sessionStorage.removeItem('nh7_user_email');
-      window.location.replace('LoginNH7.html');
+      sessionStorage.removeItem('kms7_user_email');
+      window.location.replace('LoginKMS7.html');
     } else {
       console.error('Logout error:', error);
       alert('Erreur lors de la déconnexion. Veuillez réessayer.');
@@ -465,9 +465,9 @@
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const lang = link.getAttribute('data-lang');
-      if (lang === 'nl') window.location.href = 'ClientNH7_nl.html';
-      else if (lang === 'en') window.location.href = 'ClientNH7_en.html';
-      else if (lang === 'fr') window.location.href = 'ClientNH7.html';
+      if (lang === 'nl') window.location.href = 'ClientKMS7_nl.html';
+      else if (lang === 'en') window.location.href = 'ClientKMS7_en.html';
+      else if (lang === 'fr') window.location.href = 'ClientKMS7.html';
     });
   });
   
@@ -502,7 +502,7 @@
       const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=fr`; 
       const controller = new AbortController(); 
       const timeoutId = setTimeout(() => controller.abort(), 8000); 
-      const response = await fetch(url, { headers: { 'User-Agent': 'C-NH-7-Portal/1.0' }, signal: controller.signal }); 
+      const response = await fetch(url, { headers: { 'User-Agent': 'C-KMS-7-Portal/1.0' }, signal: controller.signal }); 
       clearTimeout(timeoutId); 
       if (!response.ok) throw new Error(`HTTP ${response.status}`); 
       const data = await response.json(); 
