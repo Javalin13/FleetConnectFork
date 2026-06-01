@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Fleet Connect - Onderaannemer Paneel</title>
+    <title>NH - Onderaannemer Paneel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="translations.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f1f5f9; height: 100vh; display: flex; }
@@ -130,6 +129,35 @@
             color: #f59e0b;
         }
         
+        /* Taal selector styling */
+        .language-selector {
+            display: flex;
+            gap: 5px;
+            background: #1e293b;
+            padding: 5px 10px;
+            border-radius: 40px;
+            margin-left: 10px;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #334155;
+            color: white;
+        }
+        .lang-btn.active {
+            background: #2dd4bf;
+            color: #0f172a;
+        }
+        
         .main {
             flex: 1;
             display: flex;
@@ -154,6 +182,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
         .switch-btn {
             background: #f59e0b;
@@ -227,7 +256,7 @@
             padding: 32px;
         }
         
-        /* Filter bar stijlen */
+        /* Rest van de stijlen (filter-bar, tabellen, modals, etc.) */
         .filter-bar { background: white; padding: 8px 16px; border-radius: 48px; margin-bottom: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border: 1px solid #e2e8f0; }
         .filter-group { display: flex; align-items: center; gap: 6px; background: #f8fafc; padding: 4px 12px; border-radius: 32px; border: 1px solid #e2e8f0; }
         .filter-group label { font-size: 0.7rem; font-weight: 600; color: #475569; }
@@ -237,7 +266,6 @@
         .btn-filter { background: #0f172a; color: white; }
         .btn-reset { background: #e2e8f0; color: #1e293b; }
         
-        /* Tabellen */
         .orders-table-wrapper { overflow-x: auto; background: white; border-radius: 16px; padding: 20px; }
         .orders-table { width: 100%; border-collapse: collapse; }
         .orders-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; font-size: 0.75rem; font-weight: 600; color: #64748b; }
@@ -249,7 +277,6 @@
         .add-btn { background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.8rem; margin-bottom: 16px; }
         .order-count { background: #2dd4bf20; padding: 4px 12px; border-radius: 40px; font-size: 0.75rem; font-weight: 600; color: #0f172a; }
         
-        /* Modals */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
         .modal-content { background: white; border-radius: 20px; max-width: 700px; width: 90%; max-height: 85vh; overflow-y: auto; }
         .fiche-header { background: #0f172a; color: white; padding: 20px; border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center; }
@@ -269,14 +296,12 @@
         .fiche-btn.close { background: #64748b; color: white; }
         .fiche-btn.assign { background: #f59e0b; color: white; }
         
-        /* Dashboard kaarten */
         .people-card { background: white; border-radius: 16px; padding: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
         .stat-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .stat-card h4 { font-size: 0.75rem; text-transform: uppercase; color: #64748b; margin-bottom: 8px; }
         .stat-card .value { font-size: 1.8rem; font-weight: 700; }
         
-        /* Kalender stijlen - VERBETERDE SELECTIE */
         .calendar-container { background: white; border-radius: 16px; padding: 20px; margin-bottom: 24px; }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
         .calendar-header h2 { font-size: 1.3rem; font-weight: 600; }
@@ -286,36 +311,14 @@
         .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s ease; position: relative; }
         .calendar-day:hover { background: #e2e8f0; transform: scale(1.05); }
-        /* Geselecteerde dag - DIKKE ORANJE RAND */
-        .calendar-day.selected {
-            background: #2dd4bf !important;
-            color: #0f172a !important;
-            font-weight: 700 !important;
-            border: 3px solid #f59e0b !important;
-            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3) !important;
-            transform: scale(1.02);
-            position: relative;
-            z-index: 2;
-        }
-        /* Vinkje bij geselecteerde dag */
-        .calendar-day.selected::after {
-            content: "✓";
-            position: absolute;
-            top: 2px;
-            right: 4px;
-            font-size: 10px;
-            color: #f59e0b;
-            font-weight: bold;
-        }
+        .calendar-day.selected { background: #2dd4bf !important; color: #0f172a !important; font-weight: 700 !important; border: 3px solid #f59e0b !important; box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3) !important; transform: scale(1.02); position: relative; z-index: 2; }
+        .calendar-day.selected::after { content: "✓"; position: absolute; top: 2px; right: 4px; font-size: 10px; color: #f59e0b; font-weight: bold; }
         .calendar-day.other-month { color: #94a3b8; }
         .calendar-day.today { border: 2px solid #f59e0b; font-weight: 600; }
         .calendar-day.selected.today { border: 3px solid #f59e0b; background: #2dd4bf !important; }
         .calendar-day.has-rides { background: #dbeafe; }
-        .calendar-day.has-expired { background: #fee2e2; }
         .ride-dot { width: 6px; height: 6px; background: #2dd4bf; border-radius: 50%; margin-top: 2px; }
-        .expired-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; margin-top: 2px; }
         
-        /* Dashboard grid */
         .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .info-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer; }
         .mini-flip-container { perspective: 600px; height: 140px; }
@@ -326,45 +329,27 @@
         .mini-flip-back { background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%); color: #0f172a; transform: rotateY(180deg); }
         .mini-flip-front .value, .mini-flip-back .value { font-size: 1.8rem; font-weight: 700; margin: 8px 0; }
         
-        /* Planning container */
         .planning-container { margin-top: 20px; background: white; border-radius: 16px; padding: 20px; }
         .planning-list { max-height: 400px; overflow-y: auto; }
         .planning-item { background: #f1f5f9; border-radius: 12px; padding: 12px; margin-bottom: 10px; border-left: 4px solid #2dd4bf; }
-        .planning-item.expired { border-left-color: #ef4444; background: #fef2f2; }
         .planning-time { font-weight: 700; color: #0f172a; margin-bottom: 4px; }
         .planning-ride { font-size: 0.85rem; color: #475569; }
         .empty-planning { text-align: center; padding: 40px; color: #94a3b8; }
-        
-        /* Financieel */
-        .finance-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
-        .period-buttons { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-        .period-btn { padding: 8px 20px; border-radius: 40px; border: none; cursor: pointer; font-weight: 500; background: #e2e8f0; transition: all 0.2s; }
-        .period-btn.active { background: #2dd4bf; color: #0f172a; }
-        .chart-container { background: white; border-radius: 16px; padding: 20px; margin-top: 24px; }
-        canvas { max-height: 300px; width: 100% !important; }
         
         .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
         .kpi-card { background: white; border-radius: 16px; padding: 20px; text-align: center; }
         .kpi-card .value { font-size: 1.8rem; font-weight: 700; }
         .kpi-card .label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; margin-top: 8px; }
         
-        /* Wiki */
         .wiki-container { background: white; border-radius: 16px; padding: 24px; }
         .wiki-content { text-align: left; max-width: 1000px; margin: 0 auto; line-height: 1.6; }
         .wiki-content h2 { color: #0f172a; border-bottom: 2px solid #2dd4bf; padding-bottom: 10px; margin-bottom: 20px; }
         .wiki-content h3 { color: #2dd4bf; margin-top: 20px; margin-bottom: 10px; }
         
-        /* Partners */
         .partner-card { border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px; background: #f8fafc; }
         .partner-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
         .partner-name { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
-        .driver-list { margin-top: 12px; padding-left: 16px; border-left: 2px solid #2dd4bf; }
-        .driver-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
-        .add-driver-form { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-        .add-driver-form input { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.8rem; flex: 1; min-width: 120px; }
-        select { padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; font-family: 'Inter', sans-serif; }
         
-        .alert-no-data { background: #fef3c7; color: #92400e; padding: 20px; border-radius: 16px; text-align: center; margin: 20px; }
         .toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 12px 24px; border-radius: 40px; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; }
         .hidden { display: none; }
@@ -377,7 +362,6 @@
         .status-completed { background: #d1fae5; color: #065f46; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
 
-        /* Responsive */
         @media (max-width: 1200px) {
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
             .kpi-grid { grid-template-columns: repeat(2, 1fr); }
@@ -387,6 +371,7 @@
             .sidebar.collapsed { width: 80px; }
             .content { padding: 16px; }
             .header { padding: 16px; }
+            .header-right { flex-wrap: wrap; }
         }
         @media (max-width: 480px) {
             .header h1 { font-size: 1rem; }
@@ -404,35 +389,35 @@
         <div class="logo" onclick="if(window.app) app.toggleSidebar()">
             <i class="fas fa-bars"></i>
             <div class="logo-text">
-                <i class="fas fa-taxi"></i> Fleet Connect
-                <br><small>Onderaannemer Paneel</small>
+                <i class="fas fa-taxi"></i> NH
+                <br><small id="sidebarSubtitle">Onderaannemer Paneel</small>
             </div>
         </div>
         <div class="nav-menu">
             <div class="nav-section">
-                <div class="nav-section-title">📋 BOEKINGEN</div>
-                <div class="nav-item active" data-tab="neworders"><i class="fas fa-clipboard-list"></i><span> New Orders</span></div>
-                <div class="nav-item" data-tab="orders"><i class="fas fa-box"></i><span> Orders</span></div>
-                <div class="nav-item" data-tab="history"><i class="fas fa-history"></i><span> History</span></div>
-                <div class="nav-item" data-tab="agenda"><i class="fas fa-calendar-alt"></i><span> Agenda</span></div>
+                <div class="nav-section-title" id="navBookings">📋 BOEKINGEN</div>
+                <div class="nav-item active" data-tab="neworders"><i class="fas fa-clipboard-list"></i><span id="navNewOrders">New Orders</span></div>
+                <div class="nav-item" data-tab="orders"><i class="fas fa-box"></i><span id="navOrders">Orders</span></div>
+                <div class="nav-item" data-tab="history"><i class="fas fa-history"></i><span id="navHistory">History</span></div>
+                <div class="nav-item" data-tab="agenda"><i class="fas fa-calendar-alt"></i><span id="navAgenda">Agenda</span></div>
             </div>
             <div class="nav-section">
-                <div class="nav-section-title">👥 BEHEER</div>
-                <div class="nav-item" data-tab="drivers"><i class="fas fa-id-card"></i><span> Drivers</span></div>
-                <div class="nav-item" data-tab="partners"><i class="fas fa-handshake"></i><span> Mijn Partners</span></div>
+                <div class="nav-section-title" id="navManagement">👥 BEHEER</div>
+                <div class="nav-item" data-tab="drivers"><i class="fas fa-id-card"></i><span id="navDrivers">Drivers</span></div>
+                <div class="nav-item" data-tab="partners"><i class="fas fa-handshake"></i><span id="navPartners">Mijn Partners</span></div>
             </div>
             <div class="nav-section">
-                <div class="nav-section-title">💰 FINANCIËN</div>
-                <div class="nav-item" data-tab="financieel"><i class="fas fa-chart-line"></i><span> Financieel</span></div>
-                <div class="nav-item" data-tab="settlements"><i class="fas fa-university"></i><span> Settlements</span></div>
+                <div class="nav-section-title" id="navFinance">💰 FINANCIËN</div>
+                <div class="nav-item" data-tab="financieel"><i class="fas fa-chart-line"></i><span id="navFinancial">Financieel</span></div>
+                <div class="nav-item" data-tab="settlements"><i class="fas fa-university"></i><span id="navSettlements">Settlements</span></div>
             </div>
             <div class="nav-section">
-                <div class="nav-section-title">ℹ️ INFORMATIE</div>
-                <div class="nav-item" data-tab="wiki"><i class="fas fa-robot"></i><span> Wiki Agent</span></div>
+                <div class="nav-section-title" id="navInfo">ℹ️ INFORMATIE</div>
+                <div class="nav-item" data-tab="wiki"><i class="fas fa-robot"></i><span id="navWiki">Wiki Agent</span></div>
             </div>
-            <div class="nav-item switch-item" id="switchWoningenBtn"><i class="fas fa-home"></i><span> Switch naar Woningen</span></div>
-            <div class="nav-item switch-item" id="switchDealerBtn"><i class="fas fa-exchange-alt"></i><span> Switch naar Auto Dealer</span></div>
-            <div class="nav-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span> Uitloggen</span></div>
+            <div class="nav-item switch-item" id="switchWoningenBtn"><i class="fas fa-home"></i><span id="switchWoningenText">Switch naar Woningen</span></div>
+            <div class="nav-item switch-item" id="switchDealerBtn"><i class="fas fa-exchange-alt"></i><span id="switchDealerText">Switch naar Auto Dealer</span></div>
+            <div class="nav-item logout-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span id="logoutText">Uitloggen</span></div>
         </div>
     </div>
     <div class="main">
@@ -440,11 +425,16 @@
         <div class="header">
             <h1 id="pageTitle">New Orders</h1>
             <div class="header-right">
-                <button class="back-btn" id="backBtn"><i class="fas fa-home"></i> <span>Terug naar overzicht</span></button>
-                <button class="switch-woningen-btn" id="headerWoningenBtn"><i class="fas fa-home"></i> <span>Woningen Paneel</span></button>
-                <button class="switch-btn" id="headerDealerBtn"><i class="fas fa-exchange-alt"></i> <span>Switch naar Auto Dealer</span></button>
-                <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> <span>Vernieuwen</span></button>
-                <span class="user-info"><i class="fas fa-user-circle"></i> <span id="langToggle" style="cursor:pointer;">🌐 Taal</span></span>
+                <div class="language-selector">
+                    <button class="lang-btn active" data-lang="nl">🇳🇱 NL</button>
+                    <button class="lang-btn" data-lang="fr">🇫🇷 FR</button>
+                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                    <button class="lang-btn" data-lang="es">🇪🇸 ES</button>
+                </div>
+                <button class="back-btn" id="backBtn"><i class="fas fa-home"></i> <span id="backText">Terug naar overzicht</span></button>
+                <button class="switch-woningen-btn" id="headerWoningenBtn"><i class="fas fa-home"></i> <span id="headerWoningenText">Woningen Paneel</span></button>
+                <button class="switch-btn" id="headerDealerBtn"><i class="fas fa-exchange-alt"></i> <span id="headerDealerText">Switch naar Auto Dealer</span></button>
+                <button class="refresh-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> <span id="refreshText">Vernieuwen</span></button>
             </div>
         </div>
         <div class="content" id="contentArea"></div>
@@ -452,24 +442,24 @@
 
     <div id="bookingModal" class="modal">
         <div class="modal-content">
-            <div class="fiche-header"><h3><i class="fas fa-file-invoice"></i> Rit Fiche</h3><button class="close-modal" id="closeModalBtn">&times;</button></div>
+            <div class="fiche-header"><h3 id="ficheTitle"><i class="fas fa-file-invoice"></i> Rit Fiche</h3><button class="close-modal" id="closeModalBtn">&times;</button></div>
             <div class="fiche-body" id="ficheBody"></div>
         </div>
     </div>
 
     <div id="partnerModal" class="modal">
         <div class="modal-content" style="max-width: 500px;">
-            <div class="fiche-header"><h3><i class="fas fa-handshake"></i> Partner Beheer</h3><button class="close-modal" id="closePartnerModalBtn">&times;</button></div>
+            <div class="fiche-header"><h3 id="partnerModalTitle"><i class="fas fa-handshake"></i> Partner Beheer</h3><button class="close-modal" id="closePartnerModalBtn">&times;</button></div>
             <div class="fiche-body">
                 <div class="add-driver-form" style="flex-direction: column; gap: 15px;">
-                    <input type="text" id="p_name" placeholder="Bedrijfsnaam">
+                    <input type="text" id="p_name" id="p_name_placeholder" placeholder="Bedrijfsnaam">
                     <input type="text" id="p_contact" placeholder="Contactpersoon">
                     <input type="text" id="p_email" placeholder="Email">
                     <input type="text" id="p_phone" placeholder="Telefoon">
                     <input type="text" id="p_prefix" placeholder="Prefix (bv. AA)">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <input type="checkbox" id="p_is_hoofd" class="compact-checkbox">
-                        <label for="p_is_hoofd" style="font-size: 0.85rem; cursor: pointer;">Dit is de Hoofdpartner</label>
+                        <label for="p_is_hoofd" id="isHoofdLabel" style="font-size: 0.85rem; cursor: pointer;">Dit is de Hoofdpartner</label>
                     </div>
                     <button class="add-btn" id="savePartnerBtn" style="width: 100%; margin: 0;">Partner Opslaan</button>
                 </div>
@@ -496,6 +486,509 @@
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // ========== VERTALINGEN ==========
+        const translations = {
+            nl: {
+                // Sidebar
+                sidebarSubtitle: "Onderaannemer Paneel",
+                navBookings: "📋 BOEKINGEN",
+                navNewOrders: "New Orders",
+                navOrders: "Orders",
+                navHistory: "History",
+                navAgenda: "Agenda",
+                navManagement: "👥 BEHEER",
+                navDrivers: "Drivers",
+                navPartners: "Mijn Partners",
+                navFinance: "💰 FINANCIËN",
+                navFinancial: "Financieel",
+                navSettlements: "Settlements",
+                navInfo: "ℹ️ INFORMATIE",
+                navWiki: "Wiki Agent",
+                switchWoningenText: "Switch naar Woningen",
+                switchDealerText: "Switch naar Auto Dealer",
+                logoutText: "Uitloggen",
+                // Header buttons
+                backText: "Terug naar overzicht",
+                headerWoningenText: "Woningen Paneel",
+                headerDealerText: "Switch naar Auto Dealer",
+                refreshText: "Vernieuwen",
+                // Tabellen
+                filterOrderId: "Order ID",
+                filterName: "Naam",
+                btnSearch: "Zoeken",
+                btnReset: "Reset",
+                tableId: "ID",
+                tableDatetime: "Datum/Tijd",
+                tableCustomer: "Klant",
+                tableRoute: "Route",
+                tableVehicle: "Voertuig",
+                tableAmount: "Bedrag",
+                tableAction: "Actie",
+                tableDriver: "Driver",
+                btnViewFiche: "Bekijk Fiche",
+                // Status
+                statusNew: "Nieuw",
+                statusAccepted: "Geaccepteerd",
+                statusAssigned: "Toegewezen",
+                statusCompleted: "Voltooid",
+                statusCancelled: "Geannuleerd",
+                statusUnassigned: "Niet toegewezen",
+                // Agenda
+                agendaTodayOmzet: "Vandaag Omzet",
+                agendaCash: "Cash Vandaag",
+                agendaCompleted: "Voltooid",
+                agendaFuture: "Toekomstige Ritten",
+                calendarToday: "Vandaag",
+                planningTitle: "Planning voor geselecteerde dag",
+                planningNoRides: "Geen ritten op deze dag",
+                // Knoppen
+                btnAccept: "Accepteren",
+                btnAssign: "Toewijzen",
+                btnCancel: "Annuleren",
+                btnClose: "Sluiten",
+                btnAddDriver: "Nieuwe Driver",
+                btnAddPartner: "Nieuwe Partner",
+                btnDelete: "Verwijderen",
+                // Wiki
+                wikiTitle: "Wiki Agent",
+                wikiWelcome: "Welkom bij het NH Onderaannemer Paneel.",
+                wikiNewOrders: "Nieuwe Orders",
+                wikiNewOrdersText: "Hier verschijnen nieuwe ritten. Klik op 'Bekijk Fiche' en accepteer de rit.",
+                wikiOrders: "Orders",
+                wikiOrdersText: "Geaccepteerde ritten. Hier kunt u drivers toewijzen.",
+                wikiHistory: "History",
+                wikiHistoryText: "Voltooide en geannuleerde ritten.",
+                wikiAgenda: "Agenda",
+                wikiAgendaText: "Kalender met ritten overzicht. Klik op een dag om de ritten te zien.",
+                wikiDrivers: "Drivers & Partners",
+                wikiDriversText: "Beheer uw drivers en partners.",
+                // Fiche
+                ficheTitle: "Rit Fiche",
+                ficheBookingInfo: "Boekingsinformatie",
+                ficheBookingNumber: "Boekingsnummer",
+                ficheDateTime: "Datum & Tijd",
+                ficheCustomerInfo: "Klantgegevens",
+                ficheName: "Naam",
+                ficheEmail: "Email",
+                ficheRideInfo: "Ritgegevens",
+                fichePickup: "Pickup",
+                ficheDestination: "Destination",
+                ficheVehicle: "Voertuig",
+                ficheAssign: "Toewijzen",
+                ficheSelectDriver: "-- Selecteer Driver --",
+                fichePayment: "Betaling",
+                ficheUnknown: "Onbekend",
+                // Drivers & Partners
+                driversTitle: "Drivers",
+                partnersTitle: "Mijn Partners",
+                noDrivers: "Geen drivers gevonden",
+                noPartners: "Geen partners gevonden",
+                partnerContact: "Contact",
+                // Financieel
+                financialTotalRevenue: "Totale Omzet",
+                financialTotalRides: "Totaal Ritten",
+                financialNewOrders: "Nieuwe Orders",
+                financialActiveOrders: "Actieve Orders",
+                financialHistory: "Historie",
+                // Settlements
+                settlementsTitle: "Settlements",
+                settlementsText: "Hier komen de Stripe betalingen en refunds",
+                // Toasts
+                toastRefreshing: "Bezig met vernieuwen...",
+                toastRefreshed: "Gegevens vernieuwd",
+                toastAccepted: "Rit geaccepteerd",
+                toastCancelled: "Rit geannuleerd",
+                toastAssigned: "Rit toegewezen aan",
+                toastDeleted: "Verwijderd",
+                toastAdded: "toegevoegd",
+                toastError: "Fout bij",
+                // Confirm
+                confirmCancel: "Weet u zeker dat u deze rit wilt annuleren?",
+                confirmDelete: "Weet u zeker dat u dit wilt verwijderen?",
+                confirmLogout: "Weet u zeker dat u wilt uitloggen?"
+            },
+            fr: {
+                sidebarSubtitle: "Panel Sous-traitant",
+                navBookings: "📋 RÉSERVATIONS",
+                navNewOrders: "Nouvelles Commandes",
+                navOrders: "Commandes",
+                navHistory: "Historique",
+                navAgenda: "Agenda",
+                navManagement: "👥 GESTION",
+                navDrivers: "Chauffeurs",
+                navPartners: "Mes Partenaires",
+                navFinance: "💰 FINANCES",
+                navFinancial: "Finances",
+                navSettlements: "Règlements",
+                navInfo: "ℹ️ INFOS",
+                navWiki: "Wiki Agent",
+                switchWoningenText: "Passer aux Logements",
+                switchDealerText: "Passer au Concessionnaire",
+                logoutText: "Déconnexion",
+                backText: "Retour à l'aperçu",
+                headerWoningenText: "Panneau Logements",
+                headerDealerText: "Passer au Concessionnaire",
+                refreshText: "Actualiser",
+                filterOrderId: "ID Commande",
+                filterName: "Nom",
+                btnSearch: "Chercher",
+                btnReset: "Réinitialiser",
+                tableId: "ID",
+                tableDatetime: "Date/Heure",
+                tableCustomer: "Client",
+                tableRoute: "Trajet",
+                tableVehicle: "Véhicule",
+                tableAmount: "Montant",
+                tableAction: "Action",
+                tableDriver: "Chauffeur",
+                btnViewFiche: "Voir Fiche",
+                statusNew: "Nouveau",
+                statusAccepted: "Accepté",
+                statusAssigned: "Assigné",
+                statusCompleted: "Terminé",
+                statusCancelled: "Annulé",
+                statusUnassigned: "Non assigné",
+                agendaTodayOmzet: "Chiffre Aujourd'hui",
+                agendaCash: "Espèces Aujourd'hui",
+                agendaCompleted: "Terminés",
+                agendaFuture: "Trajets Futurs",
+                calendarToday: "Aujourd'hui",
+                planningTitle: "Planning du jour sélectionné",
+                planningNoRides: "Aucun trajet ce jour",
+                btnAccept: "Accepter",
+                btnAssign: "Assigner",
+                btnCancel: "Annuler",
+                btnClose: "Fermer",
+                btnAddDriver: "Nouveau Chauffeur",
+                btnAddPartner: "Nouveau Partenaire",
+                btnDelete: "Supprimer",
+                wikiTitle: "Wiki Agent",
+                wikiWelcome: "Bienvenue dans le panneau Sous-traitant NH.",
+                wikiNewOrders: "Nouvelles Commandes",
+                wikiNewOrdersText: "Les nouveaux trajets apparaissent ici. Cliquez sur 'Voir Fiche' et acceptez le trajet.",
+                wikiOrders: "Commandes",
+                wikiOrdersText: "Trajets acceptés. Vous pouvez assigner des chauffeurs ici.",
+                wikiHistory: "Historique",
+                wikiHistoryText: "Trajets terminés et annulés.",
+                wikiAgenda: "Agenda",
+                wikiAgendaText: "Calendrier avec aperçu des trajets. Cliquez sur un jour pour voir les trajets.",
+                wikiDrivers: "Chauffeurs & Partenaires",
+                wikiDriversText: "Gérez vos chauffeurs et partenaires.",
+                ficheTitle: "Fiche Trajet",
+                ficheBookingInfo: "Infos Réservation",
+                ficheBookingNumber: "Numéro",
+                ficheDateTime: "Date & Heure",
+                ficheCustomerInfo: "Infos Client",
+                ficheName: "Nom",
+                ficheEmail: "Email",
+                ficheRideInfo: "Infos Trajet",
+                fichePickup: "Prise en charge",
+                ficheDestination: "Destination",
+                ficheVehicle: "Véhicule",
+                ficheAssign: "Assigner",
+                ficheSelectDriver: "-- Sélectionner Chauffeur --",
+                fichePayment: "Paiement",
+                ficheUnknown: "Inconnu",
+                driversTitle: "Chauffeurs",
+                partnersTitle: "Mes Partenaires",
+                noDrivers: "Aucun chauffeur trouvé",
+                noPartners: "Aucun partenaire trouvé",
+                partnerContact: "Contact",
+                financialTotalRevenue: "Chiffre Total",
+                financialTotalRides: "Total Trajets",
+                financialNewOrders: "Nouvelles Commandes",
+                financialActiveOrders: "Commandes Actives",
+                financialHistory: "Historique",
+                settlementsTitle: "Règlements",
+                settlementsText: "Paiements Stripe et remboursements",
+                toastRefreshing: "Actualisation...",
+                toastRefreshed: "Données actualisées",
+                toastAccepted: "Trajet accepté",
+                toastCancelled: "Trajet annulé",
+                toastAssigned: "Trajet assigné à",
+                toastDeleted: "Supprimé",
+                toastAdded: "ajouté",
+                toastError: "Erreur lors de",
+                confirmCancel: "Voulez-vous vraiment annuler ce trajet ?",
+                confirmDelete: "Voulez-vous vraiment supprimer ?",
+                confirmLogout: "Voulez-vous vraiment vous déconnecter ?"
+            },
+            en: {
+                sidebarSubtitle: "Subcontractor Panel",
+                navBookings: "📋 BOOKINGS",
+                navNewOrders: "New Orders",
+                navOrders: "Orders",
+                navHistory: "History",
+                navAgenda: "Agenda",
+                navManagement: "👥 MANAGEMENT",
+                navDrivers: "Drivers",
+                navPartners: "My Partners",
+                navFinance: "💰 FINANCE",
+                navFinancial: "Financial",
+                navSettlements: "Settlements",
+                navInfo: "ℹ️ INFO",
+                navWiki: "Wiki Agent",
+                switchWoningenText: "Switch to Housing",
+                switchDealerText: "Switch to Auto Dealer",
+                logoutText: "Logout",
+                backText: "Back to overview",
+                headerWoningenText: "Housing Panel",
+                headerDealerText: "Switch to Auto Dealer",
+                refreshText: "Refresh",
+                filterOrderId: "Order ID",
+                filterName: "Name",
+                btnSearch: "Search",
+                btnReset: "Reset",
+                tableId: "ID",
+                tableDatetime: "Date/Time",
+                tableCustomer: "Customer",
+                tableRoute: "Route",
+                tableVehicle: "Vehicle",
+                tableAmount: "Amount",
+                tableAction: "Action",
+                tableDriver: "Driver",
+                btnViewFiche: "View Details",
+                statusNew: "New",
+                statusAccepted: "Accepted",
+                statusAssigned: "Assigned",
+                statusCompleted: "Completed",
+                statusCancelled: "Cancelled",
+                statusUnassigned: "Unassigned",
+                agendaTodayOmzet: "Today's Revenue",
+                agendaCash: "Cash Today",
+                agendaCompleted: "Completed",
+                agendaFuture: "Future Rides",
+                calendarToday: "Today",
+                planningTitle: "Planning for selected day",
+                planningNoRides: "No rides on this day",
+                btnAccept: "Accept",
+                btnAssign: "Assign",
+                btnCancel: "Cancel",
+                btnClose: "Close",
+                btnAddDriver: "New Driver",
+                btnAddPartner: "New Partner",
+                btnDelete: "Delete",
+                wikiTitle: "Wiki Agent",
+                wikiWelcome: "Welcome to the NH Subcontractor Panel.",
+                wikiNewOrders: "New Orders",
+                wikiNewOrdersText: "New rides appear here. Click 'View Details' and accept the ride.",
+                wikiOrders: "Orders",
+                wikiOrdersText: "Accepted rides. You can assign drivers here.",
+                wikiHistory: "History",
+                wikiHistoryText: "Completed and cancelled rides.",
+                wikiAgenda: "Agenda",
+                wikiAgendaText: "Calendar with ride overview. Click a day to see the rides.",
+                wikiDrivers: "Drivers & Partners",
+                wikiDriversText: "Manage your drivers and partners.",
+                ficheTitle: "Ride Details",
+                ficheBookingInfo: "Booking Info",
+                ficheBookingNumber: "Booking Number",
+                ficheDateTime: "Date & Time",
+                ficheCustomerInfo: "Customer Info",
+                ficheName: "Name",
+                ficheEmail: "Email",
+                ficheRideInfo: "Ride Info",
+                fichePickup: "Pickup",
+                ficheDestination: "Destination",
+                ficheVehicle: "Vehicle",
+                ficheAssign: "Assign",
+                ficheSelectDriver: "-- Select Driver --",
+                fichePayment: "Payment",
+                ficheUnknown: "Unknown",
+                driversTitle: "Drivers",
+                partnersTitle: "My Partners",
+                noDrivers: "No drivers found",
+                noPartners: "No partners found",
+                partnerContact: "Contact",
+                financialTotalRevenue: "Total Revenue",
+                financialTotalRides: "Total Rides",
+                financialNewOrders: "New Orders",
+                financialActiveOrders: "Active Orders",
+                financialHistory: "History",
+                settlementsTitle: "Settlements",
+                settlementsText: "Stripe payments and refunds",
+                toastRefreshing: "Refreshing...",
+                toastRefreshed: "Data refreshed",
+                toastAccepted: "Ride accepted",
+                toastCancelled: "Ride cancelled",
+                toastAssigned: "Ride assigned to",
+                toastDeleted: "Deleted",
+                toastAdded: "added",
+                toastError: "Error with",
+                confirmCancel: "Are you sure you want to cancel this ride?",
+                confirmDelete: "Are you sure you want to delete this?",
+                confirmLogout: "Are you sure you want to logout?"
+            },
+            es: {
+                sidebarSubtitle: "Panel Subcontratista",
+                navBookings: "📋 RESERVAS",
+                navNewOrders: "Nuevos Pedidos",
+                navOrders: "Pedidos",
+                navHistory: "Historial",
+                navAgenda: "Agenda",
+                navManagement: "👥 GESTIÓN",
+                navDrivers: "Conductores",
+                navPartners: "Mis Socios",
+                navFinance: "💰 FINANZAS",
+                navFinancial: "Financiero",
+                navSettlements: "Liquidaciones",
+                navInfo: "ℹ️ INFO",
+                navWiki: "Wiki Agente",
+                switchWoningenText: "Cambiar a Viviendas",
+                switchDealerText: "Cambiar a Concesionario",
+                logoutText: "Cerrar Sesión",
+                backText: "Volver al resumen",
+                headerWoningenText: "Panel Viviendas",
+                headerDealerText: "Cambiar a Concesionario",
+                refreshText: "Actualizar",
+                filterOrderId: "ID Pedido",
+                filterName: "Nombre",
+                btnSearch: "Buscar",
+                btnReset: "Restablecer",
+                tableId: "ID",
+                tableDatetime: "Fecha/Hora",
+                tableCustomer: "Cliente",
+                tableRoute: "Ruta",
+                tableVehicle: "Vehículo",
+                tableAmount: "Importe",
+                tableAction: "Acción",
+                tableDriver: "Conductor",
+                btnViewFiche: "Ver Ficha",
+                statusNew: "Nuevo",
+                statusAccepted: "Aceptado",
+                statusAssigned: "Asignado",
+                statusCompleted: "Completado",
+                statusCancelled: "Cancelado",
+                statusUnassigned: "No asignado",
+                agendaTodayOmzet: "Facturación Hoy",
+                agendaCash: "Efectivo Hoy",
+                agendaCompleted: "Completados",
+                agendaFuture: "Viajes Futuros",
+                calendarToday: "Hoy",
+                planningTitle: "Planificación del día seleccionado",
+                planningNoRides: "No hay viajes este día",
+                btnAccept: "Aceptar",
+                btnAssign: "Asignar",
+                btnCancel: "Cancelar",
+                btnClose: "Cerrar",
+                btnAddDriver: "Nuevo Conductor",
+                btnAddPartner: "Nuevo Socio",
+                btnDelete: "Eliminar",
+                wikiTitle: "Wiki Agente",
+                wikiWelcome: "Bienvenido al Panel Subcontratista NH.",
+                wikiNewOrders: "Nuevos Pedidos",
+                wikiNewOrdersText: "Los nuevos viajes aparecen aquí. Haga clic en 'Ver Ficha' y acepte el viaje.",
+                wikiOrders: "Pedidos",
+                wikiOrdersText: "Viajes aceptados. Puede asignar conductores aquí.",
+                wikiHistory: "Historial",
+                wikiHistoryText: "Viajes completados y cancelados.",
+                wikiAgenda: "Agenda",
+                wikiAgendaText: "Calendario con resumen de viajes. Haga clic en un día para ver los viajes.",
+                wikiDrivers: "Conductores y Socios",
+                wikiDriversText: "Gestione sus conductores y socios.",
+                ficheTitle: "Ficha de Viaje",
+                ficheBookingInfo: "Info Reserva",
+                ficheBookingNumber: "Número",
+                ficheDateTime: "Fecha y Hora",
+                ficheCustomerInfo: "Info Cliente",
+                ficheName: "Nombre",
+                ficheEmail: "Email",
+                ficheRideInfo: "Info Viaje",
+                fichePickup: "Recogida",
+                ficheDestination: "Destino",
+                ficheVehicle: "Vehículo",
+                ficheAssign: "Asignar",
+                ficheSelectDriver: "-- Seleccionar Conductor --",
+                fichePayment: "Pago",
+                ficheUnknown: "Desconocido",
+                driversTitle: "Conductores",
+                partnersTitle: "Mis Socios",
+                noDrivers: "No se encontraron conductores",
+                noPartners: "No se encontraron socios",
+                partnerContact: "Contacto",
+                financialTotalRevenue: "Facturación Total",
+                financialTotalRides: "Total Viajes",
+                financialNewOrders: "Nuevos Pedidos",
+                financialActiveOrders: "Pedidos Activos",
+                financialHistory: "Historial",
+                settlementsTitle: "Liquidaciones",
+                settlementsText: "Pagos de Stripe y reembolsos",
+                toastRefreshing: "Actualizando...",
+                toastRefreshed: "Datos actualizados",
+                toastAccepted: "Viaje aceptado",
+                toastCancelled: "Viaje cancelado",
+                toastAssigned: "Viaje asignado a",
+                toastDeleted: "Eliminado",
+                toastAdded: "agregado",
+                toastError: "Error con",
+                confirmCancel: "¿Está seguro de que desea cancelar este viaje?",
+                confirmDelete: "¿Está seguro de que desea eliminar esto?",
+                confirmLogout: "¿Está seguro de que desea cerrar sesión?"
+            }
+        };
+
+        let currentLang = 'nl';
+
+        function updateUILanguage() {
+            const t = translations[currentLang];
+            if (!t) return;
+            
+            // Update sidebar
+            document.getElementById('sidebarSubtitle').textContent = t.sidebarSubtitle;
+            document.getElementById('navBookings').textContent = t.navBookings;
+            document.getElementById('navNewOrders').textContent = t.navNewOrders;
+            document.getElementById('navOrders').textContent = t.navOrders;
+            document.getElementById('navHistory').textContent = t.navHistory;
+            document.getElementById('navAgenda').textContent = t.navAgenda;
+            document.getElementById('navManagement').textContent = t.navManagement;
+            document.getElementById('navDrivers').textContent = t.navDrivers;
+            document.getElementById('navPartners').textContent = t.navPartners;
+            document.getElementById('navFinance').textContent = t.navFinance;
+            document.getElementById('navFinancial').textContent = t.navFinancial;
+            document.getElementById('navSettlements').textContent = t.navSettlements;
+            document.getElementById('navInfo').textContent = t.navInfo;
+            document.getElementById('navWiki').textContent = t.navWiki;
+            document.getElementById('switchWoningenText').textContent = t.switchWoningenText;
+            document.getElementById('switchDealerText').textContent = t.switchDealerText;
+            document.getElementById('logoutText').textContent = t.logoutText;
+            
+            // Header buttons
+            document.getElementById('backText').textContent = t.backText;
+            document.getElementById('headerWoningenText').textContent = t.headerWoningenText;
+            document.getElementById('headerDealerText').textContent = t.headerDealerText;
+            document.getElementById('refreshText').textContent = t.refreshText;
+            
+            // Fiche modal
+            document.getElementById('ficheTitle').innerHTML = `<i class="fas fa-file-invoice"></i> ${t.ficheTitle}`;
+            document.getElementById('partnerModalTitle').innerHTML = `<i class="fas fa-handshake"></i> ${t.partnersTitle}`;
+            document.getElementById('isHoofdLabel').textContent = "Dit is de Hoofdpartner";
+            
+            // Update placeholders
+            document.getElementById('p_name').placeholder = t.ficheName;
+            document.getElementById('p_contact').placeholder = t.partnerContact;
+            document.getElementById('savePartnerBtn').textContent = t.btnAddPartner;
+            
+            // Refresh current tab to update dynamic content
+            if (window.app && window.app.refreshCurrentTab) {
+                window.app.refreshCurrentTab();
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('nh_language', lang);
+            updateUILanguage();
+            
+            // Update active button styling
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
         const app = {
             allBookings: [],
             newOrders: [],
@@ -509,6 +1002,10 @@
             financePeriod: 'month',
             revenueChart: null,
             flipStates: { omzet: false, cash: false, orders: false },
+            
+            t(key) {
+                return translations[currentLang][key] || key;
+            },
             
             showToast(msg, isError) {
                 const toast = document.getElementById('toast');
@@ -584,85 +1081,92 @@
             },
             
             renderNewOrders() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderNew" placeholder="Zoeken"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameNew" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">Zoeken</button><button class="btn-reset" onclick="app.resetFiltersNew()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>ID</th><th>Datum/Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Actie</th></tr></thead><tbody id="newOrdersTable"></tbody></table></div>`;
+                let t = translations[currentLang];
+                let html = `<div class="filter-bar"><div class="filter-group"><label>${t.filterOrderId}</label><input type="text" id="filterOrderNew" placeholder="${t.btnSearch}"></div><div class="filter-group"><label>${t.filterName}</label><input type="text" id="filterNameNew" placeholder="${t.tableCustomer}"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersNew()">${t.btnSearch}</button><button class="btn-reset" onclick="app.resetFiltersNew()">${t.btnReset}</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>${t.tableId}</th><th>${t.tableDatetime}</th><th>${t.tableCustomer}</th><th>${t.tableRoute}</th><th>${t.tableVehicle}</th><th>${t.tableAmount}</th><th>${t.tableAction}</th></tr></thead><tbody id="newOrdersTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderNewOrdersTable(this.newOrders);
-                document.getElementById('pageTitle').innerHTML = `New Orders <span class="order-count">${this.newOrders.length}</span>`;
+                document.getElementById('pageTitle').innerHTML = `${t.navNewOrders} <span class="order-count">${this.newOrders.length}</span>`;
             },
             
             renderNewOrdersTable(orders) {
+                let t = translations[currentLang];
                 let tbody = document.getElementById('newOrdersTable');
                 if (!tbody) return;
-                if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="empty-planning">Geen nieuwe orders gevonden</td></tr>'; return; }
-                tbody.innerHTML = orders.map(o => `<tr><td><strong>${o.id}</strong><br><span class="status-badge status-pending">Nieuw</span></td><td>${o.datetime} ${o.time}</td><td>${this.escapeHtml(o.name)}</td><td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td><td>${o.vehicle}</td><td>€${(o.amount || 0).toFixed(2)}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td></tr>`).join('');
+                if (orders.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="empty-planning">${t.planningNoRides}</td></tr>`; return; }
+                tbody.innerHTML = orders.map(o => `<tr><td><strong>${o.id}</strong><br><span class="status-badge status-pending">${t.statusNew}</span></td><td>${o.datetime} ${o.time}</td><td>${this.escapeHtml(o.name)}</td><td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td><td>${o.vehicle}</td><td>€${(o.amount || 0).toFixed(2)}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td></tr>`).join('');
             },
             
             renderOrders() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderOrders" placeholder="Zoeken"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameOrders" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersOrders()">Zoeken</button><button class="btn-reset" onclick="app.resetFiltersOrders()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>ID</th><th>Datum/Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="ordersTable"></tbody>}</div>`;
+                let t = translations[currentLang];
+                let html = `<div class="filter-bar"><div class="filter-group"><label>${t.filterOrderId}</label><input type="text" id="filterOrderOrders" placeholder="${t.btnSearch}"></div><div class="filter-group"><label>${t.filterName}</label><input type="text" id="filterNameOrders" placeholder="${t.tableCustomer}"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersOrders()">${t.btnSearch}</button><button class="btn-reset" onclick="app.resetFiltersOrders()">${t.btnReset}</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>${t.tableId}</th><th>${t.tableDatetime}</th><th>${t.tableCustomer}</th><th>${t.tableRoute}</th><th>${t.tableVehicle}</th><th>${t.tableAmount}</th><th>${t.tableDriver}</th><th>${t.tableAction}</th></tr></thead><tbody id="ordersTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderOrdersTable(this.ordersList);
-                document.getElementById('pageTitle').innerHTML = `Orders <span class="order-count">${this.ordersList.length}</span>`;
+                document.getElementById('pageTitle').innerHTML = `${t.navOrders} <span class="order-count">${this.ordersList.length}</span>`;
             },
             
             renderOrdersTable(orders) {
+                let t = translations[currentLang];
                 let tbody = document.getElementById('ordersTable');
                 if (!tbody) return;
-                if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="empty-planning">Geen actieve orders gevonden</td></tr>'; return; }
+                if (orders.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${t.planningNoRides}</td></tr>`; return; }
                 tbody.innerHTML = orders.map(o => {
                     const driver = this.getDriverForBooking(o);
-                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : '<span style="color:#f59e0b;">Niet toegewezen</span>';
-                    return `<tr><td><strong>${o.id}</strong><br><span class="status-badge status-accepted">Geaccepteerd</span></td><td>${o.datetime} ${o.time}</td><td>${this.escapeHtml(o.name)}</td><td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td><td>${o.vehicle}</td><td>€${(o.amount || 0).toFixed(2)}</td><td>${driverText}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td></tr>`;
+                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : `<span style="color:#f59e0b;">${t.statusUnassigned}</span>`;
+                    return `<tr><td><strong>${o.id}</strong><br><span class="status-badge status-accepted">${t.statusAccepted}</span></td><td>${o.datetime} ${o.time}</td><td>${this.escapeHtml(o.name)}</td><td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td><td>${o.vehicle}</td><td>€${(o.amount || 0).toFixed(2)}</td><td>${driverText}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td></tr>`;
                 }).join('');
             },
             
             renderHistory() {
-                let html = `<div class="filter-bar"><div class="filter-group"><label>Order ID</label><input type="text" id="filterOrderHistory" placeholder="Zoeken"></div><div class="filter-group"><label>Naam</label><input type="text" id="filterNameHistory" placeholder="Klant"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">Zoeken</button><button class="btn-reset" onclick="app.resetFiltersHistory()">Reset</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>ID</th><th>Datum/Tijd</th><th>Klant</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Driver</th><th>Actie</th></tr></thead><tbody id="historyTable"></tbody>}</div>`;
+                let t = translations[currentLang];
+                let html = `<div class="filter-bar"><div class="filter-group"><label>${t.filterOrderId}</label><input type="text" id="filterOrderHistory" placeholder="${t.btnSearch}"></div><div class="filter-group"><label>${t.filterName}</label><input type="text" id="filterNameHistory" placeholder="${t.tableCustomer}"></div><div class="filter-actions"><button class="btn-filter" onclick="app.applyFiltersHistory()">${t.btnSearch}</button><button class="btn-reset" onclick="app.resetFiltersHistory()">${t.btnReset}</button></div></div><div class="orders-table-wrapper"><table class="orders-table"><thead><tr><th>${t.tableId}</th><th>${t.tableDatetime}</th><th>${t.tableCustomer}</th><th>${t.tableRoute}</th><th>${t.tableVehicle}</th><th>${t.tableAmount}</th><th>${t.tableDriver}</th><th>${t.tableAction}</th></tr></thead><tbody id="historyTable"></tbody>}</div>`;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderHistoryTable(this.historyOrders);
-                document.getElementById('pageTitle').innerHTML = `History <span class="order-count">${this.historyOrders.length}</span>`;
+                document.getElementById('pageTitle').innerHTML = `${t.navHistory} <span class="order-count">${this.historyOrders.length}</span>`;
             },
             
             renderHistoryTable(orders) {
+                let t = translations[currentLang];
                 let tbody = document.getElementById('historyTable');
                 if (!tbody) return;
-                if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="empty-planning">Geen historie gevonden</td></tr>'; return; }
+                if (orders.length === 0) { tbody.innerHTML = `<tr><td colspan="8" class="empty-planning">${t.planningNoRides}</td></tr>`; return; }
                 tbody.innerHTML = orders.map(o => {
                     const driver = this.getDriverForBooking(o);
-                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : 'Niet toegewezen';
+                    const driverText = driver ? `${driver.name} (${driver.vehicle})` : t.statusUnassigned;
                     let statusBadge = '';
-                    if (o.status === 'completed') statusBadge = '<br><span class="status-badge status-completed">Voltooid</span>';
-                    else if (o.status === 'cancelled') statusBadge = '<br><span class="status-badge status-cancelled">Geannuleerd</span>';
-                    return `<tr><td><strong>${o.id}</strong>${statusBadge}</td><td>${o.datetime} ${o.time}</td><td>${this.escapeHtml(o.name)}</td><td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td><td>${o.vehicle}</td><td>€${(o.amount || 0).toFixed(2)}</td><td>${driverText}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>Bekijk Fiche</button></td></tr>`;
+                    if (o.status === 'completed') statusBadge = `<br><span class="status-badge status-completed">${t.statusCompleted}</span>`;
+                    else if (o.status === 'cancelled') statusBadge = `<br><span class="status-badge status-cancelled">${t.statusCancelled}</span>`;
+                    return `<tr><td><strong>${o.id}</strong>${statusBadge}</td><td>${o.datetime} ${o.time}</td><td>${this.escapeHtml(o.name)}</td><td>${this.escapeHtml(o.pickup)} → ${this.escapeHtml(o.destination)}</td><td>${o.vehicle}</td><td>€${(o.amount || 0).toFixed(2)}</td><td>${driverText}</td><td><button class="action-btn" onclick='app.showBookingFiche(${JSON.stringify(o).replace(/'/g, "&#39;")})'>${t.btnViewFiche}</button></td></tr>`;
                 }).join('');
             },
             
             renderAgenda() {
+                let t = translations[currentLang];
                 let stats = this.getTodayStats();
-                let currentMonthName = this.currentMonth.toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' });
+                let currentMonthName = this.currentMonth.toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : currentLang === 'fr' ? 'fr-FR' : currentLang === 'es' ? 'es-ES' : 'en-US', { month: 'long', year: 'numeric' });
                 let html = `
                     <div class="dashboard-grid">
-                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-euro-sign" style="font-size:1.5rem;"></i><div class="value">€ ${stats.total.toFixed(2)}</div><div class="label">Vandaag Omzet</div></div></div></div></div>
-                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-money-bill-wave" style="font-size:1.5rem;"></i><div class="value">€ ${stats.cash.toFixed(2)}</div><div class="label">Cash Vandaag</div></div></div></div></div>
-                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-check-circle" style="font-size:1.5rem;"></i><div class="value">${stats.completed}</div><div class="label">Voltooid</div></div></div></div></div>
-                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-clock" style="font-size:1.5rem;"></i><div class="value">${stats.futureRides}</div><div class="label">Toekomstige Ritten</div></div></div></div></div>
+                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-euro-sign" style="font-size:1.5rem;"></i><div class="value">€ ${stats.total.toFixed(2)}</div><div class="label">${t.agendaTodayOmzet}</div></div></div></div></div>
+                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-money-bill-wave" style="font-size:1.5rem;"></i><div class="value">€ ${stats.cash.toFixed(2)}</div><div class="label">${t.agendaCash}</div></div></div></div></div>
+                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-check-circle" style="font-size:1.5rem;"></i><div class="value">${stats.completed}</div><div class="label">${t.agendaCompleted}</div></div></div></div></div>
+                        <div class="info-card"><div class="mini-flip-container"><div class="mini-flip-card"><div class="mini-flip-front"><i class="fas fa-clock" style="font-size:1.5rem;"></i><div class="value">${stats.futureRides}</div><div class="label">${t.agendaFuture}</div></div></div></div></div>
                     </div>
                     <div class="calendar-container">
                         <div class="calendar-header">
                             <h2>${currentMonthName}</h2>
                             <div class="calendar-nav">
                                 <button onclick="app.changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                                <button onclick="app.goToToday()">Vandaag</button>
+                                <button onclick="app.goToToday()">${t.calendarToday}</button>
                                 <button onclick="app.changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
                             </div>
                         </div>
-                        <div class="calendar-weekdays"><div>Ma</div><div>Di</div><div>Wo</div><div>Do</div><div>Vr</div><div>Za</div><div>Zo</div></div>
+                        <div class="calendar-weekdays"><div>${t.calendarWeekdays ? t.calendarWeekdays.Mon : 'Ma'}</div><div>${t.calendarWeekdays ? t.calendarWeekdays.Tue : 'Di'}</div><div>${t.calendarWeekdays ? t.calendarWeekdays.Wed : 'Wo'}</div><div>${t.calendarWeekdays ? t.calendarWeekdays.Thu : 'Do'}</div><div>${t.calendarWeekdays ? t.calendarWeekdays.Fri : 'Vr'}</div><div>${t.calendarWeekdays ? t.calendarWeekdays.Sat : 'Za'}</div><div>${t.calendarWeekdays ? t.calendarWeekdays.Sun : 'Zo'}</div></div>
                         <div class="calendar-days" id="calendarDays"></div>
                     </div>
-                    <div class="planning-container"><h3>Planning voor geselecteerde dag</h3><div class="planning-list" id="planningList">Selecteer een datum</div></div>
+                    <div class="planning-container"><h3>${t.planningTitle}</h3><div class="planning-list" id="planningList">${t.planningNoRides}</div></div>
                 `;
                 document.getElementById('contentArea').innerHTML = html;
                 this.renderSimpleCalendar();
-                document.getElementById('pageTitle').innerHTML = 'Agenda';
+                document.getElementById('pageTitle').innerHTML = t.navAgenda;
             },
             
             renderSimpleCalendar() {
@@ -676,13 +1180,11 @@
                 let adjustedStart = startDay === 0 ? 6 : startDay - 1;
                 let html = '';
                 
-                // Vorige maand dagen
                 for (let i = adjustedStart - 1; i >= 0; i--) {
                     let prevDate = new Date(year, month, -i);
                     html += `<div class="calendar-day other-month" onclick="app.selectDate(${prevDate.getDate()}, ${prevDate.getMonth()+1}, ${prevDate.getFullYear()})">${prevDate.getDate()}</div>`;
                 }
                 
-                // Huidige maand dagen
                 for (let day = 1; day <= daysInMonth; day++) {
                     let dateStr = `${day.toString().padStart(2,'0')}-${(month+1).toString().padStart(2,'0')}-${year}`;
                     let rides = this.getRidesByDate(dateStr);
@@ -697,7 +1199,6 @@
                     html += `<div class="${classes}" onclick="app.selectDate(${day}, ${month+1}, ${year})">${day}${rides.length > 0 ? '<div class="ride-dot"></div>' : ''}</div>`;
                 }
                 
-                // Volgende maand dagen
                 let totalCells = Math.ceil((adjustedStart + daysInMonth) / 7) * 7;
                 let nextMonthDay = 1;
                 for (let i = adjustedStart + daysInMonth; i < totalCells; i++) {
@@ -711,19 +1212,20 @@
             },
             
             renderSimplePlanning() {
+                let t = translations[currentLang];
                 let container = document.getElementById('planningList');
                 if (!container) return;
                 let dateStr = `${this.selectedDate.getDate().toString().padStart(2,'0')}-${(this.selectedDate.getMonth()+1).toString().padStart(2,'0')}-${this.selectedDate.getFullYear()}`;
                 let rides = this.getRidesByDate(dateStr).sort((a,b) => a.time.localeCompare(b.time));
-                let formattedDate = this.selectedDate.toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                let formattedDate = this.selectedDate.toLocaleDateString(currentLang === 'nl' ? 'nl-NL' : currentLang === 'fr' ? 'fr-FR' : currentLang === 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 
                 if (rides.length === 0) { 
-                    container.innerHTML = `<div class="empty-planning">📅 Geen ritten op ${formattedDate}</div>`; 
+                    container.innerHTML = `<div class="empty-planning">📅 ${t.planningNoRides} ${formattedDate}</div>`; 
                     return; 
                 }
-                container.innerHTML = `<h4 style="margin-bottom: 15px; color: #2dd4bf;">📅 ${formattedDate} (${rides.length} ritten)</h4>` + rides.map(r => `
+                container.innerHTML = `<h4 style="margin-bottom: 15px; color: #2dd4bf;">📅 ${formattedDate} (${rides.length} ${t.financialTotalRides.toLowerCase()})</h4>` + rides.map(r => `
                     <div class="planning-item">
-                        <div class="planning-time"><i class="fas fa-clock"></i> ${r.time} uur</div>
+                        <div class="planning-time"><i class="fas fa-clock"></i> ${r.time} ${t.financialHour ? t.financialHour : 'uur'}</div>
                         <div class="planning-ride"><strong>${this.escapeHtml(r.name)}</strong> - ${this.escapeHtml(r.pickup)} → ${this.escapeHtml(r.destination)}</div>
                         <div class="planning-ride"><i class="fas fa-car"></i> ${r.vehicle}</div>
                         <div class="planning-ride"><i class="fas fa-euro-sign"></i> €${(r.amount || 0).toFixed(2)}</div>
@@ -743,12 +1245,10 @@
             },
             
             selectDate(day, month, year) {
-                console.log(`Dag geselecteerd: ${day}-${month}-${year}`);
                 this.selectedDate = new Date(year, month-1, day);
                 this.currentMonth = new Date(year, month-1, 1);
                 this.renderSimpleCalendar();
                 
-                // Scroll naar planning sectie
                 setTimeout(() => {
                     const planningContainer = document.querySelector('.planning-container');
                     if (planningContainer) {
@@ -758,39 +1258,44 @@
             },
             
             renderDrivers() {
+                let t = translations[currentLang];
                 let myDrivers = this.drivers.filter(c => { let partner = this.partners.find(p => p.id === c.partner_id); return partner && partner.is_hoofd === true; });
-                let html = `<div class="people-card"><h3><i class="fas fa-id-card"></i> Drivers</h3><button class="add-btn" onclick="app.showAddDriverForm()">➕ Nieuwe Driver</button><div style="margin-top:20px;">`;
-                if (myDrivers.length === 0) html += '<div class="empty-planning">Geen drivers gevonden</div>';
-                else myDrivers.forEach(c => { html += `<div style="border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;"><div><strong>${c.driver_code}</strong> – ${this.escapeHtml(c.name)}<br><small>🚗 ${c.vehicle} | ${c.license_plate}</small></div><button class="delete-btn" onclick="app.deleteDriver(${c.id})">Verwijder</button></div>`; });
+                let html = `<div class="people-card"><h3><i class="fas fa-id-card"></i> ${t.driversTitle}</h3><button class="add-btn" onclick="app.showAddDriverForm()">➕ ${t.btnAddDriver}</button><div style="margin-top:20px;">`;
+                if (myDrivers.length === 0) html += `<div class="empty-planning">${t.noDrivers}</div>`;
+                else myDrivers.forEach(c => { html += `<div style="border:1px solid #e2e8f0; border-radius:12px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;"><div><strong>${c.driver_code}</strong> – ${this.escapeHtml(c.name)}<br><small>🚗 ${c.vehicle} | ${c.license_plate}</small></div><button class="delete-btn" onclick="app.deleteDriver(${c.id})">${t.btnDelete}</button></div>`; });
                 html += `</div></div>`;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = 'Drivers';
+                document.getElementById('pageTitle').innerHTML = t.driversTitle;
             },
             
             renderPartners() {
-                let html = `<div class="people-card"><h3><i class="fas fa-handshake"></i> Mijn Partners</h3><button class="add-btn" onclick="app.showAddPartnerForm()">➕ Nieuwe Partner</button><div style="margin-top:20px;">`;
-                if (this.partners.length === 0) html += '<div class="empty-planning">Geen partners gevonden</div>';
-                else this.partners.forEach(p => { html += `<div class="partner-card"><div class="partner-header"><div class="partner-name">${this.escapeHtml(p.name)}</div><button class="delete-btn" onclick="app.deletePartner(${p.id})">Verwijder</button></div><div><small>Contact: ${this.escapeHtml(p.contact)} | ${p.email} | ${p.phone}</small></div></div>`; });
+                let t = translations[currentLang];
+                let html = `<div class="people-card"><h3><i class="fas fa-handshake"></i> ${t.partnersTitle}</h3><button class="add-btn" onclick="app.showAddPartnerForm()">➕ ${t.btnAddPartner}</button><div style="margin-top:20px;">`;
+                if (this.partners.length === 0) html += `<div class="empty-planning">${t.noPartners}</div>`;
+                else this.partners.forEach(p => { html += `<div class="partner-card"><div class="partner-header"><div class="partner-name">${this.escapeHtml(p.name)}</div><button class="delete-btn" onclick="app.deletePartner(${p.id})">${t.btnDelete}</button></div><div><small>${t.partnerContact}: ${this.escapeHtml(p.contact)} | ${p.email} | ${p.phone}</small></div></div>`; });
                 html += `</div></div>`;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = 'Mijn Partners';
+                document.getElementById('pageTitle').innerHTML = t.partnersTitle;
             },
             
             renderFinance() {
+                let t = translations[currentLang];
                 let totalRevenue = this.allBookings.reduce((sum, b) => sum + (b.amount || 0), 0);
-                let html = `<div class="kpi-grid"><div class="kpi-card"><div class="value">€ ${totalRevenue.toFixed(2)}</div><div class="label">Totale Omzet</div></div><div class="kpi-card"><div class="value">${this.allBookings.length}</div><div class="label">Totaal Ritten</div></div><div class="kpi-card"><div class="value">${this.newOrders.length}</div><div class="label">Nieuwe Orders</div></div><div class="kpi-card"><div class="value">${this.ordersList.length}</div><div class="label">Actieve Orders</div></div><div class="kpi-card"><div class="value">${this.historyOrders.length}</div><div class="label">Historie</div></div></div>`;
+                let html = `<div class="kpi-grid"><div class="kpi-card"><div class="value">€ ${totalRevenue.toFixed(2)}</div><div class="label">${t.financialTotalRevenue}</div></div><div class="kpi-card"><div class="value">${this.allBookings.length}</div><div class="label">${t.financialTotalRides}</div></div><div class="kpi-card"><div class="value">${this.newOrders.length}</div><div class="label">${t.financialNewOrders}</div></div><div class="kpi-card"><div class="value">${this.ordersList.length}</div><div class="label">${t.financialActiveOrders}</div></div><div class="kpi-card"><div class="value">${this.historyOrders.length}</div><div class="label">${t.financialHistory}</div></div></div>`;
                 document.getElementById('contentArea').innerHTML = html;
-                document.getElementById('pageTitle').innerHTML = 'Financieel Overzicht';
+                document.getElementById('pageTitle').innerHTML = t.navFinancial;
             },
             
             renderSettlements() {
-                document.getElementById('contentArea').innerHTML = `<div class="people-card"><h3>Settlements</h3><p>Hier komen de Stripe betalingen en refunds</p></div>`;
-                document.getElementById('pageTitle').innerHTML = 'Settlements';
+                let t = translations[currentLang];
+                document.getElementById('contentArea').innerHTML = `<div class="people-card"><h3>${t.settlementsTitle}</h3><p>${t.settlementsText}</p></div>`;
+                document.getElementById('pageTitle').innerHTML = t.navSettlements;
             },
             
             renderWiki() {
-                document.getElementById('contentArea').innerHTML = `<div class="wiki-container"><div class="wiki-content"><h2><i class="fas fa-robot"></i> Wiki Agent</h2><p>Welkom bij het Fleet Connect Onderaannemer Paneel.</p><h3>📋 Nieuwe Orders</h3><p>Hier verschijnen nieuwe ritten. Klik op "Bekijk Fiche" en accepteer de rit.</p><h3>📦 Orders</h3><p>Geaccepteerde ritten. Hier kunt u drivers toewijzen.</p><h3>📜 History</h3><p>Voltooide en geannuleerde ritten.</p><h3>📅 Agenda</h3><p>Kalender met ritten overzicht. Klik op een dag om de ritten te zien.</p><h3>👥 Drivers & Partners</h3><p>Beheer uw drivers en partners.</p></div></div>`;
-                document.getElementById('pageTitle').innerHTML = 'Wiki Agent';
+                let t = translations[currentLang];
+                document.getElementById('contentArea').innerHTML = `<div class="wiki-container"><div class="wiki-content"><h2><i class="fas fa-robot"></i> ${t.wikiTitle}</h2><p>${t.wikiWelcome}</p><h3>📋 ${t.wikiNewOrders}</h3><p>${t.wikiNewOrdersText}</p><h3>📦 ${t.wikiOrders}</h3><p>${t.wikiOrdersText}</p><h3>📜 ${t.wikiHistory}</h3><p>${t.wikiHistoryText}</p><h3>📅 ${t.wikiAgenda}</h3><p>${t.wikiAgendaText}</p><h3>👥 ${t.wikiDrivers}</h3><p>${t.wikiDriversText}</p></div></div>`;
+                document.getElementById('pageTitle').innerHTML = t.navWiki;
             },
             
             applyFiltersNew() {
@@ -816,21 +1321,22 @@
             resetFiltersHistory() { this.renderHistoryTable(this.historyOrders); },
             
             async showBookingFiche(booking) {
-                let driverOptions = '<option value="">-- Selecteer Driver --</option>';
+                let t = translations[currentLang];
+                let driverOptions = `<option value="">${t.ficheSelectDriver}</option>`;
                 let availableDrivers = this.drivers.filter(c => c.partner_id === (booking.partner_id || 1));
                 availableDrivers.forEach(d => { driverOptions += `<option value="${d.id}">${this.escapeHtml(d.name)} (${d.vehicle})</option>`; });
                 let ficheBody = document.getElementById('ficheBody');
                 ficheBody.innerHTML = `
-                    <div class="fiche-section"><h4>Boekingsinformatie</h4><div class="fiche-row"><span class="fiche-label">Boekingsnummer:</span><span class="fiche-value"><strong>${booking.id}</strong></span></div><div class="fiche-row"><span class="fiche-label">Datum & Tijd:</span><span class="fiche-value">${booking.datetime} om ${booking.time} uur</span></div></div>
-                    <div class="fiche-section"><h4>Klantgegevens</h4><div class="fiche-row"><span class="fiche-label">Naam:</span><span class="fiche-value">${this.escapeHtml(booking.name)}</span></div><div class="fiche-row"><span class="fiche-label">Email:</span><span class="fiche-value">${booking.email || '-'}</span></div></div>
-                    <div class="fiche-section"><h4>Ritgegevens</h4><div class="fiche-row"><span class="fiche-label">Pickup:</span><span class="fiche-value">${this.escapeHtml(booking.pickup)}</span></div><div class="fiche-row"><span class="fiche-label">Destination:</span><span class="fiche-value">${this.escapeHtml(booking.destination)}</span></div><div class="fiche-row"><span class="fiche-label">Voertuig:</span><span class="fiche-value">${booking.vehicle}</span></div></div>
-                    ${(booking.status === 'accepted' || booking.status === 'assigned') && !this.isExpired(booking.datetime, booking.time) ? `<div class="fiche-section"><h4>Toewijzen</h4><div class="fiche-row"><span class="fiche-label">Driver:</span><span class="fiche-value"><select id="driverSelect" style="width:100%;">${driverOptions}</select></span></div></div>` : ''}
-                    <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>Betaling: ${booking.payment || 'Onbekend'}</div></div>
+                    <div class="fiche-section"><h4>${t.ficheBookingInfo}</h4><div class="fiche-row"><span class="fiche-label">${t.ficheBookingNumber}:</span><span class="fiche-value"><strong>${booking.id}</strong></span></div><div class="fiche-row"><span class="fiche-label">${t.ficheDateTime}:</span><span class="fiche-value">${booking.datetime} om ${booking.time} uur</span></div></div>
+                    <div class="fiche-section"><h4>${t.ficheCustomerInfo}</h4><div class="fiche-row"><span class="fiche-label">${t.ficheName}:</span><span class="fiche-value">${this.escapeHtml(booking.name)}</span></div><div class="fiche-row"><span class="fiche-label">${t.ficheEmail}:</span><span class="fiche-value">${booking.email || '-'}</span></div></div>
+                    <div class="fiche-section"><h4>${t.ficheRideInfo}</h4><div class="fiche-row"><span class="fiche-label">${t.fichePickup}:</span><span class="fiche-value">${this.escapeHtml(booking.pickup)}</span></div><div class="fiche-row"><span class="fiche-label">${t.ficheDestination}:</span><span class="fiche-value">${this.escapeHtml(booking.destination)}</span></div><div class="fiche-row"><span class="fiche-label">${t.ficheVehicle}:</span><span class="fiche-value">${booking.vehicle}</span></div></div>
+                    ${(booking.status === 'accepted' || booking.status === 'assigned') && !this.isExpired(booking.datetime, booking.time) ? `<div class="fiche-section"><h4>${t.ficheAssign}</h4><div class="fiche-row"><span class="fiche-label">${t.tableDriver}:</span><span class="fiche-value"><select id="driverSelect" style="width:100%;">${driverOptions}</select></span></div></div>` : ''}
+                    <div class="fiche-total"><div class="amount">€ ${(booking.amount || 0).toFixed(2)}</div><div>${t.fichePayment}: ${booking.payment || t.ficheUnknown}</div></div>
                     <div class="fiche-actions">
-                        ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">Accepteren</button>` : ''}
-                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !this.isExpired(booking.datetime, booking.time) ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">Toewijzen</button>` : ''}
-                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !this.isExpired(booking.datetime, booking.time) ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">Annuleren</button>` : ''}
-                        <button class="fiche-btn close" onclick="app.closeModal()">Sluiten</button>
+                        ${booking.status === 'pending' ? `<button class="fiche-btn confirm" onclick="app.confirmBooking('${booking.id}')">${t.btnAccept}</button>` : ''}
+                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !this.isExpired(booking.datetime, booking.time) ? `<button class="fiche-btn assign" onclick="app.assignDriverToBooking('${booking.id}')">${t.btnAssign}</button>` : ''}
+                        ${(booking.status === 'accepted' || booking.status === 'assigned') && !this.isExpired(booking.datetime, booking.time) ? `<button class="fiche-btn close" style="background:#ef4444; color:white;" onclick="app.cancelBooking('${booking.id}')">${t.btnCancel}</button>` : ''}
+                        <button class="fiche-btn close" onclick="app.closeModal()">${t.btnClose}</button>
                     </div>
                 `;
                 document.getElementById('bookingModal').style.display = 'flex';
@@ -843,69 +1349,75 @@
             },
             
             async confirmBooking(bookingId) {
+                let t = translations[currentLang];
                 const { error } = await supabase.from('bookings').update({ status: 'accepted' }).eq('id', bookingId);
-                if (error) { this.showToast('Fout bij accepteren: ' + error.message, true); return; }
-                this.showToast(`Rit ${bookingId} geaccepteerd`);
+                if (error) { this.showToast(`${t.toastError} ${t.btnAccept}: ` + error.message, true); return; }
+                this.showToast(`${t.toastAccepted}`);
                 await this.refreshAllData();
                 this.closeModal();
             },
             
             async cancelBooking(bookingId) {
-                if (!confirm('Weet u zeker dat u deze rit wilt annuleren?')) return;
+                let t = translations[currentLang];
+                if (!confirm(t.confirmCancel)) return;
                 const { error } = await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', bookingId);
-                if (error) { this.showToast('Fout bij annuleren: ' + error.message, true); return; }
-                this.showToast(`Rit ${bookingId} geannuleerd`);
+                if (error) { this.showToast(`${t.toastError} ${t.btnCancel}: ` + error.message, true); return; }
+                this.showToast(`${t.toastCancelled}`);
                 await this.refreshAllData();
                 this.closeModal();
             },
             
             async assignDriverToBooking(bookingId) {
+                let t = translations[currentLang];
                 const select = document.getElementById('driverSelect');
                 const driverId = select?.value;
-                if (!driverId) { this.showToast('Selecteer een driver', true); return; }
+                if (!driverId) { this.showToast(t.ficheSelectDriver, true); return; }
                 const driver = this.drivers.find(c => String(c.id) === String(driverId));
                 if (!driver) { this.showToast('Driver niet gevonden', true); return; }
                 const { error } = await supabase.from('bookings').update({ status: 'assigned', assigned_driver_id: driver.id, assigned_driver: { id: driver.id, name: driver.name, vehicle: driver.vehicle } }).eq('id', bookingId);
-                if (error) { this.showToast('Fout bij toewijzen: ' + error.message, true); return; }
-                this.showToast(`Rit toegewezen aan ${driver.name}`);
+                if (error) { this.showToast(`${t.toastError} ${t.btnAssign}: ` + error.message, true); return; }
+                this.showToast(`${t.toastAssigned} ${driver.name}`);
                 await this.refreshAllData();
                 this.closeModal();
             },
             
             async deleteDriver(driverId) {
-                if (!confirm('Weet u zeker dat u deze driver wilt verwijderen?')) return;
+                let t = translations[currentLang];
+                if (!confirm(t.confirmDelete)) return;
                 const { error } = await supabase.from('drivers').delete().eq('id', driverId);
-                if (error) { this.showToast('Fout bij verwijderen: ' + error.message, true); return; }
-                this.showToast('Driver verwijderd');
+                if (error) { this.showToast(`${t.toastError} ${t.btnDelete}: ` + error.message, true); return; }
+                this.showToast(`${t.toastDeleted}`);
                 await this.loadDrivers();
                 if (this.currentTab === 'drivers') this.renderDrivers();
                 if (this.currentTab === 'partners') this.renderPartners();
             },
             
             async deletePartner(partnerId) {
-                if (!confirm('Weet u zeker dat u deze partner wilt verwijderen?')) return;
+                let t = translations[currentLang];
+                if (!confirm(t.confirmDelete)) return;
                 const { error } = await supabase.from('partners').delete().eq('id', partnerId);
-                if (error) { this.showToast('Fout bij verwijderen: ' + error.message, true); return; }
-                this.showToast('Partner verwijderd');
+                if (error) { this.showToast(`${t.toastError} ${t.btnDelete}: ` + error.message, true); return; }
+                this.showToast(`${t.toastDeleted}`);
                 await this.loadPartners();
                 if (this.currentTab === 'partners') this.renderPartners();
             },
             
             async showAddDriverForm() {
+                let t = translations[currentLang];
                 let targetPartner = this.partners.find(p => p.is_hoofd === true);
                 if (!targetPartner && this.partners.length > 0) targetPartner = this.partners[0];
-                if (!targetPartner) { this.showToast('Geen partner gevonden', true); return; }
-                let name = prompt('Naam driver:');
+                if (!targetPartner) { this.showToast(t.noPartners, true); return; }
+                let name = prompt(`${t.ficheName} ${t.tableDriver}:`);
                 if (!name) return;
-                let email = prompt('Email driver:');
+                let email = prompt(`${t.ficheEmail} ${t.tableDriver}:`);
                 if (!email) return;
-                let vehicle = prompt('Voertuig:') || 'Standaard';
+                let vehicle = prompt(`${t.ficheVehicle}:`) || 'Standaard';
                 const { count } = await supabase.from('drivers').select('*', { count: 'exact', head: true }).eq('partner_id', targetPartner.id);
                 const nextNumber = (count || 0) + 1;
                 const driverCode = `${targetPartner.prefix || 'DRV'}-${String(nextNumber).padStart(2, '0')}`;
                 const { error } = await supabase.from('drivers').insert({ partner_id: targetPartner.id, driver_code: driverCode, name: name, email: email, vehicle: vehicle, color: 'Zwart', license_plate: 'Onbekend' });
-                if (error) { this.showToast('Fout bij toevoegen: ' + error.message, true); return; }
-                this.showToast(`Driver ${name} toegevoegd met code ${driverCode}`);
+                if (error) { this.showToast(`${t.toastError} ${t.btnAddDriver}: ` + error.message, true); return; }
+                this.showToast(`${name} ${t.toastAdded} ${t.btnAddDriver.toLowerCase()}`);
                 await this.loadDrivers();
                 if (this.currentTab === 'drivers') this.renderDrivers();
                 if (this.currentTab === 'partners') this.renderPartners();
@@ -916,16 +1428,17 @@
             },
             
             async savePartner() {
+                let t = translations[currentLang];
                 const name = document.getElementById('p_name').value;
-                if (!name) { this.showToast('Vul een bedrijfsnaam in', true); return; }
+                if (!name) { this.showToast(t.ficheName + ' is verplicht', true); return; }
                 const contact = document.getElementById('p_contact').value;
                 const email = document.getElementById('p_email').value;
                 const phone = document.getElementById('p_phone').value;
                 const prefix = document.getElementById('p_prefix').value || name.slice(0,2).toUpperCase();
                 const isHoofd = document.getElementById('p_is_hoofd').checked;
                 const { error } = await supabase.from('partners').insert({ name: name, is_hoofd: isHoofd, prefix: prefix, contact: contact, email: email, phone: phone });
-                if (error) { this.showToast('Fout bij opslaan: ' + error.message, true); return; }
-                this.showToast(`Partner ${name} toegevoegd`);
+                if (error) { this.showToast(`${t.toastError} ${t.btnAddPartner}: ` + error.message, true); return; }
+                this.showToast(`${name} ${t.toastAdded}`);
                 this.closePartnerModal();
                 await this.loadPartners();
                 if (this.currentTab === 'partners') this.renderPartners();
@@ -947,7 +1460,6 @@
             },
             
             switchTab(tabName) {
-                console.log('Switching to tab:', tabName);
                 this.currentTab = tabName;
                 document.querySelectorAll('.nav-item').forEach(item => {
                     const itemTab = item.getAttribute('data-tab');
@@ -958,24 +1470,43 @@
             },
             
             async refreshAllData() {
-                this.showToast('Bezig met vernieuwen...');
+                let t = translations[currentLang];
+                this.showToast(t.toastRefreshing);
                 const bookings = await this.fetchBookingsFromSupabase();
                 this.allBookings = bookings;
                 this.filterAndSortData();
                 await this.loadPartners();
                 await this.loadDrivers();
                 this.refreshCurrentTab();
-                this.showToast('Gegevens vernieuwd');
+                this.showToast(t.toastRefreshed);
             },
             
             async logout() {
-                if (confirm('Weet u zeker dat u wilt uitloggen?')) {
+                let t = translations[currentLang];
+                if (confirm(t.confirmLogout)) {
                     sessionStorage.removeItem('horizon_logged_in');
                     window.location.replace('admin-index.html');
                 }
             },
             
             async init() {
+                // Load saved language
+                const savedLang = localStorage.getItem('nh_language');
+                if (savedLang && translations[savedLang]) {
+                    currentLang = savedLang;
+                }
+                updateUILanguage();
+                
+                // Set active language button
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    if (btn.getAttribute('data-lang') === currentLang) {
+                        btn.classList.add('active');
+                    }
+                    btn.addEventListener('click', () => {
+                        setLanguage(btn.getAttribute('data-lang'));
+                    });
+                });
+                
                 const bookings = await this.fetchBookingsFromSupabase();
                 this.allBookings = bookings;
                 this.filterAndSortData();
@@ -1001,6 +1532,12 @@
                 document.getElementById('closeModalBtn')?.addEventListener('click', () => this.closeModal());
                 document.getElementById('closePartnerModalBtn')?.addEventListener('click', () => this.closePartnerModal());
                 document.getElementById('savePartnerBtn')?.addEventListener('click', () => this.savePartner());
+                
+                // Calendar weekdays translation helper
+                translations.nl.calendarWeekdays = { Mon: 'Ma', Tue: 'Di', Wed: 'Wo', Thu: 'Do', Fri: 'Vr', Sat: 'Za', Sun: 'Zo' };
+                translations.fr.calendarWeekdays = { Mon: 'Lu', Tue: 'Ma', Wed: 'Me', Thu: 'Je', Fri: 'Ve', Sat: 'Sa', Sun: 'Di' };
+                translations.en.calendarWeekdays = { Mon: 'Mo', Tue: 'Tu', Wed: 'We', Thu: 'Th', Fri: 'Fr', Sat: 'Sa', Sun: 'Su' };
+                translations.es.calendarWeekdays = { Mon: 'Lu', Tue: 'Ma', Wed: 'Mi', Thu: 'Ju', Fri: 'Vi', Sat: 'Sá', Sun: 'Do' };
             }
         };
         
