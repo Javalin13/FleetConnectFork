@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>C-NH | Portail Client - Taxi de Luxe & VTC Belgique</title>
-  <meta name="description" content="Portail client C-NH : gérez vos réservations, consultez vos trajets, téléchargez vos factures et planifiez vos courses luxe avec votre compte personnel.">
+  <title>NH | Portail Client - Taxi de Luxe & VTC Belgique</title>
+  <meta name="description" content="Portail client NH : gérez vos réservations, consultez vos trajets, téléchargez vos factures et planifiez vos courses luxe avec votre compte personnel.">
   <meta name="robots" content="noindex, nofollow">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -225,7 +225,7 @@
 
 <header>
   <div class="container navbar">
-    <div class="logo">C-NH</div>
+    <div class="logo">NH</div>
     <div class="menu-icon" id="mobileMenuBtn"><i class="fas fa-bars"></i></div>
     <ul class="nav-links" id="navLinks">
       <li><a href="#reserveren">Nouvelle course</a></li>
@@ -247,7 +247,7 @@
     <div class="container">
       <div class="hero-split-box">
         <div class="hero-left-content">
-          <h1><i class="fas fa-user-circle"></i> C-NH</h1>
+          <h1><i class="fas fa-user-circle"></i> NH</h1>
           <div class="hero-subtitle">Portail Client | L'élégance en mouvement</div>
         </div>
         <div class="hero-right-content">
@@ -318,12 +318,12 @@
 
 <footer>
   <div class="container footer-grid">
-    <div class="footer-col"><h4>C-NH</h4><p>Buitenplas 1/14<br>1601 Sint-Pieters-Leeuw</p><p>+32 473 30 03 74</p><p>booking@kms7.be</p><p>TVA: BE 0789.123.456</p></div>
+    <div class="footer-col"><h4>NH</h4><p>Buitenplas 1/14<br>1601 Sint-Pieters-Leeuw</p><p>+32 473 30 03 74</p><p>booking@kms7.be</p><p>TVA: BE 0789.123.456</p></div>
     <div class="footer-col"><h4>LIENS RAPIDES</h4><a href="#reserveren">Nouvelle course</a><a href="#dashboard">Mes courses</a><a href="KMS7.html">Page d'accueil</a></div>
     <div class="footer-col"><h4>INFORMATIONS</h4><a href="Mentions_legales_KMS7.html">Mentions légales</a><a href="Mentions_legales_KMS7.html">CGV</a><a href="#">Confidentialité</a></div>
     <div class="footer-col"><h4>CONTACT</h4><a href="#reserveren" class="btn-outline-gold" style="display:inline-block;">Réserver maintenant</a></div>
   </div>
-  <div class="container" style="text-align:center; margin-top: 2.5rem; font-size: 0.8rem;">© 2026 C-NH — L'élégance en mouvement – Portail Client | Tous droits réservés</div>
+  <div class="container" style="text-align:center; margin-top: 2.5rem; font-size: 0.8rem;">© 2026 NH — L'élégance en mouvement – Portail Client | Tous droits réservés</div>
 </footer>
 
 <div id="invoiceModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
@@ -358,7 +358,7 @@
   // ============================================================
   let currentUserEmail = sessionStorage.getItem('kms7_user_email') || '';
   function generateCustomerId(email) { return "CUST-"+email.toLowerCase().replace(/[^a-z0-9]/g,""); }
-  let currentUser = { id: generateCustomerId(currentUserEmail), full_name: 'Client C-NH', email: currentUserEmail, phone: '+32 470 12 34 56' };
+  let currentUser = { id: generateCustomerId(currentUserEmail), full_name: 'Client NH', email: currentUserEmail, phone: '+32 470 12 34 56' };
   
   let map, pickupCoord=null, dropoffCoord=null, routeLayer=null, currentRouteData=null, currentRoundTrip=false, currentReturnDateTime="";
   let selectedVehicle='Standard', selectedVehicleExtra=0, currentPage=1;
@@ -383,7 +383,7 @@
       return `
         <div style="font-family: 'Montserrat', sans-serif;">
           <div class="invoice-header">
-            <div><h2>C-NH SPRL</h2><p>Buitenplas 1/14, 1601 Sint-Pieters-Leeuw<br>TVA: BE 0789.123.456<br>+32 473 30 03 74</p></div>
+            <div><h2>NH SPRL</h2><p>Buitenplas 1/14, 1601 Sint-Pieters-Leeuw<br>TVA: BE 0789.123.456<br>+32 473 30 03 74</p></div>
             <div style="text-align:right;"><h3>FACTURE</h3><p>N°: ${booking.id}<br>Date: ${new Date().toLocaleDateString('fr-FR')}</p></div>
           </div>
           <div class="invoice-details">
