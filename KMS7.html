@@ -612,6 +612,19 @@
     document.getElementById("navLinks").classList.toggle("show");
   });
   
+  // ============================================================
+  // 🌐 TAALWISSELAAR - WERKT CORRECT
+  // ============================================================
+  document.querySelectorAll('.lang-switch a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lang = link.getAttribute('data-lang');
+      if (lang === 'nl') window.location.href = 'KMS7_nl.html';
+      else if (lang === 'en') window.location.href = 'KMS7_en.html';
+      else if (lang === 'fr') window.location.href = 'KMS7.html';
+    });
+  });
+  
   initMap(); initAutocomplete(); initVehicleSelection(); showPage(1);
 </script>
 </body>
