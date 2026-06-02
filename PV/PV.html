@@ -300,12 +300,12 @@
     function isWithinNextHour(ds) { if (!ds) return false; const parsed = parseEuroDate(ds); if (!parsed) return false; const diff = parsed - new Date(); return diff > 0 && diff < 3600000; }
     function getExtrasString() { const extras = []; if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet"); if (document.getElementById('kissRide')?.checked) extras.push("Kiss & Ride"); if (document.getElementById('waterBottle')?.checked) extras.push("Waterfles"); if (document.getElementById('wifi')?.checked) extras.push("WiFi"); return extras.join(", ") || i18n.t('none'); }
     
-    // BLIJVENDE FOUTMELDINGEN
     function setPageError(page, msg) {
         const errDiv = document.getElementById(`page${page}Error`);
         if (errDiv) {
             errDiv.innerText = msg;
             errDiv.style.display = 'block';
+            setTimeout(() => errDiv.style.display = 'none', 4000);
         }
     }
     function clearPageError(page) {
@@ -355,7 +355,6 @@
                 if (currentPage === 5) updateRitOverzicht(); 
             }); 
         }); 
-        // Standaard voertuig selecteren
         const firstVehicle = document.querySelector('.vehicle-card');
         if (firstVehicle && !selectedVehicle) {
             firstVehicle.click();
@@ -403,7 +402,6 @@
             updateRitOverzicht(); 
             updateTotalDisplay(); 
         } else if (currentPage === 5) { 
-            // DIRECTE BOEKING ZONDER OVERLAY
             await finalizeBookingDirect();
         } 
     }
@@ -442,7 +440,7 @@
         }); 
     }
     
-    // DIRECTE BOEKING FUNCTIE - GEEN OVERLAY NODIG
+    // DIRECTE BOEKING FUNCTIE - ALLEEN BESTAANDE KOLOMMEN
     async function finalizeBookingDirect() {
         console.log("🔴 BOEKING START - Directe verzending");
         
@@ -488,6 +486,7 @@
         // Customer ID
         const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
         
+        // ALLEEN BESTAANDE KOLOMMEN in jouw Supabase tabel
         const bookingData = {
             id: bookingId,
             datetime: currentDateTime ? currentDateTime.split(' ')[0] : "",
@@ -508,11 +507,7 @@
             form_data: { source: "web-booking" },
             created_at: new Date().toISOString(),
             partner_id: 1,
-            assigned_driver_id: null,
-            distance_km: currentRouteData ? parseFloat(currentRouteData.distanceKm) * (currentRoundTrip ? 2 : 1) : 0,
-            special_wishes: document.getElementById('specialWishes')?.value || "",
-            passengers: parseInt(document.getElementById('passengers')?.value) || 1,
-            luggage: parseInt(document.getElementById('luggage')?.value) || 0
+            assigned_driver_id: null
         };
         
         console.log("📦 Verzenden naar Supabase:", bookingData);
@@ -598,7 +593,6 @@
     flatpickr("#datetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, defaultDate: (() => { let d = new Date(); d.setHours(d.getHours()+1); return d; })(), minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
     returnFlatpickrInstance = flatpickr("#returnDatetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
     
-    // STAPPENKNOPPEN WERKEND MAKEN
     document.querySelectorAll('.step-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const page = parseInt(btn.getAttribute('data-page'));
