@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>FleetConnect · Customer Portal</title>
+    <title>NH · Customer Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -39,6 +39,9 @@
         #background-map {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
             filter: brightness(1.05) contrast(1.02);
+            background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80');
+            background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;
+            opacity: 0.9;
         }
         .content-overlay {
             position: relative; z-index: 10;
@@ -67,14 +70,8 @@
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .hamburger-btn:hover {
-            background: var(--primary-dark);
-            transform: scale(1.05);
-        }
-        .hamburger-btn i {
-            color: white;
-            font-size: 1.5rem;
-        }
+        .hamburger-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+        .hamburger-btn i { color: white; font-size: 1.5rem; }
         
         .sidebar-overlay {
             position: fixed;
@@ -88,11 +85,7 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
-        .sidebar-overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        
+        .sidebar-overlay.active { visibility: visible; opacity: 1; }
         .sidebar {
             position: fixed;
             top: 0;
@@ -106,11 +99,9 @@
             display: flex;
             flex-direction: column;
             border-radius: 0 20px 20px 0;
+            overflow-y: auto;
         }
-        .sidebar-overlay.active .sidebar {
-            left: 0;
-        }
-        
+        .sidebar-overlay.active .sidebar { left: 0; }
         .sidebar-header {
             display: flex;
             justify-content: space-between;
@@ -118,14 +109,9 @@
             padding: 24px 20px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border-radius: 0 20px 0 0;
+            flex-shrink: 0;
         }
-        .sidebar-header h3 {
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.3rem;
-        }
+        .sidebar-header h3 { color: white; display: flex; align-items: center; gap: 10px; font-size: 1.3rem; }
         .close-menu {
             background: rgba(255,255,255,0.2);
             border: none;
@@ -138,12 +124,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
         }
-        .close-menu:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -163,33 +144,17 @@
             transition: all 0.2s;
             border: 1px solid transparent;
         }
-        .sidebar-nav a i {
-            width: 24px;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
-        .sidebar-nav a:hover {
-            background: var(--sidebar-hover);
-            border-color: var(--border-light);
-        }
-        
+        .sidebar-nav a i { width: 24px; color: var(--primary); font-size: 1.1rem; }
+        .sidebar-nav a:hover { background: var(--sidebar-hover); border-color: var(--border-light); }
         .language-section {
             padding: 16px;
             border-top: 1px solid var(--border-light);
             border-bottom: 1px solid var(--border-light);
             margin-bottom: 8px;
+            flex-shrink: 0;
         }
-        .language-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: var(--text-light);
-            margin-bottom: 12px;
-            letter-spacing: 1px;
-        }
-        .language-buttons {
-            display: flex;
-            gap: 12px;
-        }
+        .language-title { font-size: 0.7rem; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; letter-spacing: 1px; }
+        .language-buttons { display: flex; gap: 12px; }
         .lang-sidebar-btn {
             flex: 1;
             background: #f1f5f9;
@@ -205,16 +170,8 @@
             text-decoration: none;
             display: block;
         }
-        .lang-sidebar-btn:hover, .lang-sidebar-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .login-section {
-            padding: 16px;
-            margin-top: auto;
-        }
+        .lang-sidebar-btn:hover, .lang-sidebar-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .login-section { padding: 16px; margin-top: auto; flex-shrink: 0; }
         .login-btn {
             background: linear-gradient(135deg, var(--accent-gold), #b8860b);
             color: white;
@@ -226,11 +183,20 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            transition: transform 0.2s;
         }
-        .login-btn:hover {
-            transform: translateY(-2px);
+        
+        .uitleg-grid, .services-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; padding: 50px 0 30px; }
+        .uitleg-item, .service-card {
+            background: var(--card-bg); backdrop-filter: blur(4px);
+            border: 1px solid var(--border-light); border-radius: 36px;
+            padding: 30px 24px; text-align: center; flex: 1 1 240px;
+            text-decoration: none; color: inherit; transition: transform 0.2s;
+            cursor: pointer;
         }
+        .uitleg-item:hover, .service-card:hover { transform: translateY(-6px); border-color: var(--primary); }
+        .uitleg-item i, .service-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
+        .uitleg-item h3, .service-card h3 { margin-bottom: 10px; }
+        .service-summary { font-size: 0.85rem; color: var(--text-light); margin: 10px 0; }
         
         .tabs-container {
             display: flex;
@@ -248,44 +214,19 @@
         }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .logout-tab-btn {
-            background: none; border: none; padding: 10px 20px; font-weight: 600;
-            cursor: pointer; color: #b91c1c; border-bottom: 2px solid transparent;
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #b91c1c;
+            border-bottom: 2px solid transparent;
             margin-left: auto;
             transition: 0.2s;
+            font-size: 0.9rem;
         }
         .logout-tab-btn:hover { color: #7f1d1d; border-bottom-color: #b91c1c; }
         .tab-container.hidden { display: none; }
-        
-        .uitleg-grid {
-            display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;
-            padding: 50px 0 30px;
-        }
-        .uitleg-item {
-            background: var(--card-bg); backdrop-filter: blur(4px);
-            border: 1px solid var(--border-light); border-radius: 36px;
-            padding: 30px 24px; text-align: center; flex: 1 1 240px;
-            text-decoration: none; color: inherit; transition: transform 0.2s;
-            cursor: pointer;
-        }
-        .uitleg-item:hover { transform: translateY(-6px); border-color: var(--primary); }
-        .uitleg-item i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
-        .uitleg-item h3 { margin-bottom: 10px; }
-        .service-summary { font-size: 0.85rem; color: var(--text-light); margin: 10px 0; }
-        
-        .services-grid {
-            display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;
-            padding: 50px 0 30px;
-        }
-        .service-card {
-            background: var(--card-bg); backdrop-filter: blur(4px);
-            border: 1px solid var(--border-light); border-radius: 36px;
-            padding: 30px 24px; text-align: center; flex: 1 1 220px;
-            text-decoration: none; color: inherit; transition: transform 0.2s;
-            cursor: pointer;
-        }
-        .service-card:hover { transform: translateY(-6px); border-color: var(--primary); }
-        .service-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
-        .service-card h3 { margin-bottom: 10px; }
         
         .one-grid-block {
             max-width: 850px; width: 100%; background: var(--white);
@@ -402,16 +343,16 @@
 <div class="sidebar-overlay" id="sidebarOverlay">
     <div class="sidebar">
         <div class="sidebar-header">
-            <h3><i class="fas fa-car"></i> FleetConnect</h3>
+            <h3><i class="fas fa-car"></i> NH</h3>
             <button class="close-menu" id="closeMenuBtn">&times;</button>
         </div>
         
         <div class="language-section">
             <div class="language-title"><i class="fas fa-globe"></i> Language</div>
             <div class="language-buttons">
-                <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl">NL</a>
-                <a href="klantenportaal_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
-                <a href="klantenportaal_en.html?lang=en" class="lang-sidebar-btn active" data-lang="en">EN</a>
+                <a href="klantenportaalpv.html" class="lang-sidebar-btn" data-lang="nl">NL</a>
+                <a href="klantenportaalpv_fr.html" class="lang-sidebar-btn" data-lang="fr">FR</a>
+                <a href="klantenportaalpv_en.html" class="lang-sidebar-btn" data-lang="en" style="background:#2c6e9e; color:white;">EN</a>
             </div>
         </div>
         
@@ -419,18 +360,18 @@
             <a href="#" data-nav="home"><i class="fas fa-home"></i> Home</a>
             <a href="#" data-nav="portal"><i class="fas fa-user-circle"></i> My Portal</a>
             <a href="#" data-nav="contact"><i class="fas fa-envelope"></i> Contact</a>
-            <a href="PV.html?lang=en"><i class="fas fa-taxi"></i> Bookings</a>
-            <a href="PV_Exclusieve_Service.html?lang=en"><i class="fas fa-gem"></i> Exclusive Service</a>
-            <a href="PV_Vaste_Prijzen.html?lang=en"><i class="fas fa-euro-sign"></i> Fixed Prices</a>
-            <a href="PV_Premium_Vloot.html?lang=en"><i class="fas fa-car-side"></i> Premium Fleet</a>
-            <a href="PV_Luchthavenvervoer.html?lang=en"><i class="fas fa-plane-departure"></i> Airport Transfer</a>
-            <a href="PV_Zakelijk_Vervoer.html?lang=en"><i class="fas fa-briefcase"></i> Business Transport</a>
-            <a href="PV_Events_Gala.html?lang=en"><i class="fas fa-glass-cheers"></i> Events & Gala</a>
-            <a href="PV_Koeriersdienst.html?lang=en"><i class="fas fa-file-signature"></i> Courier Service</a>
+            <a href="PV.html"><i class="fas fa-taxi"></i> Bookings</a>
+            <a href="PV_Exclusieve_Service.html"><i class="fas fa-gem"></i> Exclusive service</a>
+            <a href="PV-vaste-prijzen.html"><i class="fas fa-euro-sign"></i> Fixed prices</a>
+            <a href="PV-premium-vloot.html"><i class="fas fa-car-side"></i> Premium fleet</a>
+            <a href="PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i> Airport transfer</a>
+            <a href="PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i> Business transport</a>
+            <a href="PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i> Events & Gala</a>
+            <a href="PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i> Courier service</a>
         </div>
         
         <div class="login-section">
-            <a href="index.html?lang=en" class="login-btn">
+            <a href="index.html" class="login-btn">
                 <i class="fas fa-sign-in-alt"></i> LOGIN
                 <i class="fas fa-arrow-right"></i>
             </a>
@@ -442,31 +383,31 @@
     <section class="hero" style="padding: 40px 0 20px; text-align: center;">
         <div class="container">
             <div class="hero-card" style="background: var(--card-bg); backdrop-filter: blur(8px); max-width:700px; margin:0 auto; padding:30px; border-radius:48px;">
-                <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> FleetConnect</h1>
-                <p style="color:var(--text-light);">Professional fleet management – Punctual, reliable & smart connected</p>
+                <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> NH</h1>
+                <p style="color:var(--text-light);">Professional taxi transport – Punctual, reliable & comfortable</p>
             </div>
         </div>
     </section>
 
     <div class="container">
         <div class="uitleg-grid">
-            <a href="PV_Exclusieve_Service.html?lang=en" class="uitleg-item">
+            <a href="PV_Exclusieve_Service.html" class="uitleg-item">
                 <i class="fas fa-gem"></i>
-                <h3>Exclusive Service</h3>
-                <p>Personal chauffeur, always on time</p>
-                <div class="service-summary">Discover our exclusive service with personal chauffeur and luxury vehicles.</div>
+                <h3>Exclusive service</h3>
+                <p>Personal driver, always on time</p>
+                <div class="service-summary">Discover our exclusive service with personal driver and luxury vehicles.</div>
             </a>
-            <a href="PV_Vaste_Prijzen.html?lang=en" class="uitleg-item">
+            <a href="PV-vaste-prijzen.html" class="uitleg-item">
                 <i class="fas fa-euro-sign"></i>
-                <h3>Fixed Prices</h3>
+                <h3>Fixed prices</h3>
                 <p>Transparent, no meters</p>
                 <div class="service-summary">No surprises afterwards. Our fixed prices are transparent and clear.</div>
             </a>
-            <a href="PV_Premium_Vloot.html?lang=en" class="uitleg-item">
+            <a href="PV-premium-vloot.html" class="uitleg-item">
                 <i class="fas fa-car-side"></i>
-                <h3>Premium Fleet</h3>
+                <h3>Premium fleet</h3>
                 <p>Mercedes, BMW & luxury minivans</p>
-                <div class="service-summary">Ride in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div>
+                <div class="service-summary">Travel in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div>
             </a>
         </div>
     </div>
@@ -477,8 +418,7 @@
             <button class="tab-btn" data-tab="profile">👤 My Profile</button>
             <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Rides</button>
             <button class="tab-btn" data-tab="payments">💰 Payments</button>
-            <!-- LOGOUT BUTTON - FIXED! -->
-            <button id="logoutBtn" class="logout-tab-btn" style="background:none; border:none; cursor:pointer; font-weight:600;">
+            <button id="logoutBtn" class="logout-tab-btn">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
@@ -487,31 +427,31 @@
             <div class="one-grid-block">
                 <div class="carousel">
                     <div class="steps">
-                        <button class="step-btn active" data-page="1">1. Trip Details</button>
+                        <button class="step-btn active" data-page="1">1. Trip details</button>
                         <button class="step-btn" data-page="2">2. Route & Price</button>
                         <button class="step-btn" data-page="3">3. Vehicle & Options</button>
-                        <button class="step-btn" data-page="4">4. Customer Info</button>
+                        <button class="step-btn" data-page="4">4. Customer info</button>
                         <button class="step-btn" data-page="5">5. Checkout</button>
                     </div>
                     <div id="page1" class="carousel-page active-page">
-                        <h1>🚖 Trip Details</h1>
-                        <div class="sub">Belgium – €1.50/km | urgent rides via WhatsApp</div>
-                        <div class="field"><label>📍 Pickup Address <span class="required-star">*</span></label>
+                        <h1>🚖 Trip details</h1>
+                        <div class="sub">Belgium – €1.50/km | urgent trips via WhatsApp</div>
+                        <div class="field"><label>📍 Pickup address <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="pickupWrap">
-                                <input type="text" id="pickupInput" placeholder="e.g., Antwerp" autocomplete="off">
+                                <input type="text" id="pickupInput" placeholder="e.g. Antwerp" autocomplete="off">
                                 <div id="pickupSuggest" class="suggestions"></div>
                             </div>
                         </div>
-                        <div class="field"><label>🏁 Drop-off Address <span class="required-star">*</span></label>
+                        <div class="field"><label>🏁 Dropoff address <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="dropoffWrap">
-                                <input type="text" id="dropoffInput" placeholder="e.g., Brussels" autocomplete="off">
+                                <input type="text" id="dropoffInput" placeholder="e.g. Brussels" autocomplete="off">
                                 <div id="dropoffSuggest" class="suggestions"></div>
                             </div>
                         </div>
                         <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label>🔄 Round trip (price x2)</label></div>
                         <div class="field"><label>✈️ Flight number (optional)</label><input type="text" id="flightNumber"></div>
                         <div class="field">
-                            <label>📅 Departure date & time <span class="required-star">*</span></label>
+                            <label>📅 Outbound date & time <span class="required-star">*</span></label>
                             <input type="text" id="datetime" placeholder="Click to select date & time" readonly>
                             <i class="fas fa-calendar-alt date-icon"></i>
                         </div>
@@ -526,7 +466,7 @@
                     <div id="page2" class="carousel-page">
                         <h2>🗺️ Route & Price</h2>
                         <div id="map"></div>
-                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>🟢 Pickup</span></div><div class="legend-item"><div class="legend-color red"></div><span>🔴 Drop-off</span></div><div class="legend-item"><div class="legend-color blue"></div><span>🟡 Route</span></div></div>
+                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>🟢 Pickup</span></div><div class="legend-item"><div class="legend-color red"></div><span>🔴 Dropoff</span></div><div class="legend-item"><div class="legend-color blue"></div><span>🟡 Route</span></div></div>
                         <div class="info-strip"><div class="info-card"><div class="label">📏 Distance</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Travel time</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Price</div><div class="value" id="priceVal">—</div><small>€</small></div></div>
                         <div id="page2Error" class="error"></div>
                     </div>
@@ -534,13 +474,13 @@
                         <h2>🚘 Choose your vehicle</h2>
                         <div class="vehicle-grid" id="vehicleGrid">
                             <div class="vehicle-card selected" data-vehicle="Standard" data-extraprice="0"><div class="vehicle-emoji">🚗</div><div class="vehicle-name">Standard</div><div class="vehicle-price">no extra charge</div></div>
-                            <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name">Break</div><div class="vehicle-price">+ €5</div></div>
-                            <div class="vehicle-card" data-vehicle="Exclusive" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name">Exclusive</div><div class="vehicle-price">+ €15</div></div>
+                            <div class="vehicle-card" data-vehicle="Estate" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name">Estate</div><div class="vehicle-price">+ €5</div></div>
+                            <div class="vehicle-card" data-vehicle="Executive" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name">Executive</div><div class="vehicle-price">+ €15</div></div>
                             <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">🚐</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ €10</div></div>
                         </div>
                         <div class="extra-fields"><h3>➕ Extra options</h3><div class="extra-grid"><div><label>👥 Number of passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Luggage pieces</label><input type="number" id="luggage" min="0" value="0"></div></div>
                         <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Meet & Greet</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Water bottle</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div>
-                        <div><label>📝 Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g., child seat"></textarea></div></div>
+                        <div><label>📝 Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g. child seat"></textarea></div></div>
                         <div id="page3Error" class="error"></div>
                     </div>
                     <div id="page4" class="carousel-page">
@@ -548,20 +488,20 @@
                         <div class="field"><label>First name <span class="required-star">*</span></label><input type="text" id="firstName"></div>
                         <div class="field"><label>Last name <span class="required-star">*</span></label><input type="text" id="lastName"></div>
                         <div class="field"><label>Mobile <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
-                        <div class="field"><label>Email <span class="required-star">*</span></label><input type="email" id="email" placeholder="info@example.be"></div>
+                        <div class="field"><label>Email <span class="required-star">*</span></label><input type="email" id="email" placeholder="info@example.com"></div>
                         <div class="field"><label>VAT (optional)</label><input type="text" id="vat"></div>
                         <div id="page4Error" class="error"></div>
                     </div>
                     <div id="page5" class="carousel-page">
                         <h1>💰 Checkout</h1><div class="sub">Choose payment method & confirm</div>
                         <div class="rit-overzicht"><h3>📋 Your trip summary</h3>
-                            <div class="rit-overzicht-detail"><strong>📍 Pickup:</strong> <span id="overviewPickup">—</span></div>
-                            <div class="rit-overzicht-detail"><strong>🏁 Destination:</strong> <span id="overviewDestination">—</span></div>
-                            <div class="rit-overzicht-detail"><strong>📅 Departure date/time:</strong> <span id="overviewHeen">—</span></div>
+                            <div><strong>📍 Pickup:</strong> <span id="overviewPickup">—</span></div>
+                            <div><strong>🏁 Dropoff:</strong> <span id="overviewDestination">—</span></div>
+                            <div><strong>📅 Outbound date/time:</strong> <span id="overviewHeen">—</span></div>
                             <div id="overviewReturnContainer" style="display:none;"><strong>🔄 Return date/time:</strong> <span id="overviewReturn">—</span></div>
-                            <div class="rit-overzicht-detail"><strong>🚘 Vehicle:</strong> <span id="overviewVehicle">—</span></div>
-                            <div class="rit-overzicht-detail"><strong>➕ Extra options:</strong> <span id="overviewExtras">—</span></div>
-                            <div class="rit-overzicht-totaal"><strong>💰 Total price:</strong> <span id="overviewTotal">€ 0.00</span></div>
+                            <div><strong>🚘 Vehicle:</strong> <span id="overviewVehicle">—</span></div>
+                            <div><strong>➕ Extra options:</strong> <span id="overviewExtras">—</span></div>
+                            <div><strong>💰 Total price:</strong> <span id="overviewTotal">€ 0.00</span></div>
                         </div>
                         <div class="payment-method"><span>Payment method:</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Cash</label><label><input type="radio" name="payment" value="Card"> 💳 Card</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div>
                         <div id="totalDisplay" class="total-display">Total: € 0.00</div>
@@ -573,34 +513,6 @@
             </div>
         </div>
 
-        <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Our services</h2>
-        <div class="services-grid">
-            <a href="PV_Luchthavenvervoer.html?lang=en" class="service-card">
-                <i class="fas fa-plane-departure"></i>
-                <h3>Airport Transfer</h3>
-                <p>Fixed price, flight monitoring</p>
-                <div class="service-summary">Stress-free to the airport. We track your flight and wait for you.</div>
-            </a>
-            <a href="PV_Zakelijk_Vervoer.html?lang=en" class="service-card">
-                <i class="fas fa-briefcase"></i>
-                <h3>Business Transport</h3>
-                <p>Executive class, invoicing</p>
-                <div class="service-summary">Impress with executive class transport. Post-booking invoicing possible.</div>
-            </a>
-            <a href="PV_Events_Gala.html?lang=en" class="service-card">
-                <i class="fas fa-glass-cheers"></i>
-                <h3>Events & Gala</h3>
-                <p>Luxury car with chauffeur</p>
-                <div class="service-summary">Complete your special evening with a luxury chauffeur.</div>
-            </a>
-            <a href="PV_Koeriersdienst.html?lang=en" class="service-card">
-                <i class="fas fa-file-signature"></i>
-                <h3>Courier Service</h3>
-                <p>Fast document delivery</p>
-                <div class="service-summary">Fast and reliable document delivery throughout Belgium.</div>
-            </a>
-        </div>
-
         <div id="profile-container" class="tab-container hidden">
             <div class="profile-card">
                 <h3>My details</h3>
@@ -608,7 +520,7 @@
                     <div class="field"><label>Full name</label><input type="text" id="fullName" required></div>
                     <div class="field"><label>Email</label><input type="email" id="profileEmail" required></div>
                     <div class="field"><label>Phone</label><input type="tel" id="profilePhone" required></div>
-                    <div class="field"><label>Default pickup location</label><input type="text" id="defaultPickup"></div>
+                    <div class="field"><label>Default pickup address</label><input type="text" id="defaultPickup"></div>
                     <button type="submit" class="nav-btn" style="background:var(--primary);">Save</button>
                 </form>
             </div>
@@ -617,7 +529,7 @@
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
             <h4>📅 Upcoming rides</h4>
-            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
+            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></td>
             <h4>✅ Completed rides</h4>
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </div>
@@ -635,180 +547,366 @@
         </div>
     </div>
 
+    <div class="container">
+        <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Our services</h2>
+        <div class="services-grid">
+            <a href="PV_Luchthavenvervoer.html" class="service-card">
+                <i class="fas fa-plane-departure"></i>
+                <h3>Airport transfer</h3>
+                <p>Fixed price, flight monitoring</p>
+                <div class="service-summary">Stress-free to the airport. We monitor your flight and wait for you.</div>
+            </a>
+            <a href="PV_Zakelijk_Vervoer.html" class="service-card">
+                <i class="fas fa-briefcase"></i>
+                <h3>Business transport</h3>
+                <p>Executive class, invoicing</p>
+                <div class="service-summary">Make an impression with executive class transport.</div>
+            </a>
+            <a href="PV_Events_Gala.html" class="service-card">
+                <i class="fas fa-glass-cheers"></i>
+                <h3>Events & Gala</h3>
+                <p>Luxury car with driver</p>
+                <div class="service-summary">Complete your special evening with a luxury chauffeur.</div>
+            </a>
+            <a href="PV_Koeriersdienst.html" class="service-card">
+                <i class="fas fa-file-signature"></i>
+                <h3>Courier service</h3>
+                <p>Fast document delivery</p>
+                <div class="service-summary">Fast and reliable document delivery throughout Belgium.</div>
+            </a>
+        </div>
+    </div>
+
     <footer class="footer-dark">
         <div class="footer-grid">
-            <div><h4>FleetConnect</h4><p>Professional fleet management</p></div>
-            <div><h4>Ryz3n</h4><a href="#">Control Panel</a></div>
+            <div><h4>NH</h4><p>Professional taxi transport</p></div>
+            <div><h4>NH | Digital</h4><a href="#">Control Panel</a></div>
             <div><h4>Legal</h4>
-                <a href="PVfaq.html?lang=en">❓ FAQ</a><br>
-                <a href="PVprivacy.html?lang=en">🔒 Privacy</a><br>
-                <a href="PVcookiebeleid.html?lang=en">🍪 Cookie Policy</a><br>
-                <a href="PValgemene-voorwaarden.html?lang=en">📜 Terms & Conditions</a>
+                <a href="PVfaq.html">❓ FAQ</a><br>
+                <a href="PVprivacy.html">🔒 Privacy</a><br>
+                <a href="PVcookiebeleid.html">🍪 Cookie policy</a><br>
+                <a href="PValgemene-voorwaarden.html">📜 Terms & conditions</a>
             </div>
             <div><h4>Partners</h4><a href="#">Horizon Of Infinity</a></div>
         </div>
-        <div class="footer-bottom">© 2026 FleetConnect – Ryz3n</div>
+        <div class="footer-bottom">© 2026 NH – Ryz3n</div>
     </footer>
 </div>
 <div id="ritModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
 
 <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import { comms } from './src/modules/communication/index.js';
-    window.createClient = createClient;
-    window.comms = comms;
+    window.SUPABASE_CLIENT = createClient(
+        'https://rreqjjrmvytnwnsidmqi.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA'
+    );
+    window.SUPABASE_READY = true;
+    console.log("✅ Supabase client loaded");
 </script>
+
 <script>
-    // HAMBURGER MENU FUNCTIONALITY
+    // HAMBURGER MENU
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
     
-    function openMenu() {
-        sidebarOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeMenu() {
-        sidebarOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+    function openMenu() { sidebarOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeMenu() { sidebarOverlay.classList.remove('active'); document.body.style.overflow = ''; }
     
     if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
-    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) {
-        if (e.target === sidebarOverlay) closeMenu();
-    });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu();
-    });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) { if (e.target === sidebarOverlay) closeMenu(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu(); });
     
-    // ========== LOGOUT FUNCTION - FIXED! ==========
+    // SUPABASE
+    function getSupabase() { return window.SUPABASE_CLIENT || null; }
+    
     async function handleLogout() {
-        const confirmed = confirm('Are you sure you want to logout?');
-        if (!confirmed) return;
-        
-        if (!initSupabase()) {
-            window.location.href = 'index.html?logout=success&lang=en';
-            return;
-        }
-        
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...';
+        logoutBtn.disabled = true;
         try {
-            const { error } = await supabase.auth.signOut();
-            
-            if (error) {
-                console.error('Logout error:', error);
-                alert('Logout error: ' + error.message);
-                return;
-            }
-            
-            localStorage.removeItem('supabase.auth.token');
+            const supabase = getSupabase();
+            if (supabase) await supabase.auth.signOut();
+            localStorage.clear();
             sessionStorage.clear();
-            
-            // Redirect to login page with logout parameter - YOU STAY ON THE LOGIN PAGE!
-            window.location.href = 'index.html?logout=success&lang=en';
-            
-        } catch (err) {
-            console.error('Logout error:', err);
-            window.location.href = 'index.html?logout=success&lang=en';
-        }
+            window.location.href = 'index.html?t=' + Date.now();
+        } catch(err) { window.location.href = 'index.html?t=' + Date.now(); }
     }
     
-    // LANGUAGE FUNCTIONALITY FOR GRID LINKS
-    function updateGridLinks(lang) {
-        document.querySelectorAll('.uitleg-grid a, .services-grid a, .footer-legal a').forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && (href.includes('.html') || href.includes('PV_'))) {
-                const cleanHref = href.split('?')[0];
-                link.setAttribute('href', `${cleanHref}?lang=${lang}`);
-            }
-        });
-    }
+    document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
     
-    function getLanguageFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const langParam = urlParams.get('lang');
-        if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
-            return langParam;
-        }
-        return 'en';
-    }
-
-    function handlePaymentStatus() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const payment = urlParams.get('payment');
-        const bookingId = urlParams.get('id');
-
-        if (payment === 'success') {
-            alert(`Thank you! Your payment for booking ${bookingId} has been received successfully.`);
-            if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
-            switchToTab('payments');
-        } else if (payment === 'cancelled') {
-            alert(`The payment for booking ${bookingId} was cancelled. You can try again later via 'My Rides'.`);
-        }
-    }
-
-    function setActiveLanguageButton() {
-        const currentLang = getLanguageFromURL();
-        document.querySelectorAll('.lang-sidebar-btn').forEach(btn => {
-            if (btn.getAttribute('href')?.includes(`?lang=${currentLang}`)) {
-                btn.classList.add('active');
-                btn.style.background = '#2c6e9e';
-                btn.style.color = 'white';
-            } else {
-                btn.classList.remove('active');
-                btn.style.background = '#f1f5f9';
-                btn.style.color = '#1a2a3a';
-            }
-        });
-    }
-
-    const currentLang = getLanguageFromURL();
-    updateGridLinks(currentLang);
-    setActiveLanguageButton();
-    document.documentElement.lang = currentLang;
-    
-    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
-    
-    let supabase;
-    const initSupabase = () => {
-        if (window.createClient) {
-            if (!supabase) supabase = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            return true;
-        }
-        return false;
-    };
-
-    async function checkAuth() {
-        if (!initSupabase()) {
-            setTimeout(checkAuth, 100);
-            return;
-        }
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            window.location.href = 'index.html?lang=' + currentLang;
-        } else {
-            currentUser.id = session.user.id;
-            currentUser.email = session.user.email;
-            const { data: customer } = await supabase.from('customers').select('*').eq('user_id', session.user.id).maybeSingle();
-            if (customer) {
-                currentUser.full_name = customer.name;
-                currentUser.phone = customer.phone;
-                currentUser.default_pickup_address = customer.default_pickup_address || '';
-            }
-            loadUserProfile();
-            loadUserBookings();
-        }
-    }
-    checkAuth();
-
-    let currentUser = { id: 'demo-user', full_name: 'Demo User', email: 'demo@fleetconnect.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
+    // Globale variabelen (zelfde functionaliteit als NL versie, maar in Engels)
+    let currentUser = { id: 'demo-user', full_name: 'Demo User', email: 'demo@nh.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
     let userBookings = [];
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
     let selectedVehicle = 'Standard', selectedVehicleExtra = 0, currentPage = 1;
     let debounceTimer;
-
+    
+    function initMap() {
+        bookingMap = L.map('map').setView([50.85, 4.35], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(bookingMap);
+    }
+    
+    async function fetchAddresses(query, wrapId) {
+        const wrap = document.getElementById(wrapId);
+        if (!wrap) return;
+        const suggestionsDiv = wrap.querySelector('.suggestions');
+        if (!suggestionsDiv) return;
+        if (query.length < 3) { suggestionsDiv.style.display = 'none'; return; }
+        suggestionsDiv.innerHTML = `<div class="suggestion-item">Searching...</div>`;
+        suggestionsDiv.style.display = 'block';
+        try {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&countrycodes=be&addressdetails=1&accept-language=en`;
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'NH/3.0' } });
+            clearTimeout(timeoutId);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!data || data.length === 0) {
+                suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ No addresses found</div>`;
+                setTimeout(() => { if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none'; }, 3000);
+                return;
+            }
+            suggestionsDiv.innerHTML = '';
+            data.forEach(place => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.setAttribute('data-lat', place.lat);
+                div.setAttribute('data-lon', place.lon);
+                let displayName = place.display_name.length > 80 ? place.display_name.substring(0, 80) + '…' : place.display_name;
+                div.textContent = displayName;
+                div.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
+                    if (inputField) inputField.value = place.display_name;
+                    const coords = { lat: parseFloat(place.lat), lon: parseFloat(place.lon) };
+                    if (wrapId === 'pickupWrap') pickupCoord = coords;
+                    else dropoffCoord = coords;
+                    suggestionsDiv.style.display = 'none';
+                    if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
+                };
+                suggestionsDiv.appendChild(div);
+            });
+            suggestionsDiv.style.display = 'block';
+        } catch (err) {
+            console.error('Autocomplete error:', err);
+            suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ Network error - try again</div>`;
+            setTimeout(() => { if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none'; }, 3000);
+        }
+    }
+    
+    function initAutocomplete() {
+        const pickupInput = document.getElementById('pickupInput');
+        const dropoffInput = document.getElementById('dropoffInput');
+        if (pickupInput) {
+            pickupInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                const query = e.target.value.trim();
+                if (query.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(query, 'pickupWrap'), 500);
+                else { const s = document.querySelector('#pickupWrap .suggestions'); if (s) s.style.display = 'none'; }
+            });
+        }
+        if (dropoffInput) {
+            dropoffInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                const query = e.target.value.trim();
+                if (query.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(query, 'dropoffWrap'), 500);
+                else { const s = document.querySelector('#dropoffWrap .suggestions'); if (s) s.style.display = 'none'; }
+            });
+        }
+        document.addEventListener('click', (e) => { if (!e.target.closest('.suggest-wrapper')) document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); });
+    }
+    
+    async function calcRoute(lat1, lon1, lat2, lon2) {
+        const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data.code === 'Ok' && data.routes.length) {
+                const rt = data.routes[0];
+                return { distanceKm: (rt.distance / 1000).toFixed(1), durationMin: Math.round(rt.duration / 60), geometry: rt.geometry };
+            }
+        } catch(e) { console.error(e); }
+        return null;
+    }
+    
+    async function updateMapAndInfo(rd) {
+        if (routeLayer) bookingMap.removeLayer(routeLayer);
+        routeLayer = L.geoJSON(rd.geometry, { color: '#d4af37', weight: 8 }).addTo(bookingMap);
+        const bounds = L.latLngBounds([pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon]);
+        bookingMap.fitBounds(bounds, { padding: [60, 60] });
+        let d = parseFloat(rd.distanceKm), t = rd.durationMin;
+        if (currentRoundTrip) { d *= 2; t *= 2; }
+        const price = d * 1.5;
+        document.getElementById('distVal').innerHTML = d.toFixed(1);
+        document.getElementById('timeVal').innerHTML = t;
+        document.getElementById('priceVal').innerHTML = price.toFixed(2);
+        updateTotalDisplay();
+    }
+    
+    function parseEuroDate(str) {
+        if (!str) return null;
+        let parts = str.match(/(\d+)-(\d+)-(\d+)\s+(\d+):(\d+)/);
+        if (!parts) return null;
+        let [d, m, y, hh, min] = parts.slice(1).map(Number);
+        return new Date(y, m - 1, d, hh, min);
+    }
+    
+    function isPast(ds) { let p = parseEuroDate(ds); return p ? p < new Date() : false; }
+    function isWithinNextHour(ds) { let diff = parseEuroDate(ds) - new Date(); return diff > 0 && diff < 3600000; }
+    
+    function getExtrasString() {
+        let extras = [];
+        if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet");
+        if (document.getElementById('kissRide')?.checked) extras.push("Kiss & Ride");
+        if (document.getElementById('waterBottle')?.checked) extras.push("Water bottle");
+        if (document.getElementById('wifi')?.checked) extras.push("WiFi");
+        return extras.join(", ") || "None";
+    }
+    
+    function updateTotalDisplay() {
+        if (!currentRouteData) return;
+        let dist = parseFloat(currentRouteData.distanceKm);
+        if (currentRoundTrip) dist *= 2;
+        let total = dist * 1.5 + selectedVehicleExtra;
+        document.getElementById('totalDisplay').innerHTML = `Total: € ${total.toFixed(2)}`;
+        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || '—';
+        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || '—';
+        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value || '—';
+        document.getElementById('overviewVehicle').innerText = selectedVehicle;
+        document.getElementById('overviewExtras').innerText = getExtrasString();
+        document.getElementById('overviewTotal').innerHTML = `€${total.toFixed(2)}`;
+        const retCont = document.getElementById('overviewReturnContainer');
+        if (currentRoundTrip && currentReturnDateTime) {
+            retCont.style.display = 'block';
+            document.getElementById('overviewReturn').innerText = currentReturnDateTime;
+        } else retCont.style.display = 'none';
+    }
+    
+    function showError(page, msg) {
+        let errDiv = document.getElementById(`page${page}Error`);
+        if (errDiv) { errDiv.innerText = msg; errDiv.style.display = 'block'; setTimeout(() => errDiv.style.display = 'none', 5000); }
+    }
+    
+    async function calculateAndStoreRoute() {
+        if (!pickupCoord || !dropoffCoord) { showError(1, 'Select a valid pickup and dropoff address from suggestions'); return false; }
+        const dt = document.getElementById('datetime').value;
+        if (!dt) { showError(1, 'Choose a valid outbound date and time'); return false; }
+        if (isPast(dt)) { showError(1, 'Date cannot be in the past'); return false; }
+        if (document.getElementById('roundtripCheckbox').checked) {
+            const returnDt = document.getElementById('returnDatetime').value;
+            if (!returnDt) { showError(1, 'Choose a return date and time for round trip'); return false; }
+            if (isPast(returnDt)) { showError(1, 'Return date cannot be in the past'); return false; }
+            if (parseEuroDate(returnDt) <= parseEuroDate(dt)) { showError(1, 'Return date must be after outbound date'); return false; }
+            currentReturnDateTime = returnDt;
+        }
+        const urgent = isWithinNextHour(dt);
+        const urgentDiv = document.getElementById('urgentWhatsApp');
+        if (urgentDiv) urgent ? urgentDiv.classList.add('show') : urgentDiv.classList.remove('show');
+        const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon);
+        if (!rd) { showError(1, 'Could not calculate route'); return false; }
+        currentRouteData = rd;
+        currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
+        await updateMapAndInfo(rd);
+        return true;
+    }
+    
+    function generateBookingId() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const counter = parseInt(localStorage.getItem('bookingCounter') || '0') + 1;
+        localStorage.setItem('bookingCounter', counter);
+        return `T-PV-${year}${month}${day}-${String(counter).padStart(3, '0')}`;
+    }
+    
+    async function finalizeBooking() {
+        if (!currentRouteData) { showError(5, 'Calculate the route in steps 1 and 2 first'); return; }
+        const fn = document.getElementById('firstName').value.trim();
+        const ln = document.getElementById('lastName').value.trim();
+        const ph = document.getElementById('phone').value.trim();
+        const em = document.getElementById('email').value.trim();
+        if (!fn || !ln || !ph || !em) { showError(5, 'Please fill in all required customer information'); return; }
+        if (!selectedVehicle) { showError(5, 'Please select a vehicle in step 3'); return; }
+        
+        const payment = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
+        let dist = parseFloat(currentRouteData.distanceKm);
+        if (currentRoundTrip) dist *= 2;
+        let totalAmount = dist * 1.5 + selectedVehicleExtra;
+        const dt = document.getElementById('datetime').value;
+        let datePart = "", timePart = "";
+        if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
+        const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
+        const bookingId = generateBookingId();
+        
+        const bookingData = {
+            id: bookingId, datetime: datePart, time: timePart, name: `${fn} ${ln}`, email: em, phone: ph,
+            pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value,
+            flight_number: document.getElementById('flightNumber').value.trim() || "", vehicle: selectedVehicle,
+            extras: getExtrasString(), amount: totalAmount.toString(), payment: payment,
+            status: payment === "Cash" ? "pending" : "pending_payment", customer_id: customerId,
+            form_data: { source: "web-portal" }, created_at: new Date().toISOString(), partner_id: 1,
+            assigned_driver_id: null, payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
+        };
+        
+        const supabase = getSupabase();
+        if (!supabase) { showError(5, 'Database not available'); return; }
+        
+        try {
+            const { error } = await supabase.from('bookings').insert([bookingData]);
+            if (error) throw error;
+            alert(`✅ Booking ${bookingId} confirmed for €${totalAmount.toFixed(2)}!`);
+            resetAll();
+            await loadUserBookings();
+            switchToTab('dashboard');
+        } catch (err) { showError(5, 'Booking error: ' + err.message); }
+    }
+    
+    function resetAll() {
+        if (routeLayer) bookingMap.removeLayer(routeLayer);
+        currentRouteData = null; pickupCoord = null; dropoffCoord = null;
+        document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = '';
+        document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = '';
+        document.getElementById('roundtripCheckbox').checked = false;
+        document.getElementById('returnDateContainer').classList.remove('visible');
+        currentRoundTrip = false;
+        showPage(1);
+    }
+    
+    function showPage(page) {
+        document.querySelectorAll('.carousel-page').forEach((pg, i) => pg.classList.toggle('active-page', i + 1 === page));
+        document.querySelectorAll('.step-btn').forEach((btn, i) => btn.classList.toggle('active', i + 1 === page));
+        currentPage = page;
+        document.getElementById('prevBtn').disabled = (page === 1);
+        if (page === 5) updateTotalDisplay();
+    }
+    
+    async function nextPage() {
+        if (currentPage === 1) { const ok = await calculateAndStoreRoute(); if (ok) showPage(2); }
+        else if (currentPage === 2) { if (currentRouteData) showPage(3); else showError(2, 'Calculate a route in step 1 first'); }
+        else if (currentPage === 3) { if (selectedVehicle) showPage(4); else showError(3, 'Select a vehicle'); }
+        else if (currentPage === 4) { showPage(5); updateTotalDisplay(); }
+        else if (currentPage === 5) { console.log("Step 5 - use the confirm button"); }
+    }
+    
+    function prevPage() { if (currentPage > 1) showPage(currentPage - 1); }
+    
+    function initVehicleSelection() {
+        document.querySelectorAll('.vehicle-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedVehicle = card.getAttribute('data-vehicle');
+                selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0;
+                updateTotalDisplay();
+            });
+        });
+    }
+    
     function switchToTab(tabName) {
         document.querySelectorAll('.tab-container').forEach(c => c.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -823,15 +921,9 @@
     document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', (e) => {
         const nav = e.currentTarget.getAttribute('data-nav');
         if (nav === 'home' || nav === 'portal') switchToTab('new-booking');
-        if (nav === 'contact') alert('📧 info@fleetconnect.be | 📞 +32 470 12 34 56');
+        if (nav === 'contact') alert('Contact us at info@nh.be or +32 473 30 03 74');
         closeMenu();
     }));
-    
-    // LOGOUT BUTTON EVENT LISTENER
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
     
     async function loadUserProfile() {
         document.getElementById('fullName').value = currentUser.full_name;
@@ -842,6 +934,7 @@
         document.getElementById('lastName').value = currentUser.full_name.split(' ').slice(1).join(' ') || '';
         document.getElementById('phone').value = currentUser.phone;
         document.getElementById('email').value = currentUser.email;
+        if (currentUser.default_pickup_address) document.getElementById('pickupInput').value = currentUser.default_pickup_address;
     }
     
     document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
@@ -850,109 +943,38 @@
         currentUser.email = document.getElementById('profileEmail').value;
         currentUser.phone = document.getElementById('profilePhone').value;
         currentUser.default_pickup_address = document.getElementById('defaultPickup').value;
-        alert('Profile saved');
+        alert('Profile saved!');
         loadUserProfile();
     });
     
-    async function loadPaymentHistory() {
-        const tbody = document.querySelector('#paymentsTable tbody');
-        if (!tbody) return;
-
-        tbody.innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
-
-        try {
-            if (!initSupabase()) {
-                tbody.innerHTML = '<tr><td colspan="6">Waiting for initialization...</td></tr>';
-                setTimeout(loadPaymentHistory, 1000);
-                return;
-            }
-
-            const email = currentUser.email;
-            const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
-
-            const { data, error } = await supabase
-                .from('payments')
-                .select('*, bookings(id, invoice_id)')
-                .eq('customer_id', customerId)
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-
-            if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">No payments found</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = data.map(p => `
-                <tr>
-                    <td>${p.booking_id}</td>
-                    <td>${new Date(p.created_at).toLocaleDateString()}</td>
-                    <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
-                    <td>${p.payment_method || 'card'}</td>
-                    <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status}</span></td>
-                    <td>
-                        ${p.bookings?.invoice_id ? `<button class="btn-icon" onclick="window.open('${p.bookings.invoice_pdf_url || '#'}', '_blank')"><i class="fas fa-file-pdf"></i></button>` : '-'}
-                    </td>
-                </tr>
-            `).join('');
-
-        } catch (err) {
-            console.error('Payment history error:', err);
-            tbody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`;
-        }
-    }
-
     async function loadUserBookings() {
-        if (!initSupabase()) {
-            setTimeout(loadUserBookings, 100);
-            return;
-        }
-
+        const supabase = getSupabase();
+        if (!supabase) return;
         try {
-            const { data, error } = await supabase
-                .from('bookings')
-                .select('*')
-                .or(`user_id.eq.${currentUser.id},customer_id.eq.CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`)
-                .order('datetime', { ascending: false });
-
+            const customerId = `CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
+            const { data, error } = await supabase.from('bookings').select('*').eq('customer_id', customerId).order('datetime', { ascending: false });
             if (error) throw error;
             userBookings = data || [];
             renderDashboard();
-        } catch (err) {
-            console.error('Error loading bookings:', err);
-        }
+        } catch (err) { console.error('Error loading bookings:', err); }
     }
     
     function renderDashboard() {
-        const upcoming = userBookings.filter(b => b.status !== 'completed');
+        const upcoming = userBookings.filter(b => b.status !== 'completed' && b.status !== 'cancelled');
         const completed = userBookings.filter(b => b.status === 'completed');
-        const totalSpent = completed.reduce((s,b)=>s+b.amount,0);
+        const totalSpent = completed.reduce((s, b) => s + (parseFloat(b.amount) || 0), 0);
         const statsGrid = document.getElementById('statsGrid');
         if (statsGrid) {
-            statsGrid.innerHTML = `
-                <div class="stat-card"><h3>${upcoming.length}</h3><p>Upcoming rides</p></div>
+            statsGrid.innerHTML = `<div class="stat-card"><h3>${upcoming.length}</h3><p>Upcoming rides</p></div>
                 <div class="stat-card"><h3>${completed.length}</h3><p>Completed rides</p></div>
-                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Total spent</p></div>
-            `;
+                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Total spent</p></div>`;
         }
+        
         const renderTable = (tableId, bookings) => {
             const tbody = document.querySelector(`#${tableId} tbody`);
             if (tbody) {
-                tbody.innerHTML = bookings.map(b => `
-                    <tr>
-                        <td>${b.id}</td>
-                        <td>${b.datetime} ${b.time || ''}</td>
-                        <td>${b.pickup.split(',')[0]} → ${b.destination.split(',')[0]}</td>
-                        <td>${b.vehicle}</td>
-                        <td>€${b.amount}</td>
-                        <td><span class="status-badge" style="background:${b.status==='completed'?'#dcfce7':'#fef3c7'}">${b.status}</span></td>
-                        <td>
-                            <button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button>
-                            <button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button>
-                            <button class="download-pdf" data-id='${JSON.stringify(b)}'><i class="fas fa-download btn-icon"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
+                if (bookings.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">No rides found</td></tr>`; return; }
+                tbody.innerHTML = bookings.map(b => `<tr><td>${b.id}</td><td>${b.datetime} ${b.time || ''}</td><td>${(b.pickup || '').split(',')[0]} → ${(b.destination || '').split(',')[0]}</td><td>${b.vehicle || 'Standard'}</td><td>€${(parseFloat(b.amount) || 0).toFixed(2)}</td><td><span class="status-badge" style="background:${b.status === 'completed' ? '#dcfce7' : '#fef3c7'}">${b.status === 'completed' ? 'Completed' : 'Pending'}</span></td><td><button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button><button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button></td></tr>`).join('');
             }
         };
         renderTable('upcomingTable', upcoming);
@@ -967,343 +989,23 @@
         });
         document.querySelectorAll('.view-fiche').forEach(btn => btn.onclick = () => {
             const b = JSON.parse(btn.getAttribute('data-id'));
-            alert(`Ride details: ${b.id}\n€${b.amount}\nStatus: ${b.status}`);
-        });
-        document.querySelectorAll('.download-pdf').forEach(btn => btn.onclick = () => {
-            const b = JSON.parse(btn.getAttribute('data-id'));
-            alert(`PDF download: ${b.id}`);
+            alert(`Ride ${b.id}\nAmount: €${b.amount}\nStatus: ${b.status}\nRoute: ${b.pickup} → ${b.destination}`);
         });
     }
     
-    async function fetchAddresses(query, wrapId) {
-        const wrap = document.getElementById(wrapId);
-        if (!wrap) return;
-        const suggestionsDiv = wrap.querySelector('.suggestions');
-        if (!suggestionsDiv) return;
-        
-        if (query.length < 3) {
-            suggestionsDiv.style.display = 'none';
-            return;
-        }
-        
-        suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Searching...</div>';
-        suggestionsDiv.style.display = 'block';
-        
+    async function loadPaymentHistory() {
+        const tbody = document.querySelector('#paymentsTable tbody');
+        if (!tbody) return;
+        tbody.innerHTML = `<td><td colspan="6">Loading...</td></tr>`;
+        const supabase = getSupabase();
+        if (!supabase) { tbody.innerHTML = `<tr><td colspan="6">Database not available</td></tr>`; return; }
         try {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=en`;
-            const response = await fetch(url, {
-                headers: { 'User-Agent': 'FleetConnect/2.0' }
-            });
-            
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            
-            if (!data.length) {
-                suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ No addresses found in Belgium</div>';
-                return;
-            }
-            
-            suggestionsDiv.innerHTML = '';
-            data.forEach(place => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.setAttribute('data-lat', place.lat);
-                div.setAttribute('data-lon', place.lon);
-                div.textContent = place.display_name;
-                div.onclick = () => {
-                    const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
-                    if (inputField) inputField.value = place.display_name;
-                    
-                    const coords = { lat: parseFloat(place.lat), lon: parseFloat(place.lon) };
-                    if (wrapId === 'pickupWrap') {
-                        pickupCoord = coords;
-                    } else {
-                        dropoffCoord = coords;
-                    }
-                    
-                    suggestionsDiv.style.display = 'none';
-                    if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
-                };
-                suggestionsDiv.appendChild(div);
-            });
-        } catch (err) {
-            console.error('Autocomplete error:', err);
-            suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Network error – try again later</div>';
-        }
-    }
-    
-    function initAutocomplete() {
-        const pickupInput = document.getElementById('pickupInput');
-        const dropoffInput = document.getElementById('dropoffInput');
-        
-        if (pickupInput) {
-            pickupInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'pickupWrap'), 500);
-            });
-        }
-        
-        if (dropoffInput) {
-            dropoffInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => fetchAddresses(e.target.value, 'dropoffWrap'), 500);
-            });
-        }
-        
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.suggest-wrapper')) {
-                document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none');
-            }
-        });
-    }
-    
-    async function calcRoute(lat1, lon1, lat2, lon2) {
-        const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.code === 'Ok' && data.routes.length) {
-            const rt = data.routes[0];
-            return { distanceKm: (rt.distance/1000).toFixed(1), durationMin: Math.round(rt.duration/60), geometry: rt.geometry };
-        }
-        return null;
-    }
-    
-    async function updateMapAndInfo(rd) {
-        if (routeLayer) bookingMap.removeLayer(routeLayer);
-        routeLayer = L.geoJSON(rd.geometry, { color: '#d4af37', weight: 8 }).addTo(bookingMap);
-        const bounds = L.latLngBounds([pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon]);
-        bookingMap.fitBounds(bounds, { padding: [60,60] });
-        let d = parseFloat(rd.distanceKm), t = rd.durationMin;
-        if (currentRoundTrip) { d*=2; t*=2; }
-        const price = d * 1.5;
-        document.getElementById('distVal').innerHTML = d.toFixed(1);
-        document.getElementById('timeVal').innerHTML = t;
-        document.getElementById('priceVal').innerHTML = price.toFixed(2);
-        updateTotalDisplay();
-    }
-    
-    function updateTotalDisplay() {
-        if (!currentRouteData) return;
-        let dist = parseFloat(currentRouteData.distanceKm);
-        if (currentRoundTrip) dist*=2;
-        let total = dist * 1.5 + selectedVehicleExtra;
-        document.getElementById('totalDisplay').innerHTML = `Total: € ${total.toFixed(2)}`;
-        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value;
-        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value;
-        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value;
-        document.getElementById('overviewVehicle').innerText = selectedVehicle;
-        document.getElementById('overviewExtras').innerText = getExtrasString();
-        document.getElementById('overviewTotal').innerHTML = `€${total.toFixed(2)}`;
-        const retCont = document.getElementById('overviewReturnContainer');
-        if (currentRoundTrip && currentReturnDateTime) { retCont.style.display = 'block'; document.getElementById('overviewReturn').innerText = currentReturnDateTime; }
-        else retCont.style.display = 'none';
-    }
-    
-    function getExtrasString() {
-        let extras = [];
-        if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet");
-        if (document.getElementById('kissRide')?.checked) extras.push("Kiss & Ride");
-        if (document.getElementById('waterBottle')?.checked) extras.push("Water bottle");
-        if (document.getElementById('wifi')?.checked) extras.push("WiFi");
-        return extras.join(", ") || "None";
-    }
-    
-    function parseEuroDate(str) {
-        if (!str) return null;
-        let parts = str.match(/(\d+)-(\d+)-(\d+)\s+(\d+):(\d+)/);
-        if (!parts) return null;
-        let [d,m,y,hh,min] = parts.slice(1).map(Number);
-        return new Date(y, m-1, d, hh, min);
-    }
-    
-    function isPast(ds) { let p = parseEuroDate(ds); return p ? p < new Date() : false; }
-    function isWithinNextHour(ds) { let diff = parseEuroDate(ds) - new Date(); return diff > 0 && diff < 3600000; }
-    
-    function showError(page, msg) {
-        let errDiv = document.getElementById(`page${page}Error`);
-        if (errDiv) { errDiv.innerText = msg; errDiv.style.display = 'block'; setTimeout(() => errDiv.style.display = 'none', 4000); }
-    }
-    
-    async function calculateAndStoreRoute() {
-        if (!pickupCoord || !dropoffCoord) { showError(1, 'Select addresses from suggestions'); return false; }
-        const dt = document.getElementById('datetime').value;
-        if (!dt) { showError(1, 'Choose departure date/time.'); return false; }
-        if (isPast(dt)) { showError(1, '❌ No trips in the past.'); return false; }
-        if (document.getElementById('roundtripCheckbox').checked) {
-            const returnDt = document.getElementById('returnDatetime').value;
-            if (!returnDt) { showError(1, 'Choose return date/time for round trip.'); return false; }
-            if (isPast(returnDt)) { showError(1, '❌ Return trip cannot be in the past.'); return false; }
-            if (parseEuroDate(returnDt) <= parseEuroDate(dt)) { showError(1, '❌ Return date/time must be after departure date/time.'); return false; }
-            currentReturnDateTime = returnDt;
-        }
-        const urgent = isWithinNextHour(dt);
-        document.getElementById('urgentWhatsApp').classList.toggle('show', urgent);
-        const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon);
-        if (!rd) { showError(1, 'Route failed.'); return false; }
-        currentRouteData = rd;
-        currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
-        await updateMapAndInfo(rd);
-        return true;
-    }
-    
-    function generateBookingId() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const seq = String(Math.floor(Math.random() * 900) + 100);
-        return `T-PV-${year}${month}${day}-${seq}`;
-    }
-    
-    async function sendToSupabase(record) {
-        try {
-            console.log('Sending:', record);
-            const response = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                    'Prefer': 'return=representation'
-                },
-                body: JSON.stringify(record)
-            });
-            if (!response.ok) throw new Error(await response.text());
-            console.log('Success!');
-            return true;
-        } catch (err) {
-            console.error('Error:', err);
-            alert('Error: ' + err.message);
-            return false;
-        }
-    }
-    
-    async function finalizeBooking() {
-        if (!currentRouteData) { showError(5,'No route calculated'); return; }
-        const fn = document.getElementById('firstName').value.trim();
-        const ln = document.getElementById('lastName').value.trim();
-        const ph = document.getElementById('phone').value.trim();
-        const em = document.getElementById('email').value.trim();
-        if (!fn || !ln || !ph || !em) { showError(5,'Please fill in all customer details'); return; }
-        
-        const payment = document.querySelector('input[name="payment"]:checked').value;
-        let dist = parseFloat(currentRouteData.distanceKm);
-        if (currentRoundTrip) dist *= 2;
-        let totalAmount = dist * 1.5 + selectedVehicleExtra;
-        
-        const dt = document.getElementById('datetime').value;
-        let datePart = "", timePart = "";
-        if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
-        
-        const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
-        
-        const bookingId = generateBookingId();
-        const record = {
-            id: bookingId,
-            datetime: datePart,
-            time: timePart,
-            name: `${fn} ${ln}`,
-            email: em,
-            phone: ph,
-            pickup: document.getElementById('pickupInput').value,
-            destination: document.getElementById('dropoffInput').value,
-            flight_number: document.getElementById('flightNumber').value.trim() || null,
-            vehicle: selectedVehicle,
-            extras: getExtrasString(),
-            amount: totalAmount,
-            payment: payment,
-            status: payment === "Cash" ? "pending" : "pending_payment",
-            customer_id: customerId,
-            form_data: { ai: true, source: "web-portal" },
-            assigned_driver_id: null,
-            partner_id: 1,
-            payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
-        };
-        
-        if (!initSupabase()) {
-            alert('Supabase not initialized');
-            return;
-        }
-
-        const success = await sendToSupabase(record);
-        if (success) {
-            if (payment === "Card" || payment === "App") {
-                try {
-                    const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-                        body: {
-                            bookingId: bookingId,
-                            email: em,
-                            amount: totalAmount,
-                            paymentMethodType: payment,
-                            successUrl: `${window.location.origin}/klantenportaal_en.html?payment=success&id=${bookingId}&lang=en`,
-                            cancelUrl: `${window.location.origin}/klantenportaal_en.html?payment=cancelled&id=${bookingId}&lang=en`
-                        }
-                    });
-                    if (error) throw error;
-                    if (data.url) {
-                        window.location.href = data.url;
-                    } else {
-                        throw new Error("No Stripe URL received");
-                    }
-                } catch (stripeErr) {
-                    console.error('Stripe error:', stripeErr);
-                    alert('Something went wrong starting the payment: ' + stripeErr.message);
-                }
-            } else {
-                alert(`✅ Booking confirmed!\n📋 Number: ${record.id}\n💰 € ${totalAmount.toFixed(2)}`);
-                if (window.comms) window.comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
-                resetAll();
-                await loadUserBookings();
-            }
-        }
-    }
-    
-    function resetAll() {
-        if (routeLayer) bookingMap.removeLayer(routeLayer);
-        currentRouteData = null; pickupCoord = null; dropoffCoord = null;
-        document.getElementById('pickupInput').value = '';
-        document.getElementById('dropoffInput').value = '';
-        document.getElementById('datetime').value = '';
-        document.getElementById('returnDatetime').value = '';
-        document.getElementById('roundtripCheckbox').checked = false;
-        document.getElementById('returnDateContainer').classList.remove('visible');
-        currentRoundTrip = false;
-        showPage(1);
-    }
-    
-    function showPage(page) {
-        document.querySelectorAll('.carousel-page').forEach((pg,i) => pg.classList.toggle('active-page', i+1 === page));
-        document.querySelectorAll('.step-btn').forEach((btn,i) => btn.classList.toggle('active', i+1 === page));
-        currentPage = page;
-        document.getElementById('prevBtn').disabled = (page === 1);
-        if (page === 5) updateTotalDisplay();
-    }
-    
-    async function nextPage() {
-        if (currentPage === 1) { const ok = await calculateAndStoreRoute(); if (ok) showPage(2); }
-        else if (currentPage === 2) { if (currentRouteData) showPage(3); else showError(2,'Calculate route first'); }
-        else if (currentPage === 3) { if (selectedVehicle) showPage(4); else showError(3,'Choose a vehicle'); }
-        else if (currentPage === 4) { showPage(5); updateTotalDisplay(); }
-        else if (currentPage === 5) { await finalizeBooking(); }
-    }
-    
-    function prevPage() { if (currentPage > 1) showPage(currentPage-1); }
-    
-    function initMap() {
-        bookingMap = L.map('map').setView([50.85,4.35],13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(bookingMap);
-    }
-    
-    function initVehicleSelection() {
-        document.querySelectorAll('.vehicle-card').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                selectedVehicle = card.getAttribute('data-vehicle');
-                selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0;
-                updateTotalDisplay();
-            });
-        });
+            const customerId = `CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
+            const { data, error } = await supabase.from('payments').select('*').eq('customer_id', customerId).order('created_at', { ascending: false });
+            if (error) throw error;
+            if (!data || data.length === 0) { tbody.innerHTML = `<td><td colspan="6">No payments found</td></tr>`; return; }
+            tbody.innerHTML = data.map(p => `<tr><td>${p.booking_id || '-'}</td><td>${new Date(p.created_at).toLocaleDateString('en-GB')}</td><td>€ ${parseFloat(p.amount).toFixed(2)}</td><td>${p.payment_method === 'card' ? 'Card' : (p.payment_method || 'Cash')}</td><td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Completed' : 'Pending'}</span></td><td>-</td></tr>`).join('');
+        } catch (err) { console.error('Payment history error:', err); tbody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`; }
     }
     
     document.getElementById('roundtripCheckbox')?.addEventListener('change', (e) => {
@@ -1311,7 +1013,7 @@
         if (currentRouteData) {
             currentRoundTrip = e.target.checked;
             let d = parseFloat(currentRouteData.distanceKm);
-            if (currentRoundTrip) d*=2;
+            if (currentRoundTrip) d *= 2;
             document.getElementById('priceVal').innerHTML = (d * 1.5).toFixed(2);
             updateTotalDisplay();
         }
@@ -1321,8 +1023,8 @@
     document.getElementById('prevBtn')?.addEventListener('click', prevPage);
     document.getElementById('finalConfirmBtn')?.addEventListener('click', finalizeBooking);
     
-    flatpickr("#datetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
-    flatpickr("#returnDatetime", { enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true });
+    flatpickr("#datetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
+    flatpickr("#returnDatetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
     
     initMap();
     initVehicleSelection();
@@ -1331,7 +1033,12 @@
     loadUserProfile();
     loadUserBookings();
     switchToTab('new-booking');
-    handlePaymentStatus();
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') alert(`Payment completed!`);
+    else if (urlParams.get('payment') === 'cancelled') alert(`Payment cancelled.`);
+    
+    console.log("✅ Application ready - EN version");
 </script>
 </body>
 </html>
