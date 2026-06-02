@@ -18,7 +18,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
-    /* (zelfde CSS als eerder – ongewijzigd) */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: linear-gradient(180deg, #F4F6F9 0%, #FFFFFF 100%); font-family: 'Montserrat', sans-serif; color: #0A1C2F; line-height: 1.5; scroll-behavior: smooth; }
     :root { --midnight-dark: #0A192F; --midnight-light: #0F2A3F; --silver: #C0C0C0; --silver-dim: rgba(192,192,192,0.25); --silver-bright: #E8E8E8; --glass-white: rgba(255,255,255,0.65); --glass-form: rgba(255,255,255,0.85); --chrome-gradient: linear-gradient(135deg, #E0E0E0 0%, #FFFFFF 25%, #B0B0B0 50%, #F5F5F5 75%, #A0A0A0 100%); --shadow-glass: 0 8px 32px rgba(0,0,0,0.04), 0 0 0 1px rgba(192,192,192,0.2); --shadow-glass-hover: 0 20px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.8); --glow-silver: 0 0 12px rgba(192,192,192,0.4); }
@@ -341,7 +340,7 @@
   })();
 
   // ============================================================
-  // 📍 VARIABLES (ongewijzigd)
+  // 📍 VARIABLES
   // ============================================================
   let currentUserEmail = sessionStorage.getItem('kms7_user_email') || '';
   function generateCustomerId(email) { return "CUST-"+email.toLowerCase().replace(/[^a-z0-9]/g,""); }
@@ -457,7 +456,6 @@
       else if (lang === 'en') targetUrl = 'ClientKMS7_en.html';
       else if (lang === 'fr') targetUrl = 'ClientKMS7.html';
       else return;
-      // Cachebuster: unieke timestamp om te voorkomen dat de oude pagina uit de cache wordt geladen
       const cacheBuster = '?t=' + Date.now();
       window.location.href = targetUrl + cacheBuster;
     });
@@ -476,16 +474,27 @@
   function initMap(){ map=L.map('map').setView([50.85,4.35],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map); }
   function initVehicleSelect(){ document.querySelectorAll('.vehicle-card-select').forEach(c=>{ c.addEventListener('click',()=>{ document.querySelectorAll('.vehicle-card-select').forEach(c2=>c2.classList.remove('selected')); c.classList.add('selected'); selectedVehicle=c.getAttribute('data-vehicle'); selectedVehicleExtra=parseInt(c.getAttribute('data-extraprice'))||0; updateTotalDisplay(); }); }); const first=document.querySelector('.vehicle-card-select'); if(first){first.classList.add('selected'); selectedVehicle=first.getAttribute('data-vehicle'); selectedVehicleExtra=0;} }
   
+  // ============================================================
+  // 🔍 AUTOCOMPLETE CORRECTE VERSIE (met replaceChildren en proper event handling)
+  // ============================================================
   async function fetchAddresses(query, suggestionsDivId) {
     const suggestionsDiv = document.getElementById(suggestionsDivId);
     if (!suggestionsDiv) return;
+
     if (query.length < 3) {
       suggestionsDiv.style.display = 'none';
       return;
     }
+
     suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Recherche...</div>';
     suggestionsDiv.style.display = 'block';
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=fr`;
+
+    let lang = 'fr';
+    if (window.location.pathname.includes('_nl')) lang = 'nl';
+    else if (window.location.pathname.includes('_en')) lang = 'en';
+
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=${lang}`;
+
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
@@ -496,16 +505,25 @@
       clearTimeout(timeoutId);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
+
       if (!data.length) {
         suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ Aucune adresse trouvée en Belgique</div>';
         return;
       }
-      suggestionsDiv.innerHTML = data.map(p => `<div class="suggestion-item" data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</div>`).join('');
-      suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const lat = parseFloat(item.dataset.lat);
-          const lon = parseFloat(item.dataset.lon);
-          const fullAddress = item.innerText;
+
+      // Vervang de inhoud op een veilige manier
+      suggestionsDiv.replaceChildren(); // leeg maken zonder innerHTML (behoudt event listeners niet nodig)
+      data.forEach(place => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        div.setAttribute('data-lat', place.lat);
+        div.setAttribute('data-lon', place.lon);
+        div.textContent = place.display_name;
+        div.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const lat = parseFloat(div.dataset.lat);
+          const lon = parseFloat(div.dataset.lon);
+          const fullAddress = div.textContent;
           const inputField = suggestionsDivId === 'pickupSuggest' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
           inputField.value = fullAddress;
           if (suggestionsDivId === 'pickupSuggest') {
@@ -516,6 +534,7 @@
           suggestionsDiv.style.display = 'none';
           if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
         });
+        suggestionsDiv.appendChild(div);
       });
     } catch (err) {
       console.error('Erreur autocomplétion:', err);
@@ -527,18 +546,26 @@
     const pickupInput = document.getElementById('pickupInput');
     const dropoffInput = document.getElementById('dropoffInput');
     let pickupDebounce, dropoffDebounce;
-    pickupInput.addEventListener('input', (e) => {
-      clearTimeout(pickupDebounce);
-      pickupDebounce = setTimeout(() => fetchAddresses(e.target.value, 'pickupSuggest'), 400);
-    });
-    dropoffInput.addEventListener('input', (e) => {
-      clearTimeout(dropoffDebounce);
-      dropoffDebounce = setTimeout(() => fetchAddresses(e.target.value, 'dropoffSuggest'), 400);
-    });
+
+    if (pickupInput) {
+      pickupInput.addEventListener('input', (e) => {
+        clearTimeout(pickupDebounce);
+        pickupDebounce = setTimeout(() => fetchAddresses(e.target.value, 'pickupSuggest'), 400);
+      });
+    }
+    if (dropoffInput) {
+      dropoffInput.addEventListener('input', (e) => {
+        clearTimeout(dropoffDebounce);
+        dropoffDebounce = setTimeout(() => fetchAddresses(e.target.value, 'dropoffSuggest'), 400);
+      });
+    }
+
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.suggest-wrapper')) {
-        document.getElementById('pickupSuggest').style.display = 'none';
-        document.getElementById('dropoffSuggest').style.display = 'none';
+        const pickupSuggest = document.getElementById('pickupSuggest');
+        const dropoffSuggest = document.getElementById('dropoffSuggest');
+        if (pickupSuggest) pickupSuggest.style.display = 'none';
+        if (dropoffSuggest) dropoffSuggest.style.display = 'none';
       }
     });
   }
