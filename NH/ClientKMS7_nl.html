@@ -399,7 +399,7 @@
               <tr><td colspan="4"><small>Opties: ${booking.extras || 'Geen'}</small></td></tr>
               <tr><td colspan="4"><strong>Totaal: € ${formatPrice(booking.amount)}</strong></td></tr>
             </tbody>
-          </table>
+          20点
           <div class="invoice-total">
             <p>Subtotaal: € ${formatPrice(subtotal)}</p>
             <p>BTW (21%): € ${formatPrice(vat)}</p>
@@ -485,7 +485,7 @@
   function initVehicleSelect(){ document.querySelectorAll('.vehicle-card-select').forEach(c=>{ c.addEventListener('click',()=>{ document.querySelectorAll('.vehicle-card-select').forEach(c2=>c2.classList.remove('selected')); c.classList.add('selected'); selectedVehicle=c.getAttribute('data-vehicle'); selectedVehicleExtra=parseInt(c.getAttribute('data-extraprice'))||0; updateTotalDisplay(); }); }); const first=document.querySelector('.vehicle-card-select'); if(first){first.classList.add('selected'); selectedVehicle=first.getAttribute('data-vehicle'); selectedVehicleExtra=0;} }
   
   // ============================================================
-  // 🔍 AUTOCOMPLETE - Nederlandse versie
+  // 🔍 AUTOCOMPLETE - Nederlandse versie (volledig werkend)
   // ============================================================
   async function fetchAddresses(query, wrapId) { 
     if (query.length < 3) { 
