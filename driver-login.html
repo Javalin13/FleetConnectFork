@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>NH - Driver Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .language-switch { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+        .lang-btn { background: none; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; padding: 6px 12px; border-radius: 30px; transition: all 0.2s; color: #64748b; min-width: 44px; }
+        .lang-btn.active { background: #2dd4bf; color: #0f172a; }
+        .logo { text-align: center; margin-bottom: 32px; }
+        .logo i { font-size: 3rem; color: #2dd4bf; }
+        .logo h1 { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+        .logo p { color: #64748b; font-size: 0.85rem; margin-top: 4px; }
+        .form-group { margin-bottom: 24px; }
+        label { font-weight: 500; color: #334155; margin-bottom: 8px; display: block; }
+        input { width: 100%; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 16px; font-size: 1rem; }
+        button[type="submit"] { width: 100%; padding: 14px; background: #2dd4bf; color: #0f172a; font-weight: 700; border: none; border-radius: 40px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .error-msg { background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 16px; margin-top: 16px; display: none; text-align: center; }
+        .test-credentials { background: #f8fafc; border-radius: 16px; padding: 12px; margin-top: 24px; text-align: center; font-size: 0.75rem; border: 1px dashed #cbd5e1; }
+        @media (max-width: 480px) {
+            .login-container { padding: 24px 20px; }
+            .logo h1 { font-size: 1.5rem; }
+            .lang-btn { font-size: 0.9rem; padding: 4px 8px; }
+        }
+        @media (orientation: landscape) and (max-height: 500px) {
+            body { align-items: flex-start; }
+            .login-container { margin: 20px auto; }
+        }
+        button, .lang-btn { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="language-switch">
+        <button class="lang-btn" data-lang="nl">NL</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <div class="logo">
+        <i class="fas fa-taxi"></i>
+        <h1 id="title">NH Driver</h1>
+        <p id="subtitle">Demo omgeving</p>
+    </div>
+    <form id="loginForm">
+        <div class="form-group">
+            <label id="emailLabel">E-mailadres</label>
+            <input type="email" id="email" value="admin@ryzen.be">
+        </div>
+        <div class="form-group">
+            <label id="passwordLabel">Wachtwoord</label>
+            <input type="password" id="password" value="admin@ryzen.be">
+        </div>
+        <button type="submit" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Inloggen</button>
+        <div id="errorMsg" class="error-msg"></div>
+    </form>
+    <div class="test-credentials" id="testCreds">
+        <i class="fas fa-info-circle"></i> Testgegevens:<br>
+        <strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>
+    </div>
+</div>
+<script>
+    const translations = {
+        nl: { title: "NH Driver", subtitle: "Demo omgeving", emailLabel: "E-mailadres", passwordLabel: "Wachtwoord", loginBtn: "Inloggen", testCreds: "Testgegevens:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Ongeldige inloggegevens. Gebruik admin@ryzen.be / admin@ryzen.be" },
+        fr: { title: "NH Chauffeur", subtitle: "Environnement de démonstration", emailLabel: "Adresse e-mail", passwordLabel: "Mot de passe", loginBtn: "Se connecter", testCreds: "Identifiants de démonstration :<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Identifiants invalides. Utilisez admin@ryzen.be / admin@ryzen.be" },
+        es: { title: "NH Conductor", subtitle: "Entorno de demostración", emailLabel: "Correo electrónico", passwordLabel: "Contraseña", loginBtn: "Iniciar sesión", testCreds: "Credenciales de demostración:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Credenciales inválidas. Use admin@ryzen.be / admin@ryzen.be" },
+        en: { title: "NH Driver", subtitle: "Demo environment", emailLabel: "Email address", passwordLabel: "Password", loginBtn: "Login", testCreds: "Test credentials:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Invalid credentials. Use admin@ryzen.be / admin@ryzen.be" }
+    };
+    let currentLang = 'nl';
+    function updateUI(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+        document.getElementById('title').innerText = t.title;
+        document.getElementById('subtitle').innerText = t.subtitle;
+        document.getElementById('emailLabel').innerText = t.emailLabel;
+        document.getElementById('passwordLabel').innerText = t.passwordLabel;
+        document.getElementById('loginBtn').innerHTML = `<i class="fas fa-sign-in-alt"></i> ${t.loginBtn}`;
+        document.getElementById('testCreds').innerHTML = `<i class="fas fa-info-circle"></i> ${t.testCreds}`;
+        document.querySelectorAll('.lang-btn').forEach(btn => { if (btn.dataset.lang === lang) btn.classList.add('active'); else btn.classList.remove('active'); });
+        sessionStorage.setItem('driver_lang', lang);
+    }
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.addEventListener('click', () => updateUI(btn.dataset.lang)));
+    const saved = sessionStorage.getItem('driver_lang') || 'nl';
+    updateUI(saved);
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const pwd = document.getElementById('password').value;
+        if (email === 'admin@ryzen.be' && pwd === 'admin@ryzen.be') {
+            sessionStorage.setItem('driver_id', '101');
+            sessionStorage.setItem('driver_name', 'Admin Driver');
+            sessionStorage.setItem('driver_email', email);
+            sessionStorage.setItem('driver_vehicle', 'Tesla Model 3');
+            sessionStorage.setItem('driver_plate', 'AB-123');
+            sessionStorage.setItem('driver_logged_in', 'true');
+            sessionStorage.setItem('driver_lang', currentLang);
+            window.location.href = 'driverpaneel.html';
+        } else {
+            const err = document.getElementById('errorMsg');
+            err.textContent = translations[currentLang].errorMsg;
+            err.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>NH - Partner Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-container {
+            background: white;
+            border-radius: 32px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            transition: all 0.3s ease;
+        }
+        .language-switch {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 20px;
+            transition: all 0.2s;
+            color: #64748b;
+        }
+        .lang-btn.active {
+            background: #2dd4bf;
+            color: #0f172a;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo i {
+            font-size: 3rem;
+            color: #2dd4bf;
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .logo p {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        label {
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 8px;
+            display: block;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        input:focus {
+            border-color: #2dd4bf;
+            box-shadow: 0 0 0 3px rgba(45,212,191,0.2);
+            outline: none;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #2dd4bf;
+            color: #0f172a;
+            font-weight: 700;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        button[type="submit"]:hover {
+            background: #14b8a6;
+            transform: scale(1.02);
+        }
+        .error-msg {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 16px;
+            margin-top: 16px;
+            display: none;
+            text-align: center;
+        }
+        .test-credentials {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.75rem;
+            border: 1px dashed #cbd5e1;
+        }
+
+        /* ========== RESPONSIVE AANPASSINGEN ========== */
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+            .login-container {
+                padding: 24px 20px;
+                border-radius: 24px;
+            }
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            .logo i {
+                font-size: 2.5rem;
+            }
+            .language-switch {
+                gap: 8px;
+                justify-content: center;
+            }
+            .lang-btn {
+                font-size: 0.85rem;
+                padding: 4px 10px;
+            }
+            input {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+            }
+            button[type="submit"] {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            .test-credentials {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .login-container {
+                max-width: 380px;
+                padding: 32px 28px;
+            }
+        }
+
+        /* Horizontale modus op mobiel */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body {
+                padding: 12px;
+            }
+            .login-container {
+                max-width: 500px;
+                padding: 20px 28px;
+            }
+            .logo {
+                margin-bottom: 20px;
+            }
+            .logo h1 {
+                font-size: 1.3rem;
+            }
+            .logo i {
+                font-size: 2rem;
+            }
+            .form-group {
+                margin-bottom: 16px;
+            }
+        }
+
+        /* Grote desktops */
+        @media (min-width: 1440px) {
+            .login-container {
+                max-width: 460px;
+                padding: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="language-switch">
+        <button class="lang-btn" data-lang="nl">NL</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="es">ES</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+    <div class="logo">
+        <i class="fas fa-taxi"></i>
+        <h1 id="title">NH Partner</h1>
+        <p id="subtitle">Demo omgeving</p>
+    </div>
+    <form id="loginForm">
+        <div class="form-group">
+            <label id="emailLabel">E-mailadres</label>
+            <input type="email" id="email" value="admin@ryzen.be">
+        </div>
+        <div class="form-group">
+            <label id="passwordLabel">Wachtwoord</label>
+            <input type="password" id="password" value="admin@ryzen.be">
+        </div>
+        <button type="submit" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Inloggen</button>
+        <div id="errorMsg" class="error-msg"></div>
+    </form>
+    <div class="test-credentials" id="testCreds">
+        <i class="fas fa-info-circle"></i> Testgegevens:<br>
+        <strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>
+    </div>
+</div>
+
+<script>
+    // Vertalingen voor NL, FR, ES, EN
+    const translations = {
+        nl: {
+            title: "NH Partner",
+            subtitle: "Demo omgeving",
+            emailLabel: "E-mailadres",
+            passwordLabel: "Wachtwoord",
+            loginBtn: "Inloggen",
+            testCreds: "Testgegevens:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Ongeldige inloggegevens. Gebruik admin@ryzen.be / admin@ryzen.be"
+        },
+        fr: {
+            title: "NH Partenaire",
+            subtitle: "Environnement de démonstration",
+            emailLabel: "Adresse e-mail",
+            passwordLabel: "Mot de passe",
+            loginBtn: "Se connecter",
+            testCreds: "Identifiants de démonstration :<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Identifiants invalides. Utilisez admin@ryzen.be / admin@ryzen.be"
+        },
+        es: {
+            title: "NH Socio",
+            subtitle: "Entorno de demostración",
+            emailLabel: "Correo electrónico",
+            passwordLabel: "Contraseña",
+            loginBtn: "Iniciar sesión",
+            testCreds: "Credenciales de demostración:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Credenciales inválidas. Use admin@ryzen.be / admin@ryzen.be"
+        },
+        en: {
+            title: "NH Partner",
+            subtitle: "Demo environment",
+            emailLabel: "Email address",
+            passwordLabel: "Password",
+            loginBtn: "Login",
+            testCreds: "Test credentials:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Invalid credentials. Use admin@ryzen.be / admin@ryzen.be"
+        }
+    };
+
+    let currentLang = 'nl';
+
+    function updateUILanguage(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+        document.getElementById('title').innerText = t.title;
+        document.getElementById('subtitle').innerText = t.subtitle;
+        document.getElementById('emailLabel').innerText = t.emailLabel;
+        document.getElementById('passwordLabel').innerText = t.passwordLabel;
+        document.getElementById('loginBtn').innerHTML = `<i class="fas fa-sign-in-alt"></i> ${t.loginBtn}`;
+        document.getElementById('testCreds').innerHTML = `<i class="fas fa-info-circle"></i> ${t.testCreds}`;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.getAttribute('data-lang') === lang) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        sessionStorage.setItem('app_lang', lang);
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            updateUILanguage(lang);
+        });
+    });
+
+    const savedLang = sessionStorage.getItem('app_lang') || 'nl';
+    updateUILanguage(savedLang);
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        if (email === 'admin@ryzen.be' && password === 'admin@ryzen.be') {
+            sessionStorage.setItem('app_lang', currentLang);
+            sessionStorage.setItem('partner_id', '1');
+            sessionStorage.setItem('is_hoofd', 'true');
+            sessionStorage.setItem('user_email', email);
+            sessionStorage.setItem('horizon_logged_in', 'true');
+            window.location.href = 'partnerspaneel.html';
+        } else {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = translations[currentLang].errorMsg;
+            errorDiv.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>
