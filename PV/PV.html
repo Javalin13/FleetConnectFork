@@ -24,16 +24,15 @@
         .hamburger-btn:hover{background:var(--primary-dark)}
         .sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:1001;visibility:hidden;opacity:0;transition:all 0.3s}
         .sidebar-overlay.active{visibility:visible;opacity:1}
-        .sidebar{position:fixed;top:0;right:-300px;width:300px;height:100%;background:white;box-shadow:-4px 0 25px rgba(0,0,0,0.15);transition:right 0.3s;z-index:1002;display:flex;flex-direction:column;border-radius:20px 0 0 20px}
-        .sidebar-overlay.active .sidebar{right:0}
-        .sidebar-header{display:flex;justify-content:space-between;align-items:center;padding:24px 20px;border-bottom:1px solid var(--border-light);background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:20px 0 0 0}
+        .sidebar{position:fixed;top:0;right:-300px;width:300px;height:100%;background:white;box-shadow:-4px 0 25px rgba(0,0,0,0.15);transition:right 0.3s;z-index:1002;display:flex;flex-direction:column;border-radius:20px 0 0 20px;overflow:hidden}
+        .sidebar-header{display:flex;justify-content:space-between;align-items:center;padding:24px 20px;border-bottom:1px solid var(--border-light);background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:20px 0 0 0;flex-shrink:0}
         .sidebar-header h3{color:white;display:flex;align-items:center;gap:8px}
         .close-menu{background:rgba(255,255,255,0.2);border:none;font-size:1.5rem;cursor:pointer;color:white;width:32px;height:32px;border-radius:50%}
-        .sidebar-nav{display:flex;flex-direction:column;padding:20px 16px;gap:8px;flex:1}
+        .sidebar-nav{display:flex;flex-direction:column;padding:20px 16px;gap:8px;flex:1;overflow-y:auto}
         .sidebar-nav a{color:var(--text-dark);text-decoration:none;padding:14px 16px;border-radius:14px;font-weight:500;display:flex;align-items:center;gap:14px;background:white;border:1px solid var(--border-light)}
         .sidebar-nav a i{width:24px;color:var(--primary)}
         .sidebar-nav a:hover{background:#eef2fa;border-color:var(--primary)}
-        .login-section{padding:16px;border-top:1px solid var(--border-light);margin-top:auto}
+        .login-section{padding:16px;border-top:1px solid var(--border-light);margin-top:auto;flex-shrink:0}
         .login-btn{background:linear-gradient(135deg,var(--accent-gold),#b8860b);color:white;text-decoration:none;padding:14px 16px;border-radius:14px;font-weight:600;display:flex;align-items:center;gap:12px}
         .hero{padding:80px 0 40px;text-align:center}
         .hero-card{background:var(--card-bg);backdrop-filter:blur(8px);max-width:700px;margin:0 auto;padding:40px 30px;border-radius:48px;border:1px solid var(--border-light)}
@@ -404,8 +403,22 @@
             updateRitOverzicht(); 
             updateTotalDisplay(); 
         } else if (currentPage === 5) { 
-            const event = new CustomEvent('showBookingOverlay'); 
-            window.dispatchEvent(event); 
+            // Direct de overlay tonen zonder event
+            if (!currentRouteData) {
+                alert('Eerst moet u een route berekenen in stap 1 en 2.');
+                return;
+            }
+            if (!selectedVehicle) {
+                alert('Kies eerst een voertuig in stap 3.');
+                return;
+            }
+            const firstName = document.getElementById('firstName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            if (!firstName || !email) {
+                alert('Vul uw contactgegevens in in stap 4.');
+                return;
+            }
+            window.showOverlay();
         } 
     }
     function prevPage() { if (currentPage > 1) showPage(currentPage-1); }
@@ -442,8 +455,11 @@
             } 
         }); 
     }
+    
+    // Event listeners
     document.getElementById('nextBtn').addEventListener('click', nextPage);
     document.getElementById('prevBtn').addEventListener('click', prevPage);
+    
     document.getElementById('roundtripCheckbox')?.addEventListener('change', function(e) { 
         const returnContainer = document.getElementById('returnDateContainer'); 
         e.target.checked ? returnContainer.classList.add('visible') : returnContainer.classList.remove('visible'); 
@@ -457,10 +473,13 @@
             updateTotalDisplay(); 
         } 
     });
-    document.getElementById('verstuurBerichtBtn')?.addEventListener('click', () => alert(i18n.t('contact_success_alert')));
+    
+    document.getElementById('verstuurBerichtBtn')?.addEventListener('click', () => alert(i18n.t('contact_success_alert') || 'Bericht verzonden!'));
+    
     initAutocomplete(); 
     initVehicleSelection(); 
     showPage(1);
+    
     flatpickr("#datetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, defaultDate: (() => { let d = new Date(); d.setHours(d.getHours()+1); return d; })(), minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
     returnFlatpickrInstance = flatpickr("#returnDatetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
     
@@ -501,7 +520,13 @@
     window.generateBookingId = () => { const now = new Date(); const yyyy = now.getFullYear(); const mm = String(now.getMonth()+1).padStart(2,'0'); const dd = String(now.getDate()).padStart(2,'0'); let counter = parseInt(localStorage.getItem('bookingCounter') || '0'); counter++; localStorage.setItem('bookingCounter', counter); return `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3,'0')}`; };
     window.getExtrasString = getExtrasString;
     window.resetAll = function() { if (routeLayer) map.removeLayer(routeLayer); if (pickupMarker) map.removeLayer(pickupMarker); if (dropoffMarker) map.removeLayer(dropoffMarker); currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0; document.getElementById('distVal').innerHTML = '—'; document.getElementById('timeVal').innerHTML = '—'; document.getElementById('priceVal').innerHTML = '—'; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('firstName').value = ''; document.getElementById('lastName').value = ''; document.getElementById('phone').value = ''; document.getElementById('email').value = ''; document.getElementById('vat').value = ''; document.getElementById('flightNumber').value = ''; document.getElementById('roundtripCheckbox').checked = false; document.getElementById('meetGreet').checked = false; document.getElementById('kissRide').checked = false; document.getElementById('waterBottle').checked = false; document.getElementById('wifi').checked = false; document.getElementById('specialWishes').value = ''; document.getElementById('returnDatetime').value = ''; currentRoundTrip = false; currentReturnDateTime = ''; document.getElementById('returnDateContainer').classList.remove('visible'); showPage(1); if (document.getElementById('totalDisplay')) document.getElementById('totalDisplay').innerHTML = `${i18n.t('total_display')} € 0,00`; };
-    window.hideOverlay = function() { document.getElementById('summaryOverlay').classList.remove('active'); };
+    window.hideOverlay = function() { 
+        const overlay = document.getElementById('summaryOverlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+            overlay.style.display = 'none';
+        }
+    };
     window.buildSummaryHTML = function() {
         const fn = document.getElementById('firstName').value.trim(), ln = document.getElementById('lastName').value.trim();
         const ph = document.getElementById('phone').value.trim(), em = document.getElementById('email').value.trim();
@@ -510,30 +535,33 @@
         if (currentRoundTrip) { d *= 2; t *= 2; }
         const base = d * 1.5, total = base + selectedVehicleExtra;
         return `<div class="summary-section"><h3>🚖 Ritgegevens</h3>
-                <div class="summary-line"><strong>📍</strong> ${pu}</div>
-                <div class="summary-line"><strong>🏁</strong> ${doff}</div>
-                <div class="summary-line"><strong>Heen datum/tijd:</strong> ${currentDateTime}</div>
-                <div class="summary-line"><strong>✈️ Vlucht:</strong> ${currentFlight || 'geen'}</div>
+                <div><strong>📍</strong> ${pu}</div>
+                <div><strong>🏁</strong> ${doff}</div>
+                <div><strong>Heen datum/tijd:</strong> ${currentDateTime}</div>
+                <div><strong>✈️ Vlucht:</strong> ${currentFlight || 'geen'}</div>
                 </div>
                 <div class="summary-section"><h3>👤 Klantgegevens</h3>
-                <div class="summary-line"><strong>Naam:</strong> ${fn} ${ln}</div>
-                <div class="summary-line"><strong>GSM:</strong> ${ph}</div>
-                <div class="summary-line"><strong>E-mail:</strong> ${em}</div>
+                <div><strong>Naam:</strong> ${fn} ${ln}</div>
+                <div><strong>GSM:</strong> ${ph}</div>
+                <div><strong>E-mail:</strong> ${em}</div>
                 </div>
                 <div class="summary-section"><h3>🚘 Voertuig</h3>
-                <div class="summary-line"><strong>Type:</strong> ${selectedVehicle} (+€${selectedVehicleExtra})</div>
+                <div><strong>Type:</strong> ${selectedVehicle} (+€${selectedVehicleExtra})</div>
                 </div>
                 <div class="summary-section"><h3>💰 Prijs</h3>
-                <div class="summary-line"><strong>Afstand:</strong> ${d.toFixed(1)} km</div>
-                <div class="summary-line"><strong>Basisprijs:</strong> € ${base.toFixed(2)}</div>
-                <div class="summary-line"><strong>Totaal:</strong> € ${total.toFixed(2)}</div>
+                <div><strong>Afstand:</strong> ${d.toFixed(1)} km</div>
+                <div><strong>Basisprijs:</strong> € ${base.toFixed(2)}</div>
+                <div><strong>Totaal:</strong> € ${total.toFixed(2)}</div>
                 </div>`;
     };
     window.showOverlay = function() { 
         const overlaySummary = document.getElementById('overlaySummary');
         if (overlaySummary) overlaySummary.innerHTML = window.buildSummaryHTML(); 
         const overlay = document.getElementById('summaryOverlay');
-        if (overlay) overlay.classList.add('active'); 
+        if (overlay) {
+            overlay.style.display = 'flex';
+            overlay.classList.add('active'); 
+        }
     };
 </script>
 
@@ -561,7 +589,7 @@
             return true; 
         } catch (error) { 
             console.error('❌ Supabase fout:', error.message); 
-            alert(i18n.t('error_supabase')?.replace('{error}', error.message) || 'Fout bij opslaan: ' + error.message); 
+            alert('Fout bij opslaan: ' + error.message); 
             return false; 
         } 
     }
@@ -583,7 +611,7 @@
         const email = document.getElementById('email').value.trim();
         const phone = document.getElementById('phone').value.trim();
         if (!firstName || !lastName || !email || !phone) {
-            alert(i18n.t('error_fill_required') || 'Vul alle verplichte velden in');
+            alert('Vul alle verplichte velden in');
             return;
         }
         fillHiddenSupabaseFields();
@@ -637,62 +665,27 @@
                     if (data.url) {
                         window.location.href = data.url;
                     } else {
-                        throw new Error(i18n.t('error_no_stripe_url') || 'Geen betaallink ontvangen');
+                        throw new Error('Geen betaallink ontvangen');
                     }
                 } catch (stripeErr) {
                     console.error('Stripe error:', stripeErr);
-                    alert(i18n.t('error_payment_start')?.replace('{error}', stripeErr.message) || 'Fout bij starten betaling: ' + stripeErr.message);
+                    alert('Fout bij starten betaling: ' + stripeErr.message);
                 }
             } else {
-                alert(i18n.t('booking_confirm_alert')?.replace('{id}', bookingData.id).replace('{amount}', totalAmount.toFixed(2)) || `Boeking ${bookingData.id} bevestigd voor €${totalAmount.toFixed(2)}`);
+                alert(`Boeking ${bookingData.id} bevestigd voor €${totalAmount.toFixed(2)}`);
                 if (comms && comms.trigger) comms.trigger('BOOKING_CONFIRMATION', bookingId, supabase);
                 window.resetAll();
                 window.hideOverlay();
             }
         } else {
-            alert(i18n.t('error_booking_save') || 'Fout bij opslaan van boeking');
+            alert('Fout bij opslaan van boeking');
         }
-    }
-    
-    // Event listeners voor de overlay
-    window.addEventListener('showBookingOverlay', () => { 
-        console.log("showBookingOverlay event ontvangen");
-        window.showOverlay(); 
-    });
-    
-    // BELANGRIJK: Deze knop opent de overlay - fix voor het probleem!
-    const finalConfirmBtn = document.getElementById('finalConfirmBtn');
-    if (finalConfirmBtn) {
-        finalConfirmBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log("finalConfirmBtn clicked - showing overlay");
-            // Controleer of alle gegevens ingevuld zijn
-            if (!window.getCurrentRouteData()) {
-                alert('Eerst moet u een route berekenen in stap 1 en 2.');
-                return;
-            }
-            if (!window.getSelectedVehicle()) {
-                alert('Kies eerst een voertuig in stap 3.');
-                return;
-            }
-            const firstName = document.getElementById('firstName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            if (!firstName || !email) {
-                alert('Vul uw contactgegevens in in stap 4.');
-                return;
-            }
-            window.showOverlay();
-        });
-    } else {
-        console.error("finalConfirmBtn niet gevonden in DOM!");
     }
     
     // Overlay knoppen
     const confirmBookingBtn = document.getElementById('confirmBookingBtn');
     if (confirmBookingBtn) {
         confirmBookingBtn.addEventListener('click', finalizeBooking);
-    } else {
-        console.error("confirmBookingBtn niet gevonden!");
     }
     
     const closeOverlayBtn = document.getElementById('closeOverlayBtn');
@@ -708,8 +701,8 @@
     console.log("Module geladen, alles is gereed!");
 </script>
 
-<!-- SUMMARY OVERLAY (moet bestaan!) -->
-<div id="summaryOverlay" class="overlay">
+<!-- SUMMARY OVERLAY - BINNEN content-overlay maar met hoge z-index -->
+<div id="summaryOverlay" class="overlay" style="z-index: 10000;">
     <div class="overlay-content">
         <button id="closeOverlayBtn" style="float:right; background:none; border:none; font-size:28px; cursor:pointer;">&times;</button>
         <h2>📋 Samenvatting reservatie</h2>
