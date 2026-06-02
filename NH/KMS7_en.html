@@ -157,6 +157,7 @@
       backdrop-filter: blur(24px);
       color: #FDFBF7;
       border: 1px solid var(--silver-bright);
+      justify-content: flex-start;  /* 👈 de enige aanpassing: tekst begint bovenaan, scrollbaar */
     }
     .flip-card-back p, .flip-card-back strong {
       color: #FDFBF7;
@@ -216,10 +217,12 @@
       .about-image-wrapper { min-height: 240px; }
       #map { height: 300px; }
       .img-tweeluik-left, .img-tweeluik-right { min-height: 200px; }
+      .flip-card-front, .flip-card-back { padding: 1.2rem; }
     }
     @media (max-width: 480px) {
       .img-tweeluik-left, .img-tweeluik-right { min-height: 160px; }
       .vehicle-image { max-height: 200px; }
+      .flip-card-front, .flip-card-back { padding: 1rem; }
     }
     @media (orientation: landscape) and (max-height: 700px) {
       #map { height: 260px; }
