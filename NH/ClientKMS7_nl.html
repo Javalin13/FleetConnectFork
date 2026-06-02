@@ -242,7 +242,6 @@
 </header>
 
 <main>
-  <!-- NIEUWE HERO SECTIE - ZELFDE STIJL ALS NH_nl.html -->
   <section class="hero-portal">
     <div class="container">
       <div class="hero-split-box">
@@ -472,7 +471,7 @@
   });
   
   // ============================================================
-  // 🗺️ OVERIGE INITIALISATIES
+  // 🗺️ KAART & VOERTUIG INIT
   // ============================================================
   document.getElementById('roundtripCheckbox').addEventListener('change',(e)=>document.getElementById('returnDateContainer').style.display=e.target.checked?'block':'none');
   document.getElementById('nextBtn').addEventListener('click',nextPage);
@@ -485,77 +484,95 @@
   function initVehicleSelect(){ document.querySelectorAll('.vehicle-card-select').forEach(c=>{ c.addEventListener('click',()=>{ document.querySelectorAll('.vehicle-card-select').forEach(c2=>c2.classList.remove('selected')); c.classList.add('selected'); selectedVehicle=c.getAttribute('data-vehicle'); selectedVehicleExtra=parseInt(c.getAttribute('data-extraprice'))||0; updateTotalDisplay(); }); }); const first=document.querySelector('.vehicle-card-select'); if(first){first.classList.add('selected'); selectedVehicle=first.getAttribute('data-vehicle'); selectedVehicleExtra=0;} }
   
   // ============================================================
-  // 🔍 AUTOCOMPLETE - Nederlandse versie (volledig werkend)
+  // 🔍 WERKENDE AUTOCOMPLETE (gebaseerd op de test)
   // ============================================================
-  async function fetchAddresses(query, wrapId) { 
-    if (query.length < 3) { 
-      const wrap = document.getElementById(wrapId); 
-      if (wrap) { const s = wrap.querySelector('.suggestions'); if (s) s.style.display = 'none'; } 
-      return; 
-    } 
-    const wrap = document.getElementById(wrapId); 
-    const suggestionsDiv = wrap.querySelector('.suggestions'); 
-    if (!suggestionsDiv) return; 
-    suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Zoeken...</div>'; 
-    suggestionsDiv.style.display = 'block'; 
-    try { 
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=nl`; 
-      const controller = new AbortController(); 
-      const timeoutId = setTimeout(() => controller.abort(), 8000); 
-      const response = await fetch(url, { headers: { 'User-Agent': 'NH-Portal/1.0' }, signal: controller.signal }); 
-      clearTimeout(timeoutId); 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`); 
-      const data = await response.json(); 
-      if (!data.length) { 
-        suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ Geen adres gevonden in België</div>'; 
-        return; 
-      } 
-      suggestionsDiv.innerHTML = data.map(p => `<div class="suggestion-item" data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</div>`).join(''); 
-      suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => { 
-        item.addEventListener('click', () => { 
-          const lat = parseFloat(item.dataset.lat); 
-          const lon = parseFloat(item.dataset.lon); 
-          const fullAddress = item.innerText; 
-          const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput'); 
-          inputField.value = fullAddress; 
-          if (wrapId === 'pickupWrap') { pickupCoord = { lat: lat, lon: lon }; } 
-          else { dropoffCoord = { lat: lat, lon: lon }; } 
-          suggestionsDiv.style.display = 'none'; 
-          if (pickupCoord && dropoffCoord) calculateAndStoreRoute(); 
-        }); 
-      }); 
-    } catch (err) { 
-      console.error(err); 
-      suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Netwerkfout – probeer opnieuw</div>'; 
-    } 
+  async function fetchAddresses(query, suggestionsDivId) {
+    const suggestionsDiv = document.getElementById(suggestionsDivId);
+    if (!suggestionsDiv) return;
+
+    if (query.length < 3) {
+      suggestionsDiv.style.display = 'none';
+      return;
+    }
+
+    suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Zoeken...</div>';
+    suggestionsDiv.style.display = 'block';
+
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=nl`;
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+      const response = await fetch(url, {
+        headers: { 'User-Agent': 'NH-Portal/2.0' },
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+
+      if (!data.length) {
+        suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ Geen adres gevonden in België</div>';
+        return;
+      }
+
+      suggestionsDiv.innerHTML = data.map(p => `<div class="suggestion-item" data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</div>`).join('');
+
+      // Klik event toevoegen
+      suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const lat = parseFloat(item.dataset.lat);
+          const lon = parseFloat(item.dataset.lon);
+          const fullAddress = item.innerText;
+          const inputField = suggestionsDivId === 'pickupSuggest' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
+          inputField.value = fullAddress;
+
+          if (suggestionsDivId === 'pickupSuggest') {
+            pickupCoord = { lat, lon };
+          } else {
+            dropoffCoord = { lat, lon };
+          }
+          suggestionsDiv.style.display = 'none';
+          if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
+        });
+      });
+    } catch (err) {
+      console.error('Autocomplete fout:', err);
+      suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Netwerkfout – probeer opnieuw</div>';
+    }
   }
-  
-  function initAutocomplete() { 
-    const pickupInput = document.getElementById('pickupInput'); 
-    const dropoffInput = document.getElementById('dropoffInput'); 
+
+  function initAutocomplete() {
+    const pickupInput = document.getElementById('pickupInput');
+    const dropoffInput = document.getElementById('dropoffInput');
     let pickupDebounce, dropoffDebounce;
-    pickupInput.addEventListener('input', (e) => { 
-      clearTimeout(pickupDebounce); 
-      pickupDebounce = setTimeout(() => fetchAddresses(e.target.value, 'pickupWrap'), 400); 
-    }); 
-    dropoffInput.addEventListener('input', (e) => { 
-      clearTimeout(dropoffDebounce); 
-      dropoffDebounce = setTimeout(() => fetchAddresses(e.target.value, 'dropoffWrap'), 400); 
-    }); 
-    document.addEventListener('click', (e) => { 
-      if (!e.target.closest('.suggest-wrapper')) { 
-        document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); 
-      } 
-    }); 
+
+    pickupInput.addEventListener('input', (e) => {
+      clearTimeout(pickupDebounce);
+      pickupDebounce = setTimeout(() => fetchAddresses(e.target.value, 'pickupSuggest'), 400);
+    });
+    dropoffInput.addEventListener('input', (e) => {
+      clearTimeout(dropoffDebounce);
+      dropoffDebounce = setTimeout(() => fetchAddresses(e.target.value, 'dropoffSuggest'), 400);
+    });
+
+    // Sluit suggesties bij klik buiten
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.suggest-wrapper')) {
+        document.getElementById('pickupSuggest').style.display = 'none';
+        document.getElementById('dropoffSuggest').style.display = 'none';
+      }
+    });
   }
-  
-  initMap(); 
-  initVehicleSelect(); 
-  initAutocomplete(); 
-  showPage(1); 
-  loadUserProfile(); 
+
+  initMap();
+  initVehicleSelect();
+  initAutocomplete();
+  showPage(1);
+  loadUserProfile();
   switchToTab('new-booking');
-  document.getElementById('mobileMenuBtn').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('show'));
+  document.getElementById('mobileMenuBtn').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('show'));
 </script>
 </body>
 </html>
