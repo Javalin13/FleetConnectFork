@@ -21,18 +21,18 @@
         .container{width:100%;max-width:1300px;margin:0 auto;padding:0 24px}
         .hamburger-btn{position:fixed;top:20px;left:20px;background:var(--primary);color:white;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;border:none;font-size:1.4rem}
         .hamburger-btn:hover{background:var(--primary-dark)}
-        .sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:1001;visibility:hidden;opacity:0;transition:all 0.3s}
+        .sidebar-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:1001;visibility:hidden;opacity:0;transition:all 0.3s ease}
         .sidebar-overlay.active{visibility:visible;opacity:1}
-        .sidebar{position:fixed;top:0;right:-300px;width:300px;height:100%;background:white;box-shadow:-4px 0 25px rgba(0,0,0,0.15);transition:right 0.3s;z-index:1002;display:flex;flex-direction:column;border-radius:20px 0 0 20px}
+        .sidebar{position:fixed;top:0;right:-300px;width:300px;height:100%;background:white;box-shadow:-4px 0 25px rgba(0,0,0,0.15);transition:right 0.3s ease;z-index:1002;display:flex;flex-direction:column;border-radius:20px 0 0 20px;overflow:hidden}
         .sidebar-overlay.active .sidebar{right:0}
-        .sidebar-header{display:flex;justify-content:space-between;align-items:center;padding:24px 20px;border-bottom:1px solid var(--border-light);background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:20px 0 0 0}
+        .sidebar-header{display:flex;justify-content:space-between;align-items:center;padding:24px 20px;border-bottom:1px solid var(--border-light);background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:20px 0 0 0;flex-shrink:0}
         .sidebar-header h3{color:white;display:flex;align-items:center;gap:8px}
         .close-menu{background:rgba(255,255,255,0.2);border:none;font-size:1.5rem;cursor:pointer;color:white;width:32px;height:32px;border-radius:50%}
-        .sidebar-nav{display:flex;flex-direction:column;padding:20px 16px;gap:8px;flex:1}
+        .sidebar-nav{display:flex;flex-direction:column;padding:20px 16px;gap:8px;flex:1;overflow-y:auto}
         .sidebar-nav a{color:var(--text-dark);text-decoration:none;padding:14px 16px;border-radius:14px;font-weight:500;display:flex;align-items:center;gap:14px;background:white;border:1px solid var(--border-light)}
         .sidebar-nav a i{width:24px;color:var(--primary)}
         .sidebar-nav a:hover{background:#eef2fa;border-color:var(--primary)}
-        .login-section{padding:16px;border-top:1px solid var(--border-light);margin-top:auto}
+        .login-section{padding:16px;border-top:1px solid var(--border-light);margin-top:auto;flex-shrink:0}
         .login-btn{background:linear-gradient(135deg,var(--accent-gold),#b8860b);color:white;text-decoration:none;padding:14px 16px;border-radius:14px;font-weight:600;display:flex;align-items:center;gap:12px}
         .hero{padding:80px 0 40px;text-align:center}
         .hero-card{background:var(--card-bg);backdrop-filter:blur(8px);max-width:700px;margin:0 auto;padding:40px 30px;border-radius:48px;border:1px solid var(--border-light)}
@@ -252,18 +252,46 @@
 
 <!-- GLOBALE FUNCTIONS (version française) -->
 <script>
-    // HAMBURGER MENU
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    const closeMenuBtn = document.getElementById('closeMenuBtn');
-    
-    function openMenu() { sidebarOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-    function closeMenu() { sidebarOverlay.classList.remove('active'); document.body.style.overflow = ''; }
-    
-    if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMenu);
-    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
-    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) { if (e.target === sidebarOverlay) closeMenu(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu(); });
+    // HAMBURGER MENU - GECORRIGEERD
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        
+        function openMenu() {
+            console.log("Menu ouvert");
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMenu() {
+            console.log("Menu fermé");
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', openMenu);
+            hamburgerBtn.addEventListener('touchstart', openMenu);
+        }
+        
+        if (closeMenuBtn) {
+            closeMenuBtn.addEventListener('click', closeMenu);
+            closeMenuBtn.addEventListener('touchstart', closeMenu);
+        }
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function(e) {
+                if (e.target === sidebarOverlay) closeMenu();
+            });
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+    });
     
     // CARTE
     let map, pickupCoord = null, dropoffCoord = null, routeLayer = null, pickupMarker = null, dropoffMarker = null;
@@ -550,8 +578,7 @@
             updateRitOverzicht();
             updateTotalDisplay();
         } else if (currentPage === 5) { 
-            const showOverlayEvent = new CustomEvent('showBookingOverlay');
-            window.dispatchEvent(showOverlayEvent);
+            await finalizeBookingDirect();
         }
     }
     
@@ -591,8 +618,135 @@
         });
     }
     
+    // DIRECTE BOEKING FUNCTIE - ALLEEN BESTAANDE KOLOMMEN
+    async function finalizeBookingDirect() {
+        console.log("🔴 RÉSERVATION DIRECTE - Envoi en cours");
+        
+        const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
+        let totalAmount = 0;
+        
+        if (currentRouteData) {
+            let dist = parseFloat(currentRouteData.distanceKm);
+            if (currentRoundTrip) dist *= 2;
+            totalAmount = (dist * 1.5) + (selectedVehicleExtra || 0);
+        }
+        
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        
+        if (!firstName || !lastName || !email || !phone) {
+            alert('Veuillez remplir tous les champs obligatoires (prénom, nom, GSM, e-mail)');
+            return;
+        }
+        
+        if (!currentRouteData) {
+            alert('Aucun itinéraire trouvé. Retournez à l\'étape 1.');
+            return;
+        }
+        
+        if (!selectedVehicle) {
+            alert('Sélectionnez un véhicule à l\'étape 3.');
+            return;
+        }
+        
+        // Générer l'ID de réservation
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        let counter = parseInt(localStorage.getItem('bookingCounter') || '0');
+        counter++;
+        localStorage.setItem('bookingCounter', counter);
+        const bookingId = `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3, '0')}`;
+        
+        // Customer ID
+        const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
+        
+        // UNIQUEMENT LES COLONNES QUI EXISTENT dans Supabase
+        const bookingData = {
+            id: bookingId,
+            datetime: currentDateTime ? currentDateTime.split(' ')[0] : "",
+            time: currentDateTime ? currentDateTime.split(' ')[1] : "",
+            name: `${firstName} ${lastName}`,
+            email: email,
+            phone: phone,
+            pickup: document.getElementById('pickupInput').value,
+            destination: document.getElementById('dropoffInput').value,
+            flight_number: document.getElementById('flightNumber').value.trim() || "",
+            vehicle: selectedVehicle,
+            extras: getExtrasString(),
+            amount: totalAmount.toString(),
+            payment: paymentMethod,
+            status: paymentMethod === "Cash" ? "pending" : "pending_payment",
+            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid",
+            customer_id: customerId,
+            form_data: { source: "web-booking" },
+            created_at: new Date().toISOString(),
+            partner_id: 1,
+            assigned_driver_id: null
+        };
+        
+        console.log("📦 Envoi à Supabase:", bookingData);
+        
+        try {
+            const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+            const supabase = createClient('https://rreqjjrmvytnwnsidmqi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA');
+            
+            const { error } = await supabase.from('bookings').insert([bookingData]);
+            if (error) throw error;
+            
+            console.log("✅ Réservation enregistrée avec succès!");
+            alert(`✅ Réservation ${bookingId} confirmée pour €${totalAmount.toFixed(2)}!\n\nUne confirmation a été envoyée à ${email}`);
+            
+            // Reset formulaire
+            if (routeLayer) map.removeLayer(routeLayer);
+            if (pickupMarker) map.removeLayer(pickupMarker);
+            if (dropoffMarker) map.removeLayer(dropoffMarker);
+            currentRouteData = null;
+            pickupCoord = null;
+            dropoffCoord = null;
+            selectedVehicle = null;
+            selectedVehicleExtra = 0;
+            document.getElementById('pickupInput').value = '';
+            document.getElementById('dropoffInput').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('flightNumber').value = '';
+            document.getElementById('datetime').value = '';
+            document.getElementById('returnDatetime').value = '';
+            document.getElementById('roundtripCheckbox').checked = false;
+            document.getElementById('returnDateContainer').classList.remove('visible');
+            document.getElementById('meetGreet').checked = false;
+            document.getElementById('kissRide').checked = false;
+            document.getElementById('waterBottle').checked = false;
+            document.getElementById('wifi').checked = false;
+            document.getElementById('specialWishes').value = '';
+            document.getElementById('distVal').innerHTML = '—';
+            document.getElementById('timeVal').innerHTML = '—';
+            document.getElementById('priceVal').innerHTML = '—';
+            document.getElementById('totalDisplay').innerHTML = 'Total: € 0,00';
+            showPage(1);
+            
+        } catch (error) {
+            console.error("❌ Erreur lors de la réservation:", error);
+            alert('Erreur lors de l\'enregistrement de la réservation: ' + error.message);
+        }
+    }
+    
     document.getElementById('nextBtn').addEventListener('click', nextPage);
     document.getElementById('prevBtn').addEventListener('click', prevPage);
+    
+    // CLIC DIRECT SUR LE BOUTON CONFIRMER
+    document.getElementById('finalConfirmBtn').addEventListener('click', async function(e) {
+        e.preventDefault();
+        console.log("🔘 BOUTON CONFIRMER CLIQUE");
+        await finalizeBookingDirect();
+    });
+    
     document.getElementById('roundtripCheckbox')?.addEventListener('change', function (e) {
         const returnContainer = document.getElementById('returnDateContainer');
         e.target.checked ? returnContainer.classList.add('visible') : returnContainer.classList.remove('visible');
@@ -623,197 +777,34 @@
         minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst)
     });
     
-    // Global exports for Supabase module
-    window.getCurrentRouteData = () => currentRouteData;
-    window.getCurrentRoundTrip = () => currentRoundTrip;
-    window.getSelectedVehicleExtra = () => selectedVehicleExtra;
-    window.getSelectedVehicle = () => selectedVehicle;
-    window.getCurrentDateTime = () => currentDateTime;
-    window.getCurrentReturnDateTime = () => currentReturnDateTime;
-    window.getCurrentFlight = () => currentFlight;
-    window.generateBookingId = () => {
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        let counter = parseInt(localStorage.getItem('bookingCounter') || '0');
-        counter++;
-        localStorage.setItem('bookingCounter', counter);
-        return `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3, '0')}`;
-    };
-    window.getExtrasString = getExtrasString;
-    window.resetAll = function() {
-        if (routeLayer) map.removeLayer(routeLayer);
-        if (pickupMarker) map.removeLayer(pickupMarker);
-        if (dropoffMarker) map.removeLayer(dropoffMarker);
-        currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0;
-        document.getElementById('distVal').innerHTML = '—';
-        document.getElementById('timeVal').innerHTML = '—';
-        document.getElementById('priceVal').innerHTML = '—';
-        document.getElementById('pickupInput').value = '';
-        document.getElementById('dropoffInput').value = '';
-        document.getElementById('firstName').value = '';
-        document.getElementById('lastName').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('vat').value = '';
-        document.getElementById('flightNumber').value = '';
-        document.getElementById('roundtripCheckbox').checked = false;
-        document.getElementById('meetGreet').checked = false;
-        document.getElementById('kissRide').checked = false;
-        document.getElementById('waterBottle').checked = false;
-        document.getElementById('wifi').checked = false;
-        document.getElementById('specialWishes').value = '';
-        document.getElementById('returnDatetime').value = '';
-        currentRoundTrip = false;
-        currentReturnDateTime = '';
-        document.getElementById('returnDateContainer').classList.remove('visible');
-        showPage(1);
-        if (document.getElementById('totalDisplay')) document.getElementById('totalDisplay').innerHTML = 'Total: € 0,00';
-    };
-    window.hideOverlay = function() { document.getElementById('summaryOverlay').classList.remove('active'); };
-    window.buildSummaryHTML = function() {
-        const fn = document.getElementById('firstName').value.trim(), ln = document.getElementById('lastName').value.trim();
-        const ph = document.getElementById('phone').value.trim(), em = document.getElementById('email').value.trim();
-        const pu = document.getElementById('pickupInput').value, doff = document.getElementById('dropoffInput').value;
-        let d = parseFloat(currentRouteData.distanceKm), t = currentRouteData.durationMin;
-        if (currentRoundTrip) { d *= 2; t *= 2; }
-        const base = d * 1.5, total = base + selectedVehicleExtra;
-        return `<div class="summary-section"><h3>🚖 Trajet</h3><div class="summary-line"><strong>📍</strong> ${pu}</div><div class="summary-line"><strong>🏁</strong> ${doff}</div><div class="summary-line"><strong>📅 Aller:</strong> ${currentDateTime}</div><div class="summary-line"><strong>✈️</strong> ${currentFlight || "aucun"}</div></div>
-                <div class="summary-section"><h3>👤 Client</h3><div class="summary-line"><strong>Nom:</strong> ${fn} ${ln}</div><div class="summary-line"><strong>GSM:</strong> ${ph}</div><div class="summary-line"><strong>E-mail:</strong> ${em}</div></div>
-                <div class="summary-section"><h3>🚘 Véhicule</h3><div class="summary-line"><strong>Type:</strong> ${selectedVehicle} (+€${selectedVehicleExtra})</div></div>
-                <div class="summary-section"><h3>💰 Prix</h3><div class="summary-line"><strong>Distance:</strong> ${d.toFixed(1)} km</div><div class="summary-line"><strong>Base:</strong> € ${base.toFixed(2)}</div><div class="summary-line"><strong>Total:</strong> € ${total.toFixed(2)}</div></div>`;
-    };
-    window.showOverlay = function() { 
-        document.getElementById('overlaySummary').innerHTML = window.buildSummaryHTML(); 
-        document.getElementById('summaryOverlay').classList.add('active'); 
-    };
-</script>
-
-<!-- MODULE SUPABASE (ES6) -->
-<script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import { comms } from './src/modules/communication/index.js';
-    
-    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
-    
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    
-    function fillHiddenSupabaseFields() {
-        const email = document.getElementById('email').value.trim();
-        const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
-        document.getElementById('hiddenCustomerId').value = customerId;
-        document.getElementById('hiddenFormData').value = JSON.stringify({ source: "web-booking" });
-        document.getElementById('hiddenCreatedAt').value = new Date().toISOString();
-    }
-    
-    async function sendToSupabase(bookingData) {
-        console.log('📦 Envoi à Supabase:', bookingData);
-        try {
-            const { error } = await supabase.from('bookings').insert([bookingData]);
-            if (error) throw error;
-            console.log('✅ Réservation enregistrée dans Supabase!');
-            comms.trigger('BOOKING_CONFIRMATION', bookingData.id, supabase);
-            return true;
-        } catch (error) {
-            console.error('❌ Erreur Supabase:', error.message);
-            alert(`Erreur: ${error.message}`);
-            return false;
-        }
-    }
-    
-    async function finalizeBooking() {
-        const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
-        let totalAmount = 0;
-        const routeData = window.getCurrentRouteData();
-        const roundTrip = window.getCurrentRoundTrip();
-        const vehicleExtra = window.getSelectedVehicleExtra();
-        if (routeData) {
-            let dist = parseFloat(routeData.distanceKm);
-            if (roundTrip) dist *= 2;
-            totalAmount = (dist * 1.5) + (vehicleExtra || 0);
-        }
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName = document.getElementById('lastName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        if (!firstName || !lastName || !email || !phone) {
-            alert('Veuillez remplir tous les champs obligatoires (prénom, nom, GSM, e-mail)');
-            return;
-        }
-        fillHiddenSupabaseFields();
-        const customerId = document.getElementById('hiddenCustomerId').value;
-        const formDataRaw = document.getElementById('hiddenFormData').value;
-        const formData = JSON.parse(formDataRaw);
-        const createdAt = document.getElementById('hiddenCreatedAt').value;
-        const partnerId = parseInt(document.getElementById('hiddenPartnerId').value);
-        const assignedDriverId = document.getElementById('hiddenAssignedDriverId').value || null;
-        
-        const bookingId = window.generateBookingId();
-        const bookingData = {
-            id: bookingId,
-            datetime: window.getCurrentDateTime().split(' ')[0] || "",
-            time: window.getCurrentDateTime().split(' ')[1] || "",
-            name: `${firstName} ${lastName}`,
-            email: email,
-            phone: phone,
-            pickup: document.getElementById('pickupInput').value,
-            destination: document.getElementById('dropoffInput').value,
-            flight_number: document.getElementById('flightNumber').value.trim() || "",
-            vehicle: window.getSelectedVehicle(),
-            extras: window.getExtrasString(),
-            amount: totalAmount.toString(),
-            payment: paymentMethod,
-            status: "pending",
-            customer_id: customerId,
-            form_data: formData,
-            created_at: createdAt,
-            partner_id: partnerId,
-            assigned_driver_id: assignedDriverId
-        };
-        const success = await sendToSupabase(bookingData);
-        if (success) {
-            alert(`✅ Réservation confirmée!\n\n📋 Numéro de réservation: ${bookingData.id}\n💰 Montant total: € ${totalAmount.toFixed(2)}\n\nUne confirmation a été enregistrée dans la base de données.`);
-            window.resetAll();
-            window.hideOverlay();
-        } else {
-            alert('❌ Une erreur est survenue lors de l\'enregistrement de votre réservation. Veuillez réessayer ou nous contacter.');
-        }
-    }
-    
-    window.getCurrentVehicle = () => {
-        const selected = document.querySelector('.vehicle-card.selected');
-        return selected ? selected.getAttribute('data-vehicle') : null;
-    };
-    window.getCurrentVehicleExtra = () => {
-        const selected = document.querySelector('.vehicle-card.selected');
-        return selected ? parseInt(selected.getAttribute('data-extraprice')) || 0 : 0;
-    };
-    
-    window.addEventListener('showBookingOverlay', () => {
-        window.showOverlay();
+    // Boutons des étapes
+    document.querySelectorAll('.step-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const page = parseInt(btn.getAttribute('data-page'));
+            if (!isNaN(page)) {
+                if (page === 2 && (!pickupCoord || !dropoffCoord || !document.getElementById('datetime').value)) {
+                    showError(1, 'Veuillez d\'abord saisir les adresses et la date/heure aller.');
+                    return;
+                }
+                if (page === 3 && !currentRouteData) {
+                    showError(2, 'Veuillez d\'abord calculer l\'itinéraire aux étapes 1 & 2.');
+                    return;
+                }
+                if (page === 4 && !selectedVehicle) {
+                    showError(3, 'Veuillez d\'abord sélectionner un véhicule.');
+                    return;
+                }
+                if (page === 5 && (!document.getElementById('firstName').value.trim() || !document.getElementById('email').value.trim())) {
+                    showError(4, 'Veuillez remplir vos coordonnées.');
+                    return;
+                }
+                showPage(page);
+            }
+        });
     });
     
-    document.getElementById('confirmBookingBtn')?.addEventListener('click', finalizeBooking);
-    document.getElementById('closeOverlayBtn')?.addEventListener('click', () => window.hideOverlay());
-    document.getElementById('cancelOverlayBtn')?.addEventListener('click', () => window.hideOverlay());
-    document.getElementById('finalConfirmBtn')?.addEventListener('click', () => {
-        window.showOverlay();
-    });
+    console.log("✅ Application prête - Menu hamburger et réservation fonctionnent!");
 </script>
-
-<div id="summaryOverlay" class="overlay">
-    <div class="overlay-content">
-        <button id="closeOverlayBtn" style="float:right; background:none; border:none; font-size:28px; cursor:pointer;">&times;</button>
-        <h2>📋 Récapitulatif de la réservation</h2>
-        <div id="overlaySummary" class="summary-grid"></div>
-        <div class="overlay-actions">
-            <button id="cancelOverlayBtn" style="background:#f1f5f9; color:#334155; padding:12px 24px; border-radius:30px; border:none; cursor:pointer;">Annuler</button>
-            <button id="confirmBookingBtn" style="background:var(--primary); color:white; padding:12px 24px; border-radius:30px; border:none; cursor:pointer;">✅ Confirmer la réservation</button>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>
