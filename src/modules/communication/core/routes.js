@@ -17,7 +17,7 @@ export class RouteBuilder {
 
         switch (type) {
             case 'view-booking':
-                return `${baseUrl}/klantenportaalpv.html?id=${params.id}`;
+                return `${baseUrl}/PV/klantenportaalpv.html?id=${params.id}`;
 
             case 'review':
                 return `${baseUrl}/review/${params.id}`; // Future route
@@ -26,13 +26,13 @@ export class RouteBuilder {
                 return `https://wa.me/${CommunicationConfig.brand.supportWhatsapp}`;
 
             case 'book-new':
-                return `${baseUrl}/PV.html#booking`;
+                return `${baseUrl}/PV/PV.html#booking`;
 
             case 'account-welcome':
-                return `${baseUrl}/setup-account.html?token=${params.token}`;
+                return `${baseUrl}/PV/register.html?token=${params.token}`;
 
             case 'setup-account-prefilled':
-                return `${baseUrl}/setup-account.html?booking_id=${params.id}&email=${params.email}`;
+                return `${baseUrl}/PV/register.html?booking_id=${params.id}&email=${params.email}`;
 
             case 'driver-accept':
                 return `${baseUrl}/driver-accept.html?token=${params.token}`;

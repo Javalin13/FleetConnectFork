@@ -31,6 +31,14 @@ serve(async (req) => {
   }
 
   try {
+    if (origin && !isAllowedOrigin) {
+      console.error(`[Email Dispatch] Blocked unauthorized origin: ${origin}`)
+      return new Response(JSON.stringify({ success: false, error: 'Unauthorized origin' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 403,
+      })
+    }
+
     const payload = await req.json()
     const { to, subject, html, from, reply_to, metadata } = payload
 

@@ -1,0 +1,32 @@
+# FleetConnect Launch Risk Matrix
+
+Generated: 2026-06-02
+
+## Risk Matrix
+
+| Item | Severity | Probability | Impact | Recommendation | Estimated effort |
+| --- | --- | --- | --- | --- | --- |
+| Completed ride email trigger missing | Critical | High | Customers may not receive thank-you/review communication after ride completion. | Identify existing completion action and wire `RIDE_COMPLETED` without changing workflow semantics. | 0.5 day |
+| Registration browser/inbox validation pending | Medium | High | Registration welcome path is wired in repository but not browser/inbox tested. | Validate with approved test account and inbox. | 0.5 day |
+| Google review URL not configured | Medium | High | Review CTA no longer fake, but does not route to a verified review destination. | Set `FLEETCONNECT_REVIEW_URL` or `CommunicationConfig.brand.reviewUrl` to a verified Google review link. | 0.25 day |
+| Frontend repairs not deployed/browser-tested | High | High | Repository repairs may not be active in production until deployed and validated. | Deploy repaired frontend and run full browser lifecycle. | 1 day |
+| Inbox delivery validation pending | High | High | Email wiring is static until real inbox delivery is confirmed. | Run approved customer, driver, operations, and escalation inbox tests. | 0.5 day |
+| Stripe credentials unavailable | Critical | Certain | Payment checkout/webhook/refund cannot be certified. | Configure Stripe secrets and validate payment functions after credential availability. | 1-2 days after credentials |
+| Historical `user_id` backfill unresolved | High | Medium | Existing customer portal history may be incomplete or inaccessible. | Build manual mapping and approve controlled backfill. | 0.5-1 day |
+| Live browser lifecycle testing pending | High | High | Regression risk remains across public booking, operator assignment, driver token links, and email. | Execute end-to-end browser tests with real mapped accounts/test inboxes. | 1 day |
+| Standalone partner/driver portal auth unresolved | Medium | Medium | Demo portals may be unsafe if exposed in production scope. | Keep out of MVP scope or implement Supabase auth separately. | 1-3 days |
+| FleetConnect-owned sender domain absent | Low | Medium | Brand/deliverability limitations. | Configure Resend custom domain when DNS access is available. | 0.5 day plus DNS propagation |
+
+## Launch Recommendation
+
+NO.
+
+Rationale: core dispatch and RLS risk has been reduced, but required customer and operations communication flows are incomplete and payment remains externally blocked.
+
+## Phase 5.5 Additional Launch Risks
+
+| Risk | Severity | Likelihood | Impact | Mitigation | Owner |
+| --- | --- | --- | --- | --- | --- |
+| Extracted tree has no Git checkpoint | Medium | High | Branch/tag provenance is not available from this workspace. | Apply repaired files to real Git checkout, then create requested checkpoint branch and annotated tag. | Release manager |
+| Legacy root email helper remains | Medium | Medium | A non-PV legacy booking path could bypass the repaired communication module. | Confirm root `fleetconnect.html` is out of launch scope or reconcile it before expanding launch scope. | Engineering |
+| Hardcoded anon keys remain | Low | High | Public anon keys are token-like and reduce maintainability/audit clarity. | Centralize public client config in a future hardening pass without changing behavior. | Engineering |

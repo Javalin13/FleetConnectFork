@@ -861,8 +861,11 @@
         if (!supabase) { showError(5, 'Database niet beschikbaar'); return; }
         
         try {
-            const { error } = await supabase.from('bookings').insert([bookingData]);
+            const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
+            const savedBookingId = data?.id || bookingId;
+            const { comms } = await import('../src/modules/communication/index.js');
+            await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
             alert(`✅ Boeking ${bookingId} bevestigd voor €${totalAmount.toFixed(2)}!`);
             resetAll();
             await loadUserBookings();

@@ -60,11 +60,12 @@
     <script src="translations.js"></script>
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-        import { CommunicationConfig } from './src/modules/communication/core/config.js';
+        import { CommunicationService } from './src/modules/communication/index.js';
 
         const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const comms = new CommunicationService();
 
         async function handleDecline() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -76,50 +77,28 @@
             }
 
             try {
-                // 1. Fetch booking by token
-                const { data: booking, error: fetchError } = await supabase
-                    .from('bookings')
-                    .select('id, assignment_accepted_at, assignment_declined_at, assignment_sent_at')
-                    .eq('assignment_token', token)
-                    .single();
+                const { data, error } = await supabase.rpc('driver_decline_assignment', {
+                    p_assignment_token: token
+                });
 
-                if (fetchError || !booking) {
-                    throw new Error(i18n.t('dr_err_not_found'));
+                if (error) throw error;
+
+                if (data?.id) {
+                    await comms.trigger('DRIVER_DECLINED', data.id, supabase, { operationsOnly: true });
                 }
-
-                // 2. Duplicate Check
-                if (booking.assignment_accepted_at || booking.assignment_declined_at) {
-                    showState('already');
-                    return;
-                }
-
-                // 3. Timeout Check
-                const timeoutMinutes = CommunicationConfig.settings.ASSIGNMENT_TIMEOUT_MINUTES || 30;
-                const sentAt = new Date(booking.assignment_sent_at);
-                const now = new Date();
-                if ((now - sentAt) > (timeoutMinutes * 60 * 1000)) {
-                    showState('expired');
-                    return;
-                }
-
-                // 3. Update assignment state
-                const { error: updateError } = await supabase
-                    .from('bookings')
-                    .update({
-                        assignment_declined_at: new Date().toISOString(),
-                        status: 'accepted', // Revert to accepted for reassignment
-                        assigned_driver_id: null,
-                        assigned_driver: null,
-                        assignment_token: null // Clear token to allow new assignment
-                    })
-                    .eq('id', booking.id);
-
-                if (updateError) throw updateError;
 
                 showState('success');
 
             } catch (err) {
                 console.error(err);
+                if (err.message?.toLowerCase().includes('expired')) {
+                    showState('expired');
+                    return;
+                }
+                if (err.message?.toLowerCase().includes('already')) {
+                    showState('already');
+                    return;
+                }
                 showState('error', err.message);
             }
         }
@@ -128,6 +107,7 @@
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('success').classList.add('hidden');
             document.getElementById('already').classList.add('hidden');
+            document.getElementById('expired').classList.add('hidden');
             document.getElementById('error').classList.add('hidden');
 
             const el = document.getElementById(state);

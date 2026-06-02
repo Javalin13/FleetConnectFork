@@ -4183,7 +4183,6 @@ const translations = {
         openLanguageModal,
         closeLanguageModal,
         updateContent,
-        t: (key) => translations[currentLang][key] || key
         link,
         updateAllLinks,
         get currentLang() { return currentLang; },

@@ -7,9 +7,12 @@ export const CommunicationConfig = {
         name: 'FleetConnect',
         email: 'fleetconnect.os@gmail.com',
         website: 'https://fleetconnect.be',
+        reviewUrl: '',
         logoUrl: '', // To be filled later
         supportPhone: '+3200000000',
-        supportWhatsapp: '3200000000'
+        supportWhatsapp: '3200000000',
+        operationsEmail: 'fleetconnect.os@gmail.com',
+        technicalEscalationEmail: 'ryzenoutsourcing@gmail.com'
     },
     theme: {
         primaryColor: '#2dd4bf', // Teal/Turquoise
@@ -33,8 +36,8 @@ export const CommunicationConfig = {
             // Secure backend endpoint (Supabase Edge Function)
             // This prevents exposing the Resend API Key in the browser.
             endpoint: '/send-email',
-           from: 'FleetConnect <onboarding@resend.dev>',
-replyTo: 'fleetconnect.os@gmail.com'
+            from: 'FleetConnect <onboarding@resend.dev>',
+            replyTo: 'fleetconnect.os@gmail.com'
         }
     }
 };
