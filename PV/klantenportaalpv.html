@@ -494,7 +494,7 @@
             <button class="tab-btn" data-tab="profile">👤 Mijn Profiel</button>
             <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Ritten</button>
             <button class="tab-btn" data-tab="payments">💰 Betalingen</button>
-            <!-- UITLOG KNOP - GECORRIGEERD: van <a> naar <button> met onclick -->
+            <!-- UITLOG KNOP -->
             <button id="logoutBtn" class="logout-tab-btn">
                 <i class="fas fa-sign-out-alt"></i> Uitloggen
             </button>
@@ -767,53 +767,79 @@
         return false;
     };
 
+    // ========== CLEAR ALL SESSION DATA ==========
+    function clearAllSessionData() {
+        // Verwijder alle Supabase gerelateerde items uit localStorage
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.includes('supabase') || key.includes('sb-') || key.includes('auth'))) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        
+        // Specifiek de bekende Supabase token key verwijderen
+        localStorage.removeItem('sb-rreqjjrmvytnwnsidmqi-auth-token');
+        
+        // Verwijder alles uit sessionStorage
+        sessionStorage.clear();
+        
+        console.log('Alle sessie data gewist');
+    }
+
     // ========== LOGOUT FUNCTION - DE OPLOSSING! ==========
     async function handleLogout() {
-        if (!initSupabase()) {
-            console.error('Supabase niet geïnitialiseerd');
-            window.location.href = 'index.html';
-            return;
-        }
+        console.log('Uitloggen gestart...');
+        
+        // Toon laadmelding
+        const logoutBtn = document.getElementById('logoutBtn');
+        const originalText = logoutBtn.innerHTML;
+        logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uitloggen...';
+        logoutBtn.disabled = true;
         
         try {
-            // Toon laadmelding (optioneel)
-            const logoutBtn = document.getElementById('logoutBtn');
-            const originalText = logoutBtn.innerHTML;
-            logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uitloggen...';
-            logoutBtn.disabled = true;
+            if (!initSupabase()) {
+                console.warn('Supabase niet geïnitialiseerd, direct redirect');
+                clearAllSessionData();
+                window.location.href = 'index.html?t=' + Date.now();
+                return;
+            }
             
             // 1. Supabase signOut aanroepen
             const { error } = await supabase.auth.signOut();
             
             if (error) {
                 console.error('SignOut error:', error);
-                alert('Fout bij uitloggen: ' + error.message);
-                logoutBtn.innerHTML = originalText;
-                logoutBtn.disabled = false;
-                return;
             }
             
-            // 2. Clear lokale sessie data
-            sessionStorage.removeItem('loggedInEmail');
-            localStorage.removeItem('supabase.auth.token');
+            // 2. HANDMATIG ALLE SESSIE DATA WISSEN (cruciaal!)
+            clearAllSessionData();
             
-            // 3. Redirect naar inlogpagina
-            console.log('Uitgelogd, doorverwijzen naar index.html');
-            window.location.href = 'index.html';
+            // 3. Wacht kort om zeker te zijn dat alles is gewist
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // 4. Doorverwijzen naar inlogpagina met timestamp om caching te voorkomen
+            console.log('Uitloggen voltooid, doorverwijzen naar index.html');
+            window.location.href = 'index.html?t=' + Date.now();
             
         } catch (err) {
             console.error('Logout error:', err);
             alert('Er is een fout opgetreden bij het uitloggen.');
-            // Fallback: forceer redirect
-            window.location.href = 'index.html';
+            // Fallback: forceer redirect met cache busting
+            clearAllSessionData();
+            window.location.href = 'index.html?t=' + Date.now();
         }
     }
     
     // ========== KOPPEL DE LOGOUT KNOP ==========
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-        console.log('Logout knop gekoppeld');
+        // Verwijder bestaande event listeners om conflicten te voorkomen
+        const newLogoutBtn = logoutBtn.cloneNode(true);
+        logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
+        newLogoutBtn.addEventListener('click', handleLogout);
+        console.log('Logout knop succesvol gekoppeld');
     } else {
         console.error('Logout knop niet gevonden!');
     }
