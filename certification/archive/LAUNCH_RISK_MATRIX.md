@@ -30,3 +30,11 @@ Rationale: core dispatch and RLS risk has been reduced, but required customer an
 | Extracted tree has no Git checkpoint | Medium | High | Branch/tag provenance is not available from this workspace. | Apply repaired files to real Git checkout, then create requested checkpoint branch and annotated tag. | Release manager |
 | Legacy root email helper remains | Medium | Medium | A non-PV legacy booking path could bypass the repaired communication module. | Confirm root `fleetconnect.html` is out of launch scope or reconcile it before expanding launch scope. | Engineering |
 | Hardcoded anon keys remain | Low | High | Public anon keys are token-like and reduce maintainability/audit clarity. | Centralize public client config in a future hardening pass without changing behavior. | Engineering |
+
+## Phase 5.7 Smoke-Test Risks
+
+| Risk | Severity | Likelihood | Impact | Mitigation | Owner |
+| --- | --- | --- | --- | --- | --- |
+| Operator account not mapped to hoofd partner | High | Medium | Login may succeed but dashboard data/actions may not reflect production dispatch scope. | Map Supabase Auth user to `partners.user_id` for `is_hoofd = true`. | Release manager |
+| Vercel branch not redeployed after login config fix | Medium | Medium | Dashboard login continues failing with stale admin-index file. | Redeploy latest checkpoint branch commit. | Release manager |
+| Email delivery still blocked after origin fix | Medium | Low | Booking confirmation may still fail due recipient spam/filter or Resend domain state. | Check Network response and Resend logs after new booking. | Release manager |

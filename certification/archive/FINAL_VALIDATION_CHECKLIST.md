@@ -54,3 +54,15 @@ Before treating the checkpoint as preserved, confirm:
 3. The branch contains the certification archive.
 4. The branch contains `supabase/migrations/20260602000000_phase5_live_remediation.sql`.
 5. The branch contains the repaired communication module, PV booking, driver accept/decline, operator panel, and `send-email` files.
+
+## Phase 5.7 Smoke-Test Checklist Addendum
+
+1. Open `https://rpk-mu.vercel.app/Paneel/admin-index.html`.
+2. Login with a real Supabase Auth operator account.
+3. Choose the Taxi/Onderaannemer panel.
+4. If dashboard data is missing, verify the auth user is mapped to `partners.user_id` on an `is_hoofd = true` partner.
+5. Submit a fresh booking from `https://rpk-mu.vercel.app/PV/PV.html`.
+6. In browser Network, confirm `create_public_booking` returns success.
+7. In browser Network, confirm `functions/v1/send-email` returns success.
+8. If `send-email` succeeds but no mail arrives, check spam/junk and Resend delivery status.
+9. If `send-email` fails, capture status code and response body.

@@ -178,3 +178,15 @@ Status: FINAL BASELINE CHECKPOINT PREPARED - NOT CERTIFIED
 | Legacy root email helper | REQUIRES VALIDATION | `fleetconnect.html` invokes `send-booking-email` outside repaired communication module. | Confirm legacy root page is out of production scope or reconcile before launch. |
 
 Updated readiness: 84%.
+
+## Phase 5.7 Live Smoke-Test Debug Update
+
+| Item | Classification | Evidence | Required next action |
+| --- | --- | --- | --- |
+| Dashboard route | RESOLVED | Live Vercel returned HTTP 200 for `/Paneel/admin-index.html` and `/Paneel/onderaannemerA.html`. | Use `/Paneel/admin-index.html`. |
+| Dashboard login config | RESOLVED IN REPOSITORY | `Paneel/admin-index.html` malformed Supabase anon key corrected. | Redeploy Vercel branch and login with real Supabase Auth account. |
+| Operator mapping | REQUIRES VALIDATION | Live sanitized counts show 1 mapped hoofd partner and 2 unmapped hoofd partners. | Confirm login account is mapped to `partners.user_id` for `is_hoofd = true`. |
+| PV booking insert | RESOLVED | Live read-only evidence shows recent bookings: 1 in last 2h, 11 in last 24h. | Submit next test booking and verify latest booking row. |
+| Booking confirmation email origin | RESOLVED LIVE | `send-email` version 6 is active, JWT enabled, Vercel origin allowlisted, no wildcard CORS signal. | Re-test email delivery from Vercel PV booking page. |
+
+Remaining blockers continue to include browser/inbox validation and production ride-completion wiring.
