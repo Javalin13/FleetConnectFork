@@ -26,7 +26,7 @@ export class CommunicationService {
      * @param {string} bookingId - The booking UUID
      * @param {object} supabaseClient - Shared supabase client
      */
-    async trigger(trigger, bookingId, supabaseClient) {
+    async trigger(trigger, bookingId, supabaseClient, options = {}) {
         const startTime = performance.now();
         console.log(`[CommunicationService] START Trigger: ${trigger} | ID: ${bookingId}`);
 
@@ -66,16 +66,25 @@ export class CommunicationService {
                 if (!to) throw new Error('Driver email missing for assignment request');
             }
 
-            if (!to) throw new Error('Recipient email missing');
+            if (!options.operationsOnly && !to) throw new Error('Recipient email missing');
 
-            console.log(`[CommunicationService] Sending ${trigger} to ${to} via ${this.activeProvider.constructor.name}`);
+            let result = { success: true, provider: this.activeProvider.constructor.name };
 
-            const result = await this.activeProvider.send(to, subject, html, {
-                bookingId: snapshot.id,
-                trigger: trigger,
-                supabaseUrl: supabaseClient.supabaseUrl,
-                supabaseKey: supabaseClient.supabaseKey
-            });
+            if (!options.operationsOnly) {
+                console.log(`[CommunicationService] Sending ${trigger} to ${to} via ${this.activeProvider.constructor.name}`);
+
+                result = await this.activeProvider.send(to, subject, html, {
+                    bookingId: snapshot.id,
+                    trigger: trigger,
+                    supabaseUrl: supabaseClient.supabaseUrl,
+                    supabaseKey: supabaseClient.supabaseKey
+                });
+            }
+
+            const operationsResult = await this.sendOperationsCopy(trigger, snapshot, subject, html, to, supabaseClient);
+            if (!result.success || !operationsResult.success) {
+                await this.sendTechnicalEscalation(trigger, snapshot.id, result.error || operationsResult.error || 'Communication delivery failure', supabaseClient);
+            }
 
             const duration = (performance.now() - startTime).toFixed(2);
             console.log(`[CommunicationService] END Trigger: ${trigger} | To: ${to} | Status: ${result.success ? 'SUCCESS' : 'FAILED'} | Duration: ${duration}ms`);
@@ -89,7 +98,8 @@ export class CommunicationService {
                 provider: result.provider,
                 bookingId: snapshot.id,
                 lang: mode === 'trilingual' ? 'TRILINGUAL' : lang,
-                error: result.error
+                error: result.error,
+                operationsStatus: operationsResult.success ? 'success' : 'failed'
             });
 
             return result;
@@ -104,6 +114,123 @@ export class CommunicationService {
                 bookingId,
                 error: error.message
             });
+
+            await this.sendTechnicalEscalation(trigger, bookingId, error.message, supabaseClient);
+        }
+    }
+
+    async sendOperationsCopy(trigger, snapshot, subject, html, primaryRecipient, supabaseClient) {
+        const recipients = [CommunicationConfig.brand.operationsEmail]
+            .filter(Boolean)
+            .filter((email) => email !== primaryRecipient);
+
+        if (!recipients.length) {
+            return { success: true, skipped: true };
+        }
+
+        const operationsSubject = `[FleetConnect Ops] ${subject || trigger} (${snapshot.id})`;
+
+        const result = await this.activeProvider.send(recipients, operationsSubject, html, {
+            bookingId: snapshot.id,
+            trigger: `${trigger}_OPERATIONS`,
+            replyTo: CommunicationConfig.providers.resend.replyTo,
+            supabaseUrl: supabaseClient.supabaseUrl,
+            supabaseKey: supabaseClient.supabaseKey
+        });
+
+        CommunicationLogger.log({
+            trigger: `${trigger}_OPERATIONS`,
+            to: recipients.join(', '),
+            subject: operationsSubject,
+            status: result.success ? 'success' : 'failed',
+            provider: result.provider,
+            bookingId: snapshot.id,
+            error: result.error
+        });
+
+        return result;
+    }
+
+    async sendTechnicalEscalation(trigger, entityId, errorMessage, supabaseClient) {
+        const to = CommunicationConfig.brand.technicalEscalationEmail;
+        if (!to) return { success: true, skipped: true };
+
+        const subject = `[FleetConnect Technical] ${trigger} failure (${entityId || 'unknown'})`;
+        const html = `
+            <div style="font-family: Inter, Arial, sans-serif; color: #0f172a;">
+                <h2>FleetConnect communication escalation</h2>
+                <p><strong>Trigger:</strong> ${trigger}</p>
+                <p><strong>Entity:</strong> ${entityId || 'unknown'}</p>
+                <p><strong>Error:</strong> ${errorMessage || 'Unknown error'}</p>
+            </div>
+        `;
+
+        return this.activeProvider.send(to, subject, html, {
+            bookingId: entityId,
+            trigger: `${trigger}_TECHNICAL_ESCALATION`,
+            replyTo: CommunicationConfig.providers.resend.replyTo,
+            supabaseUrl: supabaseClient?.supabaseUrl,
+            supabaseKey: supabaseClient?.supabaseKey
+        });
+    }
+
+    async sendAccountWelcome(customer, supabaseClient) {
+        const startTime = performance.now();
+        const snapshot = {
+            id: customer.id || customer.email,
+            token: customer.token || '',
+            customer: {
+                name: customer.name || customer.full_name,
+                email: customer.email,
+                phone: customer.phone,
+                preferred_language: customer.preferred_language || CommunicationConfig.settings.defaultLanguage
+            },
+            preferred_language: customer.preferred_language || CommunicationConfig.settings.defaultLanguage
+        };
+
+        try {
+            const lang = LanguageEngine.detectLanguage(snapshot, snapshot.customer);
+            const mode = CommunicationConfig.settings.fallbackMode;
+            const trigger = 'ACCOUNT_ONBOARDING';
+            const subject = mode === 'trilingual'
+                ? LanguageEngine.getTrilingualSubject(trigger)
+                : LanguageEngine.getSubject(trigger, lang);
+            const html = TemplateRegistry[trigger].render(snapshot, lang, mode);
+
+            const result = await this.activeProvider.send(snapshot.customer.email, subject, html, {
+                bookingId: snapshot.id,
+                trigger,
+                supabaseUrl: supabaseClient?.supabaseUrl,
+                supabaseKey: supabaseClient?.supabaseKey
+            });
+
+            const operationsResult = await this.sendOperationsCopy(trigger, snapshot, subject, html, snapshot.customer.email, supabaseClient || {});
+            if (!result.success || !operationsResult.success) {
+                await this.sendTechnicalEscalation(trigger, snapshot.id, result.error || operationsResult.error || 'Account welcome delivery failure', supabaseClient);
+            }
+
+            CommunicationLogger.log({
+                trigger,
+                to: snapshot.customer.email,
+                subject,
+                status: result.success ? 'success' : 'failed',
+                provider: result.provider,
+                bookingId: snapshot.id,
+                duration: (performance.now() - startTime).toFixed(2),
+                operationsStatus: operationsResult.success ? 'success' : 'failed',
+                error: result.error
+            });
+
+            return result;
+        } catch (error) {
+            CommunicationLogger.log({
+                trigger: 'ACCOUNT_ONBOARDING',
+                status: 'error',
+                bookingId: snapshot.id,
+                error: error.message
+            });
+            await this.sendTechnicalEscalation('ACCOUNT_ONBOARDING', snapshot.id, error.message, supabaseClient);
+            return { success: false, error: error.message };
         }
     }
 }

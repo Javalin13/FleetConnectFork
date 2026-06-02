@@ -80,50 +80,27 @@
             }
 
             try {
-                // 1. Fetch booking by token
-                const { data: booking, error: fetchError } = await supabase
-                    .from('bookings')
-                    .select('id, assignment_accepted_at, assignment_declined_at, assignment_sent_at')
-                    .eq('assignment_token', token)
-                    .single();
+                const { data, error } = await supabase.rpc('driver_accept_assignment', {
+                    p_assignment_token: token
+                });
 
-                if (fetchError || !booking) {
-                    throw new Error(i18n.t('dr_err_not_found'));
-                }
-
-                // 2. Duplicate Check
-                if (booking.assignment_accepted_at || booking.assignment_declined_at) {
-                    showState('already');
-                    return;
-                }
-
-                // 3. Timeout Check
-                const timeoutMinutes = CommunicationConfig.settings.ASSIGNMENT_TIMEOUT_MINUTES || 30;
-                const sentAt = new Date(booking.assignment_sent_at);
-                const now = new Date();
-                if ((now - sentAt) > (timeoutMinutes * 60 * 1000)) {
-                    showState('expired');
-                    return;
-                }
-
-                // 3. Update assignment state
-                const { error: updateError } = await supabase
-                    .from('bookings')
-                    .update({
-                        assignment_accepted_at: new Date().toISOString(),
-                        status: 'assigned'
-                    })
-                    .eq('id', booking.id);
-
-                if (updateError) throw updateError;
+                if (error) throw error;
 
                 // 4. Trigger Customer Notification
-                await comms.trigger('DRIVER_ASSIGNED', booking.id, supabase);
+                await comms.trigger('DRIVER_ASSIGNED', data.id, supabase);
 
                 showState('success');
 
             } catch (err) {
                 console.error(err);
+                if (err.message?.toLowerCase().includes('expired')) {
+                    showState('expired');
+                    return;
+                }
+                if (err.message?.toLowerCase().includes('already')) {
+                    showState('already');
+                    return;
+                }
                 showState('error', err.message);
             }
         }
@@ -132,6 +109,7 @@
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('success').classList.add('hidden');
             document.getElementById('already').classList.add('hidden');
+            document.getElementById('expired').classList.add('hidden');
             document.getElementById('error').classList.add('hidden');
 
             const el = document.getElementById(state);

@@ -6,6 +6,25 @@ markdown
 ![Supabase](https://img.shields.io/badge/supabase-integrated-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+## Certification Notice
+
+Current audit status: **NOT CERTIFIED**.
+
+The permanent certification archive is stored in:
+
+- `certification/archive/PRODUCTION_CERTIFICATION.md`
+- `certification/archive/PHASE_5_REMEDIATION_REPORT.md`
+- `certification/archive/FINAL_CERTIFICATION_GAP_REPORT.md`
+- `certification/archive/ROLLBACK_PLAN.md`
+- `certification/archive/EMAIL_WORKFLOW_REPORT.md`
+- `certification/archive/EXECUTIVE_CERTIFICATION_SUMMARY.md`
+- `certification/archive/LAUNCH_RISK_MATRIX.md`
+- `certification/archive/FINAL_REPOSITORY_VERIFICATION_REPORT.md`
+- `certification/archive/CHECKPOINT_BRANCH_REPORT.md`
+- `certification/archive/FINAL_VALIDATION_CHECKLIST.md`
+
+Release managers, auditors, partners, and future maintainers should review this package before treating the application as production-ready.
+
 **Drie complete bedrijfsplatforms – één codebase.**  
 Ryzen is een modulair ecosysteem voor taxi bedrijven, vakantieverhuur en autodealers. Alles draait op Supabase met realtime functionaliteit.
 

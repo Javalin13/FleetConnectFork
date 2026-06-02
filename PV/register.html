@@ -6,7 +6,7 @@
     <title>Account Aanmaken | FleetConnect</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="translations.js"></script>
+    <script src="../translations.js"></script>
     <style>
         :root { --primary: #2c7da0; --primary-dark: #1a5c8c; --bg: #f4f7fc; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
@@ -60,6 +60,7 @@
 
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        import { comms } from '../src/modules/communication/index.js';
      
         const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
@@ -107,6 +108,13 @@
                     if (dbError) {
                          console.warn('Customer record insertion delayed or failed:', dbError.message);
                     }
+
+                    await comms.sendAccountWelcome({
+                        id: customerId,
+                        name: fullName,
+                        email,
+                        phone
+                    }, supabase);
 
                     alert(i18n.t('auth_magic_link_sent').replace('{email}', email));
                     window.location.href = 'index.html';

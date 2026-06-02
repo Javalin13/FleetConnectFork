@@ -79,6 +79,7 @@ export class TemplateRenderer {
             case 'BOOKING_ACCEPTED': return this.renderBookingAccepted(data, labels, subjects, lang);
             case 'DRIVER_ASSIGNMENT_REQUEST': return this.renderDriverAssignmentRequest(data, labels, subjects, lang);
             case 'DRIVER_ASSIGNED': return this.renderDriverAssigned(data, labels, subjects, lang);
+            case 'DRIVER_DECLINED': return this.renderDriverDeclined(data, labels, subjects, lang);
             case 'BOOKING_CANCELLED': return this.renderBookingCancelled(data, labels, subjects, lang);
             case 'BOOKING_COMPLETED':
             case 'RIDE_COMPLETED':
@@ -226,6 +227,24 @@ export class TemplateRenderer {
         `;
     }
 
+    static renderDriverDeclined(data, labels, subjects, lang) {
+        const d = data.driver || {};
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.DRIVER_DECLINED || 'Driver declined assignment'}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                Driver ${d.name || 'unknown'} declined booking ${data.reference || data.id}. The booking has been reset for reassignment.
+            </p>
+            ${EmailComponents.sectionTitle(labels.summary)}
+            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
+                ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
+                ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
+                ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
+                ${EmailComponents.detailsRow(labels.vehicle, data.vehicle || '...')}
+            </table>
+        `;
+    }
+
     static renderBookingCancelled(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data, labels);
         return `
@@ -239,11 +258,21 @@ export class TemplateRenderer {
 
     static renderBookingCompleted(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data, labels);
+        const d = data.driver || {};
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_COMPLETED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.completedBody}
             </p>
+            ${EmailComponents.sectionTitle(labels.summary)}
+            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
+                ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
+                ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
+                ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
+                ${EmailComponents.detailsRow(labels.driver, d.name || '...')}
+                ${EmailComponents.detailsRow(labels.vehicle, `${d.vehicle || data.vehicle || '...'} (${d.color || '...'})`)}
+            </table>
             ${EmailComponents.cta(labels.writeReview, ReviewConfig.googleReviewUrl)}
             <div style="text-align: center; margin-top: 10px;">
                 <a href="${RouteBuilder.build('book-new')}" style="color: ${CommunicationConfig.theme.primaryColor}; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none;">

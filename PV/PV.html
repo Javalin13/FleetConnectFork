@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/nl.js"></script>
-    <script src="translations.js"></script>
+    <script src="../translations.js"></script>
     
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
@@ -539,8 +539,11 @@
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
             const supabase = createClient('https://rreqjjrmvytnwnsidmqi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA');
             
-            const { error } = await supabase.from('bookings').insert([bookingData]);
+            const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
+            const savedBookingId = data?.id || bookingId;
+            const { comms } = await import('../src/modules/communication/index.js');
+            await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
             
             console.log("✅ Boeking succesvol opgeslagen!");
             alert(`✅ Boeking ${bookingId} bevestigd voor €${totalAmount.toFixed(2)}!\n\nEen bevestiging wordt naar ${email} gestuurd.`);

@@ -118,35 +118,88 @@
             display: none;
             text-align: center;
         }
-        .forgot-password {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 0.75rem;
-        }
-        .forgot-password a {
-            color: #2c7da0;
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-        .info-text {
+        .test-credentials {
             background: #f8fafc;
             border-radius: 16px;
             padding: 12px;
             margin-top: 24px;
             text-align: center;
-            font-size: 0.7rem;
-            border: 1px solid #e2e8f0;
-            color: #475569;
+            font-size: 0.75rem;
+            border: 1px dashed #cbd5e1;
         }
+
+        /* ========== RESPONSIVE AANPASSINGEN ========== */
         @media (max-width: 480px) {
-            .login-container { padding: 24px 20px; }
-            .logo h1 { font-size: 1.5rem; }
-            .logo i { font-size: 2.5rem; }
-            .lang-btn { font-size: 0.85rem; padding: 4px 10px; }
+            body {
+                padding: 16px;
+            }
+            .login-container {
+                padding: 24px 20px;
+                border-radius: 24px;
+            }
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            .logo i {
+                font-size: 2.5rem;
+            }
+            .language-switch {
+                gap: 8px;
+                justify-content: center;
+            }
+            .lang-btn {
+                font-size: 0.85rem;
+                padding: 4px 10px;
+            }
+            input {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+            }
+            button[type="submit"] {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            .test-credentials {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .login-container {
+                max-width: 380px;
+                padding: 32px 28px;
+            }
+        }
+
+        /* Horizontale modus op mobiel */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body {
+                padding: 12px;
+            }
+            .login-container {
+                max-width: 500px;
+                padding: 20px 28px;
+            }
+            .logo {
+                margin-bottom: 20px;
+            }
+            .logo h1 {
+                font-size: 1.3rem;
+            }
+            .logo i {
+                font-size: 2rem;
+            }
+            .form-group {
+                margin-bottom: 16px;
+            }
+        }
+
+        /* Grote desktops */
+        @media (min-width: 1440px) {
+            .login-container {
+                max-width: 460px;
+                padding: 48px;
+            }
         }
     </style>
 </head>
@@ -161,42 +214,65 @@
     <div class="logo">
         <i class="fas fa-taxi"></i>
         <h1 id="title">NH Partner</h1>
-        <p id="subtitle">Partnerportaal</p>
+        <p id="subtitle">Demo omgeving</p>
     </div>
     <form id="loginForm">
         <div class="form-group">
             <label id="emailLabel">E-mailadres</label>
-            <input type="email" id="email" placeholder="partner@example.com">
+            <input type="email" id="email" value="admin@ryzen.be">
         </div>
         <div class="form-group">
             <label id="passwordLabel">Wachtwoord</label>
-            <input type="password" id="password" placeholder="Uw wachtwoord">
+            <input type="password" id="password" value="admin@ryzen.be">
         </div>
         <button type="submit" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Inloggen</button>
         <div id="errorMsg" class="error-msg"></div>
-        <div class="forgot-password">
-            <a id="forgotPwLink">Wachtwoord vergeten?</a>
-        </div>
     </form>
-    <div class="info-text">
-        <i class="fas fa-info-circle"></i> Gebruik uw partneraccount om in te loggen.<br>
-        Vraag uw inloggegevens aan de beheerder.
+    <div class="test-credentials" id="testCreds">
+        <i class="fas fa-info-circle"></i> Testgegevens:<br>
+        <strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>
     </div>
 </div>
 
-<script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Vertalingen voor UI (alleen interface)
+<script>
+    // Vertalingen voor NL, FR, ES, EN
     const translations = {
-        nl: { title: "NH Partner", subtitle: "Partnerportaal", emailLabel: "E-mailadres", passwordLabel: "Wachtwoord", loginBtn: "Inloggen", errorMsg: "Ongeldige inloggegevens of geen partnerrechten." },
-        fr: { title: "NH Partenaire", subtitle: "Portail partenaire", emailLabel: "Adresse e-mail", passwordLabel: "Mot de passe", loginBtn: "Se connecter", errorMsg: "Identifiants invalides ou droits partenaire manquants." },
-        es: { title: "NH Socio", subtitle: "Portal de socios", emailLabel: "Correo electrónico", passwordLabel: "Contraseña", loginBtn: "Iniciar sesión", errorMsg: "Credenciales inválidas o sin permisos de socio." },
-        en: { title: "NH Partner", subtitle: "Partner portal", emailLabel: "Email address", passwordLabel: "Password", loginBtn: "Login", errorMsg: "Invalid credentials or no partner rights." }
+        nl: {
+            title: "NH Partner",
+            subtitle: "Demo omgeving",
+            emailLabel: "E-mailadres",
+            passwordLabel: "Wachtwoord",
+            loginBtn: "Inloggen",
+            testCreds: "Testgegevens:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Ongeldige inloggegevens. Gebruik admin@ryzen.be / admin@ryzen.be"
+        },
+        fr: {
+            title: "NH Partenaire",
+            subtitle: "Environnement de démonstration",
+            emailLabel: "Adresse e-mail",
+            passwordLabel: "Mot de passe",
+            loginBtn: "Se connecter",
+            testCreds: "Identifiants de démonstration :<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Identifiants invalides. Utilisez admin@ryzen.be / admin@ryzen.be"
+        },
+        es: {
+            title: "NH Socio",
+            subtitle: "Entorno de demostración",
+            emailLabel: "Correo electrónico",
+            passwordLabel: "Contraseña",
+            loginBtn: "Iniciar sesión",
+            testCreds: "Credenciales de demostración:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Credenciales inválidas. Use admin@ryzen.be / admin@ryzen.be"
+        },
+        en: {
+            title: "NH Partner",
+            subtitle: "Demo environment",
+            emailLabel: "Email address",
+            passwordLabel: "Password",
+            loginBtn: "Login",
+            testCreds: "Test credentials:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>",
+            errorMsg: "Invalid credentials. Use admin@ryzen.be / admin@ryzen.be"
+        }
     };
 
     let currentLang = 'nl';
@@ -209,78 +285,42 @@
         document.getElementById('emailLabel').innerText = t.emailLabel;
         document.getElementById('passwordLabel').innerText = t.passwordLabel;
         document.getElementById('loginBtn').innerHTML = `<i class="fas fa-sign-in-alt"></i> ${t.loginBtn}`;
+        document.getElementById('testCreds').innerHTML = `<i class="fas fa-info-circle"></i> ${t.testCreds}`;
         document.querySelectorAll('.lang-btn').forEach(btn => {
-            if (btn.dataset.lang === lang) btn.classList.add('active');
-            else btn.classList.remove('active');
+            if (btn.getAttribute('data-lang') === lang) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         });
-        sessionStorage.setItem('partner_lang', lang);
+        sessionStorage.setItem('app_lang', lang);
     }
 
     document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.addEventListener('click', () => updateUILanguage(btn.dataset.lang));
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            updateUILanguage(lang);
+        });
     });
-    const savedLang = sessionStorage.getItem('partner_lang') || 'nl';
+
+    const savedLang = sessionStorage.getItem('app_lang') || 'nl';
     updateUILanguage(savedLang);
 
-    // Inloggen met Supabase Auth
-    const form = document.getElementById('loginForm');
-    const errorDiv = document.getElementById('errorMsg');
-    const loginBtn = document.getElementById('loginBtn');
-
-    form.addEventListener('submit', async (e) => {
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        errorDiv.style.display = 'none';
-        const email = document.getElementById('email').value.trim();
+        const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-
-        if (!email || !password) {
-            errorDiv.textContent = translations[currentLang].errorMsg;
-            errorDiv.style.display = 'block';
-            return;
-        }
-
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bezig...';
-
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) throw error;
-
-            const role = data.user?.user_metadata?.role || data.user?.app_metadata?.role;
-            if (role !== 'partner') {
-                await supabase.auth.signOut();
-                throw new Error('Geen partnerrechten');
-            }
-
-            // Sla minimale info op (alleen voor navigatie, niet voor beveiliging)
-            sessionStorage.setItem('partner_logged_in', 'true');
-            sessionStorage.setItem('partner_email', email);
+        if (email === 'admin@ryzen.be' && password === 'admin@ryzen.be') {
+            sessionStorage.setItem('app_lang', currentLang);
+            sessionStorage.setItem('partner_id', '1');
+            sessionStorage.setItem('is_hoofd', 'true');
+            sessionStorage.setItem('user_email', email);
+            sessionStorage.setItem('horizon_logged_in', 'true');
             window.location.href = 'partnerspaneel.html';
-        } catch (err) {
+        } else {
+            const errorDiv = document.getElementById('errorMsg');
             errorDiv.textContent = translations[currentLang].errorMsg;
             errorDiv.style.display = 'block';
-            loginBtn.disabled = false;
-            loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> ${translations[currentLang].loginBtn}`;
-        }
-    });
-
-    // Wachtwoord vergeten (stuurt een resetlink naar de ingevulde e-mail)
-    document.getElementById('forgotPwLink').addEventListener('click', async () => {
-        const email = document.getElementById('email').value.trim();
-        if (!email) {
-            errorDiv.textContent = 'Vul eerst uw e-mailadres in.';
-            errorDiv.style.display = 'block';
-            return;
-        }
-        // Redirect naar een pagina waar de gebruiker een nieuw wachtwoord kan instellen
-        const redirectTo = `${window.location.origin}/partner-reset-password.html`;
-        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-        if (error) {
-            errorDiv.textContent = error.message;
-            errorDiv.style.display = 'block';
-        } else {
-            alert(`Een resetlink is verzonden naar ${email}. Controleer uw e-mail.`);
-            errorDiv.style.display = 'none';
         }
     });
 </script>
