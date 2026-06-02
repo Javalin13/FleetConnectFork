@@ -1768,3 +1768,25 @@ Known remaining blockers are unchanged:
 - Stripe if payment enters production scope.
 
 Final Git commit/tag/push evidence is recorded in `CHECKPOINT_BRANCH_REPORT.md` and the final assistant response for Phase 5.6.
+
+## Phase 5.7 - Minimal Vercel Root Routing Fix
+
+Status: ROUTING FIX APPLIED - NOT CERTIFIED
+
+Issue:
+
+- Vercel deployed successfully, but the production root URL returned 404 because the repository had no root `index.html` or Vercel routing file.
+
+Minimal repair:
+
+- Added `vercel.json` with a root-only rewrite from `/` to `/PV/PV.html`.
+
+Preserved routes:
+
+- `/PV/PV.html`
+- `/PV/klantenportaalpv.html`
+- `/PV/register.html`
+- `/driver-accept.html`
+- `/driver-decline.html`
+
+No Supabase, RLS, email, dispatch, Stripe, UI, layout, or workflow logic was changed.
