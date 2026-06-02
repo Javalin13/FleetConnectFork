@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <!-- Supabase module - wordt als eerste geladen -->
+    <!-- Supabase module -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         window.SUPABASE_CLIENT = createClient(
@@ -347,12 +347,10 @@
 <body>
 <div id="background-map"></div>
 
-<!-- HAMBURGER MENU KNOB -->
 <button class="hamburger-btn" id="hamburgerBtn">
     <i class="fas fa-bars"></i>
 </button>
 
-<!-- SIDEBAR OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay">
     <div class="sidebar">
         <div class="sidebar-header">
@@ -363,9 +361,9 @@
         <div class="language-section">
             <div class="language-title"><i class="fas fa-globe"></i> Taal / Language</div>
             <div class="language-buttons">
-                <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl">NL</a>
-                <a href="klantenportaal_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
-                <a href="klantenportaal_en.html?lang=en" class="lang-sidebar-btn" data-lang="en">EN</a>
+                <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl" style="background:#2c6e9e; color:white;">NL</a>
+                <a href="klantenportaalpv_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
+                <a href="klantenportaalpv_en.html?lang=en" class="lang-sidebar-btn" data-lang="en">EN</a>
             </div>
         </div>
         
@@ -402,7 +400,7 @@
         </div>
     </section>
 
-    <!-- 3 GRIDBLOKKEN - BOVEN DE TABS -->
+    <!-- 3 GRIDBLOKKEN -->
     <div class="container">
         <div class="uitleg-grid">
             <a href="PV_Exclusieve_Service.html" class="uitleg-item">
@@ -438,7 +436,6 @@
             </button>
         </div>
 
-        <!-- TAB 1: NIEUWE RIT -->
         <div id="new-booking-container" class="tab-container">
             <div class="one-grid-block">
                 <div class="carousel">
@@ -529,7 +526,6 @@
             </div>
         </div>
 
-        <!-- TAB 2: MIJN PROFIEL -->
         <div id="profile-container" class="tab-container hidden">
             <div class="profile-card">
                 <h3>Mijn gegevens</h3>
@@ -543,7 +539,6 @@
             </div>
         </div>
 
-        <!-- TAB 3: DASHBOARD & RITTEN -->
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
             <h4>📅 Komende ritten</h4>
@@ -552,7 +547,6 @@
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
         </div>
 
-        <!-- TAB 4: BETALINGEN -->
         <div id="payments-container" class="tab-container hidden">
             <div class="profile-card">
                 <h3>💰 Betalingsgeschiedenis</h3>
@@ -566,7 +560,7 @@
         </div>
     </div>
 
-    <!-- 4 GRIDBLOKKEN - ONDERAAN -->
+    <!-- 4 GRIDBLOKKEN ONDERAAN -->
     <div class="container">
         <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Onze diensten</h2>
         <div class="services-grid">
@@ -597,7 +591,6 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
     <footer class="footer-dark">
         <div class="footer-grid">
             <div><h4>NH</h4><p>Professioneel taxivervoer</p></div>
@@ -616,166 +609,62 @@
 <div id="ritModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
 
 <script>
-    // ========== SIMPELE i18n FALLBACK ==========
-    window.i18n = {
-        t: (key) => {
-            const fallbacks = {
-                'error_select_addresses': 'Selecteer een geldig adres',
-                'error_choose_heen': 'Kies een geldige datum/tijd',
-                'error_past_date': 'Datum mag niet in het verleden liggen',
-                'error_route_failed': 'Route kon niet worden berekend',
-                'error_select_vehicle': 'Selecteer een voertuig',
-                'error_fill_all_client': 'Vul alle verplichte velden in',
-                'error_no_trip_calculated': 'Bereken eerst de route',
-                'error_no_route_step2': 'Bereken eerst een route',
-                'error_generic': 'Fout: {error}',
-                'error_no_supabase': 'Database niet beschikbaar',
-                'error_payment_start': 'Betaalfout: {error}',
-                'booking_confirm_alert_short': 'Boeking {id} bevestigd voor €{amount}',
-                'total_display': 'Totaal:',
-                'btn_prev': '◀ Vorige',
-                'btn_next': 'Volgende ▶',
-                'op_loading': 'Laden...',
-                'op_no_payments': 'Geen betalingen gevonden',
-                'portal_dashboard_upcoming': 'Komende ritten',
-                'portal_dashboard_completed': 'Voltooide ritten',
-                'portal_tab_new_booking': 'Nieuwe Rit',
-                'portal_tab_profile': 'Mijn Profiel',
-                'portal_tab_dashboard': 'Dashboard',
-                'portal_tab_payments': 'Betalingen',
-                'auth_logout_btn': 'Uitloggen',
-                'profile_saved_alert': 'Profiel opgeslagen',
-                'contact_info_alert': 'Neem contact op via info@nh.be of +32 473 30 03 74',
-                'payment_success_alert': 'Betaling voltooid voor boeking {id}',
-                'payment_cancelled_alert': 'Betaling geannuleerd voor boeking {id}',
-                'ride_fiche_alert': 'Rit {id} - Bedrag: €{amount} - Status: {status}',
-                'pdf_download_alert': 'PDF download voor boeking {id} wordt voorbereid',
-                'error_choose_return': 'Kies een retour datum/tijd',
-                'error_return_past': 'Retour datum mag niet in het verleden liggen',
-                'error_return_after_heen': 'Retour datum moet na heen datum zijn',
-                'op_waiting_init': 'Verbinden...',
-                'op_no_upcoming_rides': 'Geen toekomstige ritten',
-                'op_no_completed_rides': 'Geen voltooide ritten'
-            };
-            return fallbacks[key] || key;
-        },
-        setLanguage: () => {}
-    };
-
-    // ========== HAMBURGER MENU ==========
+    // HAMBURGER MENU
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
     
-    function openMenu() {
-        sidebarOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeMenu() {
-        sidebarOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
+    function openMenu() { sidebarOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    function closeMenu() { sidebarOverlay.classList.remove('active'); document.body.style.overflow = ''; }
     
     if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
-    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) {
-        if (e.target === sidebarOverlay) closeMenu();
-    });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu();
-    });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) { if (e.target === sidebarOverlay) closeMenu(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu(); });
     
-    // ========== SUPABASE CLIENT ==========
-    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+    // SUPABASE
+    function getSupabase() { return window.SUPABASE_CLIENT || null; }
     
-    function getSupabase() {
-        if (window.SUPABASE_CLIENT) {
-            return window.SUPABASE_CLIENT;
-        } else if (window.createClient) {
-            window.SUPABASE_CLIENT = window.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            return window.SUPABASE_CLIENT;
-        }
-        return null;
-    }
-    
-    // ========== CLEAR ALL SESSION DATA ==========
-    function clearAllSessionData() {
-        const keysToRemove = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && (key.includes('supabase') || key.includes('sb-') || key.includes('auth'))) {
-                keysToRemove.push(key);
-            }
-        }
-        keysToRemove.forEach(key => localStorage.removeItem(key));
-        localStorage.removeItem('sb-rreqjjrmvytnwnsidmqi-auth-token');
-        sessionStorage.clear();
-        console.log('Alle sessie data gewist');
-    }
-
-    // ========== LOGOUT FUNCTION ==========
     async function handleLogout() {
-        console.log('Uitloggen gestart...');
         const logoutBtn = document.getElementById('logoutBtn');
-        const originalText = logoutBtn.innerHTML;
         logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uitloggen...';
         logoutBtn.disabled = true;
-        
         try {
             const supabase = getSupabase();
-            if (supabase) {
-                await supabase.auth.signOut();
-            }
-            clearAllSessionData();
-            await new Promise(resolve => setTimeout(resolve, 100));
+            if (supabase) await supabase.auth.signOut();
+            localStorage.clear();
+            sessionStorage.clear();
             window.location.href = 'index.html?t=' + Date.now();
-        } catch (err) {
-            console.error('Logout error:', err);
-            clearAllSessionData();
-            window.location.href = 'index.html?t=' + Date.now();
-        }
+        } catch(err) { window.location.href = 'index.html?t=' + Date.now(); }
     }
     
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        const newLogoutBtn = logoutBtn.cloneNode(true);
-        logoutBtn.parentNode.replaceChild(newLogoutBtn, logoutBtn);
-        newLogoutBtn.addEventListener('click', handleLogout);
-        console.log('Logout knop succesvol gekoppeld');
-    }
+    document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
     
-    // ========== GLOBALE VARIABELEN ==========
+    // Globale variabelen
     let currentUser = { id: 'demo-user', full_name: 'Demo Gebruiker', email: 'demo@nh.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
     let userBookings = [];
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
     let selectedVehicle = 'Standaard', selectedVehicleExtra = 0, currentPage = 1;
     let debounceTimer;
     
-    // ========== AUTOCOMPLETE ==========
+    function initMap() {
+        bookingMap = L.map('map').setView([50.85, 4.35], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(bookingMap);
+    }
+    
     async function fetchAddresses(query, wrapId) {
         const wrap = document.getElementById(wrapId);
         if (!wrap) return;
         const suggestionsDiv = wrap.querySelector('.suggestions');
         if (!suggestionsDiv) return;
-        
-        if (query.length < 3) {
-            suggestionsDiv.style.display = 'none';
-            return;
-        }
-        
+        if (query.length < 3) { suggestionsDiv.style.display = 'none'; return; }
         suggestionsDiv.innerHTML = `<div class="suggestion-item">Zoeken...</div>`;
         suggestionsDiv.style.display = 'block';
-        
         try {
             const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&countrycodes=be&addressdetails=1&accept-language=nl`;
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 8000);
-            const response = await fetch(url, {
-                signal: controller.signal,
-                headers: { 'User-Agent': 'NH/3.0' }
-            });
+            const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'NH/3.0' } });
             clearTimeout(timeoutId);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
@@ -790,8 +679,7 @@
                 div.className = 'suggestion-item';
                 div.setAttribute('data-lat', place.lat);
                 div.setAttribute('data-lon', place.lon);
-                let displayName = place.display_name;
-                if (displayName.length > 80) displayName = displayName.substring(0, 80) + '…';
+                let displayName = place.display_name.length > 80 ? place.display_name.substring(0, 80) + '…' : place.display_name;
                 div.textContent = displayName;
                 div.onclick = (e) => {
                     e.preventDefault();
@@ -799,13 +687,8 @@
                     const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
                     if (inputField) inputField.value = place.display_name;
                     const coords = { lat: parseFloat(place.lat), lon: parseFloat(place.lon) };
-                    if (wrapId === 'pickupWrap') {
-                        pickupCoord = coords;
-                        console.log("Pickup geselecteerd:", place.display_name);
-                    } else {
-                        dropoffCoord = coords;
-                        console.log("Dropoff geselecteerd:", place.display_name);
-                    }
+                    if (wrapId === 'pickupWrap') pickupCoord = coords;
+                    else dropoffCoord = coords;
                     suggestionsDiv.style.display = 'none';
                     if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
                 };
@@ -826,39 +709,19 @@
             pickupInput.addEventListener('input', (e) => {
                 clearTimeout(debounceTimer);
                 const query = e.target.value.trim();
-                if (query.length >= 3) {
-                    debounceTimer = setTimeout(() => fetchAddresses(query, 'pickupWrap'), 500);
-                } else {
-                    const suggestionsDiv = document.querySelector('#pickupWrap .suggestions');
-                    if (suggestionsDiv) suggestionsDiv.style.display = 'none';
-                }
+                if (query.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(query, 'pickupWrap'), 500);
+                else { const s = document.querySelector('#pickupWrap .suggestions'); if (s) s.style.display = 'none'; }
             });
         }
         if (dropoffInput) {
             dropoffInput.addEventListener('input', (e) => {
                 clearTimeout(debounceTimer);
                 const query = e.target.value.trim();
-                if (query.length >= 3) {
-                    debounceTimer = setTimeout(() => fetchAddresses(query, 'dropoffWrap'), 500);
-                } else {
-                    const suggestionsDiv = document.querySelector('#dropoffWrap .suggestions');
-                    if (suggestionsDiv) suggestionsDiv.style.display = 'none';
-                }
+                if (query.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(query, 'dropoffWrap'), 500);
+                else { const s = document.querySelector('#dropoffWrap .suggestions'); if (s) s.style.display = 'none'; }
             });
         }
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.suggest-wrapper')) {
-                document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none');
-            }
-        });
-    }
-    
-    // ========== KAART FUNCTIES ==========
-    function initMap() {
-        bookingMap = L.map('map').setView([50.85, 4.35], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(bookingMap);
+        document.addEventListener('click', (e) => { if (!e.target.closest('.suggest-wrapper')) document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); });
     }
     
     async function calcRoute(lat1, lon1, lat2, lon2) {
@@ -888,7 +751,6 @@
         updateTotalDisplay();
     }
     
-    // ========== BOEKINGS FUNCTIES ==========
     function parseEuroDate(str) {
         if (!str) return null;
         let parts = str.match(/(\d+)-(\d+)-(\d+)\s+(\d+):(\d+)/);
@@ -925,58 +787,31 @@
         if (currentRoundTrip && currentReturnDateTime) {
             retCont.style.display = 'block';
             document.getElementById('overviewReturn').innerText = currentReturnDateTime;
-        } else {
-            retCont.style.display = 'none';
-        }
+        } else retCont.style.display = 'none';
     }
     
     function showError(page, msg) {
         let errDiv = document.getElementById(`page${page}Error`);
-        if (errDiv) {
-            errDiv.innerText = msg;
-            errDiv.style.display = 'block';
-            setTimeout(() => errDiv.style.display = 'none', 5000);
-        }
+        if (errDiv) { errDiv.innerText = msg; errDiv.style.display = 'block'; setTimeout(() => errDiv.style.display = 'none', 5000); }
     }
     
     async function calculateAndStoreRoute() {
-        if (!pickupCoord || !dropoffCoord) {
-            showError(1, 'Selecteer een geldig ophaal- en afzetadres uit de suggesties');
-            return false;
-        }
+        if (!pickupCoord || !dropoffCoord) { showError(1, 'Selecteer een geldig ophaal- en afzetadres uit de suggesties'); return false; }
         const dt = document.getElementById('datetime').value;
-        if (!dt) {
-            showError(1, 'Kies een geldige heen datum en tijd');
-            return false;
-        }
-        if (isPast(dt)) {
-            showError(1, 'Datum mag niet in het verleden liggen');
-            return false;
-        }
+        if (!dt) { showError(1, 'Kies een geldige heen datum en tijd'); return false; }
+        if (isPast(dt)) { showError(1, 'Datum mag niet in het verleden liggen'); return false; }
         if (document.getElementById('roundtripCheckbox').checked) {
             const returnDt = document.getElementById('returnDatetime').value;
-            if (!returnDt) {
-                showError(1, 'Kies een retour datum en tijd voor de terugrit');
-                return false;
-            }
-            if (isPast(returnDt)) {
-                showError(1, 'Retour datum mag niet in het verleden liggen');
-                return false;
-            }
-            if (parseEuroDate(returnDt) <= parseEuroDate(dt)) {
-                showError(1, 'Retour datum moet na de heen datum zijn');
-                return false;
-            }
+            if (!returnDt) { showError(1, 'Kies een retour datum en tijd voor de terugrit'); return false; }
+            if (isPast(returnDt)) { showError(1, 'Retour datum mag niet in het verleden liggen'); return false; }
+            if (parseEuroDate(returnDt) <= parseEuroDate(dt)) { showError(1, 'Retour datum moet na de heen datum zijn'); return false; }
             currentReturnDateTime = returnDt;
         }
         const urgent = isWithinNextHour(dt);
         const urgentDiv = document.getElementById('urgentWhatsApp');
         if (urgentDiv) urgent ? urgentDiv.classList.add('show') : urgentDiv.classList.remove('show');
         const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon);
-        if (!rd) {
-            showError(1, 'Route kon niet worden berekend');
-            return false;
-        }
+        if (!rd) { showError(1, 'Route kon niet worden berekend'); return false; }
         currentRouteData = rd;
         currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
         await updateMapAndInfo(rd);
@@ -993,133 +828,53 @@
         return `T-PV-${year}${month}${day}-${String(counter).padStart(3, '0')}`;
     }
     
-    // ========== DIRECTE BOEKING NAAR SUPABASE ==========
     async function finalizeBooking() {
-        console.log("🔴 BOEKING START - Verzenden naar Supabase");
-        
-        // Validaties
-        if (!currentRouteData) {
-            showError(5, 'Bereken eerst de route in stap 1 en 2');
-            return;
-        }
-        
+        if (!currentRouteData) { showError(5, 'Bereken eerst de route in stap 1 en 2'); return; }
         const fn = document.getElementById('firstName').value.trim();
         const ln = document.getElementById('lastName').value.trim();
         const ph = document.getElementById('phone').value.trim();
         const em = document.getElementById('email').value.trim();
+        if (!fn || !ln || !ph || !em) { showError(5, 'Vul alle verplichte klantgegevens in'); return; }
+        if (!selectedVehicle) { showError(5, 'Selecteer een voertuig in stap 3'); return; }
         
-        if (!fn || !ln || !ph || !em) {
-            showError(5, 'Vul alle verplichte klantgegevens in');
-            return;
-        }
-        
-        if (!selectedVehicle) {
-            showError(5, 'Selecteer een voertuig in stap 3');
-            return;
-        }
-        
-        // Bereken totaalbedrag
         const payment = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
         let dist = parseFloat(currentRouteData.distanceKm);
         if (currentRoundTrip) dist *= 2;
         let totalAmount = dist * 1.5 + selectedVehicleExtra;
-        
         const dt = document.getElementById('datetime').value;
         let datePart = "", timePart = "";
-        if (dt) {
-            const parts = dt.split(' ');
-            datePart = parts[0];
-            timePart = parts[1] || "";
-        }
-        
+        if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
         const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
         const bookingId = generateBookingId();
         
-        // Boeking data voor Supabase
         const bookingData = {
-            id: bookingId,
-            datetime: datePart,
-            time: timePart,
-            name: `${fn} ${ln}`,
-            email: em,
-            phone: ph,
-            pickup: document.getElementById('pickupInput').value,
-            destination: document.getElementById('dropoffInput').value,
-            flight_number: document.getElementById('flightNumber').value.trim() || "",
-            vehicle: selectedVehicle,
-            extras: getExtrasString(),
-            amount: totalAmount.toString(),
-            payment: payment,
-            status: payment === "Cash" ? "pending" : "pending_payment",
-            customer_id: customerId,
-            form_data: { source: "web-portal" },
-            created_at: new Date().toISOString(),
-            partner_id: 1,
-            assigned_driver_id: null,
-            payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
+            id: bookingId, datetime: datePart, time: timePart, name: `${fn} ${ln}`, email: em, phone: ph,
+            pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value,
+            flight_number: document.getElementById('flightNumber').value.trim() || "", vehicle: selectedVehicle,
+            extras: getExtrasString(), amount: totalAmount.toString(), payment: payment,
+            status: payment === "Cash" ? "pending" : "pending_payment", customer_id: customerId,
+            form_data: { source: "web-portal" }, created_at: new Date().toISOString(), partner_id: 1,
+            assigned_driver_id: null, payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
         };
         
-        console.log("📦 Verzenden naar Supabase:", bookingData);
-        
-        // Supabase client ophalen
         const supabase = getSupabase();
-        
-        if (!supabase) {
-            console.error("❌ Supabase client niet beschikbaar");
-            showError(5, 'Database niet beschikbaar. Probeer opnieuw.');
-            return;
-        }
+        if (!supabase) { showError(5, 'Database niet beschikbaar'); return; }
         
         try {
-            // Eerst controleren of we verbinding hebben
-            const { data: testData, error: testError } = await supabase.from('bookings').select('count', { count: 'exact', head: true });
-            if (testError) {
-                console.error("❌ Verbinding test mislukt:", testError);
-                showError(5, 'Kan geen verbinding maken met de database. Probeer opnieuw.');
-                return;
-            }
-            
-            console.log("✅ Verbinding met Supabase OK");
-            
-            // Boeking opslaan
-            const { data, error } = await supabase
-                .from('bookings')
-                .insert([bookingData])
-                .select();
-            
-            if (error) {
-                console.error("❌ Supabase insert error:", error);
-                showError(5, 'Fout bij opslaan: ' + error.message);
-                return;
-            }
-            
-            console.log("✅ Boeking succesvol opgeslagen!", data);
-            alert(`✅ Boeking ${bookingId} bevestigd voor €${totalAmount.toFixed(2)}!\n\nEen bevestiging wordt naar ${em} gestuurd.`);
-            
-            // Reset formulier
+            const { error } = await supabase.from('bookings').insert([bookingData]);
+            if (error) throw error;
+            alert(`✅ Boeking ${bookingId} bevestigd voor €${totalAmount.toFixed(2)}!`);
             resetAll();
-            
-            // Herlaad boekingen voor dashboard
             await loadUserBookings();
-            
-            // Ga naar dashboard tab om de nieuwe boeking te zien
             switchToTab('dashboard');
-            
-        } catch (err) {
-            console.error("❌ Fout bij boeking:", err);
-            showError(5, 'Fout bij het opslaan van de boeking: ' + err.message);
-        }
+        } catch (err) { showError(5, 'Fout bij boeking: ' + err.message); }
     }
     
     function resetAll() {
         if (routeLayer) bookingMap.removeLayer(routeLayer);
-        currentRouteData = null;
-        pickupCoord = null;
-        dropoffCoord = null;
-        document.getElementById('pickupInput').value = '';
-        document.getElementById('dropoffInput').value = '';
-        document.getElementById('datetime').value = '';
-        document.getElementById('returnDatetime').value = '';
+        currentRouteData = null; pickupCoord = null; dropoffCoord = null;
+        document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = '';
+        document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = '';
         document.getElementById('roundtripCheckbox').checked = false;
         document.getElementById('returnDateContainer').classList.remove('visible');
         currentRoundTrip = false;
@@ -1127,39 +882,22 @@
     }
     
     function showPage(page) {
-        document.querySelectorAll('.carousel-page').forEach((pg, i) => {
-            pg.classList.toggle('active-page', i + 1 === page);
-        });
-        document.querySelectorAll('.step-btn').forEach((btn, i) => {
-            btn.classList.toggle('active', i + 1 === page);
-        });
+        document.querySelectorAll('.carousel-page').forEach((pg, i) => pg.classList.toggle('active-page', i + 1 === page));
+        document.querySelectorAll('.step-btn').forEach((btn, i) => btn.classList.toggle('active', i + 1 === page));
         currentPage = page;
         document.getElementById('prevBtn').disabled = (page === 1);
         if (page === 5) updateTotalDisplay();
     }
     
     async function nextPage() {
-        if (currentPage === 1) {
-            const ok = await calculateAndStoreRoute();
-            if (ok) showPage(2);
-        } else if (currentPage === 2) {
-            if (currentRouteData) showPage(3);
-            else showError(2, 'Bereken eerst een route in stap 1');
-        } else if (currentPage === 3) {
-            if (selectedVehicle) showPage(4);
-            else showError(3, 'Selecteer een voertuig');
-        } else if (currentPage === 4) {
-            showPage(5);
-            updateTotalDisplay();
-        } else if (currentPage === 5) {
-            // GEEN finalizeBooking hier - alleen via de knop!
-            console.log("Stap 5 - gebruik de bevestig knop");
-        }
+        if (currentPage === 1) { const ok = await calculateAndStoreRoute(); if (ok) showPage(2); }
+        else if (currentPage === 2) { if (currentRouteData) showPage(3); else showError(2, 'Bereken eerst een route in stap 1'); }
+        else if (currentPage === 3) { if (selectedVehicle) showPage(4); else showError(3, 'Selecteer een voertuig'); }
+        else if (currentPage === 4) { showPage(5); updateTotalDisplay(); }
+        else if (currentPage === 5) { console.log("Stap 5 - gebruik de bevestig knop"); }
     }
     
-    function prevPage() {
-        if (currentPage > 1) showPage(currentPage - 1);
-    }
+    function prevPage() { if (currentPage > 1) showPage(currentPage - 1); }
     
     function initVehicleSelection() {
         document.querySelectorAll('.vehicle-card').forEach(card => {
@@ -1173,7 +911,6 @@
         });
     }
     
-    // ========== TAB FUNCTIES ==========
     function switchToTab(tabName) {
         document.querySelectorAll('.tab-container').forEach(c => c.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -1184,20 +921,14 @@
         if (tabName === 'payments') loadPaymentHistory();
     }
     
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab')));
-    });
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
+    document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', (e) => {
+        const nav = e.currentTarget.getAttribute('data-nav');
+        if (nav === 'home' || nav === 'portal') switchToTab('new-booking');
+        if (nav === 'contact') alert('Neem contact op via info@nh.be of +32 473 30 03 74');
+        closeMenu();
+    }));
     
-    document.querySelectorAll('[data-nav]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const nav = e.currentTarget.getAttribute('data-nav');
-            if (nav === 'home' || nav === 'portal') switchToTab('new-booking');
-            if (nav === 'contact') alert('Neem contact op via info@nh.be of +32 473 30 03 74');
-            closeMenu();
-        });
-    });
-    
-    // ========== PROFIEL FUNCTIES ==========
     async function loadUserProfile() {
         document.getElementById('fullName').value = currentUser.full_name;
         document.getElementById('profileEmail').value = currentUser.email;
@@ -1207,9 +938,7 @@
         document.getElementById('lastName').value = currentUser.full_name.split(' ').slice(1).join(' ') || '';
         document.getElementById('phone').value = currentUser.phone;
         document.getElementById('email').value = currentUser.email;
-        if (currentUser.default_pickup_address) {
-            document.getElementById('pickupInput').value = currentUser.default_pickup_address;
-        }
+        if (currentUser.default_pickup_address) document.getElementById('pickupInput').value = currentUser.default_pickup_address;
     }
     
     document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
@@ -1222,28 +951,16 @@
         loadUserProfile();
     });
     
-    // ========== DASHBOARD FUNCTIES ==========
     async function loadUserBookings() {
         const supabase = getSupabase();
-        if (!supabase) {
-            console.log("Supabase niet beschikbaar voor laden van boekingen");
-            return;
-        }
-        
+        if (!supabase) return;
         try {
             const customerId = `CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
-            const { data, error } = await supabase
-                .from('bookings')
-                .select('*')
-                .eq('customer_id', customerId)
-                .order('datetime', { ascending: false });
-            
+            const { data, error } = await supabase.from('bookings').select('*').eq('customer_id', customerId).order('datetime', { ascending: false });
             if (error) throw error;
             userBookings = data || [];
             renderDashboard();
-        } catch (err) {
-            console.error('Error loading bookings:', err);
-        }
+        } catch (err) { console.error('Error loading bookings:', err); }
     }
     
     function renderDashboard() {
@@ -1252,103 +969,49 @@
         const totalSpent = completed.reduce((s, b) => s + (parseFloat(b.amount) || 0), 0);
         const statsGrid = document.getElementById('statsGrid');
         if (statsGrid) {
-            statsGrid.innerHTML = `
-                <div class="stat-card"><h3>${upcoming.length}</h3><p>Komende ritten</p></div>
+            statsGrid.innerHTML = `<div class="stat-card"><h3>${upcoming.length}</h3><p>Komende ritten</p></div>
                 <div class="stat-card"><h3>${completed.length}</h3><p>Voltooide ritten</p></div>
-                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Totaal besteed</p></div>
-            `;
+                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Totaal besteed</p></div>`;
         }
         
         const renderTable = (tableId, bookings) => {
             const tbody = document.querySelector(`#${tableId} tbody`);
             if (tbody) {
-                if (bookings.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">Geen ritten gevonden</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = bookings.map(b => `
-                    <tr>
-                        <td>${b.id}</td>
-                        <td>${b.datetime} ${b.time || ''}</td>
-                        <td>${(b.pickup || '').split(',')[0]} → ${(b.destination || '').split(',')[0]}</td>
-                        <td>${b.vehicle || 'Standaard'}</td>
-                        <td>€${(parseFloat(b.amount) || 0).toFixed(2)}</td>
-                        <td><span class="status-badge" style="background:${b.status === 'completed' ? '#dcfce7' : '#fef3c7'}">${b.status === 'completed' ? 'Voltooid' : 'In afwachting'}</span></td>
-                        <td>
-                            <button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button>
-                            <button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
+                if (bookings.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">Geen ritten gevonden</td></tr>`; return; }
+                tbody.innerHTML = bookings.map(b => `<tr><td>${b.id}</td><td>${b.datetime} ${b.time || ''}</td><td>${(b.pickup || '').split(',')[0]} → ${(b.destination || '').split(',')[0]}</td><td>${b.vehicle || 'Standaard'}</td><td>€${(parseFloat(b.amount) || 0).toFixed(2)}</td><td><span class="status-badge" style="background:${b.status === 'completed' ? '#dcfce7' : '#fef3c7'}">${b.status === 'completed' ? 'Voltooid' : 'In afwachting'}</span></td><td><button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button><button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button></td></tr>`).join('');
             }
         };
-        
         renderTable('upcomingTable', upcoming);
         renderTable('completedTable', completed);
         
-        document.querySelectorAll('.repeat-booking').forEach(btn => {
-            btn.onclick = () => {
-                const b = JSON.parse(btn.getAttribute('data-id'));
-                document.getElementById('pickupInput').value = b.pickup;
-                document.getElementById('dropoffInput').value = b.destination;
-                document.getElementById('datetime').value = `${b.datetime} ${b.time}`;
-                switchToTab('new-booking');
-            };
+        document.querySelectorAll('.repeat-booking').forEach(btn => btn.onclick = () => {
+            const b = JSON.parse(btn.getAttribute('data-id'));
+            document.getElementById('pickupInput').value = b.pickup;
+            document.getElementById('dropoffInput').value = b.destination;
+            document.getElementById('datetime').value = `${b.datetime} ${b.time}`;
+            switchToTab('new-booking');
         });
-        
-        document.querySelectorAll('.view-fiche').forEach(btn => {
-            btn.onclick = () => {
-                const b = JSON.parse(btn.getAttribute('data-id'));
-                alert(`Rit ${b.id}\nBedrag: €${b.amount}\nStatus: ${b.status}\nRoute: ${b.pickup} → ${b.destination}`);
-            };
+        document.querySelectorAll('.view-fiche').forEach(btn => btn.onclick = () => {
+            const b = JSON.parse(btn.getAttribute('data-id'));
+            alert(`Rit ${b.id}\nBedrag: €${b.amount}\nStatus: ${b.status}\nRoute: ${b.pickup} → ${b.destination}`);
         });
     }
     
-    // ========== BETALINGEN FUNCTIES ==========
     async function loadPaymentHistory() {
         const tbody = document.querySelector('#paymentsTable tbody');
         if (!tbody) return;
-        
         tbody.innerHTML = `<tr><td colspan="6">Laden...</td></tr>`;
-        
         const supabase = getSupabase();
-        if (!supabase) {
-            tbody.innerHTML = `<tr><td colspan="6">Database niet beschikbaar</td></tr>`;
-            return;
-        }
-        
+        if (!supabase) { tbody.innerHTML = `<tr><td colspan="6">Database niet beschikbaar</td></tr>`; return; }
         try {
             const customerId = `CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
-            const { data, error } = await supabase
-                .from('payments')
-                .select('*')
-                .eq('customer_id', customerId)
-                .order('created_at', { ascending: false });
-            
+            const { data, error } = await supabase.from('payments').select('*').eq('customer_id', customerId).order('created_at', { ascending: false });
             if (error) throw error;
-            
-            if (!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6">Geen betalingen gevonden</td></tr>`;
-                return;
-            }
-            
-            tbody.innerHTML = data.map(p => `
-                <tr>
-                    <td>${p.booking_id || '-'}</td>
-                    <td>${new Date(p.created_at).toLocaleDateString('nl-BE')}</td>
-                    <td>€ ${parseFloat(p.amount).toFixed(2)}</td>
-                    <td>${p.payment_method === 'card' ? 'Kaart' : (p.payment_method || 'Cash')}</td>
-                    <td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Voltooid' : 'In behandeling'}</span></td>
-                    <td>-</td>
-                </tr>
-            `).join('');
-        } catch (err) {
-            console.error('Payment history error:', err);
-            tbody.innerHTML = `<tr><td colspan="6">Fout bij laden: ${err.message}</td></tr>`;
-        }
+            if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="6">Geen betalingen gevonden</td></tr>`; return; }
+            tbody.innerHTML = data.map(p => `<tr><td>${p.booking_id || '-'}</td><td>${new Date(p.created_at).toLocaleDateString('nl-BE')}</td><td>€ ${parseFloat(p.amount).toFixed(2)}</td><td>${p.payment_method === 'card' ? 'Kaart' : (p.payment_method || 'Cash')}</td><td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Voltooid' : 'In behandeling'}</span></td><td>-</td></tr>`).join('');
+        } catch (err) { console.error('Payment history error:', err); tbody.innerHTML = `<tr><td colspan="6">Fout bij laden: ${err.message}</td></tr>`; }
     }
     
-    // ========== EVENT LISTENERS ==========
     document.getElementById('roundtripCheckbox')?.addEventListener('change', (e) => {
         document.getElementById('returnDateContainer').classList.toggle('visible', e.target.checked);
         if (currentRouteData) {
@@ -1362,27 +1025,11 @@
     
     document.getElementById('nextBtn')?.addEventListener('click', nextPage);
     document.getElementById('prevBtn')?.addEventListener('click', prevPage);
-    
-    // ALLEEN HIER DE BOEKING - NIET in nextPage!
     document.getElementById('finalConfirmBtn')?.addEventListener('click', finalizeBooking);
     
-    flatpickr("#datetime", {
-        locale: "nl",
-        enableTime: true,
-        dateFormat: "d-m-Y H:i",
-        time_24hr: true,
-        minDate: "today"
-    });
+    flatpickr("#datetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
+    flatpickr("#returnDatetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
     
-    flatpickr("#returnDatetime", {
-        locale: "nl",
-        enableTime: true,
-        dateFormat: "d-m-Y H:i",
-        time_24hr: true,
-        minDate: "today"
-    });
-    
-    // ========== INITIALISATIE ==========
     initMap();
     initVehicleSelection();
     initAutocomplete();
@@ -1391,19 +1038,11 @@
     loadUserBookings();
     switchToTab('new-booking');
     
-    // Check URL parameters voor betaling status
     const urlParams = new URLSearchParams(window.location.search);
-    const paymentStatus = urlParams.get('payment');
-    const bookingIdParam = urlParams.get('id');
+    if (urlParams.get('payment') === 'success') alert(`Betaling voltooid!`);
+    else if (urlParams.get('payment') === 'cancelled') alert(`Betaling geannuleerd.`);
     
-    if (paymentStatus === 'success') {
-        alert(`Betaling voltooid voor boeking ${bookingIdParam || ''}!`);
-        switchToTab('payments');
-    } else if (paymentStatus === 'cancelled') {
-        alert(`Betaling geannuleerd voor boeking ${bookingIdParam || ''}.`);
-    }
-    
-    console.log("✅ Applicatie gereed - Boeking kan naar Supabase worden verzonden!");
+    console.log("✅ Applicatie gereed - NL versie");
 </script>
 </body>
 </html>
