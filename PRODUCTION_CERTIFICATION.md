@@ -1826,3 +1826,37 @@ Operator requirement:
 
 - Supabase Auth account must exist.
 - If dashboard data is missing after login, the auth user must be mapped to `partners.user_id` for an `is_hoofd = true` partner.
+
+## Phase 5.9 - Live Booking Insert Primary Key Fix
+
+Status: LIVE RPC FIX APPLIED - NOT CERTIFIED
+
+Issue:
+
+- Guest PV booking failed with duplicate key on `bookings_pkey`.
+
+Root cause:
+
+- PV pages generated `T-PV-YYYYMMDD-counter` IDs from browser `localStorage`.
+- A fresh browser could generate `T-PV-20260602-001` again.
+- Live `create_public_booking(payload jsonb)` trusted `payload.id`.
+- `bookings.id` is text with no database default; this was not a sequence issue.
+
+Minimal fix:
+
+- Removed frontend-supplied `id` from `PV/PV.html`.
+- Removed frontend-supplied `id` from `PV/klantenportaalpv.html`.
+- Added `supabase/migrations/20260602020000_public_booking_id_generation.sql`.
+- Updated live `create_public_booking` to generate server-side `FC-...` IDs and ignore public client IDs.
+
+Validation:
+
+- Rollback-safe double insert using the same client ID produced two unique server IDs.
+- Both rollback rows had status `pending`.
+- Rollback persisted zero rows.
+
+Dashboard visibility finding:
+
+- Dashboard reads `bookings`, not legacy `boekingen`.
+- Pending bookings are included in `newOrders`.
+- If pending bookings are not visible, verify the logged-in auth user maps to `partners.user_id` for an `is_hoofd = true` partner and view the `Nieuwe Orders` tab.

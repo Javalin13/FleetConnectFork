@@ -66,3 +66,14 @@ Before treating the checkpoint as preserved, confirm:
 7. In browser Network, confirm `functions/v1/send-email` returns success.
 8. If `send-email` succeeds but no mail arrives, check spam/junk and Resend delivery status.
 9. If `send-email` fails, capture status code and response body.
+
+## Phase 5.8 Booking Insert Retest Addendum
+
+1. Redeploy the latest checkpoint branch commit to Vercel.
+2. Submit a new guest booking from `/PV/PV.html` or `/#booking`.
+3. Confirm no `bookings_pkey` duplicate error appears.
+4. Confirm the success alert shows an `FC-...` server-generated booking ID.
+5. Confirm the booking appears in the dashboard `Nieuwe Orders` tab.
+6. If not visible, verify the logged-in Supabase Auth user is mapped to `partners.user_id` for an `is_hoofd = true` partner.
+7. Confirm `BOOKING_CONFIRMATION` still fires after insert.
+8. Confirm `functions/v1/send-email` succeeds in browser Network.

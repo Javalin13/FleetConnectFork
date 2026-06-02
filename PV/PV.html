@@ -499,19 +499,9 @@
             return;
         }
         
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        let counter = parseInt(localStorage.getItem('bookingCounter') || '0');
-        counter++;
-        localStorage.setItem('bookingCounter', counter);
-        const bookingId = `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3, '0')}`;
-        
         const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
         
         const bookingData = {
-            id: bookingId,
             datetime: currentDateTime ? currentDateTime.split(' ')[0] : "",
             time: currentDateTime ? currentDateTime.split(' ')[1] : "",
             name: `${firstName} ${lastName}`,
@@ -541,12 +531,12 @@
             
             const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
-            const savedBookingId = data?.id || bookingId;
+            const savedBookingId = data?.id || '';
             const { comms } = await import('../src/modules/communication/index.js');
             await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
             
             console.log("✅ Boeking succesvol opgeslagen!");
-            alert(`✅ Boeking ${bookingId} bevestigd voor €${totalAmount.toFixed(2)}!\n\nEen bevestiging wordt naar ${email} gestuurd.`);
+            alert(`✅ Boeking ${savedBookingId} bevestigd voor €${totalAmount.toFixed(2)}!\n\nEen bevestiging wordt naar ${email} gestuurd.`);
             
             if (routeLayer) map.removeLayer(routeLayer);
             if (pickupMarker) map.removeLayer(pickupMarker);
