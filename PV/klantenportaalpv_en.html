@@ -13,7 +13,19 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
+    <!-- Supabase module -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        window.SUPABASE_CLIENT = createClient(
+            'https://rreqjjrmvytnwnsidmqi.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA'
+        );
+        window.SUPABASE_READY = true;
+        console.log("✅ Supabase client loaded");
+    </script>
+    
     <style>
+        /* Same styling as Dutch version, omitted for brevity – identical */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #2c6e9e;
@@ -52,60 +64,36 @@
             flex-direction: column;
         }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 24px; width: 100%; }
-        
         .hamburger-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 48px;
-            height: 48px;
+            position: fixed; top: 20px; left: 20px;
+            width: 48px; height: 48px;
             background: var(--primary);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: none; border-radius: 50%;
+            cursor: pointer; z-index: 1001;
+            display: flex; align-items: center; justify-content: center;
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .hamburger-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
         .hamburger-btn i { color: white; font-size: 1.5rem; }
-        
         .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            z-index: 1002;
-            visibility: hidden;
-            opacity: 0;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); z-index: 1002;
+            visibility: hidden; opacity: 0;
             transition: all 0.3s ease;
         }
         .sidebar-overlay.active { visibility: visible; opacity: 1; }
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 300px;
-            height: 100%;
-            background: var(--sidebar-bg);
-            box-shadow: 4px 0 25px rgba(0,0,0,0.15);
-            z-index: 1003;
-            transition: left 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            position: fixed; top: 0; left: -300px; width: 300px; height: 100%;
+            background: var(--sidebar-bg); box-shadow: 4px 0 25px rgba(0,0,0,0.15);
+            z-index: 1003; transition: left 0.3s ease;
+            display: flex; flex-direction: column;
             border-radius: 0 20px 20px 0;
             overflow-y: auto;
         }
         .sidebar-overlay.active .sidebar { left: 0; }
         .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             padding: 24px 20px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border-radius: 0 20px 0 0;
@@ -113,35 +101,20 @@
         }
         .sidebar-header h3 { color: white; display: flex; align-items: center; gap: 10px; font-size: 1.3rem; }
         .close-menu {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: rgba(255,255,255,0.2); border: none;
+            font-size: 1.5rem; cursor: pointer; color: white;
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
         }
         .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-            padding: 20px 16px;
-            gap: 8px;
-            flex: 1;
+            display: flex; flex-direction: column;
+            padding: 20px 16px; gap: 8px; flex: 1;
         }
         .sidebar-nav a {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            border-radius: 14px;
-            color: var(--sidebar-text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s;
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 16px; border-radius: 14px;
+            color: var(--sidebar-text); text-decoration: none;
+            font-weight: 500; transition: all 0.2s;
             border: 1px solid transparent;
         }
         .sidebar-nav a i { width: 24px; color: var(--primary); font-size: 1.1rem; }
@@ -156,35 +129,20 @@
         .language-title { font-size: 0.7rem; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; letter-spacing: 1px; }
         .language-buttons { display: flex; gap: 12px; }
         .lang-sidebar-btn {
-            flex: 1;
-            background: #f1f5f9;
-            border: 1px solid var(--border-light);
-            padding: 8px 12px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: 0.2s;
-            color: var(--text-dark);
-            text-align: center;
-            text-decoration: none;
-            display: block;
+            flex: 1; background: #f1f5f9; border: 1px solid var(--border-light);
+            padding: 8px 12px; border-radius: 40px;
+            cursor: pointer; font-weight: 600; font-size: 0.85rem;
+            transition: 0.2s; color: var(--text-dark);
+            text-align: center; text-decoration: none; display: block;
         }
         .lang-sidebar-btn:hover, .lang-sidebar-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         .login-section { padding: 16px; margin-top: auto; flex-shrink: 0; }
         .login-btn {
             background: linear-gradient(135deg, var(--accent-gold), #b8860b);
-            color: white;
-            text-decoration: none;
-            padding: 14px 16px;
-            border-radius: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
+            color: white; text-decoration: none;
+            padding: 14px 16px; border-radius: 14px;
+            font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px;
         }
-        
         .uitleg-grid, .services-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; padding: 50px 0 30px; }
         .uitleg-item, .service-card {
             background: var(--card-bg); backdrop-filter: blur(4px);
@@ -197,37 +155,26 @@
         .uitleg-item i, .service-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
         .uitleg-item h3, .service-card h3 { margin-bottom: 10px; }
         .service-summary { font-size: 0.85rem; color: var(--text-light); margin: 10px 0; }
-        
         .tabs-container {
-            display: flex;
-            gap: 8px;
+            display: flex; gap: 8px;
             border-bottom: 2px solid var(--border-light);
             margin-bottom: 28px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: flex-start;
+            flex-wrap: wrap; align-items: center; justify-content: flex-start;
         }
         .tab-btn {
-            background: none; border: none; padding: 10px 20px; font-weight: 600;
-            cursor: pointer; color: var(--text-light); border-bottom: 2px solid transparent;
-            transition: 0.2s;
+            background: none; border: none; padding: 10px 20px;
+            font-weight: 600; cursor: pointer; color: var(--text-light);
+            border-bottom: 2px solid transparent; transition: 0.2s;
         }
         .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
         .logout-tab-btn {
-            background: none;
-            border: none;
-            padding: 10px 20px;
-            font-weight: 600;
-            cursor: pointer;
-            color: #b91c1c;
-            border-bottom: 2px solid transparent;
-            margin-left: auto;
-            transition: 0.2s;
-            font-size: 0.9rem;
+            background: none; border: none; padding: 10px 20px;
+            font-weight: 600; cursor: pointer; color: #b91c1c;
+            border-bottom: 2px solid transparent; margin-left: auto;
+            transition: 0.2s; font-size: 0.9rem;
         }
         .logout-tab-btn:hover { color: #7f1d1d; border-bottom-color: #b91c1c; }
         .tab-container.hidden { display: none; }
-        
         .one-grid-block {
             max-width: 850px; width: 100%; background: var(--white);
             border: 1px solid var(--border-light); box-shadow: var(--shadow);
@@ -350,9 +297,9 @@
         <div class="language-section">
             <div class="language-title"><i class="fas fa-globe"></i> Language</div>
             <div class="language-buttons">
-                <a href="klantenportaalpv.html" class="lang-sidebar-btn" data-lang="nl">NL</a>
-                <a href="klantenportaalpv_fr.html" class="lang-sidebar-btn" data-lang="fr">FR</a>
-                <a href="klantenportaalpv_en.html" class="lang-sidebar-btn" data-lang="en" style="background:#2c6e9e; color:white;">EN</a>
+                <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl">NL</a>
+                <a href="klantenportaalpv_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
+                <a href="klantenportaalpv_en.html?lang=en" class="lang-sidebar-btn" data-lang="en" style="background:#2c6e9e; color:white;">EN</a>
             </div>
         </div>
         
@@ -389,6 +336,7 @@
         </div>
     </section>
 
+    <!-- 3 grid blocks -->
     <div class="container">
         <div class="uitleg-grid">
             <a href="PV_Exclusieve_Service.html" class="uitleg-item">
@@ -412,6 +360,7 @@
         </div>
     </div>
 
+    <!-- Tabs -->
     <div class="container">
         <div class="tabs-container">
             <button class="tab-btn active" data-tab="new-booking">📝 New Ride</button>
@@ -529,7 +478,7 @@
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
             <h4>📅 Upcoming rides</h4>
-            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></td>
+            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
             <h4>✅ Completed rides</h4>
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
         </div>
@@ -594,33 +543,20 @@
 </div>
 <div id="ritModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
 
-<script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    window.SUPABASE_CLIENT = createClient(
-        'https://rreqjjrmvytnwnsidmqi.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA'
-    );
-    window.SUPABASE_READY = true;
-    console.log("✅ Supabase client loaded");
-</script>
-
 <script>
-    // HAMBURGER MENU
+    // Same logic as Dutch version, but with English strings
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
     
     function openMenu() { sidebarOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
     function closeMenu() { sidebarOverlay.classList.remove('active'); document.body.style.overflow = ''; }
-    
     if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
     if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) { if (e.target === sidebarOverlay) closeMenu(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu(); });
     
-    // SUPABASE
     function getSupabase() { return window.SUPABASE_CLIENT || null; }
-    
     async function handleLogout() {
         const logoutBtn = document.getElementById('logoutBtn');
         logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...';
@@ -628,15 +564,12 @@
         try {
             const supabase = getSupabase();
             if (supabase) await supabase.auth.signOut();
-            localStorage.clear();
-            sessionStorage.clear();
+            localStorage.clear(); sessionStorage.clear();
             window.location.href = 'index.html?t=' + Date.now();
         } catch(err) { window.location.href = 'index.html?t=' + Date.now(); }
     }
-    
     document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
     
-    // Globale variabelen (zelfde functionaliteit als NL versie, maar in Engels)
     let currentUser = { id: 'demo-user', full_name: 'Demo User', email: 'demo@nh.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
     let userBookings = [];
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
@@ -678,8 +611,7 @@
                 let displayName = place.display_name.length > 80 ? place.display_name.substring(0, 80) + '…' : place.display_name;
                 div.textContent = displayName;
                 div.onclick = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+                    e.preventDefault(); e.stopPropagation();
                     const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
                     if (inputField) inputField.value = place.display_name;
                     const coords = { lat: parseFloat(place.lat), lon: parseFloat(place.lon) };
@@ -996,14 +928,14 @@
     async function loadPaymentHistory() {
         const tbody = document.querySelector('#paymentsTable tbody');
         if (!tbody) return;
-        tbody.innerHTML = `<td><td colspan="6">Loading...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6">Loading...</td></tr>`;
         const supabase = getSupabase();
         if (!supabase) { tbody.innerHTML = `<tr><td colspan="6">Database not available</td></tr>`; return; }
         try {
             const customerId = `CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
             const { data, error } = await supabase.from('payments').select('*').eq('customer_id', customerId).order('created_at', { ascending: false });
             if (error) throw error;
-            if (!data || data.length === 0) { tbody.innerHTML = `<td><td colspan="6">No payments found</td></tr>`; return; }
+            if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="6">No payments found</td></tr>`; return; }
             tbody.innerHTML = data.map(p => `<tr><td>${p.booking_id || '-'}</td><td>${new Date(p.created_at).toLocaleDateString('en-GB')}</td><td>€ ${parseFloat(p.amount).toFixed(2)}</td><td>${p.payment_method === 'card' ? 'Card' : (p.payment_method || 'Cash')}</td><td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Completed' : 'Pending'}</span></td><td>-</td></tr>`).join('');
         } catch (err) { console.error('Payment history error:', err); tbody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`; }
     }
