@@ -34,24 +34,8 @@
     .lang-switch a:hover, .lang-switch .active { background: var(--silver); color: #0A192F; }
     .login-nav-item a { background: var(--silver); padding: 8px 20px; border-radius: 40px; color: #0A192F !important; }
     
-    .hero {
-      position: relative;
-      min-height: 90vh;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 50px;
-    }
-    .hero-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      z-index: -1;
-    }
+    .hero { position: relative; min-height: 90vh; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 50px; }
+    .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: -1; }
     @media (min-width: 769px) { .hero-bg { object-position: center 30%; } }
     @media (max-width: 768px) { .hero-bg { object-position: center 40%; } }
     @media (orientation: landscape) and (max-height: 700px) { .hero { min-height: 120vh; } .hero-bg { object-position: center 20%; } }
@@ -92,36 +76,63 @@
     
     section { padding: 100px 0; }
     
-    /* ====== GRILLE ÉGALE EN HAUTEUR ====== */
-    .grid-2cols {
-      display: grid;
-      grid-template-columns: 1fr 0.9fr;
-      gap: 3rem;
-      align-items: stretch;
-    }
-    .metal-card {
-      background: var(--glass-white);
-      backdrop-filter: blur(20px);
-      border-radius: 28px;
-      box-shadow: var(--shadow-glass);
-      border: 1px solid rgba(255,255,255,0.7);
-      padding: 2rem;
-      height: 100%;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .img-tweeluik-left, .img-tweeluik-right {
-      border-radius: 28px;
-      background-size: cover;
-      background-position: center;
-      box-shadow: var(--shadow-glass);
-      height: 100%;
-      min-height: 280px;
-    }
+    /* ====== GRILLE & FLIPCARDS ====== */
+    .grid-2cols { display: grid; grid-template-columns: 1fr 0.9fr; gap: 3rem; align-items: stretch; }
+    .img-tweeluik-left, .img-tweeluik-right { border-radius: 28px; background-size: cover; background-position: center; box-shadow: var(--shadow-glass); height: 100%; min-height: 280px; }
     .img-tweeluik-left { background-image: url('picgridKMS7.png'); background-size: 100% 100%; }
     .img-tweeluik-right { background-image: url('picgridKMS72.png'); }
     
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 100%;
+      perspective: 1500px;
+      cursor: pointer;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s ease-in-out;
+      transform-style: preserve-3d;
+      border-radius: 28px;
+    }
+    .flip-card:hover .flip-card-inner,
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 28px;
+      padding: 2rem;
+      background: var(--glass-white);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-glass);
+      border: 1px solid rgba(255,255,255,0.7);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+    .flip-card-front {
+      transform: rotateY(0deg);
+      justify-content: center;
+    }
+    .flip-card-back {
+      transform: rotateY(180deg);
+      background: rgba(15, 42, 63, 0.95);
+      backdrop-filter: blur(24px);
+      color: #FDFBF7;
+      border: 1px solid var(--silver-bright);
+      font-size: 0.9rem;
+    }
+    .flip-card-back p, .flip-card-back strong { color: #FDFBF7; }
+    
+    /* ====== AUTRES STYLES (flotte, réservation, etc.) ====== */
     .tab-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 55px; background: var(--glass-white); backdrop-filter: blur(20px); padding: 8px 20px; border-radius: 60px; width: fit-content; margin-left: auto; margin-right: auto; }
     .tab-btn { background: transparent; border: none; padding: 12px 30px; font-weight: 700; border-radius: 40px; cursor: pointer; }
     .tab-btn.active { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); color: white; }
@@ -172,11 +183,12 @@
       .about-image-wrapper { min-height: 240px; }
       #map { height: 300px; }
       .img-tweeluik-left, .img-tweeluik-right { min-height: 200px; }
+      .flip-card-front, .flip-card-back { padding: 1.2rem; }
     }
     @media (max-width: 480px) {
       .img-tweeluik-left, .img-tweeluik-right { min-height: 160px; }
       .vehicle-image { max-height: 200px; }
-      .metal-card { padding: 1.2rem; }
+      .flip-card-front, .flip-card-back { padding: 1rem; }
     }
     @media (orientation: landscape) and (max-height: 700px) {
       #map { height: 260px; }
@@ -224,30 +236,62 @@
     </div>
   </section>
 
-  <!-- ========== SECTION SERVICES ========== -->
+  <!-- ========== SECTION SERVICES AVEC FLIPCARDS ========== -->
   <div class="container" id="services">
+    <!-- Première ligne : flipcard à gauche, image à droite -->
     <div class="grid-2cols" style="margin: 30px 0;">
-      <div class="metal-card">
-        <h3>💼 Voyages d’affaires & transferts familiaux – NH, votre partenaire mobilité premium en Belgique et à l’international</h3>
-        <p>
-          Que vous soyez <strong>professionnel</strong> en déplacement à Bruxelles, Anvers, Liège ou Namur, ou une <strong>famille</strong> organisant un <strong>transfert aéroport</strong> vers Zaventem (BRU), Charleroi (CRL), ou vers les grands hubs voisins comme <strong>Schiphol (AMS), Paris‑CDG, Düsseldorf (DUS) ou Luxembourg (LUX)</strong>, <strong>NH</strong> vous offre une <strong>solution de transport sur mesure, nationale et internationale</strong>.<br><br>
-          Notre flotte comprend des <strong>berlines exécutives</strong> (BMW Série 5, Mercedes Classe E), des <strong>monospaces premium</strong> (Mercedes V-Class) accueillant jusqu’à 8 passagers, et des <strong>limousines</strong> pour vos <strong>événements d’entreprise</strong> (salons, incentives, visites de clients) ou <strong>cérémonies privées</strong> (mariages, galas).<br><br>
-          Nous réalisons des <strong>trajets transfrontaliers</strong> vers les <strong>Pays‑Bas, la France, l’Allemagne et le Luxembourg</strong> – sur devis personnalisé. Nos <strong>chauffeurs en tenue</strong>, parlant couramment français, néerlandais, anglais et allemand, vous garantissent <strong>ponctualité, discrétion et professionnalisme</strong>.<br><br>
-          Nous proposons une <strong>facturation adaptée aux sociétés</strong> (devis immédiat, paiement par carte ou virement, TVA 21%) et des <strong>tarifs fixes sans surprise</strong> – ni compteur, ni frais cachés. <strong>Réservation en ligne</strong> en 2 minutes, <strong>service client 24 h/24</strong>, suivi de vol inclus. Faites de vos trajets un moment d’<strong>élégance et d’efficacité</strong> avec NH.
-        </p>
+      <div class="flip-card" id="flipCard1">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <h3>💼 Voyages d’affaires & transferts internationaux</h3>
+            <p style="margin-top: 1rem;"><strong>Transferts aéroport</strong> (BRU, CRL, AMS, CDG, DUS, LUX) | <strong>Événements d’entreprise</strong> | <strong>Tarifs fixes</strong> | <strong>24/7</strong></p>
+            <p style="margin-top: 1rem; font-size: 0.85rem;"><i class="fas fa-arrow-right"></i> <em>Cliquez ou tapez pour en savoir plus</em></p>
+          </div>
+          <div class="flip-card-back">
+            <h3>💼 Affaires & international – service complet</h3>
+            <p>
+              <strong>NH</strong> offre un transport premium pour les professionnels et les familles, <strong>national et transfrontalier</strong> (Pays‑Bas, France, Allemagne, Luxembourg). 
+              Notre flotte comprend des <strong>berlines exécutives</strong> (BMW Série 5, Mercedes Classe E), des <strong>monospaces de luxe</strong> (jusqu’à 8 passagers, Mercedes V‑Class) et des <strong>limousines</strong> pour mariages ou galas.
+            </p>
+            <p>
+              <strong>Tarifs fixes</strong> – pas de compteur, pas de surprise. <strong>Chauffeurs en tenue</strong> parlant français, néerlandais, anglais et allemand. 
+              <strong>Réservation en ligne</strong> en 2 minutes, <strong>suivi de vol</strong> inclus. 
+              Vivez <strong>l’élégance en mouvement</strong> – demandez votre devis gratuit dès aujourd’hui.
+            </p>
+            <p style="margin-top: 1rem;"><i class="fas fa-sync-alt"></i> <em>Cliquez ou tapez pour retourner</em></p>
+          </div>
+        </div>
       </div>
       <div class="img-tweeluik-left"></div>
     </div>
 
+    <!-- Deuxième ligne : image à gauche, flipcard à droite -->
     <div class="grid-2cols" style="margin: 60px 0;">
       <div class="img-tweeluik-right"></div>
-      <div class="metal-card">
-        <h3>✨ Accessibilité & accompagnement sur mesure – NH, transport adapté pour seniors et personnes à mobilité réduite (PMR)</h3>
-        <p>
-          Chez <strong>NH</strong>, nous croyons que la mobilité est un droit pour tous. C’est pourquoi nous proposons un service de <strong>transport adapté</strong> destiné aux <strong>seniors</strong>, aux <strong>personnes à mobilité réduite</strong> (fauteuil roulant, déficience visuelle ou auditive) et à toute personne nécessitant une <strong>assistance personnalisée</strong>.<br><br>
-          Nos <strong>véhicules spacieux</strong> peuvent être équipés sur demande de <strong>rampes d’accès</strong>, de sièges pivotants ou de dispositifs de retenue homologués. Nos <strong>chauffeurs formés aux gestes d’aide et d’accompagnement</strong> assurent une prise en charge bienveillante, de la porte de votre domicile jusqu’à la salle d’attente de votre médecin, d’un <strong>centre de rééducation</strong>, d’une <strong>maison de repos</strong> ou d’un <strong>aéroport</strong> – <strong>y compris pour des trajets internationaux</strong> vers les pays voisins (Pays‑Bas, France, Allemagne, Luxembourg).<br><br>
-          Nous réalisons des <strong>transferts médicalisés</strong> (rendez‑vous hospitaliers, séances de kiné, dialyse), des <strong>sorties familiales</strong> (visites, promenades) et des <strong>trajets du quotidien</strong> (courses, activités sociales). <strong>Ponctualité garantie, tarifs transparents, réservation simplifiée</strong> – NH vous accompagne avec <strong>douceur et professionnalisme</strong>. Contactez‑nous pour un <strong>devis gratuit</strong> et adapté à vos besoins.
-        </p>
+      <div class="flip-card" id="flipCard2">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <h3>✨ Accessibilité & accompagnement sur mesure</h3>
+            <p><strong>Véhicules accessibles aux fauteuils roulants</strong> | <strong>Chauffeurs formés</strong> | <strong>Transport médical & seniors</strong></p>
+            <p style="margin-top: 1rem; font-size: 0.85rem;"><i class="fas fa-arrow-right"></i> <em>Cliquez ou tapez pour en savoir plus</em></p>
+          </div>
+          <div class="flip-card-back">
+            <h3>✨ Transport adapté pour tous</h3>
+            <p>
+              <strong>NH</strong> propose des <strong>véhicules accessibles</strong> avec rampes, sièges pivotants et fixations sécurisées. 
+              Nos chauffeurs sont formés à <strong>l’assistance bienveillante</strong> pour les seniors, les utilisateurs de fauteuil roulant et les personnes à mobilité réduite (PMR).
+            </p>
+            <p>
+              Nous organisons des <strong>transferts médicaux</strong> (visites hospitalières, rééducation), <strong>navettes vers/pour les maisons de retraite</strong> et 
+              <strong>trajets internationaux</strong> vers les Pays‑Bas, la France, l’Allemagne et le Luxembourg. 
+              <strong>Ponctualité garantie, tarifs transparents, réservation simplifiée.</strong>
+            </p>
+            <p>
+              Contactez‑nous pour un <strong>devis gratuit sans engagement</strong> adapté à vos besoins spécifiques.
+            </p>
+            <p style="margin-top: 1rem;"><i class="fas fa-sync-alt"></i> <em>Cliquez ou tapez pour retourner</em></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -309,7 +353,7 @@
     <div class="container grid-2cols">
       <div class="metal-card">
         <h2 style="font-family:'Playfair Display'; font-size:2rem;">À PROPOS | NH</h2>
-        <p><strong>L'Art de Voyager entre Terre et Ciel.</strong> NH, leader du transport de personnes en Belgique (Bruxelles, Wallonie, Flandre). Discrétion, excellence, sérénité. Chauffeurs anglophones, véhicules récents climatisés, assurance tous risques.</p>
+        <p><strong>L'Art de Voyager entre Terre et Ciel.</strong> NH, leader du transport de personnes en Belgique (Bruxelles, Wallonie, Flandre). Discret, excellence, sérénité. Chauffeurs anglophones, véhicules récents climatisés, assurance tous risques.</p>
         <p>Notre promesse : <strong>zéro retard, zéro stress, 100% plaisir.</strong></p>
       </div>
       <div class="about-image-wrapper">
@@ -394,21 +438,11 @@
     if(pickupMarker) map.removeLayer(pickupMarker);
     if(dropoffMarker) map.removeLayer(dropoffMarker);
     if(routeLayer) map.removeLayer(routeLayer);
-
-    const pickupIcon = L.divIcon({
-      html: '<div style="background:#22c55e; width:36px; height:36px; border-radius:50%; border:3px solid white; display:flex; align-items:center; justify-content:center;"><i class="fas fa-map-pin" style="color:white; font-size:18px;"></i></div>',
-      iconSize: [36,36]
-    });
-    const dropoffIcon = L.divIcon({
-      html: '<div style="background:#ef4444; width:36px; height:36px; border-radius:50%; border:3px solid white; display:flex; align-items:center; justify-content:center;"><i class="fas fa-flag-checkered" style="color:white; font-size:16px;"></i></div>',
-      iconSize: [36,36]
-    });
-
+    const pickupIcon = L.divIcon({ html: '<div style="background:#22c55e; width:36px; height:36px; border-radius:50%; border:3px solid white; display:flex; align-items:center; justify-content:center;"><i class="fas fa-map-pin" style="color:white; font-size:18px;"></i></div>', iconSize: [36,36] });
+    const dropoffIcon = L.divIcon({ html: '<div style="background:#ef4444; width:36px; height:36px; border-radius:50%; border:3px solid white; display:flex; align-items:center; justify-content:center;"><i class="fas fa-flag-checkered" style="color:white; font-size:16px;"></i></div>', iconSize: [36,36] });
     pickupMarker = L.marker([pickupCoord.lat, pickupCoord.lon], { icon: pickupIcon }).addTo(map);
     dropoffMarker = L.marker([dropoffCoord.lat, dropoffCoord.lon], { icon: dropoffIcon }).addTo(map);
-
     routeLayer = L.geoJSON(rd.geometry, { color: '#3b82f6', weight: 5, opacity: 0.9 }).addTo(map);
-
     map.fitBounds([ [pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon] ]);
     let d = parseFloat(rd.distanceKm);
     if(currentRoundTrip) d *= 2;
@@ -422,14 +456,14 @@
   async function calculateAndStoreRoute() { if(!pickupCoord || !dropoffCoord) { showError(1, 'Sélectionnez des adresses valides dans les suggestions'); return false; } const dt = document.getElementById('datetime').value; if(!dt) { showError(1, 'Choisissez la date et l\'heure de départ'); return false; } if(isPast(dt)) { showError(1, 'La date ne peut pas être dans le passé'); return false; } currentDateTime = dt; currentRoundTrip = document.getElementById('roundtripCheckbox').checked; if(currentRoundTrip) { const rdt = document.getElementById('returnDatetime').value; if(!rdt || isPast(rdt)) { showError(1, 'Date de retour invalide'); return false; } currentReturnDateTime = rdt; } const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon); if(!rd) { showError(1, 'Impossible de calculer l\'itinéraire. Vérifiez les adresses.'); return false; } currentRouteData = rd; await updateMapAndInfo(rd); return true; }
   function showError(page, msg) { const e = document.getElementById(`page${page}Error`); if(e) { e.innerText = msg; e.style.display = 'block'; setTimeout(()=> e.style.display='none', 5000); } }
   function initVehicleSelection() { document.querySelectorAll('.vehicle-card-select').forEach(card => { card.addEventListener('click', () => { document.querySelectorAll('.vehicle-card-select').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedVehicle = card.getAttribute('data-vehicle'); selectedVehicleExtra = parseInt(card.getAttribute('data-extraprice')) || 0; updateTotalDisplay(); }); }); const first = document.querySelector('.vehicle-card-select'); if(first) { first.classList.add('selected'); selectedVehicle = first.getAttribute('data-vehicle'); selectedVehicleExtra = 0; } }
-  async function finalizeBooking() { const firstName = document.getElementById('firstName').value.trim(); const lastName = document.getElementById('lastName').value.trim(); const email = document.getElementById('email').value.trim(); const phone = document.getElementById('phone').value.trim(); if(!firstName || !lastName || !email || !phone) { alert('Veuillez remplir tous les champs obligatoires'); return; } let total = 0; if(currentRouteData) { let d = parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; total = d*1.5 + selectedVehicleExtra; } const bookingData = { id: generateBookingId(), datetime: currentDateTime.split(' ')[0], time: currentDateTime.split(' ')[1], name: `${firstName} ${lastName}`, email, phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, vehicle: selectedVehicle, amount: total, status: 'pending', created_at: new Date().toISOString() }; const { error } = await supabase.from('bookings').insert([bookingData]); if(error) alert('Erreur: '+error.message); else { alert(`✅ Réservation confirmée!\n\nNuméro: ${bookingData.id}\nMontant: € ${total.toFixed(2)}`); resetAll(); } }
+  async function finalizeBooking() { const firstName = document.getElementById('firstName').value.trim(); const lastName = document.getElementById('lastName').value.trim(); const email = document.getElementById('email').value.trim(); const phone = document.getElementById('phone').value.trim(); if(!firstName || !lastName || !email || !phone) { alert('Veuillez remplir tous les champs obligatoires'); return; } let total = 0; if(currentRouteData) { let d = parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; total = d*1.5 + selectedVehicleExtra; } const bookingData = { id: generateBookingId(), datetime: currentDateTime.split(' ')[0], time: currentDateTime.split(' ')[1]||"", name: `${firstName} ${lastName}`, email, phone, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, flight_number: document.getElementById('flightNumber')?.value||null, vehicle: selectedVehicle, extras: getExtrasString(), amount: total, payment: payment, status: 'pending', customer_id: generateCustomerId(email), form_data: {source:"portail_client"} }; const { error } = await supabase.from('bookings').insert([bookingData]); if(error) alert('Erreur: '+error.message); else { alert(`✅ Réservation confirmée!\n\nNuméro: ${bookingData.id}\nMontant: € ${total.toFixed(2)}`); resetAll(); } }
   function resetAll() { if(routeLayer) map.removeLayer(routeLayer); if(pickupMarker) map.removeLayer(pickupMarker); if(dropoffMarker) map.removeLayer(dropoffMarker); currentRouteData = null; pickupCoord = null; dropoffCoord = null; selectedVehicle = null; selectedVehicleExtra = 0; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = ''; document.getElementById('roundtripCheckbox').checked = false; document.getElementById('returnDateContainer').style.display = 'none'; document.getElementById('firstName').value = ''; document.getElementById('lastName').value = ''; document.getElementById('phone').value = ''; document.getElementById('email').value = ''; document.getElementById('meetGreet').checked = false; document.getElementById('waterBottle').checked = false; document.getElementById('specialWishes').value = ''; currentRoundTrip = false; currentReturnDateTime = ''; showPage(1); }
   function updateProgressBar() { document.getElementById('progressFill').style.width = `${(currentPage/5)*100}%`; }
-  function showPage(page) { document.querySelectorAll('.carousel-page').forEach((p,i)=> p.classList.toggle('active-page', i+1===page)); document.querySelectorAll('.step-btn').forEach((b,i)=> { b.classList.toggle('active', i+1===page); if(i+1<page) b.classList.add('done'); else b.classList.remove('done'); }); currentPage = page; updateProgressBar(); document.getElementById('prevBtn').disabled = (page===1); document.getElementById('nextBtn').style.display = (page===5) ? 'none' : 'inline-block'; if(page===5) updateTotalDisplay(); }
-  async function nextPage() { if(currentPage===1) { let ok = await calculateAndStoreRoute(); if(ok) showPage(2); } else if(currentPage===2) { if(currentRouteData) showPage(3); else showError(2,'Calculez d\'abord l\'itinéraire'); } else if(currentPage===3) { if(selectedVehicle) showPage(4); else showError(3,'Choisissez un véhicule'); } else if(currentPage===4) { let fn=document.getElementById('firstName').value.trim(), ln=document.getElementById('lastName').value.trim(), ph=document.getElementById('phone').value.trim(), em=document.getElementById('email').value.trim(); if(fn&&ln&&ph&&em) showPage(5); else showError(4,'Tous les champs sont obligatoires'); } else if(currentPage===5) await finalizeBooking(); }
+  function showPage(page) { document.querySelectorAll('.carousel-page').forEach((p,i)=> p.classList.toggle('active-page', i+1===page)); document.querySelectorAll('.step-btn').forEach((btn,i)=>{ btn.classList.toggle('active', i+1===page); if(i+1<page) btn.classList.add('done'); else btn.classList.remove('done'); }); currentPage = page; document.getElementById('prevBtn').disabled = (page===1); document.getElementById('nextBtn').style.display = (page===5) ? 'none' : 'inline-block'; if(page===5) updateTotalDisplay(); }
+  async function nextPage() { if(currentPage===1){ let ok = await calculateAndStoreRoute(); if(ok) showPage(2); } else if(currentPage===2){ if(currentRouteData) showPage(3); else showError(2,'Calculez d\'abord l\'itinéraire'); } else if(currentPage===3){ if(selectedVehicle) showPage(4); else showError(3,'Choisissez un véhicule'); } else if(currentPage===4){ showPage(5); } else if(currentPage===5){ await finalizeBooking(); } }
   function prevPage() { if(currentPage>1) showPage(currentPage-1); }
   function initAutocomplete() { const pickup = document.getElementById('pickupInput'); const dropoff = document.getElementById('dropoffInput'); pickup.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'pickupWrap'),400); else clearSuggestions('pickupWrap'); }); dropoff.addEventListener('input', (e) => { clearTimeout(debounceTimer); let q=e.target.value; if(q.length>=3) debounceTimer=setTimeout(()=>fetchAddresses(q,'dropoffWrap'),400); else clearSuggestions('dropoffWrap'); }); document.addEventListener('click', (e) => { if(!e.target.closest('.suggest-wrapper')) { clearSuggestions('pickupWrap'); clearSuggestions('dropoffWrap'); } }); }
-  function initMap() { map = L.map('map').setView([50.85,4.35],13); L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', subdomains: 'abcd', maxZoom: 19, minZoom: 6 }).addTo(map); }
+  function initMap() { map = L.map('map').setView([50.85, 4.35], 13); L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>', subdomains: 'abcd', maxZoom: 19, minZoom: 6 }).addTo(map); }
   document.getElementById('roundtripCheckbox')?.addEventListener('change', (e) => { document.getElementById('returnDateContainer').style.display = e.target.checked ? 'block' : 'none'; if(currentRouteData) { currentRoundTrip=e.target.checked; let d=parseFloat(currentRouteData.distanceKm); if(currentRoundTrip) d*=2; document.getElementById('priceVal').innerHTML=(d*1.5).toFixed(2); updateTotalDisplay(); } });
   document.getElementById('nextBtn').addEventListener('click', nextPage);
   document.getElementById('prevBtn').addEventListener('click', prevPage);
@@ -491,7 +525,18 @@
     document.getElementById("navLinks").classList.toggle("show");
   });
   
-  initMap(); initAutocomplete(); initVehicleSelection(); showPage(1);
+  // Gestion des flipcards au clic (pour mobile)
+  function initFlipCards() {
+    const flipCards = document.querySelectorAll('.flip-card');
+    flipCards.forEach(card => {
+      card.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('flipped');
+      });
+    });
+  }
+  
+  initMap(); initAutocomplete(); initVehicleSelection(); showPage(1); initFlipCards();
 </script>
 </body>
 </html>
