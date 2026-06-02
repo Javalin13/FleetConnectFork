@@ -306,7 +306,7 @@
       </div>
       <div class="stats-card">
         <h3>✅ Courses terminées</h3>
-        <div class="table-responsive-wrapper"><table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/heure</th><th>Trajet</th><th>Véhicule</th><th>Montant</th><th>Statut</th><th>Actions</th></table></thead><tbody></tbody></table></div>
+        <div class="table-responsive-wrapper"><table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/heure</th><th>Trajet</th><th>Véhicule</th><th>Montant</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
       </div>
     </div>
 
@@ -485,68 +485,84 @@
   function initVehicleSelect(){ document.querySelectorAll('.vehicle-card-select').forEach(c=>{ c.addEventListener('click',()=>{ document.querySelectorAll('.vehicle-card-select').forEach(c2=>c2.classList.remove('selected')); c.classList.add('selected'); selectedVehicle=c.getAttribute('data-vehicle'); selectedVehicleExtra=parseInt(c.getAttribute('data-extraprice'))||0; updateTotalDisplay(); }); }); const first=document.querySelector('.vehicle-card-select'); if(first){first.classList.add('selected'); selectedVehicle=first.getAttribute('data-vehicle'); selectedVehicleExtra=0;} }
   
   // ============================================================
-  // 🔍 AUTOCOMPLETE - ROBUUSTE VERSIE (zoals in NH.html)
+  // 🔍 AUTOCOMPLETE - Version française robuste (suggestions directes)
   // ============================================================
-  async function fetchAddresses(query, wrapId) { 
-    if (query.length < 3) { 
-      const wrap = document.getElementById(wrapId); 
-      if (wrap) { const s = wrap.querySelector('.suggestions'); if (s) s.style.display = 'none'; } 
-      return; 
-    } 
-    const wrap = document.getElementById(wrapId); 
-    const suggestionsDiv = wrap.querySelector('.suggestions'); 
-    if (!suggestionsDiv) return; 
-    suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Recherche...</div>'; 
-    suggestionsDiv.style.display = 'block'; 
-    try { 
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=fr`; 
-      const controller = new AbortController(); 
-      const timeoutId = setTimeout(() => controller.abort(), 8000); 
-      const response = await fetch(url, { headers: { 'User-Agent': 'NH-Portal/1.0' }, signal: controller.signal }); 
-      clearTimeout(timeoutId); 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`); 
-      const data = await response.json(); 
-      if (!data.length) { 
-        suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ Aucune adresse trouvée en Belgique</div>'; 
-        return; 
-      } 
-      suggestionsDiv.innerHTML = data.map(p => `<div class="suggestion-item" data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</div>`).join(''); 
-      suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => { 
-        item.addEventListener('click', () => { 
-          const lat = parseFloat(item.dataset.lat); 
-          const lon = parseFloat(item.dataset.lon); 
-          const fullAddress = item.innerText; 
-          const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput'); 
-          inputField.value = fullAddress; 
-          if (wrapId === 'pickupWrap') { pickupCoord = { lat: lat, lon: lon }; } 
-          else { dropoffCoord = { lat: lat, lon: lon }; } 
-          suggestionsDiv.style.display = 'none'; 
-          if (pickupCoord && dropoffCoord) calculateAndStoreRoute(); 
-        }); 
-      }); 
-    } catch (err) { 
-      console.error(err); 
-      suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Erreur – réessayez</div>'; 
-    } 
+  async function fetchAddresses(query, suggestionsDivId) {
+    const suggestionsDiv = document.getElementById(suggestionsDivId);
+    if (!suggestionsDiv) return;
+
+    if (query.length < 3) {
+      suggestionsDiv.style.display = 'none';
+      return;
+    }
+
+    suggestionsDiv.innerHTML = '<div class="suggestion-item">🔍 Recherche...</div>';
+    suggestionsDiv.style.display = 'block';
+
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&countrycodes=be&addressdetails=0&accept-language=fr`;
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+      const response = await fetch(url, {
+        headers: { 'User-Agent': 'NH-Portal/2.0' },
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+
+      if (!data.length) {
+        suggestionsDiv.innerHTML = '<div class="suggestion-item">❌ Aucune adresse trouvée en Belgique</div>';
+        return;
+      }
+
+      suggestionsDiv.innerHTML = data.map(p => `<div class="suggestion-item" data-lat="${p.lat}" data-lon="${p.lon}">${p.display_name}</div>`).join('');
+
+      suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const lat = parseFloat(item.dataset.lat);
+          const lon = parseFloat(item.dataset.lon);
+          const fullAddress = item.innerText;
+          const inputField = suggestionsDivId === 'pickupSuggest' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
+          inputField.value = fullAddress;
+
+          if (suggestionsDivId === 'pickupSuggest') {
+            pickupCoord = { lat, lon };
+          } else {
+            dropoffCoord = { lat, lon };
+          }
+          suggestionsDiv.style.display = 'none';
+          if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
+        });
+      });
+    } catch (err) {
+      console.error('Erreur autocomplétion:', err);
+      suggestionsDiv.innerHTML = '<div class="suggestion-item" style="color:#b91c1c;">⚠️ Erreur réseau – réessayez</div>';
+    }
   }
-  
-  function initAutocomplete() { 
-    const pickupInput = document.getElementById('pickupInput'); 
-    const dropoffInput = document.getElementById('dropoffInput'); 
+
+  function initAutocomplete() {
+    const pickupInput = document.getElementById('pickupInput');
+    const dropoffInput = document.getElementById('dropoffInput');
     let pickupDebounce, dropoffDebounce;
-    pickupInput.addEventListener('input', (e) => { 
-      clearTimeout(pickupDebounce); 
-      pickupDebounce = setTimeout(() => fetchAddresses(e.target.value, 'pickupWrap'), 400); 
-    }); 
-    dropoffInput.addEventListener('input', (e) => { 
-      clearTimeout(dropoffDebounce); 
-      dropoffDebounce = setTimeout(() => fetchAddresses(e.target.value, 'dropoffWrap'), 400); 
-    }); 
-    document.addEventListener('click', (e) => { 
-      if (!e.target.closest('.suggest-wrapper')) { 
-        document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); 
-      } 
-    }); 
+
+    pickupInput.addEventListener('input', (e) => {
+      clearTimeout(pickupDebounce);
+      pickupDebounce = setTimeout(() => fetchAddresses(e.target.value, 'pickupSuggest'), 400);
+    });
+    dropoffInput.addEventListener('input', (e) => {
+      clearTimeout(dropoffDebounce);
+      dropoffDebounce = setTimeout(() => fetchAddresses(e.target.value, 'dropoffSuggest'), 400);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.suggest-wrapper')) {
+        document.getElementById('pickupSuggest').style.display = 'none';
+        document.getElementById('dropoffSuggest').style.display = 'none';
+      }
+    });
   }
   
   initMap(); 
