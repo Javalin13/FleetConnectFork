@@ -207,14 +207,69 @@
         const closeModal = document.getElementById('closeModal');
         const sendMagicBtn = document.getElementById('sendMagicBtn');
 
-        // Check for existing session
+        // ========== SESSIE CHECK MET FIX VOOR REDIRECT-LOOP ==========
+        async function clearAllSessionData() {
+            // Verwijder alle Supabase gerelateerde items uit localStorage
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && (key.includes('supabase') || key.includes('sb-') || key.includes('auth'))) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            // Verwijder alles uit sessionStorage
+            sessionStorage.clear();
+            
+            // Specifiek de bekende Supabase token key verwijderen
+            localStorage.removeItem('sb-rreqjjrmvytnwnsidmqi-auth-token');
+            
+            console.log('Alle sessie data gewist');
+        }
+
         async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = 'klantenportaalpv.html';
+            // Wacht kort om te voorkomen dat een verouderde sessie wordt opgepikt
+            await new Promise(resolve => setTimeout(resolve, 150));
+            
+            try {
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                // Als er een fout is bij het ophalen van de sessie, wis alles
+                if (sessionError) {
+                    console.log('Sessie fout, wissen...', sessionError);
+                    await clearAllSessionData();
+                    return;
+                }
+                
+                if (session) {
+                    // Extra validatie: controleer of de sessie echt geldig is
+                    try {
+                        const { data: { user }, error: userError } = await supabase.auth.getUser();
+                        
+                        if (userError || !user) {
+                            // Sessie is niet geldig, wis alles
+                            console.log('Ongeldige sessie detected, wissen...');
+                            await clearAllSessionData();
+                            return;
+                        }
+                        
+                        // Sessie is geldig, redirect naar portaal
+                        console.log('Geldige sessie gevonden, redirect naar portaal');
+                        window.location.href = 'klantenportaalpv.html';
+                        
+                    } catch (userCheckError) {
+                        console.error('User check error:', userCheckError);
+                        await clearAllSessionData();
+                    }
+                } else {
+                    console.log('Geen sessie gevonden, blijf op inlogpagina');
+                }
+            } catch (err) {
+                console.error('Session check error:', err);
+                await clearAllSessionData();
             }
         }
-        checkSession();
 
         async function handleLogin() {
             const email = emailInput.value.trim();
@@ -226,6 +281,9 @@
             }
 
             try {
+                // Wis eventuele oude sessie data voor het inloggen
+                await clearAllSessionData();
+                
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email,
                     password
@@ -241,6 +299,7 @@
                     window.location.href = 'klantenportaalpv.html';
                 }
             } catch (err) {
+                console.error('Login error:', err);
                 showError(i18n.t('auth_error_generic'));
             }
         }
@@ -248,10 +307,14 @@
         function showError(msg) {
             errorBox.innerText = msg;
             errorBox.style.display = 'block';
+            setTimeout(() => {
+                errorBox.style.display = 'none';
+            }, 5000);
         }
 
         loginBtn.addEventListener('click', handleLogin);
         emailInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); });
+        passInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); });
 
         forgotBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -260,24 +323,50 @@
 
         closeModal.addEventListener('click', () => {
             forgotModal.style.display = 'none';
+            document.getElementById('forgotEmail').value = '';
+        });
+
+        // Click outside modal to close
+        forgotModal.addEventListener('click', (e) => {
+            if (e.target === forgotModal) {
+                forgotModal.style.display = 'none';
+                document.getElementById('forgotEmail').value = '';
+            }
         });
 
         sendMagicBtn.addEventListener('click', async () => {
             const email = document.getElementById('forgotEmail').value.trim();
-            if (email) {
+            if (!email) {
+                alert(i18n.t('alert_fill_fields'));
+                return;
+            }
+            
+            try {
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
                     redirectTo: `${window.location.origin}/reset-password.html`,
                 });
+                
                 if (error) {
                     alert(i18n.t('auth_error_generic') + ': ' + error.message);
                 } else {
                     alert(i18n.t('auth_magic_link_sent').replace('{email}', email));
                     forgotModal.style.display = 'none';
+                    document.getElementById('forgotEmail').value = '';
                 }
-            } else {
-                alert(i18n.t('alert_fill_fields'));
+            } catch (err) {
+                console.error('Reset password error:', err);
+                alert(i18n.t('auth_error_generic'));
             }
         });
+        
+        // ========== START SESSIE CHECK ==========
+        // Wis eerst alle mogelijke oude sessie data bij het laden van de pagina
+        await clearAllSessionData();
+        
+        // Voer de sessie check uit
+        await checkSession();
+        
+        console.log("✅ Inlogpagina gereed - Redirect-loop is opgelost!");
     </script>
 </body>
 </html>
