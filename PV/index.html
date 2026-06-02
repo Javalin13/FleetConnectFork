@@ -1,372 +1,310 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>NH | Inloggen</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="translations.js"></script>
-    <style>
-        :root {
-            --primary: #2c7da0;
-            --primary-dark: #1a5c8c;
-            --text-dark: #1a2a3a;
-            --text-light: #4a627a;
-            --bg-body: #f4f7fc;
-            --white: #ffffff;
-            --border-light: #e2edf7;
-            --shadow: 0 8px 24px rgba(0,0,0,0.08);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-body);
-            color: var(--text-dark);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .login-card {
-            background: var(--white);
-            max-width: 400px;
-            width: 100%;
-            padding: 40px;
-            border-radius: 32px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-light);
-            text-align: center;
-        }
-        .login-card h1 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            color: var(--primary);
-        }
-        .login-card p {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 32px;
-        }
-        .field {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            color: var(--text-light);
-            letter-spacing: 0.5px;
-        }
-        input {
-            width: 100%;
-            padding: 14px 18px;
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            font-size: 0.95rem;
-            transition: 0.2s;
-            outline: none;
-        }
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
-        }
-        .btn-login {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 10px;
-        }
-        .btn-login:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        .forgot-password {
-            display: inline-block;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-        .error-msg {
-            background: #fee2e2;
-            color: #b91c1c;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            display: none;
-        }
-        /* Forgot Password Modal */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-        .modal-content {
-            background: white;
-            padding: 32px;
-            border-radius: 24px;
-            max-width: 360px;
-            width: 90%;
-            text-align: center;
-        }
-        .modal-content h2 {
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            color: var(--text-dark);
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .btn-secondary {
-            flex: 1;
-            background: #f1f5f9;
-            color: var(--text-dark);
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NH | Login - Portail Client</title>
+  <meta name="description" content="Connectez-vous à votre espace client NH pour gérer vos réservations de taxi de luxe et VTC en Belgique.">
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); font-family: 'Montserrat', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    :root { --silver: #C0C0C0; --silver-bright: #E8E8E8; --glass-white: rgba(255,255,255,0.95); --chrome-gradient: linear-gradient(135deg, #E0E0E0 0%, #FFFFFF 25%, #B0B0B0 50%, #F5F5F5 75%, #A0A0A0 100%); --shadow-glass: 0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px rgba(192,192,192,0.3); }
+    .login-card { max-width: 500px; width: 100%; background: var(--glass-white); backdrop-filter: blur(12px); border-radius: 32px; padding: 2.5rem 2rem; box-shadow: var(--shadow-glass); border: 1px solid rgba(255,255,255,0.7); transition: transform 0.3s ease; }
+    .login-card:hover { transform: translateY(-4px); }
+    .logo { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 2.8rem; letter-spacing: 6px; text-align: center; background: var(--chrome-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 0.5rem; }
+    .sub { text-align: center; color: #2c3e50; font-size: 0.85rem; margin-bottom: 1.5rem; letter-spacing: 1px; }
+    .tab-buttons { display: flex; gap: 12px; margin-bottom: 2rem; background: rgba(0,0,0,0.05); padding: 6px; border-radius: 60px; }
+    .tab-btn { flex: 1; background: transparent; border: none; padding: 12px; font-weight: 700; font-size: 0.9rem; border-radius: 40px; cursor: pointer; transition: all 0.2s; font-family: 'Montserrat', sans-serif; }
+    .tab-btn.active { background: linear-gradient(135deg, #0A192F 0%, #0F2A3F 100%); color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .tab-content { display: none; }
+    .tab-content.active-tab { display: block; }
+    .field { margin-bottom: 1.2rem; text-align: left; }
+    .field label { display: block; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; color: #1E2F3F; letter-spacing: 1.5px; margin-bottom: 0.5rem; }
+    .input-icon { position: relative; }
+    .input-icon i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--silver); font-size: 1.1rem; }
+    input { width: 100%; padding: 14px 16px 14px 48px; background: rgba(255,255,255,0.95); border: 1px solid #C0C8D0; border-radius: 48px; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; transition: all 0.2s; }
+    input:focus { outline: none; border-color: var(--silver); box-shadow: 0 0 0 3px rgba(192,192,192,0.3); background: white; }
+    .btn-submit { background: var(--chrome-gradient); border: none; padding: 14px 28px; width: 100%; font-weight: 700; letter-spacing: 2px; border-radius: 48px; cursor: pointer; font-size: 1rem; color: #0A192F; transition: all 0.3s; margin-top: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(192,192,192,0.5); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .message { padding: 10px 16px; border-radius: 40px; font-size: 0.8rem; margin-top: 1rem; display: none; align-items: center; gap: 8px; justify-content: center; }
+    .message.error { background: #fee2e2; color: #b91c1c; display: flex; }
+    .message.success { background: #dcfce7; color: #166534; display: flex; }
+    .forgot-password { text-align: right; margin-top: 8px; }
+    .forgot-password a { font-size: 0.7rem; color: #0F2A3F; text-decoration: none; }
+    .forgot-password a:hover { text-decoration: underline; }
+    .back-link { display: inline-block; margin-top: 1.5rem; color: #0F2A3F; text-decoration: none; font-size: 0.8rem; font-weight: 600; text-align: center; width: 100%; }
+    .back-link:hover { text-decoration: underline; }
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #0A192F; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .info-hint { background: rgba(10,25,47,0.08); margin-top: 1.5rem; padding: 0.8rem; border-radius: 20px; font-size: 0.7rem; color: #1E2F3F; text-align: center; border: 1px dashed var(--silver); }
+    .info-hint i { margin-right: 4px; }
+    .admin-badge { background: linear-gradient(135deg, #b91c1c, #7f1a1a); color: white; font-size: 0.6rem; font-weight: bold; padding: 2px 8px; border-radius: 20px; margin-left: 8px; display: inline-block; }
+    @media (max-width: 480px) { .login-card { padding: 1.5rem; } .logo { font-size: 2rem; } .tab-buttons { flex-direction: column; } .tab-btn { padding: 10px; } }
+  </style>
 </head>
 <body>
+<div class="login-card">
+  <div class="logo">NH</div>
+  <div class="sub">Portail Client — accès sécurisé</div>
 
-    <div class="login-card">
-        <i class="fas fa-taxi" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 16px;"></i>
-        <h1 data-i18n="auth_login_btn">Inloggen</h1>
-        <p data-i18n="auth_login_title">Toegang tot het klantenportaal</p>
+  <div class="tab-buttons">
+    <button class="tab-btn active" data-tab="login">🔐 CONNEXION</button>
+    <button class="tab-btn" data-tab="register">📝 CRÉER UN COMPTE</button>
+  </div>
 
-        <div id="errorBox" class="error-msg"></div>
+  <div id="loginTab" class="tab-content active-tab">
+    <form id="loginForm">
+      <div class="field"><label>📧 E-mail</label><div class="input-icon"><i class="fas fa-envelope"></i><input type="email" id="loginEmail" placeholder="votre@email.com" required autocomplete="email"></div></div>
+      <div class="field"><label>🔒 Mot de passe</label><div class="input-icon"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password"></div>
+      <div class="forgot-password"><a href="#" id="forgotPasswordLink">Mot de passe oublié ?</a></div></div>
+      <button type="submit" class="btn-submit" id="loginBtn">SE CONNECTER</button>
+    </form>
+  </div>
 
-        <div class="field">
-            <label data-i18n="auth_email">E-mailadres</label>
-            <input type="email" id="emailInput" data-i18n-placeholder="placeholder_email" placeholder="uw@email.be">
-        </div>
-        <div class="field">
-            <label data-i18n="auth_password">Wachtwoord</label>
-            <input type="password" id="passInput" placeholder="••••••••">
-        </div>
+  <div id="registerTab" class="tab-content">
+    <form id="registerForm">
+      <div class="field"><label>👤 Nom complet</label><div class="input-icon"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="Jean Dupont" required autocomplete="name"></div></div>
+      <div class="field"><label>📧 E-mail</label><div class="input-icon"><i class="fas fa-envelope"></i><input type="email" id="registerEmail" placeholder="votre@email.com" required autocomplete="email"></div></div>
+      <div class="field"><label>📱 Téléphone</label><div class="input-icon"><i class="fas fa-phone"></i><input type="tel" id="registerPhone" placeholder="+32 4xx xx xx xx" required autocomplete="tel"></div></div>
+      <div class="field"><label>🔒 Mot de passe (min. 6 caractères)</label><div class="input-icon"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="••••••••" required autocomplete="new-password"></div></div>
+      <div class="field"><label>🔒 Confirmer le mot de passe</label><div class="input-icon"><i class="fas fa-lock"></i><input type="password" id="registerConfirmPassword" placeholder="••••••••" required></div></div>
+      <button type="submit" class="btn-submit" id="registerBtn">CRÉER MON COMPTE</button>
+    </form>
+  </div>
 
-        <button class="btn-login" id="loginBtn" data-i18n="auth_login_btn">Inloggen</button>
+  <div id="message" class="message"></div>
+  <div class="info-hint">
+    <i class="fas fa-info-circle"></i> Déjà client ? Connectez-vous avec votre e-mail et mot de passe.<br>
+    <i class="fas fa-user-plus"></i> Nouveau client ? Créez gratuitement votre compte en quelques secondes.<br>
+    <i class="fas fa-shield-alt"></i> <strong>Admin:</strong> admin@ryzen.be <span class="admin-badge">ADMIN</span>
+  </div>
+  <a href="KMS7.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour au site public</a>
+</div>
 
-        <a href="#" class="forgot-password" id="forgotBtn" data-i18n="auth_reset_password">Wachtwoord vergeten?</a>
-    </div>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    <!-- Forgot Password Modal -->
-    <div class="modal" id="forgotModal">
-        <div class="modal-content">
-            <h2 data-i18n="auth_forgot_password_title">Wachtwoord vergeten</h2>
-            <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;" data-i18n="auth_forgot_password_desc">Voer uw e-mailadres in om een magische link te ontvangen.</p>
-            <div class="field">
-                <label data-i18n="auth_email">E-mailadres</label>
-                <input type="email" id="forgotEmail" data-i18n-placeholder="placeholder_email" placeholder="uw@email.be">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-secondary" id="closeModal" data-i18n="fp_close">Annuleren</button>
-                <button class="btn-login" id="sendMagicBtn" style="margin-top:0;" data-i18n="auth_send_magic_link">Stuur magische link</button>
-            </div>
-        </div>
-    </div>
+  const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const ADMIN_EMAIL = 'admin@ryzen.be';
+  const ADMIN_PASSWORD = 'admin@ryzen.be';
 
-        const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const loginTabBtn = document.querySelector('[data-tab="login"]');
+  const registerTabBtn = document.querySelector('[data-tab="register"]');
+  const loginTab = document.getElementById('loginTab');
+  const registerTab = document.getElementById('registerTab');
+  const messageDiv = document.getElementById('message');
 
-        const loginBtn = document.getElementById('loginBtn');
-        const emailInput = document.getElementById('emailInput');
-        const passInput = document.getElementById('passInput');
-        const errorBox = document.getElementById('errorBox');
-        const forgotBtn = document.getElementById('forgotBtn');
-        const forgotModal = document.getElementById('forgotModal');
-        const closeModal = document.getElementById('closeModal');
-        const sendMagicBtn = document.getElementById('sendMagicBtn');
+  function showMessage(text, type) {
+    messageDiv.textContent = text;
+    messageDiv.className = `message ${type}`;
+    setTimeout(() => { messageDiv.className = 'message'; }, 5000);
+  }
 
-        // ========== SESSIE CHECK MET FIX VOOR REDIRECT-LOOP ==========
-        async function clearAllSessionData() {
-            // Verwijder alle Supabase gerelateerde items uit localStorage
-            const keysToRemove = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && (key.includes('supabase') || key.includes('sb-') || key.includes('auth'))) {
-                    keysToRemove.push(key);
-                }
-            }
-            keysToRemove.forEach(key => localStorage.removeItem(key));
-            
-            // Verwijder alles uit sessionStorage
-            sessionStorage.clear();
-            
-            // Specifiek de bekende Supabase token key verwijderen
-            localStorage.removeItem('sb-rreqjjrmvytnwnsidmqi-auth-token');
-            
-            console.log('Alle sessie data gewist');
+  function setLoading(button, isLoading, originalText) {
+    if (isLoading) {
+      button.disabled = true;
+      button.innerHTML = '<span class="spinner"></span> Chargement...';
+    } else {
+      button.disabled = false;
+      button.innerHTML = originalText;
+    }
+  }
+
+  loginTabBtn.addEventListener('click', () => {
+    loginTabBtn.classList.add('active');
+    registerTabBtn.classList.remove('active');
+    loginTab.classList.add('active-tab');
+    registerTab.classList.remove('active-tab');
+    messageDiv.className = 'message';
+  });
+
+  registerTabBtn.addEventListener('click', () => {
+    registerTabBtn.classList.add('active');
+    loginTabBtn.classList.remove('active');
+    registerTab.classList.add('active-tab');
+    loginTab.classList.remove('active-tab');
+    messageDiv.className = 'message';
+  });
+
+  // ============================================================
+  // ❌ AUTOMATISCHE DOORVERWIJZING VERWIJDERD
+  // ============================================================
+  // Vroeger stond hier een checkSession() die meteen doorstuurde.
+  // Die code is weggehaald. De gebruiker ziet nu altijd de login-pagina.
+
+  async function createCustomerRecord(userId, email, fullName, phone) {
+    const customerId = `CUST-${userId.slice(0, 8)}`;
+    const { error } = await supabase.from('customers').insert([{
+      id: customerId, user_id: userId, name: fullName, email: email, phone: phone, created_at: new Date().toISOString()
+    }]);
+    if (error && error.code !== '42P01') console.error('Error creating customer record:', error);
+  }
+
+  const loginForm = document.getElementById('loginForm');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginOriginalText = loginBtn.innerHTML;
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+      showMessage('❌ Veuillez remplir tous les champs.', 'error');
+      return;
+    }
+
+    setLoading(loginBtn, true, loginOriginalText);
+
+    // ADMIN CHECK
+    if (email.toLowerCase() === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      try {
+        let { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error && error.message.includes('Invalid login credentials')) {
+          const { error: signUpError } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { full_name: "Administrator", phone: "+32 473 30 03 74" } }
+          });
+          if (signUpError && !signUpError.message.includes('already registered')) {
+            throw signUpError;
+          }
+          await new Promise(r => setTimeout(r, 1000));
+          const retry = await supabase.auth.signInWithPassword({ email, password });
+          if (retry.error) throw retry.error;
+          data = retry.data;
+        } else if (error) {
+          throw error;
         }
-
-        async function checkSession() {
-            // Wacht kort om te voorkomen dat een verouderde sessie wordt opgepikt
-            await new Promise(resolve => setTimeout(resolve, 150));
-            
-            try {
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-                
-                // Als er een fout is bij het ophalen van de sessie, wis alles
-                if (sessionError) {
-                    console.log('Sessie fout, wissen...', sessionError);
-                    await clearAllSessionData();
-                    return;
-                }
-                
-                if (session) {
-                    // Extra validatie: controleer of de sessie echt geldig is
-                    try {
-                        const { data: { user }, error: userError } = await supabase.auth.getUser();
-                        
-                        if (userError || !user) {
-                            // Sessie is niet geldig, wis alles
-                            console.log('Ongeldige sessie detected, wissen...');
-                            await clearAllSessionData();
-                            return;
-                        }
-                        
-                        // Sessie is geldig, redirect naar portaal
-                        console.log('Geldige sessie gevonden, redirect naar portaal');
-                        window.location.href = 'klantenportaalpv.html';
-                        
-                    } catch (userCheckError) {
-                        console.error('User check error:', userCheckError);
-                        await clearAllSessionData();
-                    }
-                } else {
-                    console.log('Geen sessie gevonden, blijf op inlogpagina');
-                }
-            } catch (err) {
-                console.error('Session check error:', err);
-                await clearAllSessionData();
-            }
+        if (data?.session) {
+          sessionStorage.setItem('kms7_user_email', email);
+          sessionStorage.setItem('kms7_is_admin', 'true');
+          showMessage('✅ Connexion admin réussie ! Redirection...', 'success');
+          setTimeout(() => { window.location.href = 'ClientKMS7.html'; }, 1500);
+          setLoading(loginBtn, false, loginOriginalText);
+          return;
         }
+      } catch (err) {
+        console.error('Admin login error:', err);
+        showMessage('❌ Erreur technique. Veuillez réessayer.', 'error');
+        setLoading(loginBtn, false, loginOriginalText);
+        return;
+      }
+    }
 
-        async function handleLogin() {
-            const email = emailInput.value.trim();
-            const password = passInput.value.trim();
+    // NORMALE LOGIN
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (data.session) {
+        sessionStorage.setItem('kms7_user_email', email);
+        sessionStorage.removeItem('kms7_is_admin');
+        showMessage('✅ Connexion réussie ! Redirection...', 'success');
+        const userLang = navigator.language || 'fr';
+        setTimeout(() => {
+          if (userLang.startsWith('nl')) window.location.href = 'ClientKMS7_nl.html';
+          else if (userLang.startsWith('en')) window.location.href = 'ClientKMS7_en.html';
+          else window.location.href = 'ClientKMS7.html';
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      if (error.message === 'Invalid login credentials') {
+        showMessage('❌ E-mail ou mot de passe incorrect.', 'error');
+      } else {
+        showMessage(`❌ ${error.message || 'Erreur lors de la connexion.'}`, 'error');
+      }
+    } finally {
+      setLoading(loginBtn, false, loginOriginalText);
+    }
+  });
 
-            if (!email || !password) {
-                showError(i18n.t('alert_fill_fields'));
-                return;
-            }
+  // REGISTRATION
+  const registerForm = document.getElementById('registerForm');
+  const registerBtn = document.getElementById('registerBtn');
+  const registerOriginalText = registerBtn.innerHTML;
 
-            try {
-                // Wis eventuele oude sessie data voor het inloggen
-                await clearAllSessionData();
-                
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fullName = document.getElementById('registerName').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const phone = document.getElementById('registerPhone').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
 
-                if (error) {
-                    showError(error.message === 'Invalid login credentials' ? i18n.t('auth_invalid_credentials') : error.message);
-                    return;
-                }
+    if (email.toLowerCase() === ADMIN_EMAIL) {
+      showMessage('❌ Cet e-mail est réservé. Veuillez en utiliser un autre.', 'error');
+      return;
+    }
+    if (!fullName || !email || !phone || !password || !confirmPassword) {
+      showMessage('❌ Veuillez remplir tous les champs.', 'error');
+      return;
+    }
+    if (password !== confirmPassword) {
+      showMessage('❌ Les mots de passe ne correspondent pas.', 'error');
+      return;
+    }
+    if (password.length < 6) {
+      showMessage('❌ Le mot de passe doit contenir au moins 6 caractères.', 'error');
+      return;
+    }
 
-                if (data.session) {
-                    sessionStorage.setItem('loggedInEmail', email);
-                    window.location.href = 'klantenportaalpv.html';
-                }
-            } catch (err) {
-                console.error('Login error:', err);
-                showError(i18n.t('auth_error_generic'));
-            }
+    setLoading(registerBtn, true, registerOriginalText);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: {
+          data: { full_name: fullName, phone: phone },
+          emailRedirectTo: window.location.origin + "/LoginKMS7.html"
         }
+      });
+      if (error) throw error;
+      if (data.user) {
+        try { await createCustomerRecord(data.user.id, email, fullName, phone); } catch (dbError) { console.warn(dbError); }
+        window.location.href = 'VerificatieKMS7.html?email=' + encodeURIComponent(email);
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      if (error.message.includes('User already registered')) {
+        showMessage('❌ Cet e-mail est déjà utilisé. Veuillez vous connecter.', 'error');
+      } else {
+        showMessage(`❌ ${error.message || 'Erreur lors de la création du compte.'}`, 'error');
+      }
+      setLoading(registerBtn, false, registerOriginalText);
+    }
+  });
 
-        function showError(msg) {
-            errorBox.innerText = msg;
-            errorBox.style.display = 'block';
-            setTimeout(() => {
-                errorBox.style.display = 'none';
-            }, 5000);
-        }
-
-        loginBtn.addEventListener('click', handleLogin);
-        emailInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); });
-        passInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') handleLogin(); });
-
-        forgotBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            forgotModal.style.display = 'flex';
-        });
-
-        closeModal.addEventListener('click', () => {
-            forgotModal.style.display = 'none';
-            document.getElementById('forgotEmail').value = '';
-        });
-
-        // Click outside modal to close
-        forgotModal.addEventListener('click', (e) => {
-            if (e.target === forgotModal) {
-                forgotModal.style.display = 'none';
-                document.getElementById('forgotEmail').value = '';
-            }
-        });
-
-        sendMagicBtn.addEventListener('click', async () => {
-            const email = document.getElementById('forgotEmail').value.trim();
-            if (!email) {
-                alert(i18n.t('alert_fill_fields'));
-                return;
-            }
-            
-            try {
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: `${window.location.origin}/reset-password.html`,
-                });
-                
-                if (error) {
-                    alert(i18n.t('auth_error_generic') + ': ' + error.message);
-                } else {
-                    alert(i18n.t('auth_magic_link_sent').replace('{email}', email));
-                    forgotModal.style.display = 'none';
-                    document.getElementById('forgotEmail').value = '';
-                }
-            } catch (err) {
-                console.error('Reset password error:', err);
-                alert(i18n.t('auth_error_generic'));
-            }
-        });
-        
-        // ========== START SESSIE CHECK ==========
-        // Wis eerst alle mogelijke oude sessie data bij het laden van de pagina
-        await clearAllSessionData();
-        
-        // Voer de sessie check uit
-        await checkSession();
-        
-        console.log("✅ Inlogpagina gereed - Redirect-loop is opgelost!");
-    </script>
+  // FORGOT PASSWORD
+  const forgotLink = document.getElementById('forgotPasswordLink');
+  forgotLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    if (!email) {
+      showMessage('❌ Veuillez entrer votre adresse e-mail pour réinitialiser votre mot de passe.', 'error');
+      return;
+    }
+    if (email.toLowerCase() === ADMIN_EMAIL) {
+      showMessage('⚠️ Le compte admin utilise un mot de passe fixe. Contactez le support.', 'error');
+      return;
+    }
+    setLoading(loginBtn, true, loginOriginalText);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/LoginKMS7.html' });
+      if (error) throw error;
+      showMessage(`✅ Un e-mail de réinitialisation a été envoyé à ${email}. Vérifiez votre boîte de réception.`, 'success');
+    } catch (error) {
+      showMessage(`❌ ${error.message || 'Erreur lors de l\'envoi de l\'e-mail.'}`, 'error');
+    } finally {
+      setLoading(loginBtn, false, loginOriginalText);
+    }
+  });
+</script>
 </body>
 </html>
