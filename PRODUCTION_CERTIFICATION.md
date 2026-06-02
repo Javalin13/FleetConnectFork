@@ -1790,3 +1790,39 @@ Preserved routes:
 - `/driver-decline.html`
 
 No Supabase, RLS, email, dispatch, Stripe, UI, layout, or workflow logic was changed.
+
+## Phase 5.8 - Live Smoke Test Debug
+
+Status: MINIMAL LIVE DEBUG FIXES APPLIED - NOT CERTIFIED
+
+Observed live issues:
+
+- Operator/dashboard login failed.
+- PV booking was submitted, but no booking confirmation email was received.
+
+Findings:
+
+- Vercel static routes returned HTTP 200 for root, PV pages, driver pages, and dashboard pages.
+- `Paneel/admin-index.html` used a malformed Supabase anon key, causing Supabase Auth login to fail before dashboard access.
+- Live read-only Supabase evidence showed 1 booking in the last 2 hours and 11 bookings in the last 24 hours, so PV booking insertion is reaching Supabase.
+- `send-email` did not allow `https://rpk-mu.vercel.app`, so confirmation email dispatch from the deployed Vercel origin could be blocked by the hardened origin check.
+
+Minimal fixes:
+
+- Corrected the public anon key in `Paneel/admin-index.html`.
+- Added `https://rpk-mu.vercel.app` to `send-email` `ALLOWED_ORIGINS`.
+- Redeployed live `send-email` only; live version is now 6 with JWT enabled.
+
+Validation:
+
+- Live `send-email` revalidation: ACTIVE, version 6, JWT enabled, Vercel origin present, unauthorized-origin rejection retained, no exact wildcard CORS signal, no service-role key signal.
+- CORS preflight from `https://rpk-mu.vercel.app`: HTTP 200 with matching `Access-Control-Allow-Origin`.
+
+Correct dashboard URL:
+
+- `https://rpk-mu.vercel.app/Paneel/admin-index.html`
+
+Operator requirement:
+
+- Supabase Auth account must exist.
+- If dashboard data is missing after login, the auth user must be mapped to `partners.user_id` for an `is_hoofd = true` partner.

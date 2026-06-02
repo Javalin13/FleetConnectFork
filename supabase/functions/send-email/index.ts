@@ -11,6 +11,7 @@ const resend = new Resend(Deno.env.get('RESEND_API_KEY'))
 const ALLOWED_ORIGINS = [
   'https://fleetconnect.be',
   'https://www.fleetconnect.be',
+  'https://rpk-mu.vercel.app',
   'http://localhost:3000',
   'http://127.0.0.1:5500'
 ]
