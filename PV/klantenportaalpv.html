@@ -645,6 +645,7 @@
     let userBookings = [];
     let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
     let selectedVehicle = 'Standaard', selectedVehicleExtra = 0, currentPage = 1;
+    let bookingSubmitInProgress = false;
     let debounceTimer;
     
     function initMap() {
@@ -819,6 +820,7 @@
     }
     
     async function finalizeBooking() {
+        if (bookingSubmitInProgress) return;
         if (!currentRouteData) { showError(5, 'Bereken eerst de route in stap 1 en 2'); return; }
         const fn = document.getElementById('firstName').value.trim();
         const ln = document.getElementById('lastName').value.trim();
@@ -847,18 +849,36 @@
         
         const supabase = getSupabase();
         if (!supabase) { showError(5, 'Database niet beschikbaar'); return; }
+        bookingSubmitInProgress = true;
         
         try {
             const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
             const savedBookingId = data?.id || '';
             const { comms } = await import('../src/modules/communication/index.js');
-            await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
-            alert(`✅ Boeking ${savedBookingId} bevestigd voor €${totalAmount.toFixed(2)}!`);
+            const bookingSnapshot = {
+                ...bookingData,
+                id: savedBookingId,
+                reference: savedBookingId,
+                amount: parseFloat(totalAmount) || 0,
+                customer: { name: bookingData.name, email: em, phone: ph }
+            };
+            let emailResult = { success: false };
+            try {
+                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase, { snapshot: bookingSnapshot });
+            } catch (emailError) {
+                console.error('Confirmation email error:', emailError);
+            }
+            if (emailResult?.success === true) {
+                alert(`Boeking ${savedBookingId} bevestigd voor EUR ${totalAmount.toFixed(2)}!`);
+            } else {
+                alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}. De bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
+            }
             resetAll();
             await loadUserBookings();
             switchToTab('dashboard');
         } catch (err) { showError(5, 'Fout bij boeking: ' + err.message); }
+        finally { bookingSubmitInProgress = false; }
     }
     
     function resetAll() {

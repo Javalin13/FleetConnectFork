@@ -322,6 +322,7 @@
     let selectedVehicle = null, selectedVehicleExtra = 0;
     let returnFlatpickrInstance = null;
     let currentPage = 1;
+    let bookingSubmitInProgress = false;
     
     function initMap() { map = L.map('map').setView([50.85, 4.35], 13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map); }
     initMap();
@@ -468,6 +469,7 @@
     
     // DIRECTE BOEKING FUNCTIE
     async function finalizeBookingDirect() {
+        if (bookingSubmitInProgress) return;
         console.log("🔴 BOEKING START - Directe verzending");
         
         const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
@@ -524,6 +526,9 @@
         };
         
         console.log("📦 Verzenden naar Supabase:", bookingData);
+        bookingSubmitInProgress = true;
+        const confirmBtn = document.getElementById('finalConfirmBtn');
+        if (confirmBtn) confirmBtn.disabled = true;
         
         try {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
@@ -533,10 +538,26 @@
             if (error) throw error;
             const savedBookingId = data?.id || '';
             const { comms } = await import('../src/modules/communication/index.js');
-            await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
+            const bookingSnapshot = {
+                ...bookingData,
+                id: savedBookingId,
+                reference: savedBookingId,
+                amount: parseFloat(totalAmount) || 0,
+                customer: { name: bookingData.name, email, phone }
+            };
+            let emailResult = { success: false };
+            try {
+                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase, { snapshot: bookingSnapshot });
+            } catch (emailError) {
+                console.error("Confirmation email error:", emailError);
+            }
             
             console.log("✅ Boeking succesvol opgeslagen!");
-            alert(`✅ Boeking ${savedBookingId} bevestigd voor €${totalAmount.toFixed(2)}!\n\nEen bevestiging wordt naar ${email} gestuurd.`);
+            if (emailResult?.success === true) {
+                alert(`Boeking ${savedBookingId} bevestigd voor EUR ${totalAmount.toFixed(2)}!\n\nEen bevestiging wordt naar ${email} gestuurd.`);
+            } else {
+                alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}.\n\nDe bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
+            }
             
             if (routeLayer) map.removeLayer(routeLayer);
             if (pickupMarker) map.removeLayer(pickupMarker);
@@ -571,6 +592,9 @@
         } catch (error) {
             console.error("❌ Fout bij boeking:", error);
             alert('Fout bij het opslaan van de boeking: ' + error.message);
+        } finally {
+            bookingSubmitInProgress = false;
+            if (confirmBtn) confirmBtn.disabled = false;
         }
     }
     

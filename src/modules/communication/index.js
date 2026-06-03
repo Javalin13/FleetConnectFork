@@ -18,6 +18,7 @@ export class CommunicationService {
             resend: new ResendProvider(CommunicationConfig.providers.resend)
         };
         this.activeProvider = this.providers[CommunicationConfig.settings.provider] || this.providers.mock;
+        this.escalationKeys = new Set();
     }
 
     /**
@@ -36,8 +37,8 @@ export class CommunicationService {
         }
 
         try {
-            // 1. Full Relational Rehydration
-            const snapshot = await DataNormalizer.rehydrateBookingSnapshot(bookingId, supabaseClient);
+            // 1. Full Relational Rehydration, unless the caller already has a trusted snapshot.
+            const snapshot = options.snapshot || await DataNormalizer.rehydrateBookingSnapshot(bookingId, supabaseClient);
             if (!snapshot) {
                 console.error(`❌ [CommunicationService] Rehydration failed for ${bookingId}`);
                 throw new Error('Failed to rehydrate snapshot');
@@ -116,6 +117,7 @@ export class CommunicationService {
             });
 
             await this.sendTechnicalEscalation(trigger, bookingId, error.message, supabaseClient);
+            return { success: false, error: error.message, provider: this.activeProvider.constructor.name };
         }
     }
 
@@ -154,6 +156,13 @@ export class CommunicationService {
     async sendTechnicalEscalation(trigger, entityId, errorMessage, supabaseClient) {
         const to = CommunicationConfig.brand.technicalEscalationEmail;
         if (!to) return { success: true, skipped: true };
+
+        const escalationKey = `${trigger}:${entityId || 'unknown'}:${errorMessage || 'Unknown error'}`;
+        if (this.escalationKeys.has(escalationKey)) {
+            console.warn(`[CommunicationService] Skipping duplicate technical escalation for ${trigger} (${entityId || 'unknown'})`);
+            return { success: true, skipped: true, duplicate: true };
+        }
+        this.escalationKeys.add(escalationKey);
 
         const subject = `[FleetConnect Technical] ${trigger} failure (${entityId || 'unknown'})`;
         const html = `

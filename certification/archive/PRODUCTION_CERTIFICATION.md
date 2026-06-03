@@ -1827,7 +1827,7 @@ Operator requirement:
 - Supabase Auth account must exist.
 - If dashboard data is missing after login, the auth user must be mapped to `partners.user_id` for an `is_hoofd = true` partner.
 
-## Phase 5.9 - Live Booking Insert Primary Key Fix
+## Phase 5.8 - Live Booking Insert Primary Key Fix
 
 Status: LIVE RPC FIX APPLIED - NOT CERTIFIED
 
@@ -1860,3 +1860,41 @@ Dashboard visibility finding:
 - Dashboard reads `bookings`, not legacy `boekingen`.
 - Pending bookings are included in `newOrders`.
 - If pending bookings are not visible, verify the logged-in auth user maps to `partners.user_id` for an `is_hoofd = true` partner and view the `Nieuwe Orders` tab.
+
+## Phase 5.9 - Live Booking Email Rehydration Fix
+
+Status: REPOSITORY FIX APPLIED - NOT CERTIFIED
+
+Observed live issue:
+
+- Booking insert succeeded and returned an `FC-...` ID.
+- Customer confirmation email did not arrive.
+- Ryzen received duplicate `[FleetConnect Technical] BOOKING_CONFIRMATION failure` emails.
+- Technical failure reason was `Failed to rehydrate snapshot`.
+
+Root cause:
+
+- Public PV booking pages called `BOOKING_CONFIRMATION` with only the saved booking ID.
+- `CommunicationService` attempted to rehydrate that ID through anonymous browser-side `bookings.select`.
+- Live RLS correctly blocks anonymous booking reads, so the email snapshot could not be rebuilt after insert.
+
+Minimal fix:
+
+- `CommunicationService.trigger()` now accepts an optional trusted snapshot and falls back to existing rehydration when no snapshot is supplied.
+- `PV/PV.html` and `PV/klantenportaalpv.html` now pass the submitted booking payload plus server-generated `FC-...` ID into `BOOKING_CONFIRMATION`.
+- Customer popups now only claim the email was sent when the email trigger returns success.
+- Duplicate in-flight booking submits are blocked in both PV booking pages.
+- Same trigger/entity/error technical escalations are deduplicated in the communication service page session.
+
+Dashboard finding:
+
+- Live read-only evidence confirms latest `FC-...` bookings exist in `bookings`, have `status = pending`, and use `partner_id = 1`.
+- `Paneel/onderaannemerA.html` reads `bookings` and puts `status === 'pending'` rows under `Nieuwe Orders`.
+- Drivers exist only under `partner_id = 1`; therefore public bookings must not be moved to the mapped `partner_id = 13` as a visibility shortcut.
+- If the booking remains hidden, verify the tester is logged in with the mapped hoofd-operator Supabase Auth user and is viewing `Nieuwe Orders`.
+
+Validation:
+
+- Static route/code checks passed for snapshot handoff, one confirmation trigger per PV page, duplicate-submit guard, send-email origin allowlist, and unauthorized-origin rejection.
+- Live read-only Supabase evidence confirmed current pending booking and partner/driver distribution.
+- No live inbox send was performed by Codex in this phase.

@@ -77,3 +77,16 @@ Before treating the checkpoint as preserved, confirm:
 6. If not visible, verify the logged-in Supabase Auth user is mapped to `partners.user_id` for an `is_hoofd = true` partner.
 7. Confirm `BOOKING_CONFIRMATION` still fires after insert.
 8. Confirm `functions/v1/send-email` succeeds in browser Network.
+
+## Phase 5.9 Email Rehydration Retest Addendum
+
+1. Redeploy the latest checkpoint branch commit.
+2. Submit exactly one controlled guest booking from `https://rpk-mu.vercel.app/#booking`.
+3. Confirm the booking popup says email was sent only when `functions/v1/send-email` returns success.
+4. Confirm the customer receives the booking confirmation email.
+5. Confirm Ryzen does not receive a technical escalation for a successful confirmation.
+6. Confirm no duplicate booking rows are created from one click.
+7. Login at `https://rpk-mu.vercel.app/Paneel/admin-index.html`.
+8. Use the mapped hoofd-operator Supabase Auth account.
+9. Choose Taxi/Onderaannemer and open `Nieuwe Orders`.
+10. Confirm the latest `FC-...` pending booking is visible.
