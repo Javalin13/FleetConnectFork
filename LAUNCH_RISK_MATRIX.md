@@ -46,3 +46,12 @@ Rationale: core dispatch and RLS risk has been reduced, but required customer an
 | Vercel not redeployed after booking ID fix | High | Medium | Live site may continue sending duplicate client IDs. | Redeploy latest checkpoint branch commit. | Release manager |
 | Operator uses unmapped auth account | High | Medium | Dashboard login succeeds but booking data remains hidden by RLS. | Use mapped hoofd-partner account or map intended user. | Release manager |
 | Confirmation email not retested after insert fix | Medium | Medium | Email chain remains unproven after successful insert. | Re-test booking and inspect Network/inbox. | Release manager |
+
+## Phase 5.9 Booking Email Rehydration Risks
+
+| Risk | Severity | Likelihood | Impact | Mitigation | Owner |
+| --- | --- | --- | --- | --- | --- |
+| Vercel not redeployed after snapshot handoff fix | High | Medium | Live booking confirmation continues failing with `Failed to rehydrate snapshot`. | Redeploy latest checkpoint branch commit before next booking test. | Release manager |
+| Customer inbox delivery still unverified | High | Medium | Booking may save but customer may not receive confirmation due provider/inbox issue. | Submit one controlled booking and verify Network, Resend logs, inbox, and spam. | Release manager |
+| Operator session not mapped to hoofd partner | High | Medium | Dashboard login works but live bookings appear absent to the tester. | Use the mapped hoofd-operator Supabase Auth account or map the intended operator user. | Release manager |
+| Public bookings moved to wrong partner as visibility workaround | High | Low | Driver assignment could break because current drivers exist under `partner_id = 1`. | Do not move public bookings to `partner_id = 13`; validate operator mapping and RLS instead. | Engineering |

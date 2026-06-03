@@ -199,3 +199,18 @@ Remaining blockers continue to include browser/inbox validation and production r
 | Dashboard pending booking visibility | REQUIRES VALIDATION | Dashboard includes `pending` bookings in `newOrders`; RLS operator access depends on `is_operator()`. | Login with mapped hoofd-partner auth user and open `Nieuwe Orders`. |
 | Operator mapping | BLOCKED PENDING MANUAL APPROVAL | Sanitized live mapping shows only hoofd partner `id = 13` has `user_id`; ids `1` and `3` are unmapped. | Map intended operator auth user to a hoofd partner if needed. |
 | Booking confirmation email after insert | BLOCKED PENDING INBOX TESTING | `BOOKING_CONFIRMATION` remains wired and `send-email` version 6 is ready. | Test with real browser/inbox after redeploy. |
+
+## Phase 5.9 Booking Email Rehydration Gap Update
+
+| Item | Classification | Evidence | Required next action |
+| --- | --- | --- | --- |
+| `BOOKING_CONFIRMATION` snapshot rehydration | RESOLVED IN REPOSITORY | PV booking pages now pass a trusted submitted snapshot with the server-generated `FC-...` ID; communication service uses `options.snapshot` before falling back to database rehydration. | Redeploy Vercel and submit one controlled booking. |
+| False customer email success popup | RESOLVED IN REPOSITORY | PV pages branch on `emailResult.success` and show manual follow-up wording if email delivery fails. | Validate popup behavior in browser Network success/failure case. |
+| Duplicate technical escalation for same failed event | RESOLVED IN REPOSITORY | Submit handlers now have an in-flight guard and communication service deduplicates same trigger/entity/error escalation in the current page session. | Confirm Ryzen receives no duplicate escalation during next failed-event test. |
+| Dashboard visibility for latest booking | REQUIRES VALIDATION | Live read-only evidence shows latest `FC-...` bookings are `pending` and `partner_id = 1`; dashboard reads `bookings` and filters `pending` into `Nieuwe Orders`. | Login with mapped hoofd-operator account and open `Nieuwe Orders` after redeploy. |
+| Customer confirmation inbox delivery | BLOCKED PENDING LIVE INBOX TESTING | Code path is repaired, but Codex did not perform a live customer inbox send in Phase 5.9. | Submit one test booking and inspect customer inbox/spam plus Network `send-email` result. |
+
+Updated certification answer:
+
+- FleetConnect remains NOT CERTIFIED.
+- The live booking insert + confirmation email code path is ready for redeploy and controlled browser/inbox retest.
