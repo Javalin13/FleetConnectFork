@@ -882,17 +882,17 @@
                 amount: parseFloat(totalAmount) || 0,
                 customer: { name: bookingData.name, email: em, phone: ph }
             };
-            let emailResult = { success: false };
-            try {
-                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase, { snapshot: bookingSnapshot });
-            } catch (emailError) {
-                console.error('Confirmation email error:', emailError);
-            }
-            if (emailResult?.success === true) {
-                alert(`Boeking ${savedBookingId} bevestigd voor EUR ${totalAmount.toFixed(2)}!`);
-            } else {
-                alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}. De bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
-            }
+            alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}. De bevestigingsemail wordt verzonden.`);
+            comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase, { snapshot: bookingSnapshot })
+                .then((emailResult) => {
+                    if (emailResult?.success !== true) {
+                        alert(`Boeking ${savedBookingId} is opgeslagen, maar de bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
+                    }
+                })
+                .catch((emailError) => {
+                    console.error('Confirmation email error:', emailError);
+                    alert(`Boeking ${savedBookingId} is opgeslagen, maar de bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
+                });
             resetAll();
             await loadUserBookings();
             switchToTab('dashboard');

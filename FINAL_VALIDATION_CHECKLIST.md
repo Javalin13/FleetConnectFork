@@ -105,3 +105,15 @@ Before treating the checkpoint as preserved, confirm:
 10. Confirm the driver appears in the dashboard list.
 11. Assign the driver to an accepted booking.
 12. Confirm the driver assignment request email is sent to the driver.
+
+## Phase 5.11 Operator Mapping And UX Retest Addendum
+
+1. Redeploy the latest checkpoint branch commit.
+2. Login to dashboard as `admin@ryzen.be`.
+3. Create a partner and confirm no `Operator access required` error appears.
+4. Create a driver under an available partner and confirm it appears in the driver list.
+5. Submit one PV booking and confirm the saved-booking popup appears immediately after the `FC-...` ID is returned.
+6. Confirm `BOOKING_CONFIRMATION` still sends in the background.
+7. Accept one booking and confirm the modal closes/dashboard updates without waiting for email.
+8. Confirm `BOOKING_ACCEPTED` still sends in the background.
+9. Open `Bekijk Fiche`, scroll inside the modal, and confirm the top-right X remains visible and closes the modal.

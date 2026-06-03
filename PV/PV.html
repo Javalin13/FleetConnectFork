@@ -545,19 +545,19 @@
                 amount: parseFloat(totalAmount) || 0,
                 customer: { name: bookingData.name, email, phone }
             };
-            let emailResult = { success: false };
-            try {
-                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase, { snapshot: bookingSnapshot });
-            } catch (emailError) {
-                console.error("Confirmation email error:", emailError);
-            }
             
             console.log("✅ Boeking succesvol opgeslagen!");
-            if (emailResult?.success === true) {
-                alert(`Boeking ${savedBookingId} bevestigd voor EUR ${totalAmount.toFixed(2)}!\n\nEen bevestiging wordt naar ${email} gestuurd.`);
-            } else {
-                alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}.\n\nDe bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
-            }
+            alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}.\n\nDe bevestigingsemail wordt naar ${email} verzonden.`);
+            comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase, { snapshot: bookingSnapshot })
+                .then((emailResult) => {
+                    if (emailResult?.success !== true) {
+                        alert(`Boeking ${savedBookingId} is opgeslagen, maar de bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
+                    }
+                })
+                .catch((emailError) => {
+                    console.error("Confirmation email error:", emailError);
+                    alert(`Boeking ${savedBookingId} is opgeslagen, maar de bevestigingsemail kon niet automatisch worden verzonden. FleetConnect volgt dit handmatig op.`);
+                });
             
             if (routeLayer) map.removeLayer(routeLayer);
             if (pickupMarker) map.removeLayer(pickupMarker);
