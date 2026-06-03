@@ -1943,3 +1943,48 @@ Remaining validation:
 - Register/login through CTA and confirm authenticated booking visibility.
 - Create real partner/driver from dashboard.
 - Assign driver and confirm driver assignment email delivery.
+
+## Phase 5.11 - Operator Mapping And UX Latency Fix
+
+Status: LIVE OPERATOR MAPPING FIXED - NOT CERTIFIED
+
+Observed live issues:
+
+- Partner creation failed with `Operator access required`.
+- PV booking confirmation popup was delayed by email sending.
+- Dashboard accept action was delayed by email sending/full refresh.
+- Booking fiche modal needed an always-accessible top-right close button.
+
+Root cause:
+
+- Active dashboard auth user was `admin@ryzen.be` with uid `7208ebda-dfec-42bc-8684-996e7d110cf2`.
+- That user was not mapped to any `partners.user_id` row with `is_hoofd = true`.
+- Public bookings and drivers are under partner `1`, but partner `1` was unmapped.
+- The RPC was correctly enforcing `is_operator()`; no RLS weakening was needed.
+
+Live fix:
+
+- Mapped partner `1` / `Eigen onderneming` to uid `7208ebda-dfec-42bc-8684-996e7d110cf2`.
+- Preserved partner `13` mapping to `iliass.el.krichi@gmail.com`.
+- Left partner `3` unmapped.
+- No RLS policies changed.
+
+Validation:
+
+- Rollback-only `create_operator_partner` under active admin UID succeeded.
+- Rollback-only `create_operator_driver` under active admin UID succeeded.
+- Persisted rollback rows: 0 partners, 0 drivers.
+
+Repository fixes:
+
+- `PV/PV.html` and `PV/klantenportaalpv.html` now show saved-booking popup immediately after DB insert and run `BOOKING_CONFIRMATION` in the background.
+- `Paneel/onderaannemerA.html` now updates accepted-booking UI immediately after DB update and runs `BOOKING_ACCEPTED` in the background.
+- Booking fiche header close button is now sticky, visible, and accessible.
+
+Remaining validation:
+
+- Redeploy Vercel.
+- Browser-test partner creation and driver creation as `admin@ryzen.be`.
+- Browser-test PV popup timing and customer confirmation email.
+- Browser-test accepted-booking UI timing and accepted email.
+- Browser-test fiche close X while modal body is scrolled.

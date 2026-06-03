@@ -226,3 +226,16 @@ Updated certification answer:
 | Driver assignment after created driver | BLOCKED PENDING LIVE BROWSER TESTING | Dashboard assignment code can use loaded drivers; no live assignment email was sent in Phase 5.10. | Assign a real test driver and validate driver inbox. |
 
 FleetConnect remains NOT CERTIFIED pending live browser/inbox validation and other previously documented blockers.
+
+## Phase 5.11 Operator Mapping And UX Gap Update
+
+| Item | Classification | Evidence | Required next action |
+| --- | --- | --- | --- |
+| Active dashboard operator mapping | RESOLVED LIVE | partner `1` now maps to active `admin@ryzen.be` uid; partner `13` mapping preserved. | Browser login as `admin@ryzen.be` and create partner/driver. |
+| Partner creation after mapping | RESOLVED LIVE, PENDING BROWSER TEST | Rollback-only RPC validation under active admin uid passed; no rows persisted. | Create a real test partner from dashboard. |
+| Driver creation after mapping | RESOLVED LIVE, PENDING BROWSER TEST | Rollback-only RPC validation under active admin uid passed for `partner_id = 1`; no rows persisted. | Create a real test driver from dashboard. |
+| PV booking popup latency | RESOLVED IN REPOSITORY | PV pages now show saved-booking popup immediately after DB insert and run confirmation email in background. | Redeploy and browser-test popup timing plus inbox delivery. |
+| Dashboard accept latency | RESOLVED IN REPOSITORY | Accept action updates local UI immediately after DB update and runs accepted email in background. | Redeploy and browser-test accept timing plus inbox delivery. |
+| Booking fiche close X | RESOLVED IN REPOSITORY | Modal header close button is sticky and accessible. | Redeploy and browser-test while modal body is scrolled. |
+
+FleetConnect remains NOT CERTIFIED pending redeploy, browser testing, inbox testing, and previously documented non-Stripe blockers.

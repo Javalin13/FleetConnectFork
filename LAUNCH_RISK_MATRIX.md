@@ -64,3 +64,12 @@ Rationale: core dispatch and RLS risk has been reduced, but required customer an
 | Customer portal booking lookup blocked by RLS | Medium | Medium | Customer may reach portal but not see booking if email/user ownership does not match. | Test with same email used on the booking; approve ownership backfill separately if needed. | Release manager |
 | Partner/driver RPCs not exercised by live dashboard | Medium | Medium | Repository and live RPCs are ready but browser flow remains unproven. | Create one real test partner and driver after redeploy. | Release manager |
 | Driver assignment email not inbox-tested after driver creation | High | Medium | Assignment workflow may create driver but email delivery remains unverified. | Assign test driver with real inbox and verify driver receives request. | Release manager |
+
+## Phase 5.11 Operator Mapping And UX Risks
+
+| Risk | Severity | Likelihood | Impact | Mitigation | Owner |
+| --- | --- | --- | --- | --- | --- |
+| Vercel not redeployed after latency/modal fixes | Medium | Medium | Live UI continues waiting on email and modal X remains less usable. | Redeploy latest checkpoint branch commit. | Release manager |
+| Browser session uses an unmapped operator account | High | Low | RPCs again fail with `Operator access required`. | Use `admin@ryzen.be` or map the intended auth user to a hoofd partner. | Release manager |
+| Background email failure missed by operator/customer | Medium | Medium | Booking is saved/accepted but email may fail after UI has moved on. | Watch secondary alerts/toasts and verify inbox/technical escalation. | Release manager |
+| Partner/driver creation not tested after live mapping | Medium | Medium | Mapping is rollback-validated but actual dashboard prompts remain unproven. | Create one real test partner and driver after redeploy. | Release manager |
