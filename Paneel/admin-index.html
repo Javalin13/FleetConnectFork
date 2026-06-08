@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryzen - Dealership Management</title>
+    <title>FleetConnect - Operator Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -192,7 +192,7 @@
             AUTOMOTIVE EXCELLENCE
         </div>
         <div class="subtitle">
-            Dealership Management Platform
+            Premium Dispatch Platform
         </div>
         
         <div id="loginSection">
@@ -216,7 +216,7 @@
             <div class="panel-buttons">
                 <div class="panel-card card-dealer" id="btnDealer">
                     <i class="fas fa-car-side"></i>
-                    <h3>Auto Dealer</h3>
+                    <h3>Operations</h3>
                     <p>Voorraad Â· Verkopen Â· Facturen Â· Winstmarges</p>
                 </div>
                 <div class="panel-card card-taxi" id="btnTaxi">
@@ -297,10 +297,10 @@
             }
         });
         
-        // Auto Dealer keuze
+        // Operations keuze
         document.getElementById('btnDealer').addEventListener('click', function(e) {
             e.preventDefault();
-            document.getElementById('selectedHint').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Starten Auto Dealer paneel...';
+            document.getElementById('selectedHint').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Starten Operations paneel...';
             setTimeout(function() {
                 window.location.href = 'autodealerpaneel.html';
             }, 300);
@@ -334,3 +334,4 @@
     </script>
 </body>
 </html>
+
