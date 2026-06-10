@@ -3,355 +3,691 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Algemene Voorwaarden | NH</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Vaste prijzen | Fleetconnect</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
-            height: 100vh;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
+        :root {
+            --bg-body: #f4f7fc;
+            --primary: #2c6e9e;
+            --primary-dark: #1e4a6e;
+            --accent-gold: #c9a03d;
+            --accent-green: #6b8c42;
+            --text-dark: #1a2a3a;
+            --text-light: #4a627a;
+            --white: #ffffff;
+            --card-bg: rgba(255,255,255,0.92);
+            --border-light: #e2edf7;
+            --shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
-        #background-map {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        .floating-container {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 24px;
-            height: calc(100vh - 80px);
-            overflow-y: auto;
-        }
-        .floating-container::-webkit-scrollbar { width: 6px; }
-        .floating-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
-        .floating-container::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.3); border-radius: 10px; }
         
-        .content-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 40px 48px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            margin-bottom: 24px;
-            position: relative;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
         }
-        .language-menu {
-            position: absolute;
+        
+        #background-map {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            filter: brightness(1.05) contrast(1.02);
+        }
+        .content-overlay {
+            position: relative; z-index: 10;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(1px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container { width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 24px; }
+
+        /* Taalwisselaar (rechtsboven) */
+        .language-switcher {
+            position: fixed;
             top: 20px;
-            right: 30px;
+            right: 20px;
             display: flex;
             gap: 12px;
-            background: rgba(255,255,255,0.7);
+            z-index: 1000;
+            background: rgba(255,255,255,0.9);
             padding: 6px 12px;
             border-radius: 40px;
             backdrop-filter: blur(4px);
             border: 1px solid rgba(0,0,0,0.1);
         }
         .lang-btn {
-            background: none;
-            border: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            padding: 4px 10px;
-            border-radius: 30px;
-            transition: all 0.2s;
-            color: #1a5c8c;
-        }
-        .lang-btn.active {
-            background: #2c7da0;
-            color: white;
-        }
-        .lang-btn:hover:not(.active) {
-            background: rgba(44,125,160,0.2);
-        }
-        h1 {
-            font-family: 'Inter', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1a2a3a;
-            border-left: 4px solid #2c7da0;
-            padding-left: 20px;
-            margin-bottom: 24px;
-            margin-top: 0;
-        }
-        .last-updated {
-            color: #2c7da0;
-            font-size: 0.8rem;
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-        h2 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1a5c8c;
-            margin: 28px 0 12px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            padding-bottom: 6px;
-        }
-        p, li {
-            color: #3a4a5a;
-            line-height: 1.6;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-        ul, ol { margin-left: 24px; margin-bottom: 16px; }
-        a { color: #2c7da0; text-decoration: none; font-weight: 500; }
-        a:hover { text-decoration: underline; }
-        hr { margin: 24px 0; border-color: rgba(0,0,0,0.05); }
-        
-        .footer-links {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 20px 32px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-        .footer-links a {
-            margin: 0 12px;
-            font-size: 0.8rem;
-            color: #1a5c8c;
-        }
-        .footer-links a:hover { color: #2c7da0; }
-        .back-home-btn {
-            display: inline-block;
-            background: #2c7da0;
-            color: white;
-            padding: 10px 28px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
             border-radius: 40px;
+            cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
-            margin-top: 16px;
-            transition: background 0.2s;
+            transition: 0.2s;
+            color: var(--text-dark);
         }
-        .back-home-btn:hover {
-            background: #1a5c8c;
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin: 30px 0 20px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            padding-top: 60px;
+        }
+        .breadcrumb a {
+            color: var(--primary);
             text-decoration: none;
         }
-        @media (max-width: 700px) {
-            .content-card { padding: 24px 20px; }
-            h1 { font-size: 1.5rem; }
-            h2 { font-size: 1.1rem; }
-            .floating-container { margin: 20px auto; height: calc(100vh - 40px); padding: 0 16px; }
-            .footer-links a { display: inline-block; margin: 6px 8px; }
-            .language-menu { top: 10px; right: 15px; gap: 6px; }
-            .lang-btn { font-size: 0.7rem; padding: 2px 6px; }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumb i {
+            margin: 0 8px;
+            font-size: 0.7rem;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .page-title i {
+            color: var(--accent-gold);
+            margin-right: 15px;
+        }
+        .intro-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        
+        .content-section {
+            padding: 40px 0 60px;
+        }
+        .content-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-light);
+            border-radius: 32px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+        .content-card h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 20px;
+        }
+        .content-card h3 {
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            margin: 25px 0 15px 0;
+        }
+        .content-card p {
+            color: var(--text-light);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        .price-table th, .price-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .price-table th {
+            background: rgba(44,110,158,0.1);
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .price-table tr:hover {
+            background: rgba(44,110,158,0.05);
+        }
+        .feature-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .feature-list li i {
+            color: var(--accent-green);
+            width: 24px;
+            font-size: 1.2rem;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(44,110,158,0.05) 0%, rgba(107,140,66,0.05) 100%);
+            border-left: 4px solid var(--accent-gold);
+            padding: 25px;
+            border-radius: 20px;
+            margin: 30px 0;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .nav-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-light);
+        }
+        .nav-pagination a {
+            background: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-pagination a:hover {
+            background: var(--primary-dark);
+        }
+        
+        .footer-dark {
+            background: #0d1f2c;
+            color: #e0edf5;
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        .footer-brand h4, .footer-ryz3n h4, .footer-legal h4, .footer-partners h4 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+        .footer-brand p, .footer-ryz3n a, .footer-legal a, .footer-partners a {
+            color: #e0edf5;
+            text-decoration: none;
+            line-height: 1.8;
+            display: block;
+        }
+        .footer-ryz3n a:hover, .footer-legal a:hover, .footer-partners a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(224,237,245,0.2);
+            padding-top: 24px;
+            font-size: 0.85rem;
+        }
+        .footer-bottom a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            background: var(--card-bg);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-light);
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-tab:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .page-title { font-size: 1.5rem; }
+            .content-card { padding: 25px; }
+            .price-table th, .price-table td { padding: 10px; font-size: 0.85rem; }
+            .language-switcher { top: 10px; right: 15px; gap: 6px; }
+            .lang-btn { font-size: 0.7rem; padding: 4px 10px; }
+            .breadcrumb { padding-top: 50px; }
         }
     </style>
 </head>
 <body>
-    <div id="background-map"></div>
-    <div class="floating-container">
-        <div class="content-card">
-            <div class="language-menu">
-                <button class="lang-btn active" data-lang="nl">NL</button>
-                <button class="lang-btn" data-lang="fr">FR</button>
-                <button class="lang-btn" data-lang="en">EN</button>
-            </div>
-            <h1 id="terms-title">Algemene Voorwaarden Taxivervoer</h1>
-            <div class="last-updated" id="last-updated">Laatst bijgewerkt: 1 mei 2026</div>
-            
-            <h2 id="art1">Artikel 1 – Definities</h2>
-            <ul id="art1-list">
-                <li><strong>Vervoerder:</strong> NH, gevestigd te België.</li>
-                <li><strong>Passagier:</strong> de natuurlijke of rechtspersoon die met de vervoerder een overeenkomst tot taxivervoer sluit.</li>
-                <li><strong>Taxivervoer:</strong> al het overeengekomen personenvervoer per auto.</li>
-                <li><strong>Boeking:</strong> de reservering van een taxirit via de website, telefoon of andere communicatiemiddelen.</li>
-            </ul>
-            
-            <h2 id="art2">Artikel 2 – Toepasselijkheid</h2>
-            <p id="art2-p">Deze Algemene Voorwaarden zijn van toepassing op alle aanbiedingen, boekingen en overeenkomsten met betrekking tot taxivervoer door de vervoerder. Afwijkingen zijn alleen geldig indien schriftelijk overeengekomen.</p>
-            
-            <h2 id="art3">Artikel 3 – Vergunningen</h2>
-            <p id="art3-p">De vervoerder beschikt over alle vereiste vergunningen voor individueel bezoldigd personenvervoer. Alle voertuigen voldoen aan de wettelijke eisen en milieuvoorschriften.</p>
-            
-            <h2 id="art4">Artikel 4 – Totstandkoming van de overeenkomst</h2>
-            <p id="art4-p">Een boeking is rechtsgeldig nadat de passagier een ritverzoek heeft ingediend en de vervoerder dit verzoek schriftelijk (per e-mail of SMS) heeft bevestigd. De passagier is verplicht om bij de boeking alle relevante informatie te verstrekken.</p>
-            
-            <h2 id="art5">Artikel 5 – Tarieven en betaling</h2>
-            <p id="art5-p">Alle tarieven zijn inclusief BTW. De prijs van een rit wordt voorafgaand aan de boeking kenbaar gemaakt en bedraagt €1,50 per kilometer. Betaling geschiedt voorafgaand aan de rit (online) of contant aan de chauffeur. Toeslagen kunnen van toepassing zijn op nachtritten (23:00-07:00) of extra wachttijd.</p>
-            
-            <h2 id="art6">Artikel 6 – Annulering en no-show</h2>
-            <p id="art6-p">De passagier kan kosteloos annuleren tot 60 minuten vóór de ophaaltijd. Binnen 60 minuten is 50% verschuldigd. Binnen 15 minuten of bij no-show is het volledige ritbedrag verschuldigd.</p>
-            
-            <h2 id="art7">Artikel 7 – Aansprakelijkheid</h2>
-            <p id="art7-p">De vervoerder is aansprakelijk voor schade die het gevolg is van een aan hem toe te rekenen tekortkoming, met inachtneming van wettelijke beperkingen. Maximale aansprakelijkheid per rit is beperkt tot het factuurbedrag.</p>
-            
-            <h2 id="art8">Artikel 8 – Klachten</h2>
-            <p id="art8-p">Klachten dienen binnen 7 werkdagen na de rit schriftelijk te worden ingediend via <a href="mailto:klachten@fleetconnect.be">klachten@fleetconnect.be</a>. Wij reageren binnen 14 werkdagen.</p>
-            
-            <h2 id="art9">Artikel 9 – Toepasselijk recht</h2>
-            <p id="art9-p">Op deze Algemene Voorwaarden is Belgisch recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter te Brussel.</p>
-            
-            <hr>
-            <p id="copyright" style="text-align:center; font-size:0.8rem;">© 2026 NH – DZ Collection</p>
+
+<div id="background-map"></div>
+
+<div class="content-overlay">
+    <div class="language-switcher">
+        <button class="lang-btn" data-lang="nl">NL</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="PV.html" data-i18n="breadcrumb-home">Home</a> <i class="fas fa-chevron-right"></i> 
+            <span style="color: var(--accent-gold);" data-i18n="breadcrumb-current">Vaste prijzen</span>
         </div>
-        
-        <div class="footer-links" id="footer-links">
-            <a href="PV.html" id="home-link">🏠 Home</a> |
-            <a href="PVfaq.html" id="faq-link">❓ FAQ</a> |
-            <a href="PVprivacy.html" id="privacy-link">🔒 Privacy</a> |
-            <a href="PVcookiebeleid.html" id="cookie-link">🍪 Cookiebeleid</a> |
-            <a href="PValgemene-voorwaarden.html" id="terms-link">📜 Voorwaarden</a>
-            <div style="margin-top: 16px;">
-                <a href="PV.html" class="back-home-btn" id="back-home-btn">← Terug naar hoofdpagina</a>
+        <h1 class="page-title"><i class="fas fa-euro-sign"></i> <span data-i18n="page-title">Vaste prijzen</span></h1>
+        <p class="intro-text" data-i18n="intro-text">Geen verrassingen, geen meters, geen discussie. Bij Fleetconnect betaalt u altijd een transparante, vooraf vastgestelde prijs – ongeacht files of omwegen.</p>
+        <a href="PV.html#booking" class="btn-primary"><i class="fas fa-calculator"></i> <span data-i18n="book-btn">Bereken direct uw prijs</span></a>
+    </div>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <a href="PV.html" class="nav-tab"><i class="fas fa-home"></i> <span data-i18n="tab-home">Home</span></a>
+            <a href="PV_Exclusieve_Service.html" class="nav-tab"><i class="fas fa-gem"></i> <span data-i18n="tab-exclusive">Exclusief</span></a>
+            <a href="PV-vaste-prijzen.html" class="nav-tab active"><i class="fas fa-euro-sign"></i> <span data-i18n="tab-prices">Prijzen</span></a>
+            <a href="PV-premium-vloot.html" class="nav-tab"><i class="fas fa-car-side"></i> <span data-i18n="tab-fleet">Vloot</span></a>
+            <a href="PV_Luchthavenvervoer.html" class="nav-tab"><i class="fas fa-plane-departure"></i> <span data-i18n="tab-airport">Luchthaven</span></a>
+            <a href="PV_Zakelijk_Vervoer.html" class="nav-tab"><i class="fas fa-briefcase"></i> <span data-i18n="tab-business">Zakelijk</span></a>
+            <a href="PV_Events_Gala.html" class="nav-tab"><i class="fas fa-glass-cheers"></i> <span data-i18n="tab-events">Events</span></a>
+            <a href="PV_Koeriersdienst.html" class="nav-tab"><i class="fas fa-file-signature"></i> <span data-i18n="tab-courier">Koerier</span></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <div class="content-card">
+                <h2><span data-i18n="card-title">💰 Hoe werkt ons vaste-prijzen model?</span></h2>
+                <p data-i18n="card-intro">Traditionele taxi's gebruiken een meter die blijft doorlopen bij elk rood licht, elke file en elke omweg. Bij Fleetconnect doen we dat anders. U ontvangt bij uw reservering direct een vaste prijs die niet verandert – ook niet als er onverwachte vertraging optreedt.</p>
+                
+                <div class="highlight-box">
+                    <i class="fas fa-shield-alt" style="color: var(--accent-gold); font-size: 1.5rem; margin-bottom: 15px; display: inline-block;"></i>
+                    <p style="font-size: 1.1rem; font-weight: 500;" data-i18n="highlight-text">"U betaalt exact wat u ziet – geen cent meer. Dat is onze belofte."</p>
+                </div>
+
+                <h3 data-i18n="formula-title">📏 Onze prijsformule</h3>
+                <p data-i18n="formula-text">Wij hanteren een eenvoudige en eerlijke formule: <strong>€1,50 per kilometer</strong>, vermenigvuldigd met de exacte routeafstand. Deze prijs is all-in, inclusief:</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="fuel">Alle brandstofkosten</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="tax">Btw en alle belastingen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="toll">Weg- en tolgelden</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="wait">Wacht- en parkeerkosten</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="driver">Chauffeurservice</span></li>
+                </ul>
+
+                <h3 data-i18n="examples-title">🗺️ Voorbeeldprijzen populaire routes</h3>
+                <table class="price-table">
+                    <thead>
+                        <tr><th data-i18n="table-route">Route</th><th data-i18n="table-dist">Afstand</th><th data-i18n="table-price">Vaste prijs</th><th data-i18n="table-time">Reistijd</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td data-i18n="route1">Antwerpen Centraal → Brussel Airport (Zaventem)</td><td>45 km</td><td><strong>€ 67,50</strong></td><td data-i18n="time1">± 40 min</td></tr>
+                        <tr><td data-i18n="route2">Brussel Zuid (Midi) → Charleroi Airport (CRL)</td><td>58 km</td><td><strong>€ 87,00</strong></td><td data-i18n="time2">± 50 min</td></tr>
+                        <tr><td data-i18n="route3">Gent Sint-Pieters → Brugge Centrum</td><td>48 km</td><td><strong>€ 72,00</strong></td><td data-i18n="time3">± 45 min</td></tr>
+                        <tr><td data-i18n="route4">Luik-Guillemins → Maastricht (NL)</td><td>32 km</td><td><strong>€ 48,00</strong></td><td data-i18n="time4">± 35 min</td></tr>
+                        <tr><td data-i18n="route5">Leuven → Brussel Centraal</td><td>28 km</td><td><strong>€ 42,00</strong></td><td data-i18n="time5">± 30 min</td></tr>
+                        <tr><td data-i18n="route6">Namen → Charleroi Airport</td><td>38 km</td><td><strong>€ 57,00</strong></td><td data-i18n="time6">± 35 min</td></tr>
+                    </tbody>
+                </table>
+
+                <h3 data-i18n="return-title">🔄 Heen en terug – dubbele rit, dubbele zekerheid</h3>
+                <p data-i18n="return-text">Voor ritten die u later dezelfde dag of een andere dag terugkeert, bieden wij een speciale <strong>retour-regeling</strong>. U betaalt eenvoudigweg 2× de enkele ritprijs, met de garantie dat dezelfde chauffeur (indien gewenst) u weer komt ophalen. Geen zoektocht naar een nieuwe taxi, geen onzekerheid over de prijs.</p>
+
+                <h3 data-i18n="extras-title">➕ Extra opties – meerprijzen die duidelijk zijn</h3>
+                <p data-i18n="extras-intro">Wilt u extra luxe of specifieke wensen? Dan berekenen wij hier een klein, transparant bedrag voor:</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-car"></i> <strong data-i18n="break-label">Break model</strong> <span data-i18n="break-text">– Meer bagageruimte: + €5</span></li>
+                    <li><i class="fas fa-star"></i> <strong data-i18n="exclusive-label">Exclusieve wagen</strong> <span data-i18n="exclusive-text">(Mercedes E-Klasse / BMW 5 Serie): + €15</span></li>
+                    <li><i class="fas fa-users"></i> <strong data-i18n="van-label">Mini Van</strong> <span data-i18n="van-text">(tot 8 personen): + €10</span></li>
+                    <li><i class="fas fa-handshake"></i> <strong data-i18n="meet-label">Meet & Greet</strong> <span data-i18n="meet-text">– Chauffeur wacht met naamplaatje: + €0 (gratis)</span></li>
+                    <li><i class="fas fa-kiss"></i> <strong data-i18n="kiss-label">Kiss & Ride</strong> <span data-i18n="kiss-text">– Snelle stop voor drop-off: + €0 (gratis)</span></li>
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h2><span data-i18n="payment-title">💳 Betaalmogelijkheden – flexibel en veilig</span></h2>
+                <p data-i18n="payment-intro">U kiest hoe u betaalt. Wij accepteren alle gangbare betaalmethoden, zonder verborgen toeslagen:</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-money-bill-wave"></i> <strong data-i18n="pay-cash">Cash</strong> <span data-i18n="pay-cash-text">– Contant betalen bij de chauffeur</span></li>
+                    <li><i class="fas fa-credit-card"></i> <strong data-i18n="pay-card">Bancontact / Visa / Mastercard</strong> <span data-i18n="pay-card-text">– Terminal aan boord</span></li>
+                    <li><i class="fas fa-mobile-alt"></i> <strong data-i18n="pay-mobile">Payconiq / Bank app</strong> <span data-i18n="pay-mobile-text">– Scan de QR-code</span></li>
+                    <li><i class="fas fa-file-invoice"></i> <strong data-i18n="pay-invoice">Factuur (zakelijk)</strong> <span data-i18n="pay-invoice-text">– Voor bedrijven met BTW-nummer</span></li>
+                </ul>
+                <div class="highlight-box">
+                    <p><span data-i18n="tip-text"><strong>💡 Tip voor zakelijke klanten:</strong> Vraag uw factuur aan bij de reservering. Wij sturen deze binnen 24 uur naar uw e-mailadres, inclusief BTW-specificatie.</span></p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h2><span data-i18n="faq-title">❓ Veelgestelde vragen over vaste prijzen</span></h2>
+                
+                <h3 data-i18n="faq-q1">🚦 Wat als er een file is? Wordt de prijs dan hoger?</h3>
+                <p data-i18n="faq-a1"><strong>Nee.</strong> De prijs is gebaseerd op de routeafstand, niet op de tijd. U betaalt nooit extra voor files, omleidingen of vertraging. Dit is het grote voordeel van vaste prijzen ten opzichte van een taximeter.</p>
+                
+                <h3 data-i18n="faq-q2">🛑 Wat als ik een tussenstop wil maken?</h3>
+                <p data-i18n="faq-a2">Kleine tussenstops (maximaal 5 minuten) zijn inbegrepen. Voor langere stops of extra afwijkingen berekenen wij een klein supplement van €5 per extra stop. Dit wordt vooraf met u gecommuniceerd.</p>
+                
+                <h3 data-i18n="faq-q3">🧳 Is bagage inbegrepen?</h3>
+                <p data-i18n="faq-a3">Ja, standaard bagage (2 koffers + handbagage per passagier) is inbegrepen. Voor excessieve bagage of speciale items (zoals ski's, golftassen, of fietsen) kan een kleine toeslag gelden – altijd vooraf besproken.</p>
+                
+                <h3 data-i18n="faq-q4">📅 Kan ik annuleren zonder kosten?</h3>
+                <p data-i18n="faq-a4">U kunt gratis annuleren tot 2 uur voor de rit. Bij annulering binnen 2 uur voor de rit rekenen wij 50% van de ritprijs. Voor no-show (niet komen opdagen) wordt de volledige prijs in rekening gebracht.</p>
+            </div>
+
+            <div class="nav-pagination">
+                <a href="PV_Exclusieve_Service.html"><i class="fas fa-arrow-left"></i> <span data-i18n="prev-link">Vorige: Exclusieve service</span></a>
+                <a href="PV-premium-vloot.html"><span data-i18n="next-link">Volgende: Premium vloot</span> <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
-    
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        var map = L.map('background-map').setView([50.85, 4.35], 13);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB',
-            subdomains: 'abcd',
-            maxZoom: 19
-        }).addTo(map);
-        
-        const termsTranslations = {
-            nl: {
-                title: "Algemene Voorwaarden Taxivervoer",
-                lastUpdated: "Laatst bijgewerkt: 1 mei 2026",
-                art1: "Artikel 1 – Definities",
-                art1_list: [
-                    "<strong>Vervoerder:</strong> NH, gevestigd te België.",
-                    "<strong>Passagier:</strong> de natuurlijke of rechtspersoon die met de vervoerder een overeenkomst tot taxivervoer sluit.",
-                    "<strong>Taxivervoer:</strong> al het overeengekomen personenvervoer per auto.",
-                    "<strong>Boeking:</strong> de reservering van een taxirit via de website, telefoon of andere communicatiemiddelen."
-                ],
-                art2: "Artikel 2 – Toepasselijkheid",
-                art2_p: "Deze Algemene Voorwaarden zijn van toepassing op alle aanbiedingen, boekingen en overeenkomsten met betrekking tot taxivervoer door de vervoerder. Afwijkingen zijn alleen geldig indien schriftelijk overeengekomen.",
-                art3: "Artikel 3 – Vergunningen",
-                art3_p: "De vervoerder beschikt over alle vereiste vergunningen voor individueel bezoldigd personenvervoer. Alle voertuigen voldoen aan de wettelijke eisen en milieuvoorschriften.",
-                art4: "Artikel 4 – Totstandkoming van de overeenkomst",
-                art4_p: "Een boeking is rechtsgeldig nadat de passagier een ritverzoek heeft ingediend en de vervoerder dit verzoek schriftelijk (per e-mail of SMS) heeft bevestigd. De passagier is verplicht om bij de boeking alle relevante informatie te verstrekken.",
-                art5: "Artikel 5 – Tarieven en betaling",
-                art5_p: "Alle tarieven zijn inclusief BTW. De prijs van een rit wordt voorafgaand aan de boeking kenbaar gemaakt en bedraagt €1,50 per kilometer. Betaling geschiedt voorafgaand aan de rit (online) of contant aan de chauffeur. Toeslagen kunnen van toepassing zijn op nachtritten (23:00-07:00) of extra wachttijd.",
-                art6: "Artikel 6 – Annulering en no-show",
-                art6_p: "De passagier kan kosteloos annuleren tot 60 minuten vóór de ophaaltijd. Binnen 60 minuten is 50% verschuldigd. Binnen 15 minuten of bij no-show is het volledige ritbedrag verschuldigd.",
-                art7: "Artikel 7 – Aansprakelijkheid",
-                art7_p: "De vervoerder is aansprakelijk voor schade die het gevolg is van een aan hem toe te rekenen tekortkoming, met inachtneming van wettelijke beperkingen. Maximale aansprakelijkheid per rit is beperkt tot het factuurbedrag.",
-                art8: "Artikel 8 – Klachten",
-                art8_p: "Klachten dienen binnen 7 werkdagen na de rit schriftelijk te worden ingediend via <a href='mailto:klachten@fleetconnect.be'>klachten@fleetconnect.be</a>. Wij reageren binnen 14 werkdagen.",
-                art9: "Artikel 9 – Toepasselijk recht",
-                art9_p: "Op deze Algemene Voorwaarden is Belgisch recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter te Brussel.",
-                copyright: "© 2026 NH – DZ Collection",
-                footer: { home: "🏠 Home", faq: "❓ FAQ", privacy: "🔒 Privacy", cookie: "🍪 Cookiebeleid", terms: "📜 Voorwaarden", back: "← Terug naar hoofdpagina" }
-            },
-            fr: {
-                title: "Conditions Générales de Transport en Taxi",
-                lastUpdated: "Dernière mise à jour : 1 mai 2026",
-                art1: "Article 1 – Définitions",
-                art1_list: [
-                    "<strong>Transporteur :</strong> NH, établi en Belgique.",
-                    "<strong>Passager :</strong> la personne physique ou morale qui conclut un contrat de transport en taxi avec le transporteur.",
-                    "<strong>Transport en taxi :</strong> tout transport de personnes convenu par voiture.",
-                    "<strong>Réservation :</strong> la réservation d'une course en taxi via le site web, par téléphone ou par d'autres moyens de communication."
-                ],
-                art2: "Article 2 – Applicabilité",
-                art2_p: "Les présentes conditions générales s'appliquent à toutes les offres, réservations et contrats relatifs au transport en taxi par le transporteur. Les dérogations ne sont valables que si elles sont convenues par écrit.",
-                art3: "Article 3 – Autorisations",
-                art3_p: "Le transporteur dispose de toutes les autorisations requises pour le transport rémunéré de personnes. Tous les véhicules répondent aux exigences légales et environnementales.",
-                art4: "Article 4 – Conclusion du contrat",
-                art4_p: "Une réservation est valable après que le passager a soumis une demande de course et que le transporteur a confirmé cette demande par écrit (par e-mail ou SMS). Le passager est tenu de fournir toutes les informations pertinentes lors de la réservation.",
-                art5: "Article 5 – Tarifs et paiement",
-                art5_p: "Tous les tarifs sont TTC. Le prix d'une course est communiqué avant la réservation et s'élève à 1,50 € par kilomètre. Le paiement s'effectue avant la course (en ligne) ou en espèces au chauffeur. Des suppléments peuvent s'appliquer pour les courses de nuit (23h00-07h00) ou les temps d'attente supplémentaires.",
-                art6: "Article 6 – Annulation et non-présentation",
-                art6_p: "Le passager peut annuler gratuitement jusqu'à 60 minutes avant l'heure de prise en charge. Dans les 60 minutes, 50 % est dû. Dans les 15 minutes ou en cas de non-présentation, la totalité du prix de la course est due.",
-                art7: "Article 7 – Responsabilité",
-                art7_p: "Le transporteur est responsable des dommages résultant d'un manquement qui lui est imputable, dans les limites légales. La responsabilité maximale par course est limitée au montant de la facture.",
-                art8: "Article 8 – Réclamations",
-                art8_p: "Les réclamations doivent être soumises par écrit dans les 7 jours ouvrables suivant la course à <a href='mailto:klachten@fleetconnect.be'>klachten@fleetconnect.be</a>. Nous répondons dans les 14 jours ouvrables.",
-                art9: "Article 9 – Droit applicable",
-                art9_p: "Le droit belge s'applique aux présentes conditions générales. Les litiges sont soumis au tribunal compétent de Bruxelles.",
-                copyright: "© 2026 NH – DZ Collection",
-                footer: { home: "🏠 Accueil", faq: "❓ FAQ", privacy: "🔒 Confidentialité", cookie: "🍪 Politique des cookies", terms: "📜 Conditions", back: "← Retour à la page d'accueil" }
-            },
-            en: {
-                title: "General Terms and Conditions for Taxi Transport",
-                lastUpdated: "Last updated: 1 May 2026",
-                art1: "Article 1 – Definitions",
-                art1_list: [
-                    "<strong>Carrier:</strong> NH, established in Belgium.",
-                    "<strong>Passenger:</strong> the natural or legal person who enters into a taxi transport agreement with the carrier.",
-                    "<strong>Taxi transport:</strong> all agreed passenger transport by car.",
-                    "<strong>Booking:</strong> the reservation of a taxi ride via the website, telephone or other means of communication."
-                ],
-                art2: "Article 2 – Applicability",
-                art2_p: "These General Terms and Conditions apply to all offers, bookings and agreements concerning taxi transport by the carrier. Deviations are only valid if agreed in writing.",
-                art3: "Article 3 – Licences",
-                art3_p: "The carrier holds all required licences for individual paid passenger transport. All vehicles comply with legal requirements and environmental regulations.",
-                art4: "Article 4 – Conclusion of the agreement",
-                art4_p: "A booking is valid after the passenger has submitted a ride request and the carrier has confirmed this request in writing (by email or SMS). The passenger is obliged to provide all relevant information when booking.",
-                art5: "Article 5 – Rates and payment",
-                art5_p: "All rates include VAT. The price of a ride is made known prior to booking and amounts to €1.50 per kilometre. Payment is made before the ride (online) or in cash to the driver. Surcharges may apply for night rides (11:00 PM – 7:00 AM) or extra waiting time.",
-                art6: "Article 6 – Cancellation and no-show",
-                art6_p: "The passenger may cancel free of charge up to 60 minutes before pick-up time. Within 60 minutes, 50% is due. Within 15 minutes or in case of no-show, the full ride amount is due.",
-                art7: "Article 7 – Liability",
-                art7_p: "The carrier is liable for damage resulting from a shortcoming attributable to him, subject to legal limitations. Maximum liability per ride is limited to the invoice amount.",
-                art8: "Article 8 – Complaints",
-                art8_p: "Complaints must be submitted in writing within 7 working days after the ride to <a href='mailto:klachten@fleetconnect.be'>klachten@fleetconnect.be</a>. We will respond within 14 working days.",
-                art9: "Article 9 – Applicable law",
-                art9_p: "These General Terms and Conditions are governed by Belgian law. Disputes shall be submitted to the competent court in Brussels.",
-                copyright: "© 2026 NH – DZ Collection",
-                footer: { home: "🏠 Home", faq: "❓ FAQ", privacy: "🔒 Privacy", cookie: "🍪 Cookie Policy", terms: "📜 Terms", back: "← Back to homepage" }
-            }
-        };
-        
-        function setTermsLanguage(lang) {
-            const t = termsTranslations[lang];
-            document.getElementById('terms-title').innerText = t.title;
-            document.getElementById('last-updated').innerText = t.lastUpdated;
-            document.getElementById('art1').innerText = t.art1;
-            const list1 = document.getElementById('art1-list');
-            list1.innerHTML = t.art1_list.map(li => `<li>${li}</li>`).join('');
-            document.getElementById('art2').innerText = t.art2;
-            document.getElementById('art2-p').innerHTML = t.art2_p;
-            document.getElementById('art3').innerText = t.art3;
-            document.getElementById('art3-p').innerHTML = t.art3_p;
-            document.getElementById('art4').innerText = t.art4;
-            document.getElementById('art4-p').innerHTML = t.art4_p;
-            document.getElementById('art5').innerText = t.art5;
-            document.getElementById('art5-p').innerHTML = t.art5_p;
-            document.getElementById('art6').innerText = t.art6;
-            document.getElementById('art6-p').innerHTML = t.art6_p;
-            document.getElementById('art7').innerText = t.art7;
-            document.getElementById('art7-p').innerHTML = t.art7_p;
-            document.getElementById('art8').innerText = t.art8;
-            document.getElementById('art8-p').innerHTML = t.art8_p;
-            document.getElementById('art9').innerText = t.art9;
-            document.getElementById('art9-p').innerHTML = t.art9_p;
-            document.getElementById('copyright').innerText = t.copyright;
-            // Footer
-            document.getElementById('home-link').innerHTML = t.footer.home;
-            document.getElementById('faq-link').innerHTML = t.footer.faq;
-            document.getElementById('privacy-link').innerHTML = t.footer.privacy;
-            document.getElementById('cookie-link').innerHTML = t.footer.cookie;
-            document.getElementById('terms-link').innerHTML = t.footer.terms;
-            document.getElementById('back-home-btn').innerHTML = t.footer.back;
-            // Active class
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
+
+    <footer class="footer-dark">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h4><i class="fas fa-crown"></i> Fleetconnect</h4>
+                    <p data-i18n="footer-brand-text">Premium taxivervoer in België – Stijl, stiptheid en service.</p>
+                </div>
+                <div class="footer-ryz3n">
+                    <h4>Fleetconnect | Digital Supremacy</h4>
+                    <a href="#" data-i18n="footer-control">Control Panel</a>
+                    <a href="#" data-i18n="footer-dispatch">Taxi Dispatch</a>
+                    <a href="#" data-i18n="footer-legal">Legal & Privacy</a>
+                </div>
+                <div class="footer-legal">
+                    <h4 data-i18n="footer-legal-title">Juridisch</h4>
+                    <a href="#" data-i18n="footer-tos">Algemene voorwaarden</a>
+                    <a href="#" data-i18n="footer-privacy">Privacy</a>
+                    <a href="#" data-i18n="footer-cookies">Cookiebeleid</a>
+                </div>
+                <div class="footer-partners">
+                    <h4 data-i18n="footer-partners-title">Partners</h4>
+                    <a href="#">Horizon Of Infinity</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><span data-i18n="footer-copyright">© 2026 Fleetconnect – </span><a href="#">Fleetconnect</a></div>
+        </div>
+    </footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const translations = {
+        nl: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Vaste prijzen", "page-title": "Vaste prijzen",
+            "intro-text": "Geen verrassingen, geen meters, geen discussie. Bij Fleetconnect betaalt u altijd een transparante, vooraf vastgestelde prijs – ongeacht files of omwegen.",
+            "book-btn": "Bereken direct uw prijs",
+            "tab-home": "Home", "tab-exclusive": "Exclusief", "tab-prices": "Prijzen", "tab-fleet": "Vloot", "tab-airport": "Luchthaven", "tab-business": "Zakelijk", "tab-events": "Events", "tab-courier": "Koerier",
+            "card-title": "💰 Hoe werkt ons vaste-prijzen model?",
+            "card-intro": "Traditionele taxi's gebruiken een meter die blijft doorlopen bij elk rood licht, elke file en elke omweg. Bij Fleetconnect doen we dat anders. U ontvangt bij uw reservering direct een vaste prijs die niet verandert – ook niet als er onverwachte vertraging optreedt.",
+            "highlight-text": "\"U betaalt exact wat u ziet – geen cent meer. Dat is onze belofte.\"",
+            "formula-title": "📏 Onze prijsformule",
+            "formula-text": "Wij hanteren een eenvoudige en eerlijke formule: €1,50 per kilometer, vermenigvuldigd met de exacte routeafstand. Deze prijs is all-in, inclusief:",
+            "fuel": "Alle brandstofkosten",
+            "tax": "Btw en alle belastingen",
+            "toll": "Weg- en tolgelden",
+            "wait": "Wacht- en parkeerkosten",
+            "driver": "Chauffeurservice",
+            "examples-title": "🗺️ Voorbeeldprijzen populaire routes",
+            "table-route": "Route", "table-dist": "Afstand", "table-price": "Vaste prijs", "table-time": "Reistijd",
+            "route1": "Antwerpen Centraal → Brussel Airport (Zaventem)", "time1": "± 40 min",
+            "route2": "Brussel Zuid (Midi) → Charleroi Airport (CRL)", "time2": "± 50 min",
+            "route3": "Gent Sint-Pieters → Brugge Centrum", "time3": "± 45 min",
+            "route4": "Luik-Guillemins → Maastricht (NL)", "time4": "± 35 min",
+            "route5": "Leuven → Brussel Centraal", "time5": "± 30 min",
+            "route6": "Namen → Charleroi Airport", "time6": "± 35 min",
+            "return-title": "🔄 Heen en terug – dubbele rit, dubbele zekerheid",
+            "return-text": "Voor ritten die u later dezelfde dag of een andere dag terugkeert, bieden wij een speciale retour-regeling. U betaalt eenvoudigweg 2× de enkele ritprijs, met de garantie dat dezelfde chauffeur (indien gewenst) u weer komt ophalen. Geen zoektocht naar een nieuwe taxi, geen onzekerheid over de prijs.",
+            "extras-title": "➕ Extra opties – meerprijzen die duidelijk zijn",
+            "extras-intro": "Wilt u extra luxe of specifieke wensen? Dan berekenen wij hier een klein, transparant bedrag voor:",
+            "break-label": "Break model", "break-text": "– Meer bagageruimte: + €5",
+            "exclusive-label": "Exclusieve wagen", "exclusive-text": "(Mercedes E-Klasse / BMW 5 Serie): + €15",
+            "van-label": "Mini Van", "van-text": "(tot 8 personen): + €10",
+            "meet-label": "Meet & Greet", "meet-text": "– Chauffeur wacht met naamplaatje: + €0 (gratis)",
+            "kiss-label": "Kiss & Ride", "kiss-text": "– Snelle stop voor drop-off: + €0 (gratis)",
+            "payment-title": "💳 Betaalmogelijkheden – flexibel en veilig",
+            "payment-intro": "U kiest hoe u betaalt. Wij accepteren alle gangbare betaalmethoden, zonder verborgen toeslagen:",
+            "pay-cash": "Cash", "pay-cash-text": "– Contant betalen bij de chauffeur",
+            "pay-card": "Bancontact / Visa / Mastercard", "pay-card-text": "– Terminal aan boord",
+            "pay-mobile": "Payconiq / Bank app", "pay-mobile-text": "– Scan de QR-code",
+            "pay-invoice": "Factuur (zakelijk)", "pay-invoice-text": "– Voor bedrijven met BTW-nummer",
+            "tip-text": "💡 Tip voor zakelijke klanten: Vraag uw factuur aan bij de reservering. Wij sturen deze binnen 24 uur naar uw e-mailadres, inclusief BTW-specificatie.",
+            "faq-title": "❓ Veelgestelde vragen over vaste prijzen",
+            "faq-q1": "🚦 Wat als er een file is? Wordt de prijs dan hoger?",
+            "faq-a1": "Nee. De prijs is gebaseerd op de routeafstand, niet op de tijd. U betaalt nooit extra voor files, omleidingen of vertraging. Dit is het grote voordeel van vaste prijzen ten opzichte van een taximeter.",
+            "faq-q2": "🛑 Wat als ik een tussenstop wil maken?",
+            "faq-a2": "Kleine tussenstops (maximaal 5 minuten) zijn inbegrepen. Voor langere stops of extra afwijkingen berekenen wij een klein supplement van €5 per extra stop. Dit wordt vooraf met u gecommuniceerd.",
+            "faq-q3": "🧳 Is bagage inbegrepen?",
+            "faq-a3": "Ja, standaard bagage (2 koffers + handbagage per passagier) is inbegrepen. Voor excessieve bagage of speciale items (zoals ski's, golftassen, of fietsen) kan een kleine toeslag gelden – altijd vooraf besproken.",
+            "faq-q4": "📅 Kan ik annuleren zonder kosten?",
+            "faq-a4": "U kunt gratis annuleren tot 2 uur voor de rit. Bij annulering binnen 2 uur voor de rit rekenen wij 50% van de ritprijs. Voor no-show (niet komen opdagen) wordt de volledige prijs in rekening gebracht.",
+            "prev-link": "Vorige: Exclusieve service", "next-link": "Volgende: Premium vloot",
+            "footer-brand-text": "Premium taxivervoer in België – Stijl, stiptheid en service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Juridisch", "footer-tos": "Algemene voorwaarden", "footer-privacy": "Privacy", "footer-cookies": "Cookiebeleid",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        fr: {
+            "breadcrumb-home": "Accueil", "breadcrumb-current": "Prix fixes", "page-title": "Prix fixes",
+            "intro-text": "Pas de surprises, pas de compteur, pas de discussion. Chez Fleetconnect, vous payez toujours un prix transparent et fixé à l'avance – quels que soient les embouteillages ou les détours.",
+            "book-btn": "Calculez votre prix immédiatement",
+            "tab-home": "Accueil", "tab-exclusive": "Exclusif", "tab-prices": "Prix fixes", "tab-fleet": "Flotte", "tab-airport": "Aéroport", "tab-business": "Affaires", "tab-events": "Événements", "tab-courier": "Messagerie",
+            "card-title": "💰 Comment fonctionne notre modèle de prix fixes?",
+            "card-intro": "Les taxis traditionnels utilisent un compteur qui continue de tourner à chaque feu rouge, chaque embouteillage et chaque détour. Chez Fleetconnect, nous faisons différemment. Vous recevez un prix fixe lors de votre réservation, qui ne change pas – même en cas de retard imprévu.",
+            "highlight-text": "\"Vous payez exactement ce que vous voyez – pas un centime de plus. C'est notre promesse.\"",
+            "formula-title": "📏 Notre formule de prix",
+            "formula-text": "Nous appliquons une formule simple et équitable : 1,50 € par kilomètre, multiplié par la distance exacte de l'itinéraire. Ce prix est tout compris, incluant :",
+            "fuel": "Tous les frais de carburant",
+            "tax": "TVA et toutes les taxes",
+            "toll": "Frais de route et de péage",
+            "wait": "Frais d'attente et de stationnement",
+            "driver": "Service de chauffeur",
+            "examples-title": "🗺️ Exemples de prix pour les trajets populaires",
+            "table-route": "Itinéraire", "table-dist": "Distance", "table-price": "Prix fixe", "table-time": "Temps de trajet",
+            "route1": "Anvers-Central → Aéroport de Bruxelles (Zaventem)", "time1": "± 40 min",
+            "route2": "Bruxelles-Midi → Aéroport de Charleroi (CRL)", "time2": "± 50 min",
+            "route3": "Gand Saint-Pierre → Centre de Bruges", "time3": "± 45 min",
+            "route4": "Liège-Guillemins → Maastricht (NL)", "time4": "± 35 min",
+            "route5": "Louvain → Bruxelles-Central", "time5": "± 30 min",
+            "route6": "Namur → Aéroport de Charleroi", "time6": "± 35 min",
+            "return-title": "🔄 Aller-retour – double trajet, double certitude",
+            "return-text": "Pour les trajets que vous effectuez plus tard le même jour ou un autre jour, nous proposons une formule spéciale aller-retour. Vous payez simplement 2× le prix du simple, avec la garantie que le même chauffeur (si vous le souhaitez) revienne vous chercher. Pas de recherche d'un nouveau taxi, pas d'incertitude sur le prix.",
+            "extras-title": "➕ Options supplémentaires – suppléments clairs",
+            "extras-intro": "Vous souhaitez plus de luxe ou des demandes spécifiques ? Nous appliquons alors un petit montant transparent :",
+            "break-label": "Break / familiale", "break-text": "– Plus d'espace bagages : +5 €",
+            "exclusive-label": "Voiture exclusive", "exclusive-text": "(Mercedes Classe E / BMW Série 5) : +15 €",
+            "van-label": "Mini Van", "van-text": "(jusqu'à 8 personnes) : +10 €",
+            "meet-label": "Meet & Greet", "meet-text": "– Chauffeur vous attend avec une pancarte : +0 € (gratuit)",
+            "kiss-label": "Kiss & Ride", "kiss-text": "– Arrêt rapide pour déposer : +0 € (gratuit)",
+            "payment-title": "💳 Moyens de paiement – flexibles et sécurisés",
+            "payment-intro": "Vous choisissez comment payer. Nous acceptons tous les modes de paiement courants, sans frais cachés :",
+            "pay-cash": "Espèces", "pay-cash-text": "– Paiement en espèces au chauffeur",
+            "pay-card": "Bancontact / Visa / Mastercard", "pay-card-text": "– Terminal à bord",
+            "pay-mobile": "Payconiq / App bancaire", "pay-mobile-text": "– Scannez le code QR",
+            "pay-invoice": "Facture (professionnel)", "pay-invoice-text": "– Pour les entreprises avec numéro de TVA",
+            "tip-text": "💡 Conseil pour les clients professionnels : Demandez votre facture lors de la réservation. Nous vous l'enverrons sous 24 heures à votre adresse e-mail, avec le détail de la TVA.",
+            "faq-title": "❓ Questions fréquentes sur les prix fixes",
+            "faq-q1": "🚦 Que se passe-t-il en cas d'embouteillage ? Le prix augmente-t-il ?",
+            "faq-a1": "Non. Le prix est basé sur la distance de l'itinéraire, pas sur le temps. Vous ne payez jamais de supplément pour les embouteillages, déviations ou retards. C'est le grand avantage des prix fixes par rapport au taxi à compteur.",
+            "faq-q2": "🛑 Que faire si je veux faire un arrêt intermédiaire ?",
+            "faq-a2": "Les petits arrêts (5 minutes maximum) sont inclus. Pour les arrêts plus longs ou les écarts supplémentaires, nous appliquons un petit supplément de 5 € par arrêt supplémentaire. Cela vous sera communiqué à l'avance.",
+            "faq-q3": "🧳 Les bagages sont-ils inclus ?",
+            "faq-a3": "Oui, les bagages standards (2 valises + bagage à main par passager) sont inclus. Pour les bagages excessifs ou les articles spéciaux (skis, sacs de golf, vélos), un petit supplément peut s'appliquer – toujours convenu à l'avance.",
+            "faq-q4": "📅 Puis-je annuler sans frais ?",
+            "faq-a4": "Vous pouvez annuler gratuitement jusqu'à 2 heures avant le trajet. En cas d'annulation moins de 2 heures avant le trajet, nous facturons 50 % du prix du trajet. En cas de no-show (vous ne vous présentez pas), le prix total est facturé.",
+            "prev-link": "Précédent : Service exclusif", "next-link": "Suivant : Flotte premium",
+            "footer-brand-text": "Service de taxi premium en Belgique – Style, ponctualité et service.",
+            "footer-control": "Panneau de contrôle", "footer-dispatch": "Répartition des taxis", "footer-legal": "Juridique et confidentialité",
+            "footer-legal-title": "Juridique", "footer-tos": "Conditions générales", "footer-privacy": "Confidentialité", "footer-cookies": "Politique de cookies",
+            "footer-partners-title": "Partenaires", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        en: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Fixed prices", "page-title": "Fixed prices",
+            "intro-text": "No surprises, no meters, no discussion. At Fleetconnect you always pay a transparent, pre-determined price – regardless of traffic jams or detours.",
+            "book-btn": "Calculate your price now",
+            "tab-home": "Home", "tab-exclusive": "Exclusive", "tab-prices": "Prices", "tab-fleet": "Fleet", "tab-airport": "Airport", "tab-business": "Business", "tab-events": "Events", "tab-courier": "Courier",
+            "card-title": "💰 How does our fixed-price model work?",
+            "card-intro": "Traditional taxis use a meter that keeps running at every red light, every traffic jam and every detour. At Fleetconnect we do things differently. You receive a fixed price at the time of booking that does not change – even if unexpected delays occur.",
+            "highlight-text": "\"You pay exactly what you see – not a cent more. That is our promise.\"",
+            "formula-title": "📏 Our pricing formula",
+            "formula-text": "We use a simple and fair formula: €1.50 per kilometer, multiplied by the exact route distance. This price is all-inclusive, including:",
+            "fuel": "All fuel costs",
+            "tax": "VAT and all taxes",
+            "toll": "Road and toll fees",
+            "wait": "Waiting and parking costs",
+            "driver": "Driver service",
+            "examples-title": "🗺️ Example prices for popular routes",
+            "table-route": "Route", "table-dist": "Distance", "table-price": "Fixed price", "table-time": "Travel time",
+            "route1": "Antwerp Central → Brussels Airport (Zaventem)", "time1": "± 40 min",
+            "route2": "Brussels South (Midi) → Charleroi Airport (CRL)", "time2": "± 50 min",
+            "route3": "Ghent Sint-Pieters → Bruges Center", "time3": "± 45 min",
+            "route4": "Liège-Guillemins → Maastricht (NL)", "time4": "± 35 min",
+            "route5": "Leuven → Brussels Central", "time5": "± 30 min",
+            "route6": "Namur → Charleroi Airport", "time6": "± 35 min",
+            "return-title": "🔄 Round trip – double ride, double certainty",
+            "return-text": "For rides that you return later the same day or another day, we offer a special round-trip arrangement. You simply pay 2× the one-way fare, with the guarantee that the same driver (if desired) will pick you up again. No searching for a new taxi, no uncertainty about the price.",
+            "extras-title": "➕ Extra options – clear surcharges",
+            "extras-intro": "Do you want extra luxury or specific wishes? Then we charge a small, transparent amount for it:",
+            "break-label": "Break / Station wagon", "break-text": "– More luggage space: + €5",
+            "exclusive-label": "Exclusive car", "exclusive-text": "(Mercedes E-Class / BMW 5 Series): + €15",
+            "van-label": "Mini Van", "van-text": "(up to 8 persons): + €10",
+            "meet-label": "Meet & Greet", "meet-text": "– Driver waits with name sign: + €0 (free)",
+            "kiss-label": "Kiss & Ride", "kiss-text": "– Quick stop for drop-off: + €0 (free)",
+            "payment-title": "💳 Payment methods – flexible and secure",
+            "payment-intro": "You choose how to pay. We accept all common payment methods, with no hidden fees:",
+            "pay-cash": "Cash", "pay-cash-text": "– Pay in cash to the driver",
+            "pay-card": "Bancontact / Visa / Mastercard", "pay-card-text": "– Terminal on board",
+            "pay-mobile": "Payconiq / Banking app", "pay-mobile-text": "– Scan the QR code",
+            "pay-invoice": "Invoice (business)", "pay-invoice-text": "– For companies with VAT number",
+            "tip-text": "💡 Tip for business customers: Request your invoice when booking. We will send it to your email address within 24 hours, including VAT breakdown.",
+            "faq-title": "❓ Frequently asked questions about fixed prices",
+            "faq-q1": "🚦 What if there is a traffic jam? Will the price increase?",
+            "faq-a1": "No. The price is based on the route distance, not on time. You never pay extra for traffic jams, detours or delays. This is the major advantage of fixed prices over a taximeter.",
+            "faq-q2": "🛑 What if I want to make an intermediate stop?",
+            "faq-a2": "Small stops (maximum 5 minutes) are included. For longer stops or extra deviations, we charge a small supplement of €5 per extra stop. This will be communicated to you in advance.",
+            "faq-q3": "🧳 Is luggage included?",
+            "faq-a3": "Yes, standard luggage (2 suitcases + hand luggage per passenger) is included. For excessive luggage or special items (such as skis, golf bags, or bicycles), a small surcharge may apply – always agreed in advance.",
+            "faq-q4": "📅 Can I cancel without costs?",
+            "faq-a4": "You can cancel free of charge up to 2 hours before the ride. For cancellation within 2 hours of the ride, we charge 50% of the ride price. For no-show, the full price is charged.",
+            "prev-link": "Previous: Exclusive service", "next-link": "Next: Premium fleet",
+            "footer-brand-text": "Premium taxi transport in Belgium – Style, punctuality and service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Legal", "footer-tos": "Terms & Conditions", "footer-privacy": "Privacy", "footer-cookies": "Cookie Policy",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
         }
-        
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => setTermsLanguage(btn.getAttribute('data-lang')));
+    };
+
+    function setLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = translations[lang][key];
+                else el.innerHTML = translations[lang][key];
+            }
         });
-        setTermsLanguage('nl');
-    </script>
+        document.documentElement.lang = lang;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        localStorage.setItem('preferredLanguage', lang);
+    }
+
+    // Bepaling initiële taal (prioriteit: URL parameter > localStorage > 'nl')
+    function getInitialLanguage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
+            return langParam;
+        }
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang && (savedLang === 'nl' || savedLang === 'fr' || savedLang === 'en')) {
+            return savedLang;
+        }
+        return 'nl';
+    }
+
+    // Taalwisselaar klik
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            setLanguage(lang);
+            // Verwijder de ?lang= parameter uit de URL voor een schone weergave
+            const url = new URL(window.location.href);
+            url.searchParams.delete('lang');
+            window.history.replaceState({}, '', url);
+        });
+    });
+
+    // Initiële taal instellen
+    const initialLang = getInitialLanguage();
+    setLanguage(initialLang);
+
+    // Leaflet map
+    var bgMap = L.map('background-map').setView([50.8503, 4.3517], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attribution">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19,
+        minZoom: 1
+    }).addTo(bgMap);
+    bgMap.dragging.disable();
+    bgMap.touchZoom.disable();
+    bgMap.doubleClickZoom.disable();
+    bgMap.scrollWheelZoom.disable();
+    bgMap.boxZoom.disable();
+    bgMap.keyboard.disable();
+    if (bgMap.tap) bgMap.tap.disable();
+    setTimeout(() => bgMap.invalidateSize(), 100);
+    window.addEventListener('resize', () => bgMap.invalidateSize());
+</script>
 </body>
 </html>
