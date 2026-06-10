@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Events & Gala | Fleetconnect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f4f7fc;
+            --primary: #2c6e9e;
+            --primary-dark: #1e4a6e;
+            --accent-gold: #c9a03d;
+            --accent-green: #6b8c42;
+            --text-dark: #1a2a3a;
+            --text-light: #4a627a;
+            --white: #ffffff;
+            --card-bg: rgba(255,255,255,0.92);
+            --border-light: #e2edf7;
+            --shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        #background-map {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            filter: brightness(1.05) contrast(1.02);
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(1px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.9);
+            padding: 6px 12px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .lang-btn {
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            color: var(--text-dark);
+        }
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .breadcrumb {
+            margin: 30px 0 20px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            padding-top: 60px;
+        }
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumb i {
+            margin: 0 8px;
+            font-size: 0.7rem;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .page-title i {
+            color: var(--accent-gold);
+            margin-right: 15px;
+        }
+        .intro-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        .content-section {
+            padding: 40px 0 60px;
+        }
+        .content-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-light);
+            border-radius: 32px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+        .content-card h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-gold);
+            padding-left: 20px;
+        }
+        .content-card h3 {
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            margin: 25px 0 15px 0;
+        }
+        .content-card p {
+            color: var(--text-light);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .feature-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .feature-list li i {
+            color: var(--accent-green);
+            width: 24px;
+            font-size: 1.2rem;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(44,110,158,0.05) 0%, rgba(107,140,66,0.05) 100%);
+            border-left: 4px solid var(--accent-gold);
+            padding: 25px;
+            border-radius: 20px;
+            margin: 30px 0;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            background: var(--card-bg);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-light);
+            padding: 10px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-tab:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .nav-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-light);
+        }
+        .nav-pagination a {
+            background: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-pagination a:hover {
+            background: var(--primary-dark);
+        }
+        .footer-dark {
+            background: #0d1f2c;
+            color: #e0edf5;
+            padding: 48px 0 24px;
+            margin-top: 60px;
+        }
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        .footer-brand h4, .footer-ryz3n h4, .footer-legal h4, .footer-partners h4 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+        .footer-brand p, .footer-ryz3n a, .footer-legal a, .footer-partners a {
+            color: #e0edf5;
+            text-decoration: none;
+            line-height: 1.8;
+            display: block;
+        }
+        .footer-ryz3n a:hover, .footer-legal a:hover, .footer-partners a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(224,237,245,0.2);
+            padding-top: 24px;
+            font-size: 0.85rem;
+        }
+        .footer-bottom a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .page-title { font-size: 1.5rem; }
+            .content-card { padding: 25px; }
+            .language-switcher { top: 10px; right: 15px; gap: 6px; }
+            .lang-btn { font-size: 0.7rem; padding: 4px 10px; }
+            .breadcrumb { padding-top: 50px; }
+        }
+    </style>
+</head>
+<body>
+<div id="background-map"></div>
+
+<div class="content-overlay">
+    <div class="language-switcher">
+        <button class="lang-btn" data-lang="nl">NL</button>
+        <button class="lang-btn" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/PV/PV.html" data-i18n="breadcrumb-home">Home</a> 
+            <i class="fas fa-chevron-right"></i> 
+            <span style="color: var(--accent-gold);" data-i18n="breadcrumb-current">Events & Gala</span>
+        </div>
+        <h1 class="page-title"><i class="fas fa-glass-cheers"></i> <span data-i18n="page-title">Events & Gala</span></h1>
+        <p class="intro-text" data-i18n="intro-text">Maak uw speciale moment onvergetelijk. Van bruiloften tot bedrijfsgala's – wij verzorgen het vervoer met classe en stijl.</p>
+        <a href="/PV/PV.html#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> <span data-i18n="book-btn">Reserveer voor uw event</span></a>
+    </div>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <a href="/PV/PV.html" class="nav-tab"><i class="fas fa-home"></i> <span data-i18n="tab-home">Home</span></a>
+            <a href="/PV/PV_Exclusieve_Service.html" class="nav-tab"><i class="fas fa-gem"></i> <span data-i18n="tab-exclusive">Exclusief</span></a>
+            <a href="/PV/PV-vaste-prijzen.html" class="nav-tab"><i class="fas fa-euro-sign"></i> <span data-i18n="tab-prices">Prijzen</span></a>
+            <a href="/PV/PV-premium-vloot.html" class="nav-tab"><i class="fas fa-car-side"></i> <span data-i18n="tab-fleet">Vloot</span></a>
+            <a href="/PV/PV_Luchthavenvervoer.html" class="nav-tab"><i class="fas fa-plane-departure"></i> <span data-i18n="tab-airport">Luchthaven</span></a>
+            <a href="/PV/PV_Zakelijk_Vervoer.html" class="nav-tab"><i class="fas fa-briefcase"></i> <span data-i18n="tab-business">Zakelijk</span></a>
+            <a href="/PV/PV_Events_Gala.html" class="nav-tab active"><i class="fas fa-glass-cheers"></i> <span data-i18n="tab-events">Events</span></a>
+            <a href="/PV/PV_Koeriersdienst.html" class="nav-tab"><i class="fas fa-file-signature"></i> <span data-i18n="tab-courier">Koerier</span></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <div class="content-card">
+                <h2><span data-i18n="card-title">🥂 Onvergetelijke momenten beginnen met de juiste aankomst</span></h2>
+                <p data-i18n="card-intro">Of u nu gaat trouwen, een jubileum viert of een bedrijfsgala organiseert – uw entourage moet perfect zijn. Fleetconnect zorgt voor een luxueuze en stijlvolle ervaring die bij uw event past.</p>
+                
+                <div class="highlight-box">
+                    <i class="fas fa-star" style="color: var(--accent-gold); font-size: 1.5rem; margin-bottom: 15px; display: inline-block;"></i>
+                    <p style="font-size: 1.1rem; font-weight: 500;" data-i18n="highlight-text">"Uw speciale dag verdient een speciale rit – wij maken er een onvergetelijke ervaring van."</p>
+                </div>
+
+                <h3 data-i18n="wedding-title">💍 Bruiloftsvervoer – sprookjesachtig en stijlvol</h3>
+                <p data-i18n="wedding-intro">Uw trouwdag is een van de mooiste dagen van uw leven. Laat het vervoer geen zorgenpunt zijn. Wij bieden:</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="wedding-1-label">Mercedes S-Klasse</strong> <span data-i18n="wedding-1-text">– Ultiem comfort en luxe voor het bruidspaar</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="wedding-2-label">Rode loper service</strong> <span data-i18n="wedding-2-text">– Bij de kerk, het stadhuis of de feestlocatie</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="wedding-3-label">Champagne aan boord</strong> <span data-i18n="wedding-3-text">– Proost onderweg naar uw feest</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="wedding-4-label">Linten en bloemen</strong> <span data-i18n="wedding-4-text">– Naar wens versierd (wit, rood, goud)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="wedding-5-label">Fotoshoot mogelijkheid</strong> <span data-i18n="wedding-5-text">– Stop onderweg voor de mooiste trouwfoto's</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="wedding-6-label">Gastenvervoer</strong> <span data-i18n="wedding-6-text">– Minivans voor de hele familie</span></li>
+                </ul>
+
+                <h3 data-i18n="corporate-title">🏢 Bedrijfsevenementen en Galas</h3>
+                <p data-i18n="corporate-intro">Maak indruk op uw gasten met een professionele arrival service:</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="corporate-1-label">Conciërge service</strong> <span data-i18n="corporate-1-text">– Ontvangst met naamplaatje</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="corporate-2-label">Meerdere voertuigen</strong> <span data-i18n="corporate-2-text">– Voor groepen tot 50 personen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="corporate-3-label">VIP handling</strong> <span data-i18n="corporate-3-text">– Aparte in- en uitgangen</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="corporate-4-label">Continue shuttle</strong> <span data-i18n="corporate-4-text">– Heen en terug vervoer gedurende het event</span></li>
+                </ul>
+
+                <h3 data-i18n="concerts-title">🎵 Concerten, festivals en sportevenementen</h3>
+                <p data-i18n="concerts-intro">Vermijd de parkeerstress en kom met stijl aan:</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="concerts-1-label">Vaste pick-up en drop-off punten</strong> <span data-i18n="concerts-1-text">– Dicht bij de ingang</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="concerts-2-label">Wachten tot het einde</strong> <span data-i18n="concerts-2-text">– Wij wachten, u geniet</span></li>
+                    <li><i class="fas fa-check-circle"></i> <strong data-i18n="concerts-3-label">Groepskortingen</strong> <span data-i18n="concerts-3-text">– Bij 4+ personen</span></li>
+                </ul>
+
+                <h3 data-i18n="custom-title">📦 Maatwerk pakketten</h3>
+                <p data-i18n="custom-text">Elk event is uniek. Daarom stellen wij graag een persoonlijk pakket voor u samen. Neem contact met ons op voor een offerte op maat.</p>
+
+                <h3 data-i18n="faq-title">❓ Veelgestelde vragen events</h3>
+                <ul class="feature-list">
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q1">Hoe ver van tevoren moet ik boeken?</strong> <span data-i18n="faq-a1">- Voor bruiloften adviseren wij minimaal 2 maanden van tevoren.</span></li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q2">Kunnen meerdere voertuigen tegelijk worden ingezet?</strong> <span data-i18n="faq-a2">- Ja, wij hebben een vloot van 15+ voertuigen.</span></li>
+                    <li><i class="fas fa-question-circle"></i> <strong data-i18n="faq-q3">Is er een mogelijkheid voor een proefrit voor de bruiloft?</strong> <span data-i18n="faq-a3">- Ja, kosteloos ter plaatse.</span></li>
+                </ul>
+
+                <div class="nav-pagination">
+                    <a href="/PV/PV_Zakelijk_Vervoer.html"><i class="fas fa-arrow-left"></i> <span data-i18n="prev-link">Vorige: Zakelijk vervoer</span></a>
+                    <a href="/PV/PV_Koeriersdienst.html"><span data-i18n="next-link">Volgende: Koeriersdienst</span> <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-dark">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand"><h4><i class="fas fa-crown"></i> Fleetconnect</h4><p data-i18n="footer-brand-text">Premium taxivervoer in België – Stijl, stiptheid en service.</p></div>
+                <div class="footer-ryz3n"><h4>Fleetconnect | Digital</h4><a href="#" data-i18n="footer-control">Control Panel</a><a href="#" data-i18n="footer-dispatch">Taxi Dispatch</a><a href="#">Legal & Privacy</a></div>
+                <div class="footer-legal">
+                    <h4 data-i18n="footer-legal-title">Juridisch</h4>
+                    <a href="/PV/PValgemene-voorwaarden.html" data-i18n="footer-tos">Algemene voorwaarden</a>
+                    <a href="/PV/PVprivacy.html" data-i18n="footer-privacy">Privacy</a>
+                    <a href="/PV/PVcookiebeleid.html" data-i18n="footer-cookies">Cookiebeleid</a>
+                </div>
+                <div class="footer-partners"><h4 data-i18n="footer-partners-title">Partners</h4><a href="#">Horizon Of Infinity</a></div>
+            </div>
+            <div class="footer-bottom"><span data-i18n="footer-copyright">© 2026 Fleetconnect – </span><a href="#">Fleetconnect</a></div>
+        </div>
+    </footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const translations = {
+        nl: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Events & Gala", "page-title": "Events & Gala",
+            "intro-text": "Maak uw speciale moment onvergetelijk. Van bruiloften tot bedrijfsgala's – wij verzorgen het vervoer met classe en stijl.",
+            "book-btn": "Reserveer voor uw event",
+            "tab-home": "Home", "tab-exclusive": "Exclusief", "tab-prices": "Prijzen", "tab-fleet": "Vloot", "tab-airport": "Luchthaven", "tab-business": "Zakelijk", "tab-events": "Events", "tab-courier": "Koerier",
+            "card-title": "🥂 Onvergetelijke momenten beginnen met de juiste aankomst",
+            "card-intro": "Of u nu gaat trouwen, een jubileum viert of een bedrijfsgala organiseert – uw entourage moet perfect zijn. Fleetconnect zorgt voor een luxueuze en stijlvolle ervaring die bij uw event past.",
+            "highlight-text": "\"Uw speciale dag verdient een speciale rit – wij maken er een onvergetelijke ervaring van.\"",
+            "wedding-title": "💍 Bruiloftsvervoer – sprookjesachtig en stijlvol",
+            "wedding-intro": "Uw trouwdag is een van de mooiste dagen van uw leven. Laat het vervoer geen zorgenpunt zijn. Wij bieden:",
+            "wedding-1-label": "Mercedes S-Klasse", "wedding-1-text": "– Ultiem comfort en luxe voor het bruidspaar",
+            "wedding-2-label": "Rode loper service", "wedding-2-text": "– Bij de kerk, het stadhuis of de feestlocatie",
+            "wedding-3-label": "Champagne aan boord", "wedding-3-text": "– Proost onderweg naar uw feest",
+            "wedding-4-label": "Linten en bloemen", "wedding-4-text": "– Naar wens versierd (wit, rood, goud)",
+            "wedding-5-label": "Fotoshoot mogelijkheid", "wedding-5-text": "– Stop onderweg voor de mooiste trouwfoto's",
+            "wedding-6-label": "Gastenvervoer", "wedding-6-text": "– Minivans voor de hele familie",
+            "corporate-title": "🏢 Bedrijfsevenementen en Galas",
+            "corporate-intro": "Maak indruk op uw gasten met een professionele arrival service:",
+            "corporate-1-label": "Conciërge service", "corporate-1-text": "– Ontvangst met naamplaatje",
+            "corporate-2-label": "Meerdere voertuigen", "corporate-2-text": "– Voor groepen tot 50 personen",
+            "corporate-3-label": "VIP handling", "corporate-3-text": "– Aparte in- en uitgangen",
+            "corporate-4-label": "Continue shuttle", "corporate-4-text": "– Heen en terug vervoer gedurende het event",
+            "concerts-title": "🎵 Concerten, festivals en sportevenementen",
+            "concerts-intro": "Vermijd de parkeerstress en kom met stijl aan:",
+            "concerts-1-label": "Vaste pick-up en drop-off punten", "concerts-1-text": "– Dicht bij de ingang",
+            "concerts-2-label": "Wachten tot het einde", "concerts-2-text": "– Wij wachten, u geniet",
+            "concerts-3-label": "Groepskortingen", "concerts-3-text": "– Bij 4+ personen",
+            "custom-title": "📦 Maatwerk pakketten",
+            "custom-text": "Elk event is uniek. Daarom stellen wij graag een persoonlijk pakket voor u samen. Neem contact met ons op voor een offerte op maat.",
+            "faq-title": "❓ Veelgestelde vragen events",
+            "faq-q1": "Hoe ver van tevoren moet ik boeken?", "faq-a1": "- Voor bruiloften adviseren wij minimaal 2 maanden van tevoren.",
+            "faq-q2": "Kunnen meerdere voertuigen tegelijk worden ingezet?", "faq-a2": "- Ja, wij hebben een vloot van 15+ voertuigen.",
+            "faq-q3": "Is er een mogelijkheid voor een proefrit voor de bruiloft?", "faq-a3": "- Ja, kosteloos ter plaatse.",
+            "prev-link": "Vorige: Zakelijk vervoer", "next-link": "Volgende: Koeriersdienst",
+            "footer-brand-text": "Premium taxivervoer in België – Stijl, stiptheid en service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Juridisch", "footer-tos": "Algemene voorwaarden", "footer-privacy": "Privacy", "footer-cookies": "Cookiebeleid",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        fr: {
+            "breadcrumb-home": "Accueil", "breadcrumb-current": "Événements & Gala", "page-title": "Événements & Gala",
+            "intro-text": "Rendez votre moment spécial inoubliable. Des mariages aux galas d'entreprise – nous assurons le transport avec classe et style.",
+            "book-btn": "Réservez pour votre événement",
+            "tab-home": "Accueil", "tab-exclusive": "Exclusif", "tab-prices": "Prix fixes", "tab-fleet": "Flotte", "tab-airport": "Aéroport", "tab-business": "Affaires", "tab-events": "Événements", "tab-courier": "Messagerie",
+            "card-title": "🥂 Des moments inoubliables commencent par la bonne arrivée",
+            "card-intro": "Que vous vous mariiez, célébriez un anniversaire ou organisiez un gala d'entreprise – votre arrivée doit être parfaite. Fleetconnect vous offre une expérience luxueuse et élégante adaptée à votre événement.",
+            "highlight-text": "\"Votre jour spécial mérite une course spéciale – nous en faisons une expérience inoubliable.\"",
+            "wedding-title": "💍 Transport de mariage – féerique et élégant",
+            "wedding-intro": "Votre mariage est l'un des plus beaux jours de votre vie. Ne laissez pas le transport être un souci. Nous offrons :",
+            "wedding-1-label": "Mercedes Classe S", "wedding-1-text": "– Confort et luxe ultimes pour les mariés",
+            "wedding-2-label": "Service tapis rouge", "wedding-2-text": "– À l'église, à la mairie ou à la salle de fête",
+            "wedding-3-label": "Champagne à bord", "wedding-3-text": "– Trinquez en chemin vers votre fête",
+            "wedding-4-label": "Rubans et fleurs", "wedding-4-text": "– Décoration selon vos souhaits (blanc, rouge, or)",
+            "wedding-5-label": "Possibilité de séance photo", "wedding-5-text": "– Arrêt en chemin pour les plus belles photos de mariage",
+            "wedding-6-label": "Transport des invités", "wedding-6-text": "– Minivans pour toute la famille",
+            "corporate-title": "🏢 Événements d'entreprise et Galas",
+            "corporate-intro": "Impressionnez vos invités avec un service d'arrivée professionnel :",
+            "corporate-1-label": "Service de conciergerie", "corporate-1-text": "– Accueil avec plaque nominative",
+            "corporate-2-label": "Véhicules multiples", "corporate-2-text": "– Pour groupes jusqu'à 50 personnes",
+            "corporate-3-label": "Gestion VIP", "corporate-3-text": "– Entrées et sorties séparées",
+            "corporate-4-label": "Navette continue", "corporate-4-text": "– Transport aller-retour pendant l'événement",
+            "concerts-title": "🎵 Concerts, festivals et événements sportifs",
+            "concerts-intro": "Évitez le stress du stationnement et arrivez avec style :",
+            "concerts-1-label": "Points de prise en charge/dépôt fixes", "concerts-1-text": "– Près de l'entrée",
+            "concerts-2-label": "Attente jusqu'à la fin", "concerts-2-text": "– Nous attendons, vous profitez",
+            "concerts-3-label": "Réductions de groupe", "concerts-3-text": "– À partir de 4+ personnes",
+            "custom-title": "📦 Forfaits sur mesure",
+            "custom-text": "Chaque événement est unique. C'est pourquoi nous aimons créer un forfait personnalisé pour vous. Contactez-nous pour un devis sur mesure.",
+            "faq-title": "❓ FAQ événements",
+            "faq-q1": "Combien de temps à l'avance dois-je réserver ?", "faq-a1": "- Pour les mariages, nous conseillons au moins 2 mois à l'avance.",
+            "faq-q2": "Peut-on utiliser plusieurs véhicules en même temps ?", "faq-a2": "- Oui, nous avons une flotte de plus de 15 véhicules.",
+            "faq-q3": "Y a-t-il une possibilité d'essai pour le mariage ?", "faq-a3": "- Oui, gratuitement sur place.",
+            "prev-link": "Précédent: Transport d'affaires", "next-link": "Suivant: Messagerie",
+            "footer-brand-text": "Service de taxi premium en Belgique – Style, ponctualité et service.",
+            "footer-control": "Panneau de contrôle", "footer-dispatch": "Répartition des taxis", "footer-legal": "Juridique et confidentialité",
+            "footer-legal-title": "Juridique", "footer-tos": "Conditions générales", "footer-privacy": "Confidentialité", "footer-cookies": "Politique de cookies",
+            "footer-partners-title": "Partenaires", "footer-copyright": "© 2026 Fleetconnect – "
+        },
+        en: {
+            "breadcrumb-home": "Home", "breadcrumb-current": "Events & Gala", "page-title": "Events & Gala",
+            "intro-text": "Make your special moment unforgettable. From weddings to corporate galas – we provide transport with class and style.",
+            "book-btn": "Book for your event",
+            "tab-home": "Home", "tab-exclusive": "Exclusive", "tab-prices": "Prices", "tab-fleet": "Fleet", "tab-airport": "Airport", "tab-business": "Business", "tab-events": "Events", "tab-courier": "Courier",
+            "card-title": "🥂 Unforgettable moments start with the right arrival",
+            "card-intro": "Whether you're getting married, celebrating an anniversary or organising a corporate gala – your arrival must be perfect. Fleetconnect provides a luxurious and stylish experience that suits your event.",
+            "highlight-text": "\"Your special day deserves a special ride – we make it an unforgettable experience.\"",
+            "wedding-title": "💍 Wedding transport – fairytale and stylish",
+            "wedding-intro": "Your wedding day is one of the most beautiful days of your life. Don't let transport be a worry. We offer:",
+            "wedding-1-label": "Mercedes S-Class", "wedding-1-text": "– Ultimate comfort and luxury for the couple",
+            "wedding-2-label": "Red carpet service", "wedding-2-text": "– At the church, city hall or party venue",
+            "wedding-3-label": "Champagne on board", "wedding-3-text": "– Toast on the way to your party",
+            "wedding-4-label": "Ribbons and flowers", "wedding-4-text": "– Decorated as desired (white, red, gold)",
+            "wedding-5-label": "Photo shoot opportunity", "wedding-5-text": "– Stop along the way for the best wedding photos",
+            "wedding-6-label": "Guest transport", "wedding-6-text": "– Minivans for the whole family",
+            "corporate-title": "🏢 Corporate events and Galas",
+            "corporate-intro": "Impress your guests with a professional arrival service:",
+            "corporate-1-label": "Concierge service", "corporate-1-text": "– Reception with nameplate",
+            "corporate-2-label": "Multiple vehicles", "corporate-2-text": "– For groups up to 50 people",
+            "corporate-3-label": "VIP handling", "corporate-3-text": "– Separate entrances and exits",
+            "corporate-4-label": "Continuous shuttle", "corporate-4-text": "– Return transport throughout the event",
+            "concerts-title": "🎵 Concerts, festivals and sports events",
+            "concerts-intro": "Avoid parking stress and arrive in style:",
+            "concerts-1-label": "Fixed pick-up and drop-off points", "concerts-1-text": "– Close to the entrance",
+            "concerts-2-label": "Wait until the end", "concerts-2-text": "– We wait, you enjoy",
+            "concerts-3-label": "Group discounts", "concerts-3-text": "– For 4+ people",
+            "custom-title": "📦 Custom packages",
+            "custom-text": "Every event is unique. That's why we love to create a personal package for you. Contact us for a tailored quote.",
+            "faq-title": "❓ Event FAQ",
+            "faq-q1": "How far in advance should I book?", "faq-a1": "- For weddings we advise at least 2 months in advance.",
+            "faq-q2": "Can multiple vehicles be used at the same time?", "faq-a2": "- Yes, we have a fleet of 15+ vehicles.",
+            "faq-q3": "Is there a possibility for a test ride for the wedding?", "faq-a3": "- Yes, free of charge on site.",
+            "prev-link": "Previous: Business transport", "next-link": "Next: Courier service",
+            "footer-brand-text": "Premium taxi transport in Belgium – Style, punctuality and service.",
+            "footer-control": "Control Panel", "footer-dispatch": "Taxi Dispatch", "footer-legal": "Legal & Privacy",
+            "footer-legal-title": "Legal", "footer-tos": "Terms & Conditions", "footer-privacy": "Privacy", "footer-cookies": "Cookie Policy",
+            "footer-partners-title": "Partners", "footer-copyright": "© 2026 Fleetconnect – "
+        }
+    };
+
+    function setLanguage(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = translations[lang][key];
+                } else {
+                    el.innerHTML = translations[lang][key];
+                }
+            }
+        });
+        document.documentElement.lang = lang;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        localStorage.setItem('preferredLanguage', lang);
+    }
+
+    function getInitialLanguage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && (langParam === 'nl' || langParam === 'fr' || langParam === 'en')) {
+            return langParam;
+        }
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang && (savedLang === 'nl' || savedLang === 'fr' || savedLang === 'en')) {
+            return savedLang;
+        }
+        return 'nl';
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            setLanguage(lang);
+            const url = new URL(window.location.href);
+            url.searchParams.delete('lang');
+            window.history.replaceState({}, '', url);
+        });
+    });
+
+    const initialLang = getInitialLanguage();
+    setLanguage(initialLang);
+
+    var bgMap = L.map('background-map').setView([50.8503, 4.3517], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attribution">CARTO</a>',
+        subdomains: 'abcd', maxZoom: 19, minZoom: 1
+    }).addTo(bgMap);
+    bgMap.dragging.disable(); bgMap.touchZoom.disable(); bgMap.doubleClickZoom.disable(); bgMap.scrollWheelZoom.disable(); bgMap.boxZoom.disable(); bgMap.keyboard.disable();
+    if (bgMap.tap) bgMap.tap.disable();
+    setTimeout(() => bgMap.invalidateSize(), 100);
+    window.addEventListener('resize', () => bgMap.invalidateSize());
+</script>
+</body>
+</html>
