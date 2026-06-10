@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>NH · Customer Portal</title>
+    <title>FleetConnect · Portail client</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/en.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <!-- Supabase module -->
+    <!-- Google Maps API avec Places Autocomplete -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv51ytW1FTJoSGRiD7hLNknGwNcM8cmcM&libraries=places&callback=initGoogleMapsCallback" async defer></script>
+    
+    <!-- Module Supabase -->
     <script type="module">
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
         window.SUPABASE_CLIENT = createClient(
@@ -21,11 +24,11 @@
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA'
         );
         window.SUPABASE_READY = true;
-        console.log("✅ Supabase client loaded");
+        console.log("✅ Client Supabase chargé");
     </script>
     
     <style>
-        /* Same styling as Dutch version, omitted for brevity – identical */
+        /* Same styles as NL version - identical */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #2c6e9e;
@@ -42,242 +45,111 @@
             --sidebar-text: #1a2a3a;
             --sidebar-hover: #eef2fa;
         }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f4f7fc;
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-        #background-map {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
-            filter: brightness(1.05) contrast(1.02);
-            background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80');
-            background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;
-            opacity: 0.9;
-        }
-        .content-overlay {
-            position: relative; z-index: 10;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(1px);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        body { font-family: 'Inter', sans-serif; background: #f4f7fc; color: var(--text-dark); overflow-x: hidden; }
+        #background-map { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; filter: brightness(1.05) contrast(1.02); background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; opacity: 0.9; }
+        .content-overlay { position: relative; z-index: 10; background: rgba(255,255,255,0.85); backdrop-filter: blur(1px); min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 24px; width: 100%; }
-        .hamburger-btn {
-            position: fixed; top: 20px; left: 20px;
-            width: 48px; height: 48px;
-            background: var(--primary);
-            border: none; border-radius: 50%;
-            cursor: pointer; z-index: 1001;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+        
+        .hamburger-btn { position: fixed; top: 20px; left: 20px; width: 48px; height: 48px; background: var(--primary); border: none; border-radius: 50%; cursor: pointer; z-index: 1001; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .hamburger-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
         .hamburger-btn i { color: white; font-size: 1.5rem; }
-        .sidebar-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); z-index: 1002;
-            visibility: hidden; opacity: 0;
-            transition: all 0.3s ease;
-        }
+        
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1002; visibility: hidden; opacity: 0; transition: all 0.3s ease; }
         .sidebar-overlay.active { visibility: visible; opacity: 1; }
-        .sidebar {
-            position: fixed; top: 0; left: -300px; width: 300px; height: 100%;
-            background: var(--sidebar-bg); box-shadow: 4px 0 25px rgba(0,0,0,0.15);
-            z-index: 1003; transition: left 0.3s ease;
-            display: flex; flex-direction: column;
-            border-radius: 0 20px 20px 0;
-            overflow-y: auto;
-        }
+        .sidebar { position: fixed; top: 0; left: -300px; width: 300px; height: 100%; background: var(--sidebar-bg); box-shadow: 4px 0 25px rgba(0,0,0,0.15); z-index: 1003; transition: left 0.3s ease; display: flex; flex-direction: column; border-radius: 0 20px 20px 0; overflow-y: auto; }
         .sidebar-overlay.active .sidebar { left: 0; }
-        .sidebar-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 24px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 0 20px 0 0;
-            flex-shrink: 0;
-        }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding: 24px 20px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 0 20px 0 0; flex-shrink: 0; }
         .sidebar-header h3 { color: white; display: flex; align-items: center; gap: 10px; font-size: 1.3rem; }
-        .close-menu {
-            background: rgba(255,255,255,0.2); border: none;
-            font-size: 1.5rem; cursor: pointer; color: white;
-            width: 32px; height: 32px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .sidebar-nav {
-            display: flex; flex-direction: column;
-            padding: 20px 16px; gap: 8px; flex: 1;
-        }
-        .sidebar-nav a {
-            display: flex; align-items: center; gap: 14px;
-            padding: 12px 16px; border-radius: 14px;
-            color: var(--sidebar-text); text-decoration: none;
-            font-weight: 500; transition: all 0.2s;
-            border: 1px solid transparent;
-        }
+        .close-menu { background: rgba(255,255,255,0.2); border: none; font-size: 1.5rem; cursor: pointer; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .sidebar-nav { display: flex; flex-direction: column; padding: 20px 16px; gap: 8px; flex: 1; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 14px; color: var(--sidebar-text); text-decoration: none; font-weight: 500; transition: all 0.2s; border: 1px solid transparent; }
         .sidebar-nav a i { width: 24px; color: var(--primary); font-size: 1.1rem; }
         .sidebar-nav a:hover { background: var(--sidebar-hover); border-color: var(--border-light); }
-        .language-section {
-            padding: 16px;
-            border-top: 1px solid var(--border-light);
-            border-bottom: 1px solid var(--border-light);
-            margin-bottom: 8px;
-            flex-shrink: 0;
-        }
+        .language-section { padding: 16px; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); margin-bottom: 8px; flex-shrink: 0; }
         .language-title { font-size: 0.7rem; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; letter-spacing: 1px; }
         .language-buttons { display: flex; gap: 12px; }
-        .lang-sidebar-btn {
-            flex: 1; background: #f1f5f9; border: 1px solid var(--border-light);
-            padding: 8px 12px; border-radius: 40px;
-            cursor: pointer; font-weight: 600; font-size: 0.85rem;
-            transition: 0.2s; color: var(--text-dark);
-            text-align: center; text-decoration: none; display: block;
-        }
+        .lang-sidebar-btn { flex: 1; background: #f1f5f9; border: 1px solid var(--border-light); padding: 8px 12px; border-radius: 40px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; color: var(--text-dark); text-align: center; text-decoration: none; display: block; }
         .lang-sidebar-btn:hover, .lang-sidebar-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         .login-section { padding: 16px; margin-top: auto; flex-shrink: 0; }
-        .login-btn {
-            background: linear-gradient(135deg, var(--accent-gold), #b8860b);
-            color: white; text-decoration: none;
-            padding: 14px 16px; border-radius: 14px;
-            font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px;
-        }
-        .uitleg-grid, .services-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; padding: 50px 0 30px; }
-        .uitleg-item, .service-card {
-            background: var(--card-bg); backdrop-filter: blur(4px);
-            border: 1px solid var(--border-light); border-radius: 36px;
-            padding: 30px 24px; text-align: center; flex: 1 1 240px;
-            text-decoration: none; color: inherit; transition: transform 0.2s;
-            cursor: pointer;
-        }
-        .uitleg-item:hover, .service-card:hover { transform: translateY(-6px); border-color: var(--primary); }
-        .uitleg-item i, .service-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
-        .uitleg-item h3, .service-card h3 { margin-bottom: 10px; }
-        .service-summary { font-size: 0.85rem; color: var(--text-light); margin: 10px 0; }
-        .tabs-container {
-            display: flex; gap: 8px;
-            border-bottom: 2px solid var(--border-light);
-            margin-bottom: 28px;
-            flex-wrap: wrap; align-items: center; justify-content: flex-start;
-        }
-        .tab-btn {
-            background: none; border: none; padding: 10px 20px;
-            font-weight: 600; cursor: pointer; color: var(--text-light);
-            border-bottom: 2px solid transparent; transition: 0.2s;
-        }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .logout-tab-btn {
-            background: none; border: none; padding: 10px 20px;
-            font-weight: 600; cursor: pointer; color: #b91c1c;
-            border-bottom: 2px solid transparent; margin-left: auto;
-            transition: 0.2s; font-size: 0.9rem;
-        }
-        .logout-tab-btn:hover { color: #7f1d1d; border-bottom-color: #b91c1c; }
+        .login-btn { background: linear-gradient(135deg, var(--accent-gold), #b8860b); color: white; text-decoration: none; padding: 14px 16px; border-radius: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        
+        .all-services-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; padding: 40px 0 30px; margin-top: 20px; border-top: 2px solid var(--border-light); }
+        .service-card { background: var(--card-bg); backdrop-filter: blur(4px); border: 1px solid var(--border-light); border-radius: 36px; padding: 30px 24px; text-align: center; flex: 1 1 220px; min-width: 200px; text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .service-card:hover { transform: translateY(-6px); border-color: var(--primary); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
+        .service-card i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
+        .service-card h3 { margin-bottom: 10px; font-size: 1.2rem; }
+        .service-card p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 10px; }
+        .service-summary { font-size: 0.75rem; color: var(--text-light); margin-top: 8px; }
+        
+        .tabs-container { display: flex; gap: 8px; border-bottom: 2px solid var(--border-light); margin-bottom: 28px; flex-wrap: wrap; align-items: center; justify-content: flex-start; }
+        .tab-btn { background: none; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; color: var(--text-light); border-bottom: 3px solid transparent; transition: 0.2s; font-size: 0.9rem; border-radius: 8px 8px 0 0; }
+        .tab-btn:hover { background: rgba(44,110,158,0.05); color: var(--primary); }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(44,110,158,0.05); }
+        .logout-tab-btn { background: none; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; color: #b91c1c; border-bottom: 3px solid transparent; margin-left: auto; transition: 0.2s; font-size: 0.9rem; }
+        .logout-tab-btn:hover { color: #7f1d1d; border-bottom-color: #b91c1c; background: rgba(185,28,28,0.05); }
+        .tab-container { display: block; }
         .tab-container.hidden { display: none; }
-        .one-grid-block {
-            max-width: 850px; width: 100%; background: var(--white);
-            border: 1px solid var(--border-light); box-shadow: var(--shadow);
-            margin: 0 auto 40px; border-radius: 24px; overflow: hidden;
-        }
+        
+        .one-grid-block { max-width: 900px; width: 100%; background: var(--white); border: 1px solid var(--border-light); box-shadow: var(--shadow); margin: 0 auto 40px; border-radius: 28px; overflow: hidden; }
         .steps { display: flex; background: #f8fafc; border-bottom: 1px solid var(--border-light); }
-        .step-btn {
-            flex: 1; background: none; border: none; padding: 18px 12px;
-            font-weight: 700; font-size: 0.8rem; color: var(--text-light);
-            cursor: pointer; border-bottom: 3px solid transparent;
-            text-transform: uppercase;
-        }
+        .step-btn { flex: 1; background: none; border: none; padding: 16px 12px; font-weight: 700; font-size: 0.75rem; color: var(--text-light); cursor: pointer; border-bottom: 3px solid transparent; text-transform: uppercase; transition: 0.2s; }
         .step-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--white); }
-        .step-btn.done { color: var(--accent-green); }
-        .carousel-page { display: none; padding: 32px 36px; min-height: 520px; }
+        .carousel-page { display: none; padding: 28px 32px; min-height: 480px; }
         .carousel-page.active-page { display: block; }
-        .nav-buttons { display: flex; justify-content: space-between; padding: 20px 36px 32px; gap: 16px; border-top: 1px solid var(--border-light); background: var(--white); }
-        .nav-btn {
-            background: var(--primary); color: white; border: none; padding: 12px 28px;
-            font-weight: 700; border-radius: 40px; cursor: pointer; text-transform: uppercase;
-        }
+        .nav-buttons { display: flex; justify-content: space-between; padding: 20px 32px; gap: 16px; border-top: 1px solid var(--border-light); background: var(--white); }
+        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px 28px; font-weight: 700; border-radius: 40px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
         .nav-btn.prev { background: #a0b8ce; }
         .nav-btn:disabled { background: #cbd5e1; cursor: not-allowed; opacity: 0.6; }
+        .nav-btn:hover:not(:disabled) { background: var(--primary-dark); transform: scale(1.02); }
         .field { margin-bottom: 22px; position: relative; }
         label { font-weight: 600; margin-bottom: 8px; display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-light); }
         .required-star { color: var(--accent-gold); }
-        input, select, textarea {
-            width: 100%; padding: 14px 18px; border: 1px solid var(--border-light);
-            font-size: 0.9rem; background: var(--white); color: var(--text-dark);
-            border-radius: 12px;
-        }
-        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(44,110,158,0.1); }
-        .date-icon { position: absolute; right: 15px; top: 42px; color: var(--primary); pointer-events: none; }
-        .suggest-wrapper { position: relative; }
-        .suggestions {
-            position: absolute; background: white; border: 1px solid var(--border-light);
-            border-top: none; max-height: 220px; overflow-y: auto;
-            width: 100%; z-index: 10000 !important;
-            display: none; border-radius: 0 0 12px 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        }
-        .suggestion-item {
-            padding: 10px 16px; cursor: pointer; color: var(--text-dark);
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .suggestion-item:hover { background: #f1f5f9; color: var(--primary); }
-        .roundtrip-box {
-            background: #f8fafc; padding: 14px 20px; margin: 16px 0 20px;
-            border-left: 3px solid var(--primary); display: flex; align-items: center; gap: 12px;
-            border-radius: 12px;
-        }
-        .error { background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 8px; margin-top: 12px; display: none; font-size: 0.8rem; }
-        .urgent-whatsapp {
-            background: #dcfce7; border-left: 4px solid #25d366; padding: 12px 16px;
-            margin-top: 16px; display: none; align-items: center; justify-content: space-between;
-            border-radius: 12px;
-        }
+        input, select, textarea { width: 100%; padding: 14px 18px; border: 1px solid var(--border-light); font-size: 0.9rem; background: var(--white); color: var(--text-dark); border-radius: 14px; transition: 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(44,110,158,0.1); }
+        .date-icon { position: absolute; right: 18px; top: 42px; color: var(--primary); pointer-events: none; }
+        .roundtrip-box { background: #f8fafc; padding: 14px 20px; margin: 16px 0 20px; border-left: 4px solid var(--primary); display: flex; align-items: center; gap: 12px; border-radius: 16px; }
+        .error { background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 12px; margin-top: 12px; display: none; font-size: 0.8rem; }
+        .urgent-whatsapp { background: #dcfce7; border-left: 4px solid #25d366; padding: 12px 16px; margin-top: 16px; display: none; align-items: center; justify-content: space-between; border-radius: 16px; }
         .urgent-whatsapp.show { display: flex; }
-        .whatsapp-btn { background: #25d366; color: white; padding: 6px 18px; border-radius: 40px; text-decoration: none; font-weight: bold; }
-        #map { width: 100%; height: 420px; border-radius: 12px; margin-bottom: 16px; border: 1px solid var(--border-light); }
-        .info-strip { display: flex; gap: 16px; background: #f8fafc; padding: 16px; border-radius: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-        .info-card { flex: 1; text-align: center; background: white; padding: 12px; border-radius: 12px; }
+        .whatsapp-btn { background: #25d366; color: white; padding: 8px 20px; border-radius: 40px; text-decoration: none; font-weight: bold; }
+        #map { width: 100%; height: 380px; border-radius: 16px; margin-bottom: 16px; border: 1px solid var(--border-light); background: #e8eef3; }
+        .info-strip { display: flex; gap: 16px; background: #f8fafc; padding: 16px; border-radius: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+        .info-card { flex: 1; text-align: center; background: white; padding: 12px; border-radius: 16px; }
         .info-card .value { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
-        .route-legend { display: flex; gap: 24px; padding: 12px 20px; background: white; border-radius: 12px; margin: 8px 0; font-size: 0.75rem; }
+        .route-legend { display: flex; gap: 24px; padding: 12px 20px; background: white; border-radius: 16px; margin: 8px 0; font-size: 0.75rem; }
         .legend-color { width: 20px; height: 20px; border-radius: 50%; }
         .legend-color.green { background: #22c55e; }
         .legend-color.red { background: #ef4444; }
         .legend-color.blue { background: #d4af37; height: 4px; width: 30px; border-radius: 2px; }
         .vehicle-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin: 20px 0; }
-        .vehicle-card {
-            background: #f8fafc; border: 2px solid var(--border-light); padding: 16px 8px;
-            text-align: center; cursor: pointer; border-radius: 12px;
-        }
-        .vehicle-card.selected { border-color: var(--primary); background: #eef2fa; }
-        .extra-fields { background: #f8fafc; padding: 18px; border-radius: 12px; margin: 20px 0; }
+        .vehicle-card { background: #f8fafc; border: 2px solid var(--border-light); padding: 16px 8px; text-align: center; cursor: pointer; border-radius: 16px; transition: 0.2s; }
+        .vehicle-card.selected { border-color: var(--primary); background: #eef2fa; transform: scale(1.02); }
+        .vehicle-card:hover { border-color: var(--primary); }
+        .extra-fields { background: #f8fafc; padding: 20px; border-radius: 16px; margin: 20px 0; }
         .extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-        .checkbox-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
-        .checkbox-grid label { display: flex; align-items: center; gap: 8px; background: white; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border-light); }
-        .sub { color: var(--text-light); border-left: 3px solid var(--primary); padding-left: 14px; margin-bottom: 24px; }
-        .total-display { background: #f8fafc; padding: 20px; text-align: center; font-size: 1.5rem; font-weight: 700; border-radius: 12px; margin: 20px 0; color: var(--primary); }
-        .payment-method { display: flex; gap: 20px; background: #f8fafc; padding: 14px 20px; border-radius: 20px; margin: 20px 0; }
+        .checkbox-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+        .checkbox-grid label { display: flex; align-items: center; gap: 8px; background: white; padding: 8px 16px; border-radius: 40px; border: 1px solid var(--border-light); cursor: pointer; }
+        .sub { color: var(--text-light); border-left: 3px solid var(--primary); padding-left: 14px; margin-bottom: 24px; font-size: 0.85rem; }
+        .total-display { background: #f8fafc; padding: 20px; text-align: center; font-size: 1.5rem; font-weight: 700; border-radius: 16px; margin: 20px 0; color: var(--primary); }
+        .payment-method { display: flex; gap: 24px; background: #f8fafc; padding: 16px 24px; border-radius: 20px; margin: 20px 0; }
         .return-date-field { display: none; }
         .return-date-field.visible { display: block; }
-        .rit-overzicht { background: #f8fafc; border: 1px solid var(--border-light); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+        .rit-overzicht { background: #f8fafc; border: 1px solid var(--border-light); border-radius: 20px; padding: 20px; margin-bottom: 20px; line-height: 1.8; }
         .profile-card, .stats-card { background: white; border-radius: 28px; padding: 28px; box-shadow: var(--shadow); }
         .stats-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
         .stat-card { background: white; border-radius: 20px; padding: 20px; flex: 1; text-align: center; box-shadow: var(--shadow); }
         .stat-card h3 { font-size: 2rem; color: var(--primary); }
         .bookings-table { width: 100%; background: white; border-radius: 20px; overflow-x: auto; display: block; border-collapse: collapse; }
-        .bookings-table th, .bookings-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-light); }
+        .bookings-table th, .bookings-table td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-light); }
         .status-badge { display: inline-block; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
-        .btn-icon { background: none; border: none; cursor: pointer; color: var(--primary); margin: 0 4px; }
-        .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000;
-            display: flex; align-items: center; justify-content: center;
-            visibility: hidden; opacity: 0; transition: 0.2s;
-        }
-        .modal.active { visibility: visible; opacity: 1; }
-        .modal-content { background: white; max-width: 550px; width: 90%; border-radius: 28px; padding: 28px; max-height: 85vh; overflow-y: auto; }
+        .btn-icon { background: none; border: none; cursor: pointer; color: var(--primary); margin: 0 4px; font-size: 1.1rem; }
+        .btn-icon:hover { color: var(--primary-dark); }
         .footer-dark { background: #0d1f2c; color: #e0edf5; padding: 48px 0 24px; margin-top: 40px; }
         .footer-grid { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; padding: 0 2rem; }
+        .footer-bottom { text-align: center; padding-top: 24px; border-top: 1px solid rgba(224,237,245,0.2); margin-top: 24px; }
         .hidden { display: none !important; }
-        @media (max-width:800px) { .vehicle-grid { grid-template-columns: repeat(2,1fr); } .carousel-page { padding: 20px; } }
+        .pac-container { z-index: 10000 !important; border-radius: 14px; font-family: 'Inter', sans-serif; }
+        @media (max-width:800px) { .vehicle-grid { grid-template-columns: repeat(2,1fr); } .carousel-page { padding: 20px; } .tab-btn { padding: 8px 16px; font-size: 0.8rem; } }
     </style>
 </head>
 <body>
@@ -290,36 +162,38 @@
 <div class="sidebar-overlay" id="sidebarOverlay">
     <div class="sidebar">
         <div class="sidebar-header">
-            <h3><i class="fas fa-car"></i> NH</h3>
+            <h3><i class="fas fa-car"></i> FleetConnect</h3>
             <button class="close-menu" id="closeMenuBtn">&times;</button>
         </div>
         
         <div class="language-section">
-            <div class="language-title"><i class="fas fa-globe"></i> Language</div>
+            <div class="language-title"><i class="fas fa-globe"></i> Langue</div>
             <div class="language-buttons">
-                <a href="klantenportaalpv.html?lang=nl" class="lang-sidebar-btn" data-lang="nl">NL</a>
-                <a href="klantenportaalpv_fr.html?lang=fr" class="lang-sidebar-btn" data-lang="fr">FR</a>
-                <a href="klantenportaalpv_en.html?lang=en" class="lang-sidebar-btn" data-lang="en" style="background:#2c6e9e; color:white;">EN</a>
+                <a href="klantenportaalpv.html" class="lang-sidebar-btn">NL</a>
+                <a href="klantenportaalpv_fr.html" class="lang-sidebar-btn" style="background:#2c6e9e; color:white;">FR</a>
+                <a href="klantenportaalpv_en.html" class="lang-sidebar-btn">EN</a>
             </div>
         </div>
         
         <div class="sidebar-nav">
-            <a href="#" data-nav="home"><i class="fas fa-home"></i> Home</a>
-            <a href="#" data-nav="portal"><i class="fas fa-user-circle"></i> My Portal</a>
-            <a href="#" data-nav="contact"><i class="fas fa-envelope"></i> Contact</a>
-            <a href="PV.html"><i class="fas fa-taxi"></i> Bookings</a>
-            <a href="PV_Exclusieve_Service.html"><i class="fas fa-gem"></i> Exclusive service</a>
-            <a href="PV-vaste-prijzen.html"><i class="fas fa-euro-sign"></i> Fixed prices</a>
-            <a href="PV-premium-vloot.html"><i class="fas fa-car-side"></i> Premium fleet</a>
-            <a href="PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i> Airport transfer</a>
-            <a href="PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i> Business transport</a>
-            <a href="PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i> Events & Gala</a>
-            <a href="PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i> Courier service</a>
+            <a href="#" data-nav="profile"><i class="fas fa-user-circle"></i> Mon Profil</a>
+            <a href="#" data-nav="dashboard"><i class="fas fa-chart-line"></i> Tableau de bord</a>
+            <a href="#" data-nav="new-booking"><i class="fas fa-plus-circle"></i> Nouveau trajet</a>
+            <a href="#" data-nav="payments"><i class="fas fa-credit-card"></i> Paiements</a>
+            <div style="height:1px; background:#e2edf7; margin:8px 0;"></div>
+            <a href="PV.html"><i class="fas fa-taxi"></i> Réservations</a>
+            <a href="PV_Exclusieve_Service.html"><i class="fas fa-gem"></i> Service exclusif</a>
+            <a href="PV-vaste-prijzen.html"><i class="fas fa-euro-sign"></i> Prix fixes</a>
+            <a href="PV-premium-vloot.html"><i class="fas fa-car-side"></i> Flotte premium</a>
+            <a href="PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i> Transfert aéroport</a>
+            <a href="PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i> Transport d'affaires</a>
+            <a href="PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i> Événements & Gala</a>
+            <a href="PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i> Messagerie</a>
         </div>
         
         <div class="login-section">
             <a href="index.html" class="login-btn">
-                <i class="fas fa-sign-in-alt"></i> LOGIN
+                <i class="fas fa-sign-in-alt"></i> CONNEXION
                 <i class="fas fa-arrow-right"></i>
             </a>
         </div>
@@ -327,169 +201,140 @@
 </div>
 
 <div class="content-overlay">
-    <section class="hero" style="padding: 40px 0 20px; text-align: center;">
+    <section class="hero" style="padding: 30px 0 20px; text-align: center;">
         <div class="container">
-            <div class="hero-card" style="background: var(--card-bg); backdrop-filter: blur(8px); max-width:700px; margin:0 auto; padding:30px; border-radius:48px;">
-                <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> NH</h1>
-                <p style="color:var(--text-light);">Professional taxi transport – Punctual, reliable & comfortable</p>
+            <div class="hero-card" style="background: var(--card-bg); backdrop-filter: blur(8px); max-width:650px; margin:0 auto; padding:25px 30px; border-radius:48px;">
+                <h1 style="font-size:2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> FleetConnect</h1>
+                <p style="color:var(--text-light);">Transport taxi professionnel – Ponctuel, fiable & confortable</p>
             </div>
         </div>
     </section>
 
-    <!-- 3 grid blocks -->
-    <div class="container">
-        <div class="uitleg-grid">
-            <a href="PV_Exclusieve_Service.html" class="uitleg-item">
-                <i class="fas fa-gem"></i>
-                <h3>Exclusive service</h3>
-                <p>Personal driver, always on time</p>
-                <div class="service-summary">Discover our exclusive service with personal driver and luxury vehicles.</div>
-            </a>
-            <a href="PV-vaste-prijzen.html" class="uitleg-item">
-                <i class="fas fa-euro-sign"></i>
-                <h3>Fixed prices</h3>
-                <p>Transparent, no meters</p>
-                <div class="service-summary">No surprises afterwards. Our fixed prices are transparent and clear.</div>
-            </a>
-            <a href="PV-premium-vloot.html" class="uitleg-item">
-                <i class="fas fa-car-side"></i>
-                <h3>Premium fleet</h3>
-                <p>Mercedes, BMW & luxury minivans</p>
-                <div class="service-summary">Travel in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div>
-            </a>
-        </div>
-    </div>
-
-    <!-- Tabs -->
     <div class="container">
         <div class="tabs-container">
-            <button class="tab-btn active" data-tab="new-booking">📝 New Ride</button>
-            <button class="tab-btn" data-tab="profile">👤 My Profile</button>
-            <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Rides</button>
-            <button class="tab-btn" data-tab="payments">💰 Payments</button>
+            <button class="tab-btn" data-tab="profile">👤 Mon Profil</button>
+            <button class="tab-btn" data-tab="dashboard">📊 Tableau de bord</button>
+            <button class="tab-btn active" data-tab="new-booking">📝 Nouveau trajet</button>
+            <button class="tab-btn" data-tab="payments">💰 Paiements</button>
             <button id="logoutBtn" class="logout-tab-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
             </button>
-        </div>
-
-        <div id="new-booking-container" class="tab-container">
-            <div class="one-grid-block">
-                <div class="carousel">
-                    <div class="steps">
-                        <button class="step-btn active" data-page="1">1. Trip details</button>
-                        <button class="step-btn" data-page="2">2. Route & Price</button>
-                        <button class="step-btn" data-page="3">3. Vehicle & Options</button>
-                        <button class="step-btn" data-page="4">4. Customer info</button>
-                        <button class="step-btn" data-page="5">5. Checkout</button>
-                    </div>
-                    <div id="page1" class="carousel-page active-page">
-                        <h1>🚖 Trip details</h1>
-                        <div class="sub">Belgium – €1.50/km | urgent trips via WhatsApp</div>
-                        <div class="field"><label>📍 Pickup address <span class="required-star">*</span></label>
-                            <div class="suggest-wrapper" id="pickupWrap">
-                                <input type="text" id="pickupInput" placeholder="e.g. Antwerp" autocomplete="off">
-                                <div id="pickupSuggest" class="suggestions"></div>
-                            </div>
-                        </div>
-                        <div class="field"><label>🏁 Dropoff address <span class="required-star">*</span></label>
-                            <div class="suggest-wrapper" id="dropoffWrap">
-                                <input type="text" id="dropoffInput" placeholder="e.g. Brussels" autocomplete="off">
-                                <div id="dropoffSuggest" class="suggestions"></div>
-                            </div>
-                        </div>
-                        <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label>🔄 Round trip (price x2)</label></div>
-                        <div class="field"><label>✈️ Flight number (optional)</label><input type="text" id="flightNumber"></div>
-                        <div class="field">
-                            <label>📅 Outbound date & time <span class="required-star">*</span></label>
-                            <input type="text" id="datetime" placeholder="Click to select date & time" readonly>
-                            <i class="fas fa-calendar-alt date-icon"></i>
-                        </div>
-                        <div class="field return-date-field" id="returnDateContainer">
-                            <label>📅 Return date & time</label>
-                            <input type="text" id="returnDatetime" placeholder="Click to select date & time" readonly>
-                            <i class="fas fa-calendar-alt date-icon"></i>
-                        </div>
-                        <div id="urgentWhatsApp" class="urgent-whatsapp"><span>⚠️ Departure within the hour – WhatsApp</span><a href="https://wa.me/32470123456" class="whatsapp-btn">📱 WhatsApp now</a></div>
-                        <div id="page1Error" class="error"></div>
-                    </div>
-                    <div id="page2" class="carousel-page">
-                        <h2>🗺️ Route & Price</h2>
-                        <div id="map"></div>
-                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>🟢 Pickup</span></div><div class="legend-item"><div class="legend-color red"></div><span>🔴 Dropoff</span></div><div class="legend-item"><div class="legend-color blue"></div><span>🟡 Route</span></div></div>
-                        <div class="info-strip"><div class="info-card"><div class="label">📏 Distance</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Travel time</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Price</div><div class="value" id="priceVal">—</div><small>€</small></div></div>
-                        <div id="page2Error" class="error"></div>
-                    </div>
-                    <div id="page3" class="carousel-page">
-                        <h2>🚘 Choose your vehicle</h2>
-                        <div class="vehicle-grid" id="vehicleGrid">
-                            <div class="vehicle-card selected" data-vehicle="Standard" data-extraprice="0"><div class="vehicle-emoji">🚗</div><div class="vehicle-name">Standard</div><div class="vehicle-price">no extra charge</div></div>
-                            <div class="vehicle-card" data-vehicle="Estate" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name">Estate</div><div class="vehicle-price">+ €5</div></div>
-                            <div class="vehicle-card" data-vehicle="Executive" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name">Executive</div><div class="vehicle-price">+ €15</div></div>
-                            <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">🚐</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ €10</div></div>
-                        </div>
-                        <div class="extra-fields"><h3>➕ Extra options</h3><div class="extra-grid"><div><label>👥 Number of passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Luggage pieces</label><input type="number" id="luggage" min="0" value="0"></div></div>
-                        <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Meet & Greet</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Water bottle</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div>
-                        <div><label>📝 Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g. child seat"></textarea></div></div>
-                        <div id="page3Error" class="error"></div>
-                    </div>
-                    <div id="page4" class="carousel-page">
-                        <h1>📋 Your details</h1><div class="sub">Enter your contact information</div>
-                        <div class="field"><label>First name <span class="required-star">*</span></label><input type="text" id="firstName"></div>
-                        <div class="field"><label>Last name <span class="required-star">*</span></label><input type="text" id="lastName"></div>
-                        <div class="field"><label>Mobile <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
-                        <div class="field"><label>Email <span class="required-star">*</span></label><input type="email" id="email" placeholder="info@example.com"></div>
-                        <div class="field"><label>VAT (optional)</label><input type="text" id="vat"></div>
-                        <div id="page4Error" class="error"></div>
-                    </div>
-                    <div id="page5" class="carousel-page">
-                        <h1>💰 Checkout</h1><div class="sub">Choose payment method & confirm</div>
-                        <div class="rit-overzicht"><h3>📋 Your trip summary</h3>
-                            <div><strong>📍 Pickup:</strong> <span id="overviewPickup">—</span></div>
-                            <div><strong>🏁 Dropoff:</strong> <span id="overviewDestination">—</span></div>
-                            <div><strong>📅 Outbound date/time:</strong> <span id="overviewHeen">—</span></div>
-                            <div id="overviewReturnContainer" style="display:none;"><strong>🔄 Return date/time:</strong> <span id="overviewReturn">—</span></div>
-                            <div><strong>🚘 Vehicle:</strong> <span id="overviewVehicle">—</span></div>
-                            <div><strong>➕ Extra options:</strong> <span id="overviewExtras">—</span></div>
-                            <div><strong>💰 Total price:</strong> <span id="overviewTotal">€ 0.00</span></div>
-                        </div>
-                        <div class="payment-method"><span>Payment method:</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Cash</label><label><input type="radio" name="payment" value="Card"> 💳 Card</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div>
-                        <div id="totalDisplay" class="total-display">Total: € 0.00</div>
-                        <button id="finalConfirmBtn" class="nav-btn" style="background:#10b981; width:100%;">✅ Confirm booking</button>
-                        <div id="page5Error" class="error"></div>
-                    </div>
-                    <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Previous</button><button class="nav-btn next" id="nextBtn">Next ▶</button></div>
-                </div>
-            </div>
         </div>
 
         <div id="profile-container" class="tab-container hidden">
             <div class="profile-card">
-                <h3>My details</h3>
+                <h3><i class="fas fa-user-edit"></i> Mes informations</h3>
                 <form id="profileForm">
-                    <div class="field"><label>Full name</label><input type="text" id="fullName" required></div>
-                    <div class="field"><label>Email</label><input type="email" id="profileEmail" required></div>
-                    <div class="field"><label>Phone</label><input type="tel" id="profilePhone" required></div>
-                    <div class="field"><label>Default pickup address</label><input type="text" id="defaultPickup"></div>
-                    <button type="submit" class="nav-btn" style="background:var(--primary);">Save</button>
+                    <div class="field"><label>Nom complet</label><input type="text" id="fullName" required></div>
+                    <div class="field"><label>E-mail</label><input type="email" id="profileEmail" required></div>
+                    <div class="field"><label>Téléphone</label><input type="tel" id="profilePhone" required></div>
+                    <div class="field"><label>Adresse de prise en charge par défaut</label><input type="text" id="defaultPickup" placeholder="ex. Brussels Airport, Anvers-Central..."></div>
+                    <button type="submit" class="nav-btn" style="background:var(--primary);"><i class="fas fa-save"></i> Enregistrer</button>
                 </form>
             </div>
         </div>
 
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
-            <h4>📅 Upcoming rides</h4>
-            <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
-            <h4>✅ Completed rides</h4>
-            <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Date/time</th><th>Route</th><th>Vehicle</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
+            <h4><i class="fas fa-calendar-alt"></i> Trajets à venir</h4>
+            <div style="overflow-x: auto;">
+                <table class="bookings-table" id="upcomingTable">
+                    <thead><tr><th>ID</th><th>Date/heure</th><th>Trajet</th><th>Véhicule</th><th>Montant</th><th>Statut</th><th>Actions</th></tr></thead>
+                    <tbody><tr><td colspan="7" style="text-align:center; padding:20px;">Chargement...</td></tr></tbody>
+                </table>
+            </div>
+            <h4 style="margin-top:30px;"><i class="fas fa-check-circle"></i> Trajets terminés</h4>
+            <div style="overflow-x: auto;">
+                <table class="bookings-table" id="completedTable">
+                    <thead><tr><th>ID</th><th>Date/heure</th><th>Trajet</th><th>Véhicule</th><th>Montant</th><th>Statut</th><th>Actions</th></tr></thead>
+                    <tbody><tr><td colspan="7" style="text-align:center; padding:20px;">Chargement...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="new-booking-container" class="tab-container">
+            <div class="one-grid-block">
+                <div class="carousel">
+                    <div class="steps">
+                        <button class="step-btn active" data-page="1">1. Détails du trajet</button>
+                        <button class="step-btn" data-page="2">2. Itinéraire & Prix</button>
+                        <button class="step-btn" data-page="3">3. Véhicule & Options</button>
+                        <button class="step-btn" data-page="4">4. Coordonnées</button>
+                        <button class="step-btn" data-page="5">5. Paiement</button>
+                    </div>
+                    <div id="page1" class="carousel-page active-page">
+                        <h1>🚖 Détails du trajet</h1>
+                        <div class="sub">Belgique – 1,50€/km | trajets urgents via WhatsApp</div>
+                        <div class="field"><label>📍 Adresse de prise en charge <span class="required-star">*</span></label>
+                            <input type="text" id="pickupInput" placeholder="ex. Anvers, Bruxelles, Gand..." autocomplete="off">
+                        </div>
+                        <div class="field"><label>🏁 Adresse de dépôt <span class="required-star">*</span></label>
+                            <input type="text" id="dropoffInput" placeholder="ex. Zaventem, Liège, Charleroi..." autocomplete="off">
+                        </div>
+                        <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label>🔄 Aller-retour (prix x2)</label></div>
+                        <div class="field"><label>✈️ Numéro de vol (optionnel)</label><input type="text" id="flightNumber"></div>
+                        <div class="field"><label>📅 Date & heure aller <span class="required-star">*</span></label><input type="text" id="datetime" placeholder="Cliquez pour choisir date & heure" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
+                        <div class="field return-date-field" id="returnDateContainer"><label>📅 Date & heure retour</label><input type="text" id="returnDatetime" placeholder="Cliquez pour choisir date & heure" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
+                        <div id="urgentWhatsApp" class="urgent-whatsapp"><span>⚠️ Départ dans l'heure – WhatsApp</span><a href="https://wa.me/32470123456" class="whatsapp-btn">📱 WhatsApp maintenant</a></div>
+                        <div id="page1Error" class="error"></div>
+                    </div>
+                    <div id="page2" class="carousel-page">
+                        <h2>🗺️ Itinéraire & Prix</h2>
+                        <div id="map"></div>
+                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>🟢 Prise en charge</span></div><div class="legend-item"><div class="legend-color red"></div><span>🔴 Dépôt</span></div><div class="legend-item"><div class="legend-color blue"></div><span>🟡 Itinéraire</span></div></div>
+                        <div class="info-strip"><div class="info-card"><div class="label">📏 Distance</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Temps de trajet</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Prix</div><div class="value" id="priceVal">—</div><small>€</small></div></div>
+                        <div id="page2Error" class="error"></div>
+                    </div>
+                    <div id="page3" class="carousel-page">
+                        <h2>🚘 Choisissez votre véhicule</h2>
+                        <div class="vehicle-grid" id="vehicleGrid">
+                            <div class="vehicle-card selected" data-vehicle="Standard" data-extraprice="0"><div class="vehicle-emoji">🚗</div><div class="vehicle-name">Standard</div><div class="vehicle-price">pas de supplément</div></div>
+                            <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name">Break</div><div class="vehicle-price">+ €5</div></div>
+                            <div class="vehicle-card" data-vehicle="Exclusif" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name">Exclusif</div><div class="vehicle-price">+ €15</div></div>
+                            <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">🚐</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ €10</div></div>
+                        </div>
+                        <div class="extra-fields"><h3>➕ Options supplémentaires</h3><div class="extra-grid"><div><label>👥 Nombre de passagers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Bagages</label><input type="number" id="luggage" min="0" value="0"></div></div>
+                        <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Meet & Greet</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Bouteille d'eau</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div>
+                        <div><label>📝 Demandes spéciales</label><textarea id="specialWishes" rows="2" placeholder="ex. siège enfant, champagne..."></textarea></div></div>
+                        <div id="page3Error" class="error"></div>
+                    </div>
+                    <div id="page4" class="carousel-page">
+                        <h1>📋 Vos coordonnées</h1><div class="sub">Entrez vos informations de contact</div>
+                        <div class="field"><label>Prénom <span class="required-star">*</span></label><input type="text" id="firstName"></div>
+                        <div class="field"><label>Nom <span class="required-star">*</span></label><input type="text" id="lastName"></div>
+                        <div class="field"><label>GSM <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
+                        <div class="field"><label>E-mail <span class="required-star">*</span></label><input type="email" id="email" placeholder="info@exemple.be"></div>
+                        <div class="field"><label>TVA (optionnel)</label><input type="text" id="vat"></div>
+                        <div id="page4Error" class="error"></div>
+                    </div>
+                    <div id="page5" class="carousel-page">
+                        <h1>💰 Paiement</h1><div class="sub">Choisissez le mode de paiement & confirmez</div>
+                        <div class="rit-overzicht"><h3>📋 Récapitulatif de votre trajet</h3>
+                            <div><strong>📍 Prise en charge:</strong> <span id="overviewPickup">—</span></div>
+                            <div><strong>🏁 Dépôt:</strong> <span id="overviewDestination">—</span></div>
+                            <div><strong>📅 Aller date/heure:</strong> <span id="overviewHeen">—</span></div>
+                            <div id="overviewReturnContainer" style="display:none;"><strong>🔄 Retour date/heure:</strong> <span id="overviewReturn">—</span></div>
+                            <div><strong>🚘 Véhicule:</strong> <span id="overviewVehicle">—</span></div>
+                            <div><strong>➕ Options:</strong> <span id="overviewExtras">—</span></div>
+                            <div><strong>💰 Prix total:</strong> <span id="overviewTotal">€ 0,00</span></div>
+                        </div>
+                        <div class="payment-method"><span>Mode de paiement:</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Espèces</label><label><input type="radio" name="payment" value="Card"> 💳 Carte</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div>
+                        <div id="totalDisplay" class="total-display">Total: € 0,00</div>
+                        <button id="finalConfirmBtn" class="nav-btn" style="background:#10b981; width:100%;">✅ Confirmer la réservation</button>
+                        <div id="page5Error" class="error"></div>
+                    </div>
+                    <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Précédent</button><button class="nav-btn next" id="nextBtn">Suivant ▶</button></div>
+                </div>
+            </div>
         </div>
 
         <div id="payments-container" class="tab-container hidden">
             <div class="profile-card">
-                <h3>💰 Payment history</h3>
-                <div id="paymentsList" style="margin-top:20px;">
+                <h3><i class="fas fa-credit-card"></i> Historique des paiements</h3>
+                <div style="overflow-x: auto;">
                     <table class="bookings-table" id="paymentsTable">
-                        <thead><tr><th>ID</th><th>Date</th><th>Amount</th><th>Method</th><th>Status</th><th>Invoice</th></tr></thead>
-                        <tbody></tbody>
+                        <thead><tr><th>Réservation ID</th><th>Date</th><th>Montant</th><th>Méthode</th><th>Statut</th><th>Facture</th></tr></thead>
+                        <tbody><tr><td colspan="6" style="text-align:center; padding:20px;">Chargement...</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -497,69 +342,59 @@
     </div>
 
     <div class="container">
-        <h2 style="text-align:center;margin:40px 0 20px;"><i class="fas fa-concierge-bell"></i> Our services</h2>
-        <div class="services-grid">
-            <a href="PV_Luchthavenvervoer.html" class="service-card">
-                <i class="fas fa-plane-departure"></i>
-                <h3>Airport transfer</h3>
-                <p>Fixed price, flight monitoring</p>
-                <div class="service-summary">Stress-free to the airport. We monitor your flight and wait for you.</div>
-            </a>
-            <a href="PV_Zakelijk_Vervoer.html" class="service-card">
-                <i class="fas fa-briefcase"></i>
-                <h3>Business transport</h3>
-                <p>Executive class, invoicing</p>
-                <div class="service-summary">Make an impression with executive class transport.</div>
-            </a>
-            <a href="PV_Events_Gala.html" class="service-card">
-                <i class="fas fa-glass-cheers"></i>
-                <h3>Events & Gala</h3>
-                <p>Luxury car with driver</p>
-                <div class="service-summary">Complete your special evening with a luxury chauffeur.</div>
-            </a>
-            <a href="PV_Koeriersdienst.html" class="service-card">
-                <i class="fas fa-file-signature"></i>
-                <h3>Courier service</h3>
-                <p>Fast document delivery</p>
-                <div class="service-summary">Fast and reliable document delivery throughout Belgium.</div>
-            </a>
+        <div class="all-services-grid">
+            <a href="PV_Luchthavenvervoer.html" class="service-card"><i class="fas fa-plane-departure"></i><h3>Transfert aéroport</h3><p>Prix fixe, suivi de vol</p><div class="service-summary">Sans stress vers l'aéroport. Nous suivons votre vol et vous attendons.</div></a>
+            <a href="PV_Zakelijk_Vervoer.html" class="service-card"><i class="fas fa-briefcase"></i><h3>Transport d'affaires</h3><p>Classe executive, facturation</p><div class="service-summary">Faites impression avec un transport classe executive.</div></a>
+            <a href="PV_Events_Gala.html" class="service-card"><i class="fas fa-glass-cheers"></i><h3>Événements & Gala</h3><p>Voiture de luxe avec chauffeur</p><div class="service-summary">Complétez votre soirée spéciale avec un chauffeur de luxe.</div></a>
+            <a href="PV_Koeriersdienst.html" class="service-card"><i class="fas fa-file-signature"></i><h3>Service de messagerie</h3><p>Livraison rapide de documents</p><div class="service-summary">Livraison rapide et fiable de documents dans toute la Belgique.</div></a>
+            <a href="PV_Exclusieve_Service.html" class="service-card"><i class="fas fa-gem"></i><h3>Service exclusif</h3><p>Chauffeur personnel</p><div class="service-summary">Découvrez notre service exclusif avec chauffeur personnel et véhicules de luxe.</div></a>
+            <a href="PV-vaste-prijzen.html" class="service-card"><i class="fas fa-euro-sign"></i><h3>Prix fixes</h3><p>Transparent, pas de compteur</p><div class="service-summary">Pas de surprises après. Nos prix fixes sont transparents et clairs.</div></a>
+            <a href="PV-premium-vloot.html" class="service-card"><i class="fas fa-car-side"></i><h3>Flotte premium</h3><p>Mercedes, BMW & minibus luxe</p><div class="service-summary">Voyagez en style avec notre flotte premium.</div></a>
         </div>
     </div>
 
     <footer class="footer-dark">
         <div class="footer-grid">
-            <div><h4>NH</h4><p>Professional taxi transport</p></div>
-            <div><h4>NH | Digital</h4><a href="#">Control Panel</a></div>
-            <div><h4>Legal</h4>
-                <a href="PVfaq.html">❓ FAQ</a><br>
-                <a href="PVprivacy.html">🔒 Privacy</a><br>
-                <a href="PVcookiebeleid.html">🍪 Cookie policy</a><br>
-                <a href="PValgemene-voorwaarden.html">📜 Terms & conditions</a>
-            </div>
-            <div><h4>Partners</h4><a href="#">Horizon Of Infinity</a></div>
+            <div><h4>FleetConnect</h4><p>Transport taxi professionnel</p></div>
+            <div><h4>FleetConnect</h4><a href="#">Panneau de contrôle</a></div>
+            <div><h4>Juridique</h4><a href="PVfaq.html">❓ FAQ</a><br><a href="PVprivacy.html">🔒 Vie privée</a><br><a href="PVcookiebeleid.html">🍪 Politique des cookies</a><br><a href="PValgemene-voorwaarden.html">📜 Conditions générales</a></div>
+            <div><h4>Partenaires</h4><a href="#">Support</a></div>
         </div>
-        <div class="footer-bottom">© 2026 NH – Ryz3n</div>
+        <div class="footer-bottom">© 2026 FleetConnect – Tous droits réservés</div>
     </footer>
 </div>
-<div id="ritModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
 
 <script>
-    // Same logic as Dutch version, but with English strings
+    // ==================== JAVASCRIPT (identique à la version NL avec textes FR) ====================
+    let currentUser = { id: 'demo-user', full_name: 'Utilisateur Démo', email: 'demo@nh.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
+    let userBookings = [];
+    let currentPage = 1;
+    let selectedVehicle = 'Standard', selectedVehicleExtra = 0;
+    let currentRouteData = null;
+    let currentRoundTrip = false;
+    let currentReturnDateTime = "";
+    let bookingSubmitInProgress = false;
+    let map, routeLayer;
+    let pickupLocation = null, dropoffLocation = null;
+    let directionsService;
+    
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
     
     function openMenu() { sidebarOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
     function closeMenu() { sidebarOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+    
     if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
     if (sidebarOverlay) sidebarOverlay.addEventListener('click', function(e) { if (e.target === sidebarOverlay) closeMenu(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sidebarOverlay && sidebarOverlay.classList.contains('active')) closeMenu(); });
     
     function getSupabase() { return window.SUPABASE_CLIENT || null; }
+    
     async function handleLogout() {
         const logoutBtn = document.getElementById('logoutBtn');
-        logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...';
+        logoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Déconnexion...';
         logoutBtn.disabled = true;
         try {
             const supabase = getSupabase();
@@ -570,134 +405,87 @@
     }
     document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
     
-    let currentUser = { id: 'demo-user', full_name: 'Demo User', email: 'demo@nh.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
-    let userBookings = [];
-    let bookingMap, pickupCoord = null, dropoffCoord = null, routeLayer, currentRouteData = null, currentRoundTrip = false, currentReturnDateTime = "";
-    let selectedVehicle = 'Standard', selectedVehicleExtra = 0, currentPage = 1;
-    let debounceTimer;
-    
-    function initMap() {
-        bookingMap = L.map('map').setView([50.85, 4.35], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(bookingMap);
+    function switchToTab(tabName) {
+        document.querySelectorAll('.tab-container').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        const targetContainer = document.getElementById(`${tabName}-container`);
+        if (targetContainer) targetContainer.classList.remove('hidden');
+        const targetButton = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+        if (targetButton) targetButton.classList.add('active');
+        if (tabName === 'dashboard') renderDashboard();
+        if (tabName === 'profile') loadUserProfile();
+        if (tabName === 'payments') loadPaymentHistory();
     }
     
-    async function fetchAddresses(query, wrapId) {
-        const wrap = document.getElementById(wrapId);
-        if (!wrap) return;
-        const suggestionsDiv = wrap.querySelector('.suggestions');
-        if (!suggestionsDiv) return;
-        if (query.length < 3) { suggestionsDiv.style.display = 'none'; return; }
-        suggestionsDiv.innerHTML = `<div class="suggestion-item">Searching...</div>`;
-        suggestionsDiv.style.display = 'block';
-        try {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&countrycodes=be&addressdetails=1&accept-language=en`;
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000);
-            const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'NH/3.0' } });
-            clearTimeout(timeoutId);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            if (!data || data.length === 0) {
-                suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ No addresses found</div>`;
-                setTimeout(() => { if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none'; }, 3000);
-                return;
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => { const tabName = btn.getAttribute('data-tab'); if (tabName) switchToTab(tabName); });
+    });
+    
+    document.querySelectorAll('[data-nav]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const nav = e.currentTarget.getAttribute('data-nav');
+            if (nav === 'profile') switchToTab('profile');
+            else if (nav === 'dashboard') switchToTab('dashboard');
+            else if (nav === 'new-booking') switchToTab('new-booking');
+            else if (nav === 'payments') switchToTab('payments');
+            closeMenu();
+        });
+    });
+    
+    window.initGoogleMapsCallback = function() {
+        if (typeof google !== 'undefined') {
+            directionsService = new google.maps.DirectionsService();
+            const pickupInput = document.getElementById('pickupInput');
+            if (pickupInput) {
+                const pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, { componentRestrictions: { country: "be" }, fields: ["geometry", "formatted_address"] });
+                pickupAutocomplete.addListener("place_changed", () => { const place = pickupAutocomplete.getPlace(); if (place.geometry) { pickupLocation = place.geometry.location; if (dropoffLocation) calculateGoogleRoute(); } });
             }
-            suggestionsDiv.innerHTML = '';
-            data.forEach(place => {
-                const div = document.createElement('div');
-                div.className = 'suggestion-item';
-                div.setAttribute('data-lat', place.lat);
-                div.setAttribute('data-lon', place.lon);
-                let displayName = place.display_name.length > 80 ? place.display_name.substring(0, 80) + '…' : place.display_name;
-                div.textContent = displayName;
-                div.onclick = (e) => {
-                    e.preventDefault(); e.stopPropagation();
-                    const inputField = wrapId === 'pickupWrap' ? document.getElementById('pickupInput') : document.getElementById('dropoffInput');
-                    if (inputField) inputField.value = place.display_name;
-                    const coords = { lat: parseFloat(place.lat), lon: parseFloat(place.lon) };
-                    if (wrapId === 'pickupWrap') pickupCoord = coords;
-                    else dropoffCoord = coords;
-                    suggestionsDiv.style.display = 'none';
-                    if (pickupCoord && dropoffCoord) calculateAndStoreRoute();
-                };
-                suggestionsDiv.appendChild(div);
-            });
-            suggestionsDiv.style.display = 'block';
-        } catch (err) {
-            console.error('Autocomplete error:', err);
-            suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ Network error - try again</div>`;
-            setTimeout(() => { if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none'; }, 3000);
-        }
-    }
-    
-    function initAutocomplete() {
-        const pickupInput = document.getElementById('pickupInput');
-        const dropoffInput = document.getElementById('dropoffInput');
-        if (pickupInput) {
-            pickupInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                const query = e.target.value.trim();
-                if (query.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(query, 'pickupWrap'), 500);
-                else { const s = document.querySelector('#pickupWrap .suggestions'); if (s) s.style.display = 'none'; }
-            });
-        }
-        if (dropoffInput) {
-            dropoffInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                const query = e.target.value.trim();
-                if (query.length >= 3) debounceTimer = setTimeout(() => fetchAddresses(query, 'dropoffWrap'), 500);
-                else { const s = document.querySelector('#dropoffWrap .suggestions'); if (s) s.style.display = 'none'; }
-            });
-        }
-        document.addEventListener('click', (e) => { if (!e.target.closest('.suggest-wrapper')) document.querySelectorAll('.suggestions').forEach(s => s.style.display = 'none'); });
-    }
-    
-    async function calcRoute(lat1, lon1, lat2, lon2) {
-        const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            if (data.code === 'Ok' && data.routes.length) {
-                const rt = data.routes[0];
-                return { distanceKm: (rt.distance / 1000).toFixed(1), durationMin: Math.round(rt.duration / 60), geometry: rt.geometry };
+            const dropoffInput = document.getElementById('dropoffInput');
+            if (dropoffInput) {
+                const dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, { componentRestrictions: { country: "be" }, fields: ["geometry", "formatted_address"] });
+                dropoffAutocomplete.addListener("place_changed", () => { const place = dropoffAutocomplete.getPlace(); if (place.geometry) { dropoffLocation = place.geometry.location; if (pickupLocation) calculateGoogleRoute(); } });
             }
-        } catch(e) { console.error(e); }
-        return null;
+        }
+    };
+    
+    function calculateGoogleRoute() {
+        if (!pickupLocation || !dropoffLocation || !directionsService) return;
+        directionsService.route({ origin: pickupLocation, destination: dropoffLocation, travelMode: google.maps.TravelMode.DRIVING, unitSystem: google.maps.UnitSystem.METRIC }, (result, status) => {
+            if (status === "OK") {
+                const route = result.routes[0].legs[0];
+                const distanceKm = (route.distance.value / 1000).toFixed(1);
+                const durationMin = Math.round(route.duration.value / 60);
+                currentRouteData = { distanceKm: parseFloat(distanceKm), durationMin: durationMin };
+                updateDisplayAndRoute(route);
+            } else { showError(1, "Impossible de calculer l'itinéraire."); }
+        });
     }
     
-    async function updateMapAndInfo(rd) {
-        if (routeLayer) bookingMap.removeLayer(routeLayer);
-        routeLayer = L.geoJSON(rd.geometry, { color: '#d4af37', weight: 8 }).addTo(bookingMap);
-        const bounds = L.latLngBounds([pickupCoord.lat, pickupCoord.lon], [dropoffCoord.lat, dropoffCoord.lon]);
-        bookingMap.fitBounds(bounds, { padding: [60, 60] });
-        let d = parseFloat(rd.distanceKm), t = rd.durationMin;
-        if (currentRoundTrip) { d *= 2; t *= 2; }
-        const price = d * 1.5;
-        document.getElementById('distVal').innerHTML = d.toFixed(1);
-        document.getElementById('timeVal').innerHTML = t;
-        document.getElementById('priceVal').innerHTML = price.toFixed(2);
+    function updateDisplayAndRoute(route) {
+        let displayDistance = parseFloat(currentRouteData.distanceKm);
+        let displayDuration = currentRouteData.durationMin;
+        let price = displayDistance * 1.5;
+        if (currentRoundTrip) { displayDistance *= 2; displayDuration *= 2; price *= 2; }
+        document.getElementById("distVal").innerHTML = displayDistance.toFixed(1);
+        document.getElementById("timeVal").innerHTML = displayDuration;
+        document.getElementById("priceVal").innerHTML = price.toFixed(2);
         updateTotalDisplay();
+        if (route && route.overview_path && map) {
+            const latLngs = route.overview_path.map(p => [p.lat(), p.lng()]);
+            if (routeLayer) map.removeLayer(routeLayer);
+            routeLayer = L.polyline(latLngs, { color: '#d4af37', weight: 6 }).addTo(map);
+            const bounds = L.latLngBounds(latLngs);
+            map.fitBounds(bounds);
+        }
     }
     
-    function parseEuroDate(str) {
-        if (!str) return null;
-        let parts = str.match(/(\d+)-(\d+)-(\d+)\s+(\d+):(\d+)/);
-        if (!parts) return null;
-        let [d, m, y, hh, min] = parts.slice(1).map(Number);
-        return new Date(y, m - 1, d, hh, min);
-    }
+    function initLeafletMap() { map = L.map('map').setView([50.85, 4.35], 13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map); return map; }
     
+    function parseEuroDate(str) { if (!str) return null; let parts = str.match(/(\d+)-(\d+)-(\d+)\s+(\d+):(\d+)/); if (!parts) return null; let [d, m, y, hh, min] = parts.slice(1).map(Number); return new Date(y, m-1, d, hh, min); }
     function isPast(ds) { let p = parseEuroDate(ds); return p ? p < new Date() : false; }
     function isWithinNextHour(ds) { let diff = parseEuroDate(ds) - new Date(); return diff > 0 && diff < 3600000; }
     
-    function getExtrasString() {
-        let extras = [];
-        if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet");
-        if (document.getElementById('kissRide')?.checked) extras.push("Kiss & Ride");
-        if (document.getElementById('waterBottle')?.checked) extras.push("Water bottle");
-        if (document.getElementById('wifi')?.checked) extras.push("WiFi");
-        return extras.join(", ") || "None";
-    }
+    function getExtrasString() { let extras = []; if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet"); if (document.getElementById('kissRide')?.checked) extras.push("Kiss & Ride"); if (document.getElementById('waterBottle')?.checked) extras.push("Bouteille d'eau"); if (document.getElementById('wifi')?.checked) extras.push("WiFi"); return extras.join(", ") || "Aucune"; }
     
     function updateTotalDisplay() {
         if (!currentRouteData) return;
@@ -712,120 +500,49 @@
         document.getElementById('overviewExtras').innerText = getExtrasString();
         document.getElementById('overviewTotal').innerHTML = `€${total.toFixed(2)}`;
         const retCont = document.getElementById('overviewReturnContainer');
-        if (currentRoundTrip && currentReturnDateTime) {
-            retCont.style.display = 'block';
-            document.getElementById('overviewReturn').innerText = currentReturnDateTime;
-        } else retCont.style.display = 'none';
+        if (currentRoundTrip && currentReturnDateTime) { retCont.style.display = 'block'; document.getElementById('overviewReturn').innerText = currentReturnDateTime; } else retCont.style.display = 'none';
     }
     
-    function showError(page, msg) {
-        let errDiv = document.getElementById(`page${page}Error`);
-        if (errDiv) { errDiv.innerText = msg; errDiv.style.display = 'block'; setTimeout(() => errDiv.style.display = 'none', 5000); }
-    }
-    
-    async function calculateAndStoreRoute() {
-        if (!pickupCoord || !dropoffCoord) { showError(1, 'Select a valid pickup and dropoff address from suggestions'); return false; }
-        const dt = document.getElementById('datetime').value;
-        if (!dt) { showError(1, 'Choose a valid outbound date and time'); return false; }
-        if (isPast(dt)) { showError(1, 'Date cannot be in the past'); return false; }
-        if (document.getElementById('roundtripCheckbox').checked) {
-            const returnDt = document.getElementById('returnDatetime').value;
-            if (!returnDt) { showError(1, 'Choose a return date and time for round trip'); return false; }
-            if (isPast(returnDt)) { showError(1, 'Return date cannot be in the past'); return false; }
-            if (parseEuroDate(returnDt) <= parseEuroDate(dt)) { showError(1, 'Return date must be after outbound date'); return false; }
-            currentReturnDateTime = returnDt;
-        }
-        const urgent = isWithinNextHour(dt);
-        const urgentDiv = document.getElementById('urgentWhatsApp');
-        if (urgentDiv) urgent ? urgentDiv.classList.add('show') : urgentDiv.classList.remove('show');
-        const rd = await calcRoute(pickupCoord.lat, pickupCoord.lon, dropoffCoord.lat, dropoffCoord.lon);
-        if (!rd) { showError(1, 'Could not calculate route'); return false; }
-        currentRouteData = rd;
-        currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
-        await updateMapAndInfo(rd);
-        return true;
-    }
-    
-    function generateBookingId() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const counter = parseInt(localStorage.getItem('bookingCounter') || '0') + 1;
-        localStorage.setItem('bookingCounter', counter);
-        return `T-PV-${year}${month}${day}-${String(counter).padStart(3, '0')}`;
-    }
-    
-    async function finalizeBooking() {
-        if (!currentRouteData) { showError(5, 'Calculate the route in steps 1 and 2 first'); return; }
-        const fn = document.getElementById('firstName').value.trim();
-        const ln = document.getElementById('lastName').value.trim();
-        const ph = document.getElementById('phone').value.trim();
-        const em = document.getElementById('email').value.trim();
-        if (!fn || !ln || !ph || !em) { showError(5, 'Please fill in all required customer information'); return; }
-        if (!selectedVehicle) { showError(5, 'Please select a vehicle in step 3'); return; }
-        
-        const payment = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
-        let dist = parseFloat(currentRouteData.distanceKm);
-        if (currentRoundTrip) dist *= 2;
-        let totalAmount = dist * 1.5 + selectedVehicleExtra;
-        const dt = document.getElementById('datetime').value;
-        let datePart = "", timePart = "";
-        if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
-        const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
-        const bookingId = generateBookingId();
-        
-        const bookingData = {
-            id: bookingId, datetime: datePart, time: timePart, name: `${fn} ${ln}`, email: em, phone: ph,
-            pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value,
-            flight_number: document.getElementById('flightNumber').value.trim() || "", vehicle: selectedVehicle,
-            extras: getExtrasString(), amount: totalAmount.toString(), payment: payment,
-            status: payment === "Cash" ? "pending" : "pending_payment", customer_id: customerId,
-            form_data: { source: "web-portal" }, created_at: new Date().toISOString(), partner_id: 1,
-            assigned_driver_id: null, payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
-        };
-        
-        const supabase = getSupabase();
-        if (!supabase) { showError(5, 'Database not available'); return; }
-        
-        try {
-            const { error } = await supabase.from('bookings').insert([bookingData]);
-            if (error) throw error;
-            alert(`✅ Booking ${bookingId} confirmed for €${totalAmount.toFixed(2)}!`);
-            resetAll();
-            await loadUserBookings();
-            switchToTab('dashboard');
-        } catch (err) { showError(5, 'Booking error: ' + err.message); }
-    }
-    
-    function resetAll() {
-        if (routeLayer) bookingMap.removeLayer(routeLayer);
-        currentRouteData = null; pickupCoord = null; dropoffCoord = null;
-        document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = '';
-        document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = '';
-        document.getElementById('roundtripCheckbox').checked = false;
-        document.getElementById('returnDateContainer').classList.remove('visible');
-        currentRoundTrip = false;
-        showPage(1);
-    }
+    function showError(page, msg) { let errDiv = document.getElementById(`page${page}Error`); if (errDiv) { errDiv.innerText = msg; errDiv.style.display = 'block'; setTimeout(() => errDiv.style.display = 'none', 5000); } }
     
     function showPage(page) {
-        document.querySelectorAll('.carousel-page').forEach((pg, i) => pg.classList.toggle('active-page', i + 1 === page));
-        document.querySelectorAll('.step-btn').forEach((btn, i) => btn.classList.toggle('active', i + 1 === page));
+        document.querySelectorAll('.carousel-page').forEach((pg, i) => { pg.classList.toggle('active-page', i+1 === page); });
+        document.querySelectorAll('.step-btn').forEach((btn, i) => { btn.classList.toggle('active', i+1 === page); });
         currentPage = page;
         document.getElementById('prevBtn').disabled = (page === 1);
         if (page === 5) updateTotalDisplay();
+        if (page === 2 && map) { setTimeout(() => map.invalidateSize(), 100); }
     }
     
     async function nextPage() {
-        if (currentPage === 1) { const ok = await calculateAndStoreRoute(); if (ok) showPage(2); }
-        else if (currentPage === 2) { if (currentRouteData) showPage(3); else showError(2, 'Calculate a route in step 1 first'); }
-        else if (currentPage === 3) { if (selectedVehicle) showPage(4); else showError(3, 'Select a vehicle'); }
-        else if (currentPage === 4) { showPage(5); updateTotalDisplay(); }
-        else if (currentPage === 5) { console.log("Step 5 - use the confirm button"); }
+        if (currentPage === 1) {
+            const dt = document.getElementById('datetime').value;
+            if (!dt) { showError(1, 'Choisissez une date/heure aller valide'); return; }
+            if (isPast(dt)) { showError(1, 'La date ne peut pas être dans le passé'); return; }
+            if (document.getElementById('roundtripCheckbox').checked) {
+                const returnDt = document.getElementById('returnDatetime').value;
+                if (!returnDt) { showError(1, 'Choisissez une date/heure retour'); return; }
+                if (isPast(returnDt)) { showError(1, 'La date retour ne peut pas être dans le passé'); return; }
+                currentReturnDateTime = returnDt;
+            }
+            currentRoundTrip = document.getElementById('roundtripCheckbox').checked;
+            const urgent = isWithinNextHour(dt);
+            const urgentDiv = document.getElementById('urgentWhatsApp');
+            if (urgentDiv) urgent ? urgentDiv.classList.add('show') : urgentDiv.classList.remove('show');
+            if (!pickupLocation || !dropoffLocation) { showError(1, 'Sélectionnez une adresse valide dans les suggestions'); return; }
+            showPage(2);
+        } else if (currentPage === 2) { if (!currentRouteData) { showError(2, 'Calculez d\'abord un itinéraire'); return; } showPage(3); }
+        else if (currentPage === 3) { if (!selectedVehicle) { showError(3, 'Sélectionnez un véhicule'); return; } showPage(4); }
+        else if (currentPage === 4) {
+            const fn = document.getElementById('firstName').value.trim(), ln = document.getElementById('lastName').value.trim(), ph = document.getElementById('phone').value.trim(), em = document.getElementById('email').value.trim();
+            if (!fn || !ln || !ph || !em) { showError(4, 'Veuillez remplir tous les champs obligatoires'); return; }
+            showPage(5); updateTotalDisplay();
+        } else if (currentPage === 5) { await finalizeBooking(); }
     }
     
     function prevPage() { if (currentPage > 1) showPage(currentPage - 1); }
+    document.getElementById('nextBtn')?.addEventListener('click', nextPage);
+    document.getElementById('prevBtn')?.addEventListener('click', prevPage);
     
     function initVehicleSelection() {
         document.querySelectorAll('.vehicle-card').forEach(card => {
@@ -839,23 +556,49 @@
         });
     }
     
-    function switchToTab(tabName) {
-        document.querySelectorAll('.tab-container').forEach(c => c.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`${tabName}-container`).classList.remove('hidden');
-        document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
-        if (tabName === 'dashboard') renderDashboard();
-        if (tabName === 'profile') loadUserProfile();
-        if (tabName === 'payments') loadPaymentHistory();
+    document.getElementById('roundtripCheckbox')?.addEventListener('change', (e) => {
+        document.getElementById('returnDateContainer').classList.toggle('visible', e.target.checked);
+        if (currentRouteData) {
+            currentRoundTrip = e.target.checked;
+            let d = parseFloat(currentRouteData.distanceKm);
+            if (currentRoundTrip) d *= 2;
+            document.getElementById('priceVal').innerHTML = (d * 1.5).toFixed(2);
+            updateTotalDisplay();
+        }
+    });
+    
+    async function finalizeBooking() {
+        if (bookingSubmitInProgress) return;
+        if (!currentRouteData) { showError(5, 'Calculez d\'abord l\'itinéraire'); return; }
+        const fn = document.getElementById('firstName').value.trim(), ln = document.getElementById('lastName').value.trim(), ph = document.getElementById('phone').value.trim(), em = document.getElementById('email').value.trim();
+        if (!fn || !ln || !ph || !em) { showError(5, 'Veuillez remplir tous les champs obligatoires'); return; }
+        const payment = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
+        let dist = parseFloat(currentRouteData.distanceKm);
+        if (currentRoundTrip) dist *= 2;
+        let totalAmount = dist * 1.5 + selectedVehicleExtra;
+        const dt = document.getElementById('datetime').value;
+        let datePart = "", timePart = "";
+        if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
+        const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
+        const bookingId = `T-PV-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(Math.random()*1000)}`;
+        const bookingData = { id: bookingId, datetime: datePart, time: timePart, name: `${fn} ${ln}`, email: em, phone: ph, pickup: document.getElementById('pickupInput').value, destination: document.getElementById('dropoffInput').value, flight_number: document.getElementById('flightNumber').value.trim() || "", vehicle: selectedVehicle, extras: getExtrasString(), amount: totalAmount.toString(), payment: payment, status: payment === "Cash" ? "pending" : "pending_payment", customer_id: customerId, form_data: { source: "web-portal" }, created_at: new Date().toISOString(), partner_id: 1, assigned_driver_id: null, payment_status: payment === "Cash" ? "cash_pending" : "unpaid" };
+        const supabase = getSupabase();
+        if (!supabase) { showError(5, 'Base de données indisponible'); return; }
+        bookingSubmitInProgress = true;
+        try {
+            const { error } = await supabase.from('bookings').insert([bookingData]);
+            if (error) throw error;
+            alert(`✅ Réservation ${bookingId} confirmée pour €${totalAmount.toFixed(2)}!`);
+            resetBookingForm();
+            await loadUserBookings();
+            switchToTab('dashboard');
+        } catch (err) { showError(5, 'Erreur: ' + err.message); }
+        finally { bookingSubmitInProgress = false; }
     }
     
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchToTab(btn.getAttribute('data-tab'))));
-    document.querySelectorAll('[data-nav]').forEach(link => link.addEventListener('click', (e) => {
-        const nav = e.currentTarget.getAttribute('data-nav');
-        if (nav === 'home' || nav === 'portal') switchToTab('new-booking');
-        if (nav === 'contact') alert('Contact us at info@nh.be or +32 473 30 03 74');
-        closeMenu();
-    }));
+    function resetBookingForm() { if (routeLayer) map.removeLayer(routeLayer); currentRouteData = null; pickupLocation = null; dropoffLocation = null; document.getElementById('pickupInput').value = ''; document.getElementById('dropoffInput').value = ''; document.getElementById('datetime').value = ''; document.getElementById('returnDatetime').value = ''; document.getElementById('roundtripCheckbox').checked = false; document.getElementById('returnDateContainer').classList.remove('visible'); currentRoundTrip = false; showPage(1); }
+    
+    document.getElementById('finalConfirmBtn')?.addEventListener('click', finalizeBooking);
     
     async function loadUserProfile() {
         document.getElementById('fullName').value = currentUser.full_name;
@@ -869,15 +612,7 @@
         if (currentUser.default_pickup_address) document.getElementById('pickupInput').value = currentUser.default_pickup_address;
     }
     
-    document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        currentUser.full_name = document.getElementById('fullName').value;
-        currentUser.email = document.getElementById('profileEmail').value;
-        currentUser.phone = document.getElementById('profilePhone').value;
-        currentUser.default_pickup_address = document.getElementById('defaultPickup').value;
-        alert('Profile saved!');
-        loadUserProfile();
-    });
+    document.getElementById('profileForm')?.addEventListener('submit', async (e) => { e.preventDefault(); currentUser.full_name = document.getElementById('fullName').value; currentUser.email = document.getElementById('profileEmail').value; currentUser.phone = document.getElementById('profilePhone').value; currentUser.default_pickup_address = document.getElementById('defaultPickup').value; alert('Profil enregistré!'); loadUserProfile(); });
     
     async function loadUserBookings() {
         const supabase = getSupabase();
@@ -896,81 +631,44 @@
         const completed = userBookings.filter(b => b.status === 'completed');
         const totalSpent = completed.reduce((s, b) => s + (parseFloat(b.amount) || 0), 0);
         const statsGrid = document.getElementById('statsGrid');
-        if (statsGrid) {
-            statsGrid.innerHTML = `<div class="stat-card"><h3>${upcoming.length}</h3><p>Upcoming rides</p></div>
-                <div class="stat-card"><h3>${completed.length}</h3><p>Completed rides</p></div>
-                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Total spent</p></div>`;
-        }
-        
+        if (statsGrid) { statsGrid.innerHTML = `<div class="stat-card"><h3>${upcoming.length}</h3><p>Trajets à venir</p></div><div class="stat-card"><h3>${completed.length}</h3><p>Trajets terminés</p></div><div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Total dépensé</p></div>`; }
         const renderTable = (tableId, bookings) => {
             const tbody = document.querySelector(`#${tableId} tbody`);
             if (tbody) {
-                if (bookings.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">No rides found</td></tr>`; return; }
-                tbody.innerHTML = bookings.map(b => `<tr><td>${b.id}</td><td>${b.datetime} ${b.time || ''}</td><td>${(b.pickup || '').split(',')[0]} → ${(b.destination || '').split(',')[0]}</td><td>${b.vehicle || 'Standard'}</td><td>€${(parseFloat(b.amount) || 0).toFixed(2)}</td><td><span class="status-badge" style="background:${b.status === 'completed' ? '#dcfce7' : '#fef3c7'}">${b.status === 'completed' ? 'Completed' : 'Pending'}</span></td><td><button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button><button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button></td></tr>`).join('');
+                if (bookings.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">Aucun trajet trouvé</td></tr>`; return; }
+                tbody.innerHTML = bookings.map(b => `<tr><td>${b.id}</td><td>${b.datetime} ${b.time || ''}</td><td>${(b.pickup || '').split(',')[0]} → ${(b.destination || '').split(',')[0]}</td><td>${b.vehicle || 'Standard'}</td><td>€${(parseFloat(b.amount) || 0).toFixed(2)}</td><td><span class="status-badge" style="background:${b.status === 'completed' ? '#dcfce7' : '#fef3c7'}">${b.status === 'completed' ? 'Terminé' : 'En attente'}</span></td><td><button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button></td></tr>`).join('');
+                document.querySelectorAll('.repeat-booking').forEach(btn => { btn.onclick = () => { const b = JSON.parse(btn.getAttribute('data-id')); document.getElementById('pickupInput').value = b.pickup; document.getElementById('dropoffInput').value = b.destination; document.getElementById('datetime').value = `${b.datetime} ${b.time}`; switchToTab('new-booking'); }; });
             }
         };
         renderTable('upcomingTable', upcoming);
         renderTable('completedTable', completed);
-        
-        document.querySelectorAll('.repeat-booking').forEach(btn => btn.onclick = () => {
-            const b = JSON.parse(btn.getAttribute('data-id'));
-            document.getElementById('pickupInput').value = b.pickup;
-            document.getElementById('dropoffInput').value = b.destination;
-            document.getElementById('datetime').value = `${b.datetime} ${b.time}`;
-            switchToTab('new-booking');
-        });
-        document.querySelectorAll('.view-fiche').forEach(btn => btn.onclick = () => {
-            const b = JSON.parse(btn.getAttribute('data-id'));
-            alert(`Ride ${b.id}\nAmount: €${b.amount}\nStatus: ${b.status}\nRoute: ${b.pickup} → ${b.destination}`);
-        });
     }
     
     async function loadPaymentHistory() {
         const tbody = document.querySelector('#paymentsTable tbody');
         if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="6">Loading...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6">Chargement...</td></tr>`;
         const supabase = getSupabase();
-        if (!supabase) { tbody.innerHTML = `<tr><td colspan="6">Database not available</td></tr>`; return; }
+        if (!supabase) { tbody.innerHTML = `<tr><td colspan="6">Base de données indisponible</td></tr>`; return; }
         try {
             const customerId = `CUST-${currentUser.email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
             const { data, error } = await supabase.from('payments').select('*').eq('customer_id', customerId).order('created_at', { ascending: false });
             if (error) throw error;
-            if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="6">No payments found</td></tr>`; return; }
-            tbody.innerHTML = data.map(p => `<tr><td>${p.booking_id || '-'}</td><td>${new Date(p.created_at).toLocaleDateString('en-GB')}</td><td>€ ${parseFloat(p.amount).toFixed(2)}</td><td>${p.payment_method === 'card' ? 'Card' : (p.payment_method || 'Cash')}</td><td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Completed' : 'Pending'}</span></td><td>-</td></tr>`).join('');
-        } catch (err) { console.error('Payment history error:', err); tbody.innerHTML = `<tr><td colspan="6">Error: ${err.message}</td></tr>`; }
+            if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="6">Aucun paiement trouvé</td></tr>`; return; }
+            tbody.innerHTML = data.map(p => `<tr><td>${p.booking_id || '-'}</td><td>${new Date(p.created_at).toLocaleDateString('fr-BE')}</td><td>€ ${parseFloat(p.amount).toFixed(2)}</td><td>${p.payment_method === 'card' ? 'Carte' : (p.payment_method || 'Espèces')}</td><td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Terminé' : 'En attente'}</span></td><td>-</td></tr>`).join('');
+        } catch (err) { console.error('Payment history error:', err); tbody.innerHTML = `<tr><td colspan="6">Erreur: ${err.message}</td></tr>`; }
     }
     
-    document.getElementById('roundtripCheckbox')?.addEventListener('change', (e) => {
-        document.getElementById('returnDateContainer').classList.toggle('visible', e.target.checked);
-        if (currentRouteData) {
-            currentRoundTrip = e.target.checked;
-            let d = parseFloat(currentRouteData.distanceKm);
-            if (currentRoundTrip) d *= 2;
-            document.getElementById('priceVal').innerHTML = (d * 1.5).toFixed(2);
-            updateTotalDisplay();
-        }
-    });
+    function initDemoUser() { currentUser = { id: 'demo-user-001', full_name: 'Jean Dupont', email: 'jean@exemple.be', phone: '+32 470 12 34 56', default_pickup_address: 'Brussels Airport, Zaventem' }; loadUserProfile(); }
     
-    document.getElementById('nextBtn')?.addEventListener('click', nextPage);
-    document.getElementById('prevBtn')?.addEventListener('click', prevPage);
-    document.getElementById('finalConfirmBtn')?.addEventListener('click', finalizeBooking);
-    
-    flatpickr("#datetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
-    flatpickr("#returnDatetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
-    
-    initMap();
+    initLeafletMap();
     initVehicleSelection();
-    initAutocomplete();
+    initDemoUser();
     showPage(1);
-    loadUserProfile();
-    loadUserBookings();
-    switchToTab('new-booking');
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('payment') === 'success') alert(`Payment completed!`);
-    else if (urlParams.get('payment') === 'cancelled') alert(`Payment cancelled.`);
-    
-    console.log("✅ Application ready - EN version");
+    flatpickr("#datetime", { locale: "fr", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
+    flatpickr("#returnDatetime", { locale: "fr", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
+    setTimeout(() => { loadUserBookings(); }, 500);
+    console.log("✅ Portail client FR chargé - Tout fonctionne!");
 </script>
 </body>
 </html>
