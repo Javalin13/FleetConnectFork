@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>NH · Klantenportaal</title>
+    <title>FleetConnect Â· Klantenportaal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -21,7 +21,7 @@
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA'
         );
         window.SUPABASE_READY = true;
-        console.log("✅ Supabase client geladen en klaar");
+        console.log("âœ… Supabase client geladen en klaar");
     </script>
     
     <style>
@@ -354,7 +354,7 @@
 <div class="sidebar-overlay" id="sidebarOverlay">
     <div class="sidebar">
         <div class="sidebar-header">
-            <h3><i class="fas fa-car"></i> NH</h3>
+            <h3><i class="fas fa-car"></i> FleetConnect</h3>
             <button class="close-menu" id="closeMenuBtn">&times;</button>
         </div>
         
@@ -394,8 +394,8 @@
     <section class="hero" style="padding: 40px 0 20px; text-align: center;">
         <div class="container">
             <div class="hero-card" style="background: var(--card-bg); backdrop-filter: blur(8px); max-width:700px; margin:0 auto; padding:30px; border-radius:48px;">
-                <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> NH</h1>
-                <p style="color:var(--text-light);">Professioneel taxivervoer – Stipt, betrouwbaar & comfortabel</p>
+                <h1 style="font-size:2.2rem; color:var(--primary);"><i class="fas fa-network-wired"></i> FleetConnect</h1>
+                <p style="color:var(--text-light);">Professioneel taxivervoer â€“ Stipt, betrouwbaar & comfortabel</p>
             </div>
         </div>
     </section>
@@ -427,10 +427,10 @@
     <!-- TABS SECTIE -->
     <div class="container">
         <div class="tabs-container">
-            <button class="tab-btn active" data-tab="new-booking">📝 Nieuwe Rit</button>
-            <button class="tab-btn" data-tab="profile">👤 Mijn Profiel</button>
-            <button class="tab-btn" data-tab="dashboard">📊 Dashboard & Ritten</button>
-            <button class="tab-btn" data-tab="payments">💰 Betalingen</button>
+            <button class="tab-btn active" data-tab="new-booking">ðŸ“ Nieuwe Rit</button>
+            <button class="tab-btn" data-tab="profile">ðŸ‘¤ Mijn Profiel</button>
+            <button class="tab-btn" data-tab="dashboard">ðŸ“Š Dashboard & Ritten</button>
+            <button class="tab-btn" data-tab="payments">ðŸ’° Betalingen</button>
             <button id="logoutBtn" class="logout-tab-btn">
                 <i class="fas fa-sign-out-alt"></i> Uitloggen
             </button>
@@ -447,57 +447,57 @@
                         <button class="step-btn" data-page="5">5. Afrekenen</button>
                     </div>
                     <div id="page1" class="carousel-page active-page">
-                        <h1>🚖 Ritgegevens</h1>
-                        <div class="sub">België – €1,50/km | spoedritten via WhatsApp</div>
-                        <div class="field"><label>📍 Ophaaladres <span class="required-star">*</span></label>
+                        <h1>ðŸš– Ritgegevens</h1>
+                        <div class="sub">BelgiÃ« â€“ â‚¬1,50/km | spoedritten via WhatsApp</div>
+                        <div class="field"><label>ðŸ“ Ophaaladres <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="pickupWrap">
                                 <input type="text" id="pickupInput" placeholder="bv. Antwerpen" autocomplete="off">
                                 <div id="pickupSuggest" class="suggestions"></div>
                             </div>
                         </div>
-                        <div class="field"><label>🏁 Afzetadres <span class="required-star">*</span></label>
+                        <div class="field"><label>ðŸ Afzetadres <span class="required-star">*</span></label>
                             <div class="suggest-wrapper" id="dropoffWrap">
                                 <input type="text" id="dropoffInput" placeholder="bv. Brussel" autocomplete="off">
                                 <div id="dropoffSuggest" class="suggestions"></div>
                             </div>
                         </div>
-                        <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label>🔄 Heen en terug rit (prijs x2)</label></div>
-                        <div class="field"><label>✈️ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber"></div>
+                        <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"> <label>ðŸ”„ Heen en terug rit (prijs x2)</label></div>
+                        <div class="field"><label>âœˆï¸ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber"></div>
                         <div class="field">
-                            <label>📅 Heen datum & tijd <span class="required-star">*</span></label>
+                            <label>ðŸ“… Heen datum & tijd <span class="required-star">*</span></label>
                             <input type="text" id="datetime" placeholder="Klik om datum & tijd te kiezen" readonly>
                             <i class="fas fa-calendar-alt date-icon"></i>
                         </div>
                         <div class="field return-date-field" id="returnDateContainer">
-                            <label>📅 Terug datum & tijd</label>
+                            <label>ðŸ“… Terug datum & tijd</label>
                             <input type="text" id="returnDatetime" placeholder="Klik om datum & tijd te kiezen" readonly>
                             <i class="fas fa-calendar-alt date-icon"></i>
                         </div>
-                        <div id="urgentWhatsApp" class="urgent-whatsapp"><span>⚠️ Vertrekt binnen het uur – WhatsApp</span><a href="https://wa.me/32470123456" class="whatsapp-btn">📱 WhatsApp nu</a></div>
+                        <div id="urgentWhatsApp" class="urgent-whatsapp"><span>âš ï¸ Vertrekt binnen het uur â€“ WhatsApp</span><a href="https://wa.me/32470123456" class="whatsapp-btn">ðŸ“± WhatsApp nu</a></div>
                         <div id="page1Error" class="error"></div>
                     </div>
                     <div id="page2" class="carousel-page">
-                        <h2>🗺️ Route & Prijs</h2>
+                        <h2>ðŸ—ºï¸ Route & Prijs</h2>
                         <div id="map"></div>
-                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>🟢 Ophalen</span></div><div class="legend-item"><div class="legend-color red"></div><span>🔴 Afzetten</span></div><div class="legend-item"><div class="legend-color blue"></div><span>🟡 Route</span></div></div>
-                        <div class="info-strip"><div class="info-card"><div class="label">📏 Afstand</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Reistijd</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Prijs</div><div class="value" id="priceVal">—</div><small>€</small></div></div>
+                        <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>ðŸŸ¢ Ophalen</span></div><div class="legend-item"><div class="legend-color red"></div><span>ðŸ”´ Afzetten</span></div><div class="legend-item"><div class="legend-color blue"></div><span>ðŸŸ¡ Route</span></div></div>
+                        <div class="info-strip"><div class="info-card"><div class="label">ðŸ“ Afstand</div><div class="value" id="distVal">â€”</div><small>km</small></div><div class="info-card"><div class="label">â±ï¸ Reistijd</div><div class="value" id="timeVal">â€”</div><small>min</small></div><div class="info-card"><div class="label">ðŸ’° Prijs</div><div class="value" id="priceVal">â€”</div><small>â‚¬</small></div></div>
                         <div id="page2Error" class="error"></div>
                     </div>
                     <div id="page3" class="carousel-page">
-                        <h2>🚘 Kies uw voertuig</h2>
+                        <h2>ðŸš˜ Kies uw voertuig</h2>
                         <div class="vehicle-grid" id="vehicleGrid">
-                            <div class="vehicle-card selected" data-vehicle="Standaard" data-extraprice="0"><div class="vehicle-emoji">🚗</div><div class="vehicle-name">Standaard</div><div class="vehicle-price">geen meerprijs</div></div>
-                            <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name">Break</div><div class="vehicle-price">+ €5</div></div>
-                            <div class="vehicle-card" data-vehicle="Exclusieve" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name">Exclusieve</div><div class="vehicle-price">+ €15</div></div>
-                            <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">🚐</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ €10</div></div>
+                            <div class="vehicle-card selected" data-vehicle="Standaard" data-extraprice="0"><div class="vehicle-emoji">ðŸš—</div><div class="vehicle-name">Standaard</div><div class="vehicle-price">geen meerprijs</div></div>
+                            <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">ðŸš™</div><div class="vehicle-name">Break</div><div class="vehicle-price">+ â‚¬5</div></div>
+                            <div class="vehicle-card" data-vehicle="Exclusieve" data-extraprice="15"><div class="vehicle-emoji">ðŸš˜</div><div class="vehicle-name">Exclusieve</div><div class="vehicle-price">+ â‚¬15</div></div>
+                            <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">ðŸš</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ â‚¬10</div></div>
                         </div>
-                        <div class="extra-fields"><h3>➕ Extra opties</h3><div class="extra-grid"><div><label>👥 Aantal passagiers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Bagagestuks</label><input type="number" id="luggage" min="0" value="0"></div></div>
-                        <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> 🤝 Meet & Greet</label><label><input type="checkbox" id="kissRide"> 💋 Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> 💧 Waterfles</label><label><input type="checkbox" id="wifi"> 📶 WiFi</label></div>
-                        <div><label>📝 Speciale wensen</label><textarea id="specialWishes" rows="2" placeholder="bv. kinderzitje"></textarea></div></div>
+                        <div class="extra-fields"><h3>âž• Extra opties</h3><div class="extra-grid"><div><label>ðŸ‘¥ Aantal passagiers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>ðŸ§³ Bagagestuks</label><input type="number" id="luggage" min="0" value="0"></div></div>
+                        <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> ðŸ¤ Meet & Greet</label><label><input type="checkbox" id="kissRide"> ðŸ’‹ Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> ðŸ’§ Waterfles</label><label><input type="checkbox" id="wifi"> ðŸ“¶ WiFi</label></div>
+                        <div><label>ðŸ“ Speciale wensen</label><textarea id="specialWishes" rows="2" placeholder="bv. kinderzitje"></textarea></div></div>
                         <div id="page3Error" class="error"></div>
                     </div>
                     <div id="page4" class="carousel-page">
-                        <h1>📋 Uw gegevens</h1><div class="sub">Vul uw contactgegevens in</div>
+                        <h1>ðŸ“‹ Uw gegevens</h1><div class="sub">Vul uw contactgegevens in</div>
                         <div class="field"><label>Voornaam <span class="required-star">*</span></label><input type="text" id="firstName"></div>
                         <div class="field"><label>Achternaam <span class="required-star">*</span></label><input type="text" id="lastName"></div>
                         <div class="field"><label>GSM <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
@@ -506,22 +506,22 @@
                         <div id="page4Error" class="error"></div>
                     </div>
                     <div id="page5" class="carousel-page">
-                        <h1>💰 Afrekenen</h1><div class="sub">Kies betaalmethode & bevestig</div>
-                        <div class="rit-overzicht"><h3>📋 Uw ritoverzicht</h3>
-                            <div><strong>📍 Ophalen:</strong> <span id="overviewPickup">—</span></div>
-                            <div><strong>🏁 Afzetten:</strong> <span id="overviewDestination">—</span></div>
-                            <div><strong>📅 Heen datum/tijd:</strong> <span id="overviewHeen">—</span></div>
-                            <div id="overviewReturnContainer" style="display:none;"><strong>🔄 Terug datum/tijd:</strong> <span id="overviewReturn">—</span></div>
-                            <div><strong>🚘 Voertuig:</strong> <span id="overviewVehicle">—</span></div>
-                            <div><strong>➕ Extra opties:</strong> <span id="overviewExtras">—</span></div>
-                            <div><strong>💰 Totaalprijs:</strong> <span id="overviewTotal">€ 0,00</span></div>
+                        <h1>ðŸ’° Afrekenen</h1><div class="sub">Kies betaalmethode & bevestig</div>
+                        <div class="rit-overzicht"><h3>ðŸ“‹ Uw ritoverzicht</h3>
+                            <div><strong>ðŸ“ Ophalen:</strong> <span id="overviewPickup">â€”</span></div>
+                            <div><strong>ðŸ Afzetten:</strong> <span id="overviewDestination">â€”</span></div>
+                            <div><strong>ðŸ“… Heen datum/tijd:</strong> <span id="overviewHeen">â€”</span></div>
+                            <div id="overviewReturnContainer" style="display:none;"><strong>ðŸ”„ Terug datum/tijd:</strong> <span id="overviewReturn">â€”</span></div>
+                            <div><strong>ðŸš˜ Voertuig:</strong> <span id="overviewVehicle">â€”</span></div>
+                            <div><strong>âž• Extra opties:</strong> <span id="overviewExtras">â€”</span></div>
+                            <div><strong>ðŸ’° Totaalprijs:</strong> <span id="overviewTotal">â‚¬ 0,00</span></div>
                         </div>
-                        <div class="payment-method"><span>Betaalmethode:</span><label><input type="radio" name="payment" value="Cash" checked> 💵 Cash</label><label><input type="radio" name="payment" value="Kaart"> 💳 Kaart</label><label><input type="radio" name="payment" value="App"> 📱 App</label></div>
-                        <div id="totalDisplay" class="total-display">Totaal: € 0,00</div>
-                        <button id="finalConfirmBtn" class="nav-btn" style="background:#10b981; width:100%;">✅ Bevestig boeking</button>
+                        <div class="payment-method"><span>Betaalmethode:</span><label><input type="radio" name="payment" value="Cash" checked> ðŸ’µ Cash</label><label><input type="radio" name="payment" value="Kaart"> ðŸ’³ Kaart</label><label><input type="radio" name="payment" value="App"> ðŸ“± App</label></div>
+                        <div id="totalDisplay" class="total-display">Totaal: â‚¬ 0,00</div>
+                        <button id="finalConfirmBtn" class="nav-btn" style="background:#10b981; width:100%;">âœ… Bevestig boeking</button>
                         <div id="page5Error" class="error"></div>
                     </div>
-                    <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Vorige</button><button class="nav-btn next" id="nextBtn">Volgende ▶</button></div>
+                    <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>â—€ Vorige</button><button class="nav-btn next" id="nextBtn">Volgende â–¶</button></div>
                 </div>
             </div>
         </div>
@@ -541,15 +541,15 @@
 
         <div id="dashboard-container" class="tab-container hidden">
             <div class="stats-grid" id="statsGrid"></div>
-            <h4>📅 Komende ritten</h4>
+            <h4>ðŸ“… Komende ritten</h4>
             <table class="bookings-table" id="upcomingTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
-            <h4>✅ Voltooide ritten</h4>
+            <h4>âœ… Voltooide ritten</h4>
             <table class="bookings-table" id="completedTable"><thead><tr><th>ID</th><th>Datum/tijd</th><th>Route</th><th>Voertuig</th><th>Bedrag</th><th>Status</th><th>Acties</th></tr></thead><tbody></tbody></table>
         </div>
 
         <div id="payments-container" class="tab-container hidden">
             <div class="profile-card">
-                <h3>💰 Betalingsgeschiedenis</h3>
+                <h3>ðŸ’° Betalingsgeschiedenis</h3>
                 <div id="paymentsList" style="margin-top:20px;">
                     <table class="bookings-table" id="paymentsTable">
                         <thead><tr><th>ID</th><th>Datum</th><th>Bedrag</th><th>Methode</th><th>Status</th><th>Factuur</th></tr></thead>
@@ -586,24 +586,24 @@
                 <i class="fas fa-file-signature"></i>
                 <h3>Koeriersdienst</h3>
                 <p>Snelle documentleveringen</p>
-                <div class="service-summary">Snelle en betrouwbare documentleveringen in heel België.</div>
+                <div class="service-summary">Snelle en betrouwbare documentleveringen in heel BelgiÃ«.</div>
             </a>
         </div>
     </div>
 
     <footer class="footer-dark">
         <div class="footer-grid">
-            <div><h4>NH</h4><p>Professioneel taxivervoer</p></div>
-            <div><h4>NH | Digital</h4><a href="#">Control Panel</a></div>
+            <div><h4>FleetConnect</h4><p>Professioneel taxivervoer</p></div>
+            <div><h4>FleetConnect</h4><a href="#">Control Panel</a></div>
             <div><h4>Juridisch</h4>
-                <a href="PVfaq.html">❓ FAQ</a><br>
-                <a href="PVprivacy.html">🔒 Privacy</a><br>
-                <a href="PVcookiebeleid.html">🍪 Cookiebeleid</a><br>
-                <a href="PValgemene-voorwaarden.html">📜 Algemene voorwaarden</a>
+                <a href="PVfaq.html">â“ FAQ</a><br>
+                <a href="PVprivacy.html">ðŸ”’ Privacy</a><br>
+                <a href="PVcookiebeleid.html">ðŸª Cookiebeleid</a><br>
+                <a href="PValgemene-voorwaarden.html">ðŸ“œ Algemene voorwaarden</a>
             </div>
-            <div><h4>Partners</h4><a href="#">Horizon Of Infinity</a></div>
+            <div><h4>Partners</h4><a href="#">Support</a></div>
         </div>
-        <div class="footer-bottom">© 2026 NH – Ryz3n</div>
+        <div class="footer-bottom">Â© 2026 FleetConnect â€“ Ryzen</div>
     </footer>
 </div>
 <div id="ritModal" class="modal"><div class="modal-content" id="modalContent"></div></div>
@@ -669,7 +669,7 @@
     
     function initMap() {
         bookingMap = L.map('map').setView([50.85, 4.35], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(bookingMap);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Â© OpenStreetMap' }).addTo(bookingMap);
     }
     
     async function fetchAddresses(query, wrapId) {
@@ -684,12 +684,12 @@
             const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=8&countrycodes=be&addressdetails=1&accept-language=nl`;
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 8000);
-            const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'NH/3.0' } });
+            const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'FleetConnect/3.0' } });
             clearTimeout(timeoutId);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
             if (!data || data.length === 0) {
-                suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ Geen adressen gevonden</div>`;
+                suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">âš ï¸ Geen adressen gevonden</div>`;
                 setTimeout(() => { if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none'; }, 3000);
                 return;
             }
@@ -699,7 +699,7 @@
                 div.className = 'suggestion-item';
                 div.setAttribute('data-lat', place.lat);
                 div.setAttribute('data-lon', place.lon);
-                let displayName = place.display_name.length > 80 ? place.display_name.substring(0, 80) + '…' : place.display_name;
+                let displayName = place.display_name.length > 80 ? place.display_name.substring(0, 80) + 'â€¦' : place.display_name;
                 div.textContent = displayName;
                 div.onclick = (e) => {
                     e.preventDefault();
@@ -717,7 +717,7 @@
             suggestionsDiv.style.display = 'block';
         } catch (err) {
             console.error('Autocomplete error:', err);
-            suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">⚠️ Netwerkfout - probeer opnieuw</div>`;
+            suggestionsDiv.innerHTML = `<div class="suggestion-item" style="color:#b91c1c;">âš ï¸ Netwerkfout - probeer opnieuw</div>`;
             setTimeout(() => { if (suggestionsDiv.style.display === 'block') suggestionsDiv.style.display = 'none'; }, 3000);
         }
     }
@@ -796,13 +796,13 @@
         let dist = parseFloat(currentRouteData.distanceKm);
         if (currentRoundTrip) dist *= 2;
         let total = dist * 1.5 + selectedVehicleExtra;
-        document.getElementById('totalDisplay').innerHTML = `Totaal: € ${total.toFixed(2)}`;
-        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || '—';
-        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || '—';
-        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value || '—';
+        document.getElementById('totalDisplay').innerHTML = `Totaal: â‚¬ ${total.toFixed(2)}`;
+        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || 'â€”';
+        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || 'â€”';
+        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value || 'â€”';
         document.getElementById('overviewVehicle').innerText = selectedVehicle;
         document.getElementById('overviewExtras').innerText = getExtrasString();
-        document.getElementById('overviewTotal').innerHTML = `€${total.toFixed(2)}`;
+        document.getElementById('overviewTotal').innerHTML = `â‚¬${total.toFixed(2)}`;
         const retCont = document.getElementById('overviewReturnContainer');
         if (currentRoundTrip && currentReturnDateTime) {
             retCont.style.display = 'block';
@@ -1011,14 +1011,14 @@
         if (statsGrid) {
             statsGrid.innerHTML = `<div class="stat-card"><h3>${upcoming.length}</h3><p>Komende ritten</p></div>
                 <div class="stat-card"><h3>${completed.length}</h3><p>Voltooide ritten</p></div>
-                <div class="stat-card"><h3>€${totalSpent.toFixed(2)}</h3><p>Totaal besteed</p></div>`;
+                <div class="stat-card"><h3>â‚¬${totalSpent.toFixed(2)}</h3><p>Totaal besteed</p></div>`;
         }
         
         const renderTable = (tableId, bookings) => {
             const tbody = document.querySelector(`#${tableId} tbody`);
             if (tbody) {
                 if (bookings.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">Geen ritten gevonden</td></tr>`; return; }
-                tbody.innerHTML = bookings.map(b => `<tr><td>${b.id}</td><td>${b.datetime} ${b.time || ''}</td><td>${(b.pickup || '').split(',')[0]} → ${(b.destination || '').split(',')[0]}</td><td>${b.vehicle || 'Standaard'}</td><td>€${(parseFloat(b.amount) || 0).toFixed(2)}</td><td><span class="status-badge" style="background:${b.status === 'completed' ? '#dcfce7' : '#fef3c7'}">${b.status === 'completed' ? 'Voltooid' : 'In afwachting'}</span></td><td><button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button><button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button></td></tr>`).join('');
+                tbody.innerHTML = bookings.map(b => `<tr><td>${b.id}</td><td>${b.datetime} ${b.time || ''}</td><td>${(b.pickup || '').split(',')[0]} â†’ ${(b.destination || '').split(',')[0]}</td><td>${b.vehicle || 'Standaard'}</td><td>â‚¬${(parseFloat(b.amount) || 0).toFixed(2)}</td><td><span class="status-badge" style="background:${b.status === 'completed' ? '#dcfce7' : '#fef3c7'}">${b.status === 'completed' ? 'Voltooid' : 'In afwachting'}</span></td><td><button class="repeat-booking" data-id='${JSON.stringify(b)}'><i class="fas fa-redo-alt btn-icon"></i></button><button class="view-fiche" data-id='${JSON.stringify(b)}'><i class="fas fa-eye btn-icon"></i></button></td></tr>`).join('');
             }
         };
         renderTable('upcomingTable', upcoming);
@@ -1033,7 +1033,7 @@
         });
         document.querySelectorAll('.view-fiche').forEach(btn => btn.onclick = () => {
             const b = JSON.parse(btn.getAttribute('data-id'));
-            alert(`Rit ${b.id}\nBedrag: €${b.amount}\nStatus: ${b.status}\nRoute: ${b.pickup} → ${b.destination}`);
+            alert(`Rit ${b.id}\nBedrag: â‚¬${b.amount}\nStatus: ${b.status}\nRoute: ${b.pickup} â†’ ${b.destination}`);
         });
     }
     
@@ -1048,7 +1048,7 @@
             const { data, error } = await supabase.from('payments').select('*').eq('customer_id', customerId).order('created_at', { ascending: false });
             if (error) throw error;
             if (!data || data.length === 0) { tbody.innerHTML = `<tr><td colspan="6">Geen betalingen gevonden</td></tr>`; return; }
-            tbody.innerHTML = data.map(p => `<tr><td>${p.booking_id || '-'}</td><td>${new Date(p.created_at).toLocaleDateString('nl-BE')}</td><td>€ ${parseFloat(p.amount).toFixed(2)}</td><td>${p.payment_method === 'card' ? 'Kaart' : (p.payment_method || 'Cash')}</td><td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Voltooid' : 'In behandeling'}</span></td><td>-</td></tr>`).join('');
+            tbody.innerHTML = data.map(p => `<tr><td>${p.booking_id || '-'}</td><td>${new Date(p.created_at).toLocaleDateString('nl-BE')}</td><td>â‚¬ ${parseFloat(p.amount).toFixed(2)}</td><td>${p.payment_method === 'card' ? 'Kaart' : (p.payment_method || 'Cash')}</td><td><span class="status-badge" style="background:${p.status === 'succeeded' ? '#dcfce7' : '#fee2e2'}">${p.status === 'succeeded' ? 'Voltooid' : 'In behandeling'}</span></td><td>-</td></tr>`).join('');
         } catch (err) { console.error('Payment history error:', err); tbody.innerHTML = `<tr><td colspan="6">Fout bij laden: ${err.message}</td></tr>`; }
     }
     
@@ -1088,7 +1088,9 @@
         else if (portalParams.get('payment') === 'cancelled') alert(`Betaling geannuleerd.`);
     })();
     
-    console.log("✅ Applicatie gereed - NL versie");
+    console.log("âœ… Applicatie gereed - NL versie");
 </script>
 </body>
 </html>
+
+

@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>NH - Driver Login</title>
+    <title>FleetConnect - Driver Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -60,8 +60,8 @@
     </div>
     <div class="logo">
         <i class="fas fa-taxi"></i>
-        <h1 id="title">NH Driver</h1>
-        <p id="subtitle">Demo omgeving</p>
+        <h1 id="title">FleetConnect Driver</h1>
+        <p id="subtitle">Driver portal</p>
     </div>
     <form id="loginForm">
         <div class="form-group">
@@ -82,10 +82,10 @@
 </div>
 <script>
     const translations = {
-        nl: { title: "NH Driver", subtitle: "Demo omgeving", emailLabel: "E-mailadres", passwordLabel: "Wachtwoord", loginBtn: "Inloggen", testCreds: "Testgegevens:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Ongeldige inloggegevens. Gebruik admin@ryzen.be / admin@ryzen.be" },
-        fr: { title: "NH Chauffeur", subtitle: "Environnement de démonstration", emailLabel: "Adresse e-mail", passwordLabel: "Mot de passe", loginBtn: "Se connecter", testCreds: "Identifiants de démonstration :<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Identifiants invalides. Utilisez admin@ryzen.be / admin@ryzen.be" },
-        es: { title: "NH Conductor", subtitle: "Entorno de demostración", emailLabel: "Correo electrónico", passwordLabel: "Contraseña", loginBtn: "Iniciar sesión", testCreds: "Credenciales de demostración:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Credenciales inválidas. Use admin@ryzen.be / admin@ryzen.be" },
-        en: { title: "NH Driver", subtitle: "Demo environment", emailLabel: "Email address", passwordLabel: "Password", loginBtn: "Login", testCreds: "Test credentials:<br><strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>", errorMsg: "Invalid credentials. Use admin@ryzen.be / admin@ryzen.be" }
+        nl: { title: "FleetConnect Driver", subtitle: "Driver portal", emailLabel: "E-mailadres", passwordLabel: "Wachtwoord", loginBtn: "Inloggen", testCreds: "Gebruik uw toegewezen driver-account.", errorMsg: "Ongeldige inloggegevens. Gebruik admin@ryzen.be / admin@ryzen.be" },
+        fr: { title: "FleetConnect Chauffeur", subtitle: "Portail chauffeur", emailLabel: "Adresse e-mail", passwordLabel: "Mot de passe", loginBtn: "Se connecter", testCreds: "Utilisez votre compte chauffeur attribue.", errorMsg: "Identifiants invalides. Utilisez admin@ryzen.be / admin@ryzen.be" },
+        es: { title: "FleetConnect Conductor", subtitle: "Portal de conductor", emailLabel: "Correo electrÃ³nico", passwordLabel: "ContraseÃ±a", loginBtn: "Iniciar sesiÃ³n", testCreds: "Use su cuenta de conductor asignada.", errorMsg: "Credenciales invÃ¡lidas. Use admin@ryzen.be / admin@ryzen.be" },
+        en: { title: "FleetConnect Driver", subtitle: "Driver portal", emailLabel: "Email address", passwordLabel: "Password", loginBtn: "Login", testCreds: "Use your assigned driver account.", errorMsg: "Invalid credentials. Use admin@ryzen.be / admin@ryzen.be" }
     };
     let currentLang = 'nl';
     function updateUI(lang) {
@@ -125,3 +125,5 @@
 </script>
 </body>
 </html>
+
+
