@@ -225,3 +225,35 @@ Remaining before certification:
 3. Run live end-to-end lifecycle inbox validation for driver assignment.
 4. Run live end-to-end lifecycle inbox validation for driver accepted/assigned.
 5. Apply and validate the account request migration/flow if not already applied.
+
+## Phase A.4.4 Final Lifecycle Blockers Status
+
+Date: 2026-06-11
+Branch: phase-a4.4-final-lifecycle-blockers
+Status: repository repairs completed and live Supabase migration applied; pending Vercel redeploy plus live browser/inbox validation.
+
+Completed:
+
+- Public bookings now require Google-selected pickup/dropoff place IDs, calculated route distance, calculated duration, and a positive amount.
+- Live `create_public_booking(payload jsonb)` now enforces the same strict route/pricing requirements server-side.
+- Booking confirmation email snapshot now includes route distance/duration and the renderer refuses to send placeholder distance output.
+- Driver assigned customer email now uses the assigned driver's phone where available, with dispatch phone only as fallback.
+- Dashboard assignment now stores a complete assigned-driver snapshot.
+- Live `account_requests` and `submit_account_request(payload jsonb)` were deployed and rollback-tested.
+- Driver hard delete was replaced by operator-only edit/archive RPCs and dashboard controls.
+
+Live validation completed:
+
+- Missing-place public booking payload is rejected.
+- Valid strict public booking payload is accepted and rolled back.
+- Account request RPC accepts a valid payload and was rolled back.
+- Driver edit/archive columns and RPC signatures exist live.
+
+Still required:
+
+1. Deploy this branch to Vercel.
+2. Test typed-only `Antwerpen` does not submit.
+3. Test full Google-selected pickup/dropoff submits and sends booking confirmation email.
+4. Test full inbox lifecycle: booking confirmation, accepted, driver assignment, driver accepted/assigned, account request.
+5. Implement manual/operator-created booking in a separately approved phase.
+6. Implement/certify review page, per-landing-page reviews, and completed-ride review CTA in a separately approved phase.

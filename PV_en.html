@@ -316,6 +316,7 @@
     let map;
     let mapsController = null;
     let pickupLocation = null, dropoffLocation = null;
+    let pickupPlaceId = "", dropoffPlaceId = "";
     let lastTypedPickupAddress = "", lastTypedDropoffAddress = "";
     let currentRoundTrip = false;
     let currentRouteData = null;
@@ -345,10 +346,24 @@
                     currentRouteData = null;
                     if (type === 'pickup') {
                         pickupLocation = selected.location;
+                        pickupPlaceId = selected.placeId || '';
                         lastTypedPickupAddress = selected.address;
                     } else {
                         dropoffLocation = selected.location;
+                        dropoffPlaceId = selected.placeId || '';
                         lastTypedDropoffAddress = selected.address;
+                    }
+                },
+                onPlaceInputChanged(type) {
+                    currentRouteData = null;
+                    if (type === 'pickup') {
+                        pickupLocation = null;
+                        pickupPlaceId = '';
+                        lastTypedPickupAddress = '';
+                    } else {
+                        dropoffLocation = null;
+                        dropoffPlaceId = '';
+                        lastTypedDropoffAddress = '';
                     }
                 },
                 onRouteCalculated(route) {
@@ -414,6 +429,22 @@
         return value;
     }
 
+    function hasStrictRouteSelection() {
+        return !!(
+            currentRouteData &&
+            Number.isFinite(Number(currentRouteData.distanceKm)) &&
+            Number(currentRouteData.distanceKm) > 0 &&
+            Number.isFinite(Number(currentRouteData.durationMin)) &&
+            Number(currentRouteData.durationMin) > 0 &&
+            pickupPlaceId &&
+            dropoffPlaceId &&
+            lastTypedPickupAddress &&
+            lastTypedDropoffAddress &&
+            document.getElementById('pickupInput').value === lastTypedPickupAddress &&
+            document.getElementById('dropoffInput').value === lastTypedDropoffAddress
+        );
+    }
+
     function blockRouteCalculation(message = ROUTE_ERROR_MESSAGE) {
         currentRouteData = null;
         const distVal = document.getElementById('distVal');
@@ -431,7 +462,18 @@
         if (!route || !Number.isFinite(Number(route.distanceKm)) || Number(route.distanceKm) <= 0) return false;
         pickupLocation = route.pickup.location;
         dropoffLocation = route.dropoff.location;
-        currentRouteData = { distanceKm: Number(route.distanceKm), durationMin: Number(route.durationMin) };
+        pickupPlaceId = route.pickup.placeId || '';
+        dropoffPlaceId = route.dropoff.placeId || '';
+        lastTypedPickupAddress = route.pickup.address || lastTypedPickupAddress;
+        lastTypedDropoffAddress = route.dropoff.address || lastTypedDropoffAddress;
+        currentRouteData = {
+            distanceKm: Number(route.distanceKm),
+            durationMin: Number(route.durationMin),
+            displayDistanceKm: Number(route.displayDistanceKm),
+            displayDurationMin: Number(route.displayDurationMin),
+            pickupPlaceId,
+            dropoffPlaceId
+        };
         document.getElementById('distVal').innerHTML = Number(route.displayDistanceKm).toFixed(1);
         document.getElementById('timeVal').innerHTML = Number(route.displayDurationMin);
         document.getElementById('priceVal').innerHTML = Number(route.basePrice).toFixed(2);
@@ -658,7 +700,7 @@
         
         const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
         let totalAmount = 0;
-        if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) {
+        if (!hasStrictRouteSelection()) {
             alert(ROUTE_ERROR_MESSAGE);
             return;
         }
@@ -680,7 +722,7 @@
             return;
         }
         
-        if (!currentRouteData) { alert(ROUTE_ERROR_MESSAGE); return; }
+        if (!hasStrictRouteSelection()) { alert(ROUTE_ERROR_MESSAGE); return; }
         if (!selectedVehicle) { alert("Select a vehicle in step 3."); return; }
         
         const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
@@ -691,8 +733,12 @@
             name: `${firstName} ${lastName}`,
             email: email,
             phone: phone,
-            pickup: document.getElementById('pickupInput').value,
-            destination: document.getElementById('dropoffInput').value,
+            pickup: lastTypedPickupAddress,
+            destination: lastTypedDropoffAddress,
+            pickup_place_id: pickupPlaceId,
+            dropoff_place_id: dropoffPlaceId,
+            route_distance_km: Number(currentRouteData.distanceKm),
+            route_duration_min: Number(currentRouteData.durationMin),
             flight_number: document.getElementById('flightNumber').value.trim() || "",
             vehicle: selectedVehicle,
             extras: getExtrasString(),
@@ -701,8 +747,21 @@
             status: paymentMethod === "Cash" ? "pending": "pending_payment",
             payment_status: paymentMethod === "Cash" ? "cash_pending": "unpaid",
             customer_id: customerId,
-            form_data: { source: "web-booking-en", route_distance_km: Number(currentRouteData.distanceKm), route_duration_min: Number(currentRouteData.durationMin) },
-            metadata: { route_calculated: true, route_distance_km: Number(currentRouteData.distanceKm), route_duration_min: Number(currentRouteData.durationMin) },
+            form_data: {
+                source: "web-booking-en",
+                route_distance_km: Number(currentRouteData.distanceKm),
+                route_duration_min: Number(currentRouteData.durationMin),
+                pickup_place_id: pickupPlaceId,
+                dropoff_place_id: dropoffPlaceId
+            },
+            metadata: {
+                route_calculated: true,
+                route_distance_km: Number(currentRouteData.distanceKm),
+                route_duration_min: Number(currentRouteData.durationMin),
+                pickup_place_id: pickupPlaceId,
+                dropoff_place_id: dropoffPlaceId,
+                google_places_selected: true
+            },
             created_at: new Date().toISOString(),
             partner_id: 1,
             assigned_driver_id: null
@@ -718,6 +777,21 @@
             const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
             const savedBookingId = data?.id || '';
+            const emailSnapshot = {
+                ...bookingData,
+                id: savedBookingId,
+                reference: savedBookingId,
+                customer: {
+                    name: bookingData.name,
+                    email: bookingData.email,
+                    phone: bookingData.phone,
+                    preferred_language: 'en'
+                },
+                preferred_language: 'en',
+                distance_km: Number(currentRouteData.distanceKm),
+                duration_min: Number(currentRouteData.durationMin),
+                is_registered: false
+            };
             let emailResult = { success: false, error: 'Email trigger not completed' };
             try {
                 const { comms } = await import('./src/modules/communication/index.js');
@@ -732,7 +806,7 @@
             if (emailResult?.success === true) {
                 alert(`Booking ${savedBookingId} saved. Price: EUR ${totalAmount.toFixed(2)}.\n\nThe confirmation email has been sent to ${email}.`);
             } else {
-                alert(`Booking ${savedBookingId} saved. Price: EUR ${totalAmount.toFixed(2)}.\n\nThe booking was saved, but the automatic confirmation email could not be sent. FleetConnect will follow up manually.`);
+                alert(`Booking ${savedBookingId} saved. Price: EUR ${totalAmount.toFixed(2)}.\n\nConfirmation email failed: ${emailResult?.error || 'unknown error'}. FleetConnect will follow up manually.`);
             }
             
             // Reset form
@@ -760,6 +834,8 @@
             pickupLocation = null;
             dropoffLocation = null;
             currentRouteData = null;
+            pickupPlaceId = '';
+            dropoffPlaceId = '';
             selectedVehicle = null;
             selectedVehicleExtra = 0;
             currentRoundTrip = false;

@@ -89,7 +89,22 @@ export class DataNormalizer {
                 status: booking.status,
                 flight_number: booking.flight_number,
                 extras: booking.extras,
-                distance_km: booking.distance_km || 0,
+                distance_km: Number(
+                    booking.distance_km ||
+                    booking.route_distance_km ||
+                    booking.form_data?.route_distance_km ||
+                    booking.form_data?.distance_km ||
+                    booking.metadata?.route_distance_km ||
+                    booking.metadata?.distance_km ||
+                    0
+                ),
+                duration_min: Number(
+                    booking.duration_min ||
+                    booking.route_duration_min ||
+                    booking.form_data?.route_duration_min ||
+                    booking.metadata?.route_duration_min ||
+                    0
+                ),
                 preferred_language: booking.preferred_language || customer?.preferred_language || 'nl',
                 customer: customer ? {
                     name: customer.full_name || customer.name || booking.name,

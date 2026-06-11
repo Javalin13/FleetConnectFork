@@ -39,6 +39,22 @@ Date: 2026-06-02
 6. Historical ownership backfill decision is approved or explicitly deferred.
 7. Stripe/payment scope remains excluded or credentials/testing are completed.
 
+## Phase A.4.4 Required Live Checks
+
+Date added: 2026-06-11
+
+1. Deploy `phase-a4.4-final-lifecycle-blockers` to Vercel.
+2. Confirm typed-only partial address such as `Antwerpen` cannot submit.
+3. Confirm Google-selected pickup and dropoff submit successfully.
+4. Confirm created booking has `pickup_place_id`, `dropoff_place_id`, `route_distance_km`, `route_duration_min`, and positive `amount`.
+5. Confirm booking confirmation email arrives and includes pickup, dropoff, distance, duration, and total price.
+6. Confirm operator accepted email still arrives.
+7. Confirm driver assignment email still arrives.
+8. Confirm driver accepted/customer assigned-driver email shows assigned driver phone when available.
+9. Confirm account request submits inside FleetConnect and both notification emails are sent.
+10. Confirm archived drivers no longer appear in assignment dropdown and historical bookings remain readable.
+11. Keep manual/operator ride creation and review workflow as open gaps unless separately approved.
+
 ## Current Verdict
 
 Ready for human validation: YES, for implemented non-Stripe workflows.

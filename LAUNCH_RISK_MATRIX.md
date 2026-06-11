@@ -39,6 +39,15 @@ Rationale: core dispatch and RLS risk has been reduced, but required customer an
 | Vercel branch not redeployed after login config fix | Medium | Medium | Dashboard login continues failing with stale admin-index file. | Redeploy latest checkpoint branch commit. | Release manager |
 | Email delivery still blocked after origin fix | Medium | Low | Booking confirmation may still fail due recipient spam/filter or Resend domain state. | Check Network response and Resend logs after new booking. | Release manager |
 
+## Phase A.4.4 Launch Risks
+
+| Risk | Severity | Likelihood | Impact | Mitigation | Owner |
+| --- | --- | --- | --- | --- | --- |
+| A.4.4 frontend not deployed | Critical | High | Strict booking and confirmation email fixes are not active in Vercel until the branch is deployed. | Deploy `phase-a4.4-final-lifecycle-blockers` and run the A.4.4 checklist. | Release manager |
+| Lifecycle inbox evidence missing | Critical | High | Certification cannot prove customer/operator/driver/account emails work after the final repairs. | Run controlled inbox validation for booking confirmation, accepted, assignment, driver accepted, and account request. | QA |
+| Manual/operator-created ride flow missing | Medium | Medium | Operators cannot create manual rides through a certified workflow. | Implement a narrow operator-only manual ride creation flow in a separately approved phase. | Engineering |
+| Review workflow incomplete | Medium | Medium | Completed rides cannot reliably drive customers to a verified review journey. | Implement/certify review page, per-landing reviews, and completed-ride CTA in a separately approved phase. | Product/Engineering |
+
 ## Phase 5.8 Booking Insert Risks
 
 | Risk | Severity | Likelihood | Impact | Mitigation | Owner |

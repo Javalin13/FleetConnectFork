@@ -133,3 +133,34 @@ Corrective action completed:
 Updated certification status:
 
 The stale sender deployment blocker is resolved at the Edge Function layer. FleetConnect is still not fully email-certified until booking confirmation, booking accepted, driver assignment, driver accepted/assigned, and account request emails are validated through the live UI and recipient inboxes.
+
+## Phase A.4.4 Final Lifecycle Blockers Update
+
+Phase A.4.4 completed targeted repairs for the remaining lifecycle blockers without redesigning the public booking flow, dashboard workflow, Stripe, or unrelated portals.
+
+Repairs completed:
+
+- Public booking route strictness: client and live RPC now require Google-selected pickup/dropoff place IDs, calculated distance, calculated duration, and positive amount.
+- Booking confirmation email: public pages pass a complete snapshot and the template now renders route distance/duration from the repaired fields instead of placeholder distance.
+- Driver assigned customer email: customer-facing driver-assigned email now displays assigned driver phone when available.
+- Account request RPC: `account_requests` and `submit_account_request(payload jsonb)` were deployed live and rollback-tested.
+- Driver management: dashboard driver hard delete was replaced with operator-only edit/archive RPCs to preserve historical booking references.
+- Emergency decline support: `driver_decline_assignment(text)` now supports reassignment audit events and post-acceptance emergency decline outside the 40-minute pickup window.
+
+Validation evidence:
+
+- Live rollback `submit_account_request` probe returned `status: pending`.
+- Live rollback strict booking probe rejected missing place IDs.
+- Live rollback valid booking probe returned generated `FC-...`, pending status, positive amount, route distance, and route duration.
+- Live schema now includes booking place/route columns, account request objects, reassignment events, and driver edit/archive RPCs.
+- Static JavaScript validation passed for the shared maps module, communication renderer, normalizer, active/root NL/FR/EN booking pages, dashboard, and driver accept/decline pages.
+
+Remaining before certification:
+
+1. Deploy `phase-a4.4-final-lifecycle-blockers` to Vercel.
+2. Browser-test typed-only address rejection and full Google-selected booking success.
+3. Inbox-test booking confirmation, operator accepted, driver assignment, driver accepted/assigned, and account request notifications.
+4. Implement manual/operator-created ride flow in a separately approved phase.
+5. Implement/certify review page, per-landing-page review surfacing, and completed-ride review CTA in a separately approved phase.
+
+Certification verdict remains: **NOT CERTIFIED** until the live deployment and inbox validation evidence is collected.

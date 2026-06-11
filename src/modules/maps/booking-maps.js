@@ -26,6 +26,11 @@ function getPlaceAddress(place) {
     return '';
 }
 
+function getPlaceId(place) {
+    if (!place) return '';
+    return place.id || place.name || '';
+}
+
 function ensureAutocompleteStyle() {
     if (document.getElementById('fleetconnect-modern-maps-style')) return;
     const style = document.createElement('style');
@@ -72,7 +77,8 @@ export async function createBookingMapsController(options = {}) {
         dropoffPlaceholder: options.dropoffPlaceholder || '',
         onPlaceSelected: options.onPlaceSelected || (() => {}),
         onRouteCalculated: options.onRouteCalculated || (() => {}),
-        onRouteFailed: options.onRouteFailed || (() => {})
+        onRouteFailed: options.onRouteFailed || (() => {}),
+        onPlaceInputChanged: options.onPlaceInputChanged || (() => {})
     };
 
     const [{ Map }, { PlaceAutocompleteElement }] = await Promise.all([
@@ -120,27 +126,44 @@ export async function createBookingMapsController(options = {}) {
         input.setAttribute('autocomplete', 'off');
         input.insertAdjacentElement('afterend', autocomplete);
 
+        let selectionInProgress = false;
+
+        function clearSelection() {
+            if (selectionInProgress) return;
+            if (type === 'pickup') state.pickup = null;
+            else state.dropoff = null;
+            input.value = '';
+            settings.onPlaceInputChanged(type);
+        }
+
         async function handleSelection(event) {
             const prediction = event.placePrediction || event.detail?.placePrediction;
             const place = prediction?.toPlace ? prediction.toPlace() : event.place || event.detail?.place;
             if (!place) return;
 
-            await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+            selectionInProgress = true;
+            await place.fetchFields({ fields: ['id', 'displayName', 'formattedAddress', 'location'] });
             const location = normalizeLocation(place.location);
             const address = getPlaceAddress(place);
-            if (!location || !address) {
+            const placeId = getPlaceId(place);
+            if (!location || !address || !placeId) {
+                selectionInProgress = false;
                 settings.onRouteFailed(type);
                 return;
             }
 
             input.value = address;
-            const selected = { address, location };
+            if ('value' in autocomplete) autocomplete.value = address;
+            const selected = { address, location, placeId };
             if (type === 'pickup') state.pickup = selected;
             else state.dropoff = selected;
 
             settings.onPlaceSelected(type, selected);
+            setTimeout(() => { selectionInProgress = false; }, 0);
         }
 
+        autocomplete.addEventListener('input', clearSelection);
+        autocomplete.addEventListener('change', clearSelection);
         autocomplete.addEventListener('gmp-select', handleSelection);
         autocomplete.addEventListener('gmp-placeselect', handleSelection);
         return autocomplete;
@@ -150,7 +173,7 @@ export async function createBookingMapsController(options = {}) {
     state.dropoffElement = createAutocomplete(settings.dropoffInputId, 'dropoff', settings.dropoffPlaceholder);
 
     function hasSelectedAddresses() {
-        return !!(state.pickup?.location && state.dropoff?.location);
+        return !!(state.pickup?.location && state.dropoff?.location && state.pickup?.placeId && state.dropoff?.placeId);
     }
 
     async function calculateRoute({ roundTrip = false } = {}) {
@@ -224,6 +247,8 @@ export async function createBookingMapsController(options = {}) {
         reset,
         get map() { return state.map; },
         get pickupLocation() { return state.pickup?.location || null; },
-        get dropoffLocation() { return state.dropoff?.location || null; }
+        get dropoffLocation() { return state.dropoff?.location || null; },
+        get pickupPlaceId() { return state.pickup?.placeId || ''; },
+        get dropoffPlaceId() { return state.dropoff?.placeId || ''; }
     };
 }
