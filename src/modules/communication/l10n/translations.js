@@ -68,6 +68,7 @@ export const EmailTranslations = {
             RIDE_COMPLETED: 'Merci d\'avoir voyagé avec FleetConnect',
             ACCOUNT_WELCOME: 'Bienvenue chez FleetConnect',
             ACCOUNT_ONBOARDING: 'Bienvenue chez FleetConnect',
+            CUSTOMER_REGISTRATION_CONFIRMATION: 'Votre compte FleetConnect est cree',
             PAYMENT_REFUND_CONFIRMATION: 'Votre remboursement a été traité'
         },
         labels: {
@@ -104,7 +105,10 @@ export const EmailTranslations = {
             dispatchContact: 'Contact dispatch',
             cancelledBody: (ref) => `votre réservation avec la référence <strong>${ref}</strong> a été annulée. Si vous avez déjà payé, le montant vous sera remboursé.`,
             completedBody: 'nous espérons que vous avez passé un agréable trajet. Merci de votre confiance en FleetConnect.',
-            welcomeBody: 'bienvenue chez FleetConnect. Nous avons préparé un compte pour vous permettre de réserver vos trajets plus rapidement.',
+            welcomeBody: 'bienvenue chez FleetConnect. Nous avons prepare un compte pour vous permettre de reserver vos trajets plus rapidement.',
+            registrationConfirmationBody: 'votre compte FleetConnect est cree. Vous pouvez maintenant vous connecter au portail client et ajouter vos trajets avec votre numero de reservation.',
+            accountStatus: 'Statut du compte',
+            accountCreated: 'Compte cree',
             refundConfirmationBody: 'votre remboursement a été traité avec succès. Le montant apparaîtra sur votre compte d\'ici quelques jours ouvrables.',
             refundStatus: 'Statut du remboursement'
         }

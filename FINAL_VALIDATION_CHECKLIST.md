@@ -55,6 +55,22 @@ Date added: 2026-06-11
 10. Confirm archived drivers no longer appear in assignment dropdown and historical bookings remain readable.
 11. Keep manual/operator ride creation and review workflow as open gaps unless separately approved.
 
+## Phase A.4.4.1 Required Live Checks
+
+Date added: 2026-06-11
+
+1. Deploy `phase-a4.4.1-live-validation-hotfixes` to Vercel.
+2. Deploy `supabase/functions/send-email/index.ts` manually if the live function version still lacks the requested-sender logging marker.
+3. Submit a controlled booking below EUR 15 and confirm the confirm button immediately shows processing text and disables.
+4. Confirm the UI, Supabase booking amount, and confirmation email all show EUR 15 when minimum fare applies.
+5. Confirm booking confirmation email CTA opens the customer login/register route with booking ID preserved.
+6. Register/login as customer, use `Rit toevoegen met boekingsnummer`, and confirm pickup, dropoff, date/time, price, status, and driver info load.
+7. Accept booking in dashboard and confirm BOOKING_ACCEPTED CTA no longer contains any JavaScript/DOM fragment.
+8. Assign a driver, decline from the driver CTA, and confirm dispatch receives exactly one operations notification.
+9. Confirm the orders table no longer shows the declined driver and the reassignment alert is visible.
+10. Reassign to another driver, accept from driver CTA, and confirm the reassignment alert clears.
+11. Register a new customer and confirm CUSTOMER_REGISTRATION_CONFIRMATION arrives separately from booking confirmation.
+
 ## Current Verdict
 
 Ready for human validation: YES, for implemented non-Stripe workflows.

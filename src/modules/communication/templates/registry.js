@@ -29,6 +29,9 @@ export const TemplateRegistry = {
     ACCOUNT_ONBOARDING: {
         render: (data, lang, mode) => TemplateRenderer.render('ACCOUNT_ONBOARDING', data, lang, mode)
     },
+    CUSTOMER_REGISTRATION_CONFIRMATION: {
+        render: (data, lang, mode) => TemplateRenderer.render('CUSTOMER_REGISTRATION_CONFIRMATION', data, lang, mode)
+    },
     // Compatibility aliases
     BOOKING_COMPLETED: {
         render: (data, lang, mode) => TemplateRenderer.render('RIDE_COMPLETED', data, lang, mode)

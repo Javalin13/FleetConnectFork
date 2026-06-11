@@ -18,7 +18,7 @@ export class RouteBuilder {
 
         switch (type) {
             case 'view-booking':
-                return `${baseUrl}/PV/klantenportaalpv.html?id=${params.id}`;
+                return `${baseUrl}/PV/index.html?booking=${encodeURIComponent(params.id || '')}&email=${encodeURIComponent(params.email || '')}`;
 
             case 'review':
                 return `${baseUrl}/review/${params.id}`; // Future route
@@ -33,7 +33,10 @@ export class RouteBuilder {
                 return `${baseUrl}/PV/register.html?token=${params.token}`;
 
             case 'setup-account-prefilled':
-                return `${baseUrl}/PV/register.html?booking=${params.id}&email=${encodeURIComponent(params.email || '')}`;
+                return `${baseUrl}/PV/register.html?booking=${encodeURIComponent(params.id || '')}&email=${encodeURIComponent(params.email || '')}`;
+
+            case 'customer-booking':
+                return `${baseUrl}/PV/index.html?booking=${encodeURIComponent(params.id || '')}&email=${encodeURIComponent(params.email || '')}`;
 
             case 'driver-accept':
                 return `${baseUrl}/driver-accept.html?token=${params.token}`;
