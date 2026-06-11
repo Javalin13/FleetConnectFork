@@ -28,6 +28,7 @@ export const CommunicationConfig = {
         trilingualOrder: ['nl', 'fr', 'en'],
         provider: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'mock' : 'resend',
         supabaseUrl: 'https://rreqjjrmvytnwnsidmqi.supabase.co',
+        supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA',
         edgeFunctionBase: '/functions/v1',
         ASSIGNMENT_TIMEOUT_MINUTES: 30
     },
