@@ -94,3 +94,28 @@ The send-email Edge Function still allowlists https://rpk-mu.vercel.app for back
 ## Current Status Summary
 
 FleetConnect is repository-ready for Phase A redeployment and live smoke testing, but not production certified until the above live tests pass.
+
+## Phase A.1 Live Validation Hotfix Status
+
+Date: 2026-06-11
+Branch: phase-a1-live-validation-hotfixes
+Status: repository hotfix completed, pending redeploy and live browser validation.
+
+Live validation blockers addressed in repository:
+
+- Public booking address entry now supports typed-address geocoding and a manual fallback when Google Places selection is unavailable.
+- NL, FR, and EN public booking pages now submit through create_public_booking instead of direct table inserts.
+- NL, FR, and EN public booking pages trigger BOOKING_CONFIRMATION after successful insert and show truthful email-result messaging.
+- FR and EN booking forms were moved above the service teaser grid to match the NL placement and provide immediate CTA access.
+- Mobile booking layout was tightened to prevent horizontal overflow in the booking steps, grids, inputs, map, and footer.
+- Visible city quick access links were added to the active public footer for Brussels, Antwerp, Ghent, Zaventem, Leuven, Mechelen, Waterloo, and Brugge.
+- Public footer links were corrected away from placeholder/admin-style targets toward public booking, customer, partner, support, legal, and city routes.
+
+Validation still required after deployment:
+
+1. Submit one booking from /PV/PV.html or /nl.
+2. Submit one booking from /PV/PV_fr.html or /fr.
+3. Submit one booking from /PV/PV_en.html or /en.
+4. Confirm mobile booking pages have no horizontal overflow on a real mobile viewport.
+5. Confirm city footer links resolve to /taxi-brussels, /taxi-antwerpen, /taxi-gent, /taxi-zaventem, /taxi-leuven, /taxi-mechelen, /taxi-waterloo, and /taxi-brugge.
+6. Confirm footer links do not take public users to admin/dashboard routes.

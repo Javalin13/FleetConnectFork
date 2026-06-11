@@ -103,6 +103,26 @@
         .footer-bottom{text-align:center;border-top:1px solid rgba(224,237,245,0.2);padding-top:24px}
         @media (max-width:800px){.vehicle-grid,.checkbox-grid{grid-template-columns:repeat(2,1fr)}.carousel-page{padding:20px}}
         
+
+        /* Phase A.1 mobile booking hotfix */
+        html,body{max-width:100%;overflow-x:hidden}
+        input,select,textarea,button{max-width:100%;min-width:0}
+        .footer-dark a{color:#e0edf5;text-decoration:none;display:inline-block;margin:4px 0}
+        .footer-dark a:hover{text-decoration:underline}
+        @media (max-width:800px){
+            .container{padding:0 12px}
+            .booking-container{width:100%;max-width:100%;border-radius:18px;margin:0 auto 28px}
+            .steps{display:grid;grid-template-columns:1fr;gap:0}
+            .step-btn{width:100%;padding:12px 10px;text-align:left;white-space:normal}
+            .carousel-page{padding:18px 14px;min-height:auto}
+            .nav-buttons,.button-row,.info-strip,.route-legend,.payment-method{flex-direction:column;align-items:stretch}
+            .extra-grid,.vehicle-grid,.checkbox-grid{grid-template-columns:1fr}
+            .checkbox-grid label,.roundtrip-box{align-items:flex-start}
+            #map{height:300px}
+            .footer-grid{display:grid;grid-template-columns:1fr;gap:24px}
+            .language-switcher{right:12px!important;top:12px!important;gap:6px!important}
+        }
+
         /* Google Autocomplete styling */
         .pac-container { border-radius: 12px; margin-top: 4px; border: 1px solid var(--border-light); box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif; z-index: 10000; }
         .pac-item { padding: 10px 16px; font-size: 0.9rem; border-bottom: 1px solid #eee; }
@@ -150,12 +170,6 @@
     </div>
 
     <section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i> FleetConnect</h1><p>Professional taxi transport in Belgium – Punctual, reliable & comfortable</p><a href="#booking" class="btn-primary"><i class="fas fa-calendar-alt"></i> Book now</a></div></div></section>
-
-    <div class="container"><div class="uitleg-grid">
-        <a href="PV_Exclusieve_Service.html" class="uitleg-item"><i class="fas fa-gem"></i><h3>Exclusive service</h3><p>Personal driver, always on time</p><div class="service-summary">Discover our exclusive service with personal driver and luxury vehicles.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
-        <a href="PV-vaste-prijzen.html" class="uitleg-item"><i class="fas fa-euro-sign"></i><h3>Fixed prices</h3><p>Transparent, no meters</p><div class="service-summary">No surprises afterwards. Our fixed prices are transparent and clear.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
-        <a href="PV-premium-vloot.html" class="uitleg-item"><i class="fas fa-car-side"></i><h3>Premium fleet</h3><p>Mercedes, BMW & luxury minivans</p><div class="service-summary">Travel in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
-    </div></div>
 
     <div class="container" id="booking"><div class="booking-container"><div class="carousel">
         <div class="steps"><button class="step-btn active" data-page="1">1. Trip details</button><button class="step-btn" data-page="2">2. Route & Price</button><button class="step-btn" data-page="3">3. Vehicle & Options</button><button class="step-btn" data-page="4">4. Customer info</button><button class="step-btn" data-page="5">5. Checkout</button></div>
@@ -230,6 +244,12 @@
         <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Previous</button><button class="nav-btn next" id="nextBtn">Next ▶</button></div>
     </div></div></div>
 
+    <div class="container"><div class="uitleg-grid">
+        <a href="PV_Exclusieve_Service.html" class="uitleg-item"><i class="fas fa-gem"></i><h3>Exclusive service</h3><p>Personal driver, always on time</p><div class="service-summary">Discover our exclusive service with personal driver and luxury vehicles.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
+        <a href="PV-vaste-prijzen.html" class="uitleg-item"><i class="fas fa-euro-sign"></i><h3>Fixed prices</h3><p>Transparent, no meters</p><div class="service-summary">No surprises afterwards. Our fixed prices are transparent and clear.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
+        <a href="PV-premium-vloot.html" class="uitleg-item"><i class="fas fa-car-side"></i><h3>Premium fleet</h3><p>Mercedes, BMW & luxury minivans</p><div class="service-summary">Travel in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
+    </div></div>
+
     <div class="container"><h2 style="text-align:center;margin-bottom:20px;"><i class="fas fa-concierge-bell"></i> Our services</h2><div class="services-grid">
         <a href="PV_Luchthavenvervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-plane-departure"></i></div><h3>Airport transfer</h3><p>Fixed price, flight monitoring</p><div class="service-summary">Stress-free to the airport. We monitor your flight and wait for you, even if delayed.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
         <a href="PV_Zakelijk_Vervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-briefcase"></i></div><h3>Business transport</h3><p>Executive class, invoicing</p><div class="service-summary">Make an impression with executive class transport. Post-invoicing possible for your company.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
@@ -239,7 +259,15 @@
 
     <div class="contact-wrapper" id="contact"><div class="contact-row"><div class="contact-form"><h3><i class="fas fa-paper-plane"></i> Send a message</h3><div class="compact-form"><div class="form-group"><label><i class="fas fa-user"></i> Your name *</label><input type="text" id="contactNaam"></div><div class="form-group"><label><i class="fas fa-envelope"></i> Email *</label><input type="email" id="contactEmail"></div><div class="form-group"><label><i class="fas fa-comment"></i> Message *</label><textarea id="contactBericht" rows="2"></textarea></div><div class="button-row"><button class="btn-primary" id="verstuurBerichtBtn"><i class="fas fa-paper-plane"></i> Send</button><a href="https://wa.me/32470123456" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></div></div></div></div></div>
 
-    <footer class="footer-dark"><div class="container"><div class="footer-grid"><div class="footer-brand"><h4><i class="fas fa-car"></i> FleetConnect</h4><p>Professional taxi transport in Belgium – Style, punctuality and service.</p></div><div class="footer-ryz3n"><h4>FleetConnect</h4><a href="#">Control Panel</a><a href="#">Taxi Dispatch</a><a href="#">Legal & Privacy</a></div><div class="footer-legal"><h4>Legal</h4><a href="PVfaq.html">❓ FAQ</a><br><a href="PVprivacy.html">🔒 Privacy</a><br><a href="PVcookiebeleid.html">🍪 Cookie policy</a><br><a href="PValgemene-voorwaarden.html">📜 Terms & conditions</a></div><div class="footer-partners"><h4>Partners</h4><a href="#">Support</a></div></div><div class="footer-bottom">© 2026 FleetConnect – <a href="#">FleetConnect</a></div></div></footer>
+    <footer class="footer-dark"><div class="container"><div class="footer-grid"><div class="footer-brand"><h4><i class="fas fa-car"></i> FleetConnect</h4><p>Professional taxi transport in Belgium - style, punctuality and service.</p><a href="/booking#booking">Book now</a><br><a href="/customer">Customer portal</a><br><a href="/partner-login">Partner login</a></div><div class="footer-cities"><h4>Popular cities</h4>
+<a href="/taxi-brussels">Taxi Brussels</a><br>
+<a href="/taxi-antwerpen">Taxi Antwerp</a><br>
+<a href="/taxi-gent">Taxi Ghent</a><br>
+<a href="/taxi-zaventem">Taxi Zaventem</a><br>
+<a href="/taxi-leuven">Taxi Leuven</a><br>
+<a href="/taxi-mechelen">Taxi Mechelen</a><br>
+<a href="/taxi-waterloo">Taxi Waterloo</a><br>
+<a href="/taxi-brugge">Taxi Brugge</a></div><div class="footer-legal"><h4>Legal</h4><a href="/PV/PVfaq.html">FAQ</a><br><a href="/PV/PVprivacy.html">Privacy</a><br><a href="/PV/PVcookiebeleid.html">Cookie policy</a><br><a href="/PV/PValgemene-voorwaarden.html">Terms & conditions</a></div><div class="footer-partners"><h4>FleetConnect</h4><a href="mailto:support@fleetconnect.be">Support</a><br><a href="/booking#contact">Contact</a></div></div><div class="footer-bottom">2026 FleetConnect - <a href="/">FleetConnect</a></div></div></footer>
 </div>
 
 <!-- Google Maps API with Places Autocomplete -->
@@ -315,6 +343,7 @@
         });
         
         directionsService = new google.maps.DirectionsService();
+        geocoder = new google.maps.Geocoder();
         directionsRenderer = new google.maps.DirectionsRenderer({ 
             map: map,
             polylineOptions: { strokeColor: "#d4af37", strokeWeight: 6 }
@@ -354,6 +383,83 @@
         console.log("✅ Google Maps loaded - FleetConnect!");
     };
     
+
+    function getAddressText(inputId) {
+        return (document.getElementById(inputId)?.value || '').trim();
+    }
+
+    function useManualRouteFallback() {
+        const pickupText = getAddressText('pickupInput');
+        const dropoffText = getAddressText('dropoffInput');
+        if (pickupText.length < 3 || dropoffText.length < 3) return false;
+        currentRouteData = { distanceKm: 0, durationMin: 0, manualAddress: true };
+        const distVal = document.getElementById('distVal');
+        const timeVal = document.getElementById('timeVal');
+        const priceVal = document.getElementById('priceVal');
+        if (distVal) distVal.innerHTML = '0.0';
+        if (timeVal) timeVal.innerHTML = '0';
+        if (priceVal) priceVal.innerHTML = '0.00';
+        updateTotalDisplay();
+        return true;
+    }
+
+    function geocodeAddress(value) {
+        return new Promise((resolve) => {
+            if (!value || value.length < 3 || !geocoder) return resolve(null);
+            geocoder.geocode({ address: value, componentRestrictions: { country: 'BE' } }, (results, status) => {
+                if (status === 'OK' && results && results[0]?.geometry?.location) {
+                    resolve(results[0].geometry.location);
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    }
+
+    async function resolveTypedAddresses() {
+        const pickupText = getAddressText('pickupInput');
+        const dropoffText = getAddressText('dropoffInput');
+        if (pickupText.length < 3 || dropoffText.length < 3) return false;
+        if (!pickupLocation) pickupLocation = await geocodeAddress(pickupText);
+        if (!dropoffLocation) dropoffLocation = await geocodeAddress(dropoffText);
+        return !!(pickupLocation && dropoffLocation) || useManualRouteFallback();
+    }
+
+    function calculateRoutePromise() {
+        return new Promise((resolve) => {
+            if (!pickupLocation || !dropoffLocation || !directionsService) return resolve(false);
+            directionsService.route({
+                origin: pickupLocation,
+                destination: dropoffLocation,
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC
+            }, (result, status) => {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result);
+                    const route = result.routes[0].legs[0];
+                    const distanceKm = (route.distance.value / 1000).toFixed(1);
+                    const durationMin = Math.round(route.duration.value / 60);
+                    currentRouteData = { distanceKm: parseFloat(distanceKm), durationMin: durationMin };
+                    let displayDistance = parseFloat(distanceKm);
+                    let displayDuration = durationMin;
+                    let price = displayDistance * 1.5;
+                    if (currentRoundTrip) { displayDistance *= 2; displayDuration *= 2; price *= 2; }
+                    document.getElementById('distVal').innerHTML = displayDistance.toFixed(1);
+                    document.getElementById('timeVal').innerHTML = displayDuration;
+                    document.getElementById('priceVal').innerHTML = price.toFixed(2);
+                    updateTotalDisplay();
+                    const bounds = new google.maps.LatLngBounds();
+                    bounds.extend(pickupLocation);
+                    bounds.extend(dropoffLocation);
+                    map.fitBounds(bounds);
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
+        });
+    }
+
     function updateRoute() {
         if (!pickupLocation || !dropoffLocation) return;
         
@@ -465,8 +571,18 @@
     
     async function calculateAndStoreRoute() {
         if (!pickupLocation || !dropoffLocation) {
-            setPageError(1, "Select a valid pickup and dropoff address");
-            return false;
+            const resolved = await resolveTypedAddresses();
+            if (!resolved) {
+                setPageError(1, "Enter a valid pickup and destination address");
+                return false;
+            }
+        }
+        if (!currentRouteData) {
+            const routed = await calculateRoutePromise();
+            if (!routed && !useManualRouteFallback()) {
+                setPageError(1, "Enter a valid pickup and destination address");
+                return false;
+            }
         }
         const dt = document.getElementById('datetime').value;
         if (!dt) {
@@ -613,19 +729,9 @@
         if (!currentRouteData) { alert('No route found. Go back to step 1.'); return; }
         if (!selectedVehicle) { alert('Select a vehicle in step 3.'); return; }
         
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        let counter = parseInt(localStorage.getItem('bookingCounter') || '0');
-        counter++;
-        localStorage.setItem('bookingCounter', counter);
-        const bookingId = `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3, '0')}`;
-        
         const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
         
         const bookingData = {
-            id: bookingId,
             datetime: currentDateTime ? currentDateTime.split(' ')[0] : "",
             time: currentDateTime ? currentDateTime.split(' ')[1] : "",
             name: `${firstName} ${lastName}`,
@@ -654,9 +760,22 @@
         try {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
             const supabase = createClient('https://rreqjjrmvytnwnsidmqi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA');
-            const { error } = await supabase.from('bookings').insert([bookingData]);
+            const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
-            alert(`✅ Booking ${bookingId} confirmed for €${totalAmount.toFixed(2)}!\n\nA confirmation has been sent to ${email}`);
+            const savedBookingId = data?.id || '';
+            let emailResult = { success: false, error: 'Email trigger not completed' };
+            try {
+                const { comms } = await import('../src/modules/communication/index.js');
+                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
+            } catch (emailError) {
+                console.error('BOOKING_CONFIRMATION email error:', emailError);
+                emailResult = { success: false, error: emailError.message };
+            }
+            if (emailResult?.success === true) {
+                alert(`Booking ${savedBookingId} saved for EUR ${totalAmount.toFixed(2)}.\n\nThe confirmation email has been sent to ${email}.`);
+            } else {
+                alert(`Booking ${savedBookingId} saved for EUR ${totalAmount.toFixed(2)}.\n\nThe booking was saved, but the automatic confirmation email could not be sent. FleetConnect will follow up manually.`);
+            }
             
             // Reset form
             document.getElementById('pickupInput').value = '';
