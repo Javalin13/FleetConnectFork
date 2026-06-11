@@ -102,13 +102,26 @@ export class TemplateRenderer {
 
     static renderBookingConfirmation(data, labels, subjects, lang) {
         const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
-        const distance =
-  data.distance_km ||
-  data.form_data?.distance_km ||
-  data.metadata?.distance_km ||
-  data.distance ||
-  '...';
+        const distanceValue = Number(
+            data.distance_km ||
+            data.route_distance_km ||
+            data.form_data?.route_distance_km ||
+            data.form_data?.distance_km ||
+            data.metadata?.route_distance_km ||
+            data.metadata?.distance_km ||
+            data.distance
+        );
+        if (!Number.isFinite(distanceValue) || distanceValue <= 0) {
+            throw new Error(`Booking confirmation distance missing for ${data.reference || data.id || 'unknown booking'}`);
+        }
+        const durationValue = Number(
+            data.duration_min ||
+            data.route_duration_min ||
+            data.form_data?.route_duration_min ||
+            data.metadata?.route_duration_min
+        );
         const customerName = this.getCustomerName(data, labels);
+        const amountValue = Number(data.amount || 0);
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.BOOKING_CONFIRMATION}</h2>
@@ -122,8 +135,9 @@ export class TemplateRenderer {
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
                 ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
                 ${EmailComponents.detailsRow(labels.vehicle, data.vehicle || 'Standard')}
-                ${EmailComponents.detailsRow(labels.distance, `${distance} km`)}
-                ${EmailComponents.detailsRow(labels.price, `€ ${parseFloat(data.amount || 0).toFixed(2)}`)}
+                ${EmailComponents.detailsRow(labels.distance, `${distanceValue.toFixed(1)} km`)}
+                ${Number.isFinite(durationValue) && durationValue > 0 ? EmailComponents.detailsRow(labels.duration || 'Duration', `${Math.round(durationValue)} min`) : ''}
+                ${EmailComponents.detailsRow(labels.price, `EUR ${amountValue.toFixed(2)}`)}
                 ${EmailComponents.detailsRow(labels.payment, data.payment || 'Unspecified')}
             </table>
             ${EmailComponents.cta(labels.viewBooking, viewUrl)}
@@ -200,6 +214,9 @@ export class TemplateRenderer {
         const d = data.driver || {};
         const customerName = this.getCustomerName(data, labels);
         const driverFirstName = d.name ? d.name.split(' ')[0] : (labels.driver || 'Your FleetConnect Driver');
+        const driverPhone = d.phone || CommunicationConfig.brand.supportPhone;
+        const phoneLabel = labels.phone || 'Phone';
+        const contactLabel = d.phone ? `${labels.driver || 'Driver'} ${phoneLabel.toLowerCase()}` : labels.dispatchContact;
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
@@ -209,6 +226,7 @@ export class TemplateRenderer {
             ${EmailComponents.sectionTitle(labels.driver)}
             <table width="100%" style="margin-bottom: 30px;">
                 ${EmailComponents.detailsRow(labels.name, driverFirstName)}
+                ${EmailComponents.detailsRow(phoneLabel, driverPhone)}
                 ${EmailComponents.detailsRow(labels.vehicle, `${d.vehicle || 'Luxury Vehicle'} (${d.color || '...'})`)}
                 ${EmailComponents.detailsRow(labels.plate, d.license_plate || '...')}
             </table>
@@ -220,7 +238,7 @@ export class TemplateRenderer {
             </table>
             <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
                 <p style="margin: 0; font-family: 'Inter', sans-serif; font-size: 14px; color: #64748b; text-align: center;">
-                    ${labels.dispatchContact}: <strong>${CommunicationConfig.brand.supportPhone}</strong>
+                    ${contactLabel}: <strong>${driverPhone}</strong>
                 </p>
             </div>
             ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}

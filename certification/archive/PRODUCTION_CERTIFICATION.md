@@ -1988,3 +1988,30 @@ Remaining validation:
 - Browser-test PV popup timing and customer confirmation email.
 - Browser-test accepted-booking UI timing and accepted email.
 - Browser-test fiche close X while modal body is scrolled.
+
+## Phase A.4.4 - Final Lifecycle Blockers
+
+Status: REPOSITORY AND LIVE SUPABASE REMEDIATION COMPLETE - NOT CERTIFIED
+
+Date: 2026-06-11
+Branch: phase-a4.4-final-lifecycle-blockers
+
+Completed:
+
+- Public bookings now require selected Google place IDs for pickup/dropoff, route distance, route duration, and positive calculated amount.
+- Live `create_public_booking(payload jsonb)` enforces those requirements server-side.
+- Booking confirmation email now receives an explicit snapshot and refuses missing route distance instead of rendering placeholder distance.
+- Driver assigned email now uses assigned driver phone when present, with dispatch phone only as fallback.
+- Dashboard driver assignment stores full driver snapshot details.
+- Live `account_requests` table and `submit_account_request(payload jsonb)` RPC are deployed.
+- Driver hard delete was replaced by operator-only edit/archive RPCs.
+- Live rollback validation passed for account request, strict booking rejection, and valid strict booking creation.
+
+Remaining blockers:
+
+- Vercel deployment of this branch is still required.
+- Live browser/inbox validation is still required for booking confirmation, accepted, driver assignment, driver accepted/assigned, and account request emails.
+- Manual/operator-created ride creation remains an open functional gap.
+- Review page, per-landing-page reviews, and completed-ride review CTA remain open functional gaps.
+
+Certification status: NOT CERTIFIED until deployment and live validation evidence are complete.
