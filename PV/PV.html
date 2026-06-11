@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>FleetConnect | Professioneel taxivervoer België</title>
+    <title>FleetConnect | Professioneel taxivervoer BelgiÃ«</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -168,7 +168,7 @@
         <a href="/fr" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">FR</a>
         <a href="/en" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">EN</a>
     </div>
-    <section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i> FleetConnect</h1><p>Professioneel taxivervoer in België – Stipt, betrouwbaar & comfortabel</p></div></div></section>
+    <section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i> FleetConnect</h1><p>Professioneel taxivervoer in BelgiÃ« â€“ Stipt, betrouwbaar & comfortabel</p></div></div></section>
 
     <!-- BOEKINGSFORMULIER -->
     <div class="container" id="booking"><div class="booking-container"><div class="carousel">
@@ -181,41 +181,41 @@
         </div>
         
         <div id="page1" class="carousel-page active-page">
-            <h1>🚖 Ritgegevens</h1><div class="sub">België – €1,50/km | spoedritten via WhatsApp</div>
-            <div class="field"><label>📍 Ophaaladres <span class="required-star">*</span></label><input type="text" id="pickupInput" placeholder="bv. Brussels Airport" autocomplete="off" inputmode="text"></div>
-            <div class="field"><label>🏁 Afzetadres <span class="required-star">*</span></label><input type="text" id="dropoffInput" placeholder="bv. Grand Place Brussels" autocomplete="off" inputmode="text"></div>
-            <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"><label>🔄 Heen en terug rit (prijs x2)</label></div>
-            <div class="field"><label>✈️ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber" placeholder="bv. KL1704"></div>
-            <div class="field"><label>📅 Heen datum & tijd <span class="required-star">*</span></label><input type="text" id="datetime" placeholder="Klik om datum & tijd te kiezen" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
-            <div class="field return-date-field" id="returnDateContainer"><label>📅 Terug datum & tijd</label><input type="text" id="returnDatetime" placeholder="Klik om datum & tijd te kiezen" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
-            <div id="urgentWhatsApp" class="urgent-whatsapp"><span>⚠️ Vertrekt binnen het uur – WhatsApp</span><a href="https://wa.me/32470123456" target="_blank" class="whatsapp-btn">📱 WhatsApp nu</a></div>
-            <div id="page1Error" class="error"></div><div class="footnote">* Verplicht – klik in het datumveld om de kalender te openen</div>
+            <h1>ðŸš– Ritgegevens</h1><div class="sub">BelgiÃ« â€“ â‚¬1,50/km | spoedritten via WhatsApp</div>
+            <div class="field"><label>ðŸ“ Ophaaladres <span class="required-star">*</span></label><input type="text" id="pickupInput" placeholder="bv. Brussels Airport" autocomplete="off" inputmode="text"></div>
+            <div class="field"><label>ðŸ Afzetadres <span class="required-star">*</span></label><input type="text" id="dropoffInput" placeholder="bv. Grand Place Brussels" autocomplete="off" inputmode="text"></div>
+            <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"><label>ðŸ”„ Heen en terug rit (prijs x2)</label></div>
+            <div class="field"><label>âœˆï¸ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber" placeholder="bv. KL1704"></div>
+            <div class="field"><label>ðŸ“… Heen datum & tijd <span class="required-star">*</span></label><input type="text" id="datetime" placeholder="Klik om datum & tijd te kiezen" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
+            <div class="field return-date-field" id="returnDateContainer"><label>ðŸ“… Terug datum & tijd</label><input type="text" id="returnDatetime" placeholder="Klik om datum & tijd te kiezen" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
+            <div id="urgentWhatsApp" class="urgent-whatsapp"><span>âš ï¸ Vertrekt binnen het uur â€“ WhatsApp</span><a href="https://wa.me/32470123456" target="_blank" class="whatsapp-btn">ðŸ“± WhatsApp nu</a></div>
+            <div id="page1Error" class="error"></div><div class="footnote">* Verplicht â€“ klik in het datumveld om de kalender te openen</div>
         </div>
         
         <div id="page2" class="carousel-page">
-            <h2>🗺️ Route & Prijs</h2>
+            <h2>ðŸ—ºï¸ Route & Prijs</h2>
             <div id="map"></div>
-            <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>🟢 Ophalen</span></div><div class="legend-item"><div class="legend-color red"></div><span>🔴 Afzetten</span></div><div class="legend-item"><div class="legend-color blue"></div><span>🟡 Route</span></div></div>
-            <div class="info-strip"><div class="info-card"><div class="label">📏 Afstand</div><div class="value" id="distVal">—</div><small>km</small></div><div class="info-card"><div class="label">⏱️ Reistijd</div><div class="value" id="timeVal">—</div><small>min</small></div><div class="info-card"><div class="label">💰 Prijs</div><div class="value" id="priceVal">—</div><small>€</small></div></div>
+            <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>ðŸŸ¢ Ophalen</span></div><div class="legend-item"><div class="legend-color red"></div><span>ðŸ”´ Afzetten</span></div><div class="legend-item"><div class="legend-color blue"></div><span>ðŸŸ¡ Route</span></div></div>
+            <div class="info-strip"><div class="info-card"><div class="label">ðŸ“ Afstand</div><div class="value" id="distVal">â€”</div><small>km</small></div><div class="info-card"><div class="label">â±ï¸ Reistijd</div><div class="value" id="timeVal">â€”</div><small>min</small></div><div class="info-card"><div class="label">ðŸ’° Prijs</div><div class="value" id="priceVal">â€”</div><small>â‚¬</small></div></div>
             <div id="page2Error" class="error"></div>
         </div>
         
         <div id="page3" class="carousel-page">
-            <h2>🚘 Kies uw voertuig</h2>
+            <h2>ðŸš˜ Kies uw voertuig</h2>
             <div class="vehicle-grid" id="vehicleGrid">
-                <div class="vehicle-card" data-vehicle="Standaard" data-extraprice="0"><div class="vehicle-emoji">🚗</div><div class="vehicle-name">Standaard</div><div class="vehicle-price">geen meerprijs</div></div>
-                <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">🚙</div><div class="vehicle-name">Break</div><div class="vehicle-price">+ €5</div></div>
-                <div class="vehicle-card" data-vehicle="Exclusieve" data-extraprice="15"><div class="vehicle-emoji">🚘</div><div class="vehicle-name">Exclusieve</div><div class="vehicle-price">+ €15</div></div>
-                <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">🚐</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ €10</div></div>
+                <div class="vehicle-card" data-vehicle="Standaard" data-extraprice="0"><div class="vehicle-emoji">ðŸš—</div><div class="vehicle-name">Standaard</div><div class="vehicle-price">geen meerprijs</div></div>
+                <div class="vehicle-card" data-vehicle="Break" data-extraprice="5"><div class="vehicle-emoji">ðŸš™</div><div class="vehicle-name">Break</div><div class="vehicle-price">+ â‚¬5</div></div>
+                <div class="vehicle-card" data-vehicle="Exclusieve" data-extraprice="15"><div class="vehicle-emoji">ðŸš˜</div><div class="vehicle-name">Exclusieve</div><div class="vehicle-price">+ â‚¬15</div></div>
+                <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">ðŸš</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ â‚¬10</div></div>
             </div>
-            <div class="extra-fields"><h3>➕ Extra opties</h3><div class="extra-grid"><div><label>👥 Aantal passagiers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>🧳 Bagagestuks</label><input type="number" id="luggage" min="0" value="0"></div></div>
-            <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> <span>🤝 Meet & Greet</span></label><label><input type="checkbox" id="kissRide"> <span>💋 Kiss & Ride</span></label><label><input type="checkbox" id="waterBottle"> <span>💧 Waterfles</span></label><label><input type="checkbox" id="wifi"> <span>📶 WiFi</span></label></div>
-            <div><label>📝 Speciale wensen</label><textarea id="specialWishes" rows="2" placeholder="bv. kinderzitje, champagne..."></textarea></div></div>
+            <div class="extra-fields"><h3>âž• Extra opties</h3><div class="extra-grid"><div><label>ðŸ‘¥ Aantal passagiers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>ðŸ§³ Bagagestuks</label><input type="number" id="luggage" min="0" value="0"></div></div>
+            <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> <span>ðŸ¤ Meet & Greet</span></label><label><input type="checkbox" id="kissRide"> <span>ðŸ’‹ Kiss & Ride</span></label><label><input type="checkbox" id="waterBottle"> <span>ðŸ’§ Waterfles</span></label><label><input type="checkbox" id="wifi"> <span>ðŸ“¶ WiFi</span></label></div>
+            <div><label>ðŸ“ Speciale wensen</label><textarea id="specialWishes" rows="2" placeholder="bv. kinderzitje, champagne..."></textarea></div></div>
             <div id="page3Error" class="error"></div>
         </div>
         
         <div id="page4" class="carousel-page">
-            <h1>📋 Uw gegevens</h1><div class="sub">Vul uw contactgegevens in</div>
+            <h1>ðŸ“‹ Uw gegevens</h1><div class="sub">Vul uw contactgegevens in</div>
             <div class="field"><label>Voornaam <span class="required-star">*</span></label><input type="text" id="firstName"></div>
             <div class="field"><label>Achternaam <span class="required-star">*</span></label><input type="text" id="lastName"></div>
             <div class="field"><label>GSM <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
@@ -225,19 +225,19 @@
         </div>
         
         <div id="page5" class="carousel-page">
-            <h1>💰 Afrekenen</h1><div class="sub">Kies betaalmethode & bevestig</div>
-            <div class="rit-overzicht"><h3>📋 Uw ritoverzicht</h3>
-                <div><strong>📍 Ophalen:</strong> <span id="overviewPickup">—</span></div>
-                <div><strong>🏁 Afzetten:</strong> <span id="overviewDestination">—</span></div>
-                <div><strong>📅 Heen datum/tijd:</strong> <span id="overviewHeen">—</span></div>
-                <div id="overviewReturnContainer" style="display:none;"><strong>🔄 Terug datum/tijd:</strong> <span id="overviewReturn">—</span></div>
-                <div><strong>🚘 Voertuig:</strong> <span id="overviewVehicle">—</span></div>
-                <div><strong>➕ Extra opties:</strong> <span id="overviewExtras">—</span></div>
-                <div><strong>💰 Totaalprijs:</strong> <span id="overviewTotal">€ 0,00</span></div>
+            <h1>ðŸ’° Afrekenen</h1><div class="sub">Kies betaalmethode & bevestig</div>
+            <div class="rit-overzicht"><h3>ðŸ“‹ Uw ritoverzicht</h3>
+                <div><strong>ðŸ“ Ophalen:</strong> <span id="overviewPickup">â€”</span></div>
+                <div><strong>ðŸ Afzetten:</strong> <span id="overviewDestination">â€”</span></div>
+                <div><strong>ðŸ“… Heen datum/tijd:</strong> <span id="overviewHeen">â€”</span></div>
+                <div id="overviewReturnContainer" style="display:none;"><strong>ðŸ”„ Terug datum/tijd:</strong> <span id="overviewReturn">â€”</span></div>
+                <div><strong>ðŸš˜ Voertuig:</strong> <span id="overviewVehicle">â€”</span></div>
+                <div><strong>âž• Extra opties:</strong> <span id="overviewExtras">â€”</span></div>
+                <div><strong>ðŸ’° Totaalprijs:</strong> <span id="overviewTotal">â‚¬ 0,00</span></div>
             </div>
-            <div class="payment-method"><span>Betaalmethode:</span><label><input type="radio" name="payment" value="Cash" checked> <span>💵 Cash</span></label><label><input type="radio" name="payment" value="Kaart"> <span>💳 Kaart</span></label><label><input type="radio" name="payment" value="App"> <span>📱 App</span></label></div>
-            <div id="totalDisplay" class="total-display">Totaal: € 0,00</div>
-            <button id="finalConfirmBtn" class="btn-primary" style="width:100%">✅ Bevestig boeking</button>
+            <div class="payment-method"><span>Betaalmethode:</span><label><input type="radio" name="payment" value="Cash" checked> <span>ðŸ’µ Cash</span></label><label><input type="radio" name="payment" value="Kaart"> <span>ðŸ’³ Kaart</span></label><label><input type="radio" name="payment" value="App"> <span>ðŸ“± App</span></label></div>
+            <div id="totalDisplay" class="total-display">Totaal: â‚¬ 0,00</div>
+            <button id="finalConfirmBtn" class="btn-primary" style="width:100%">âœ… Bevestig boeking</button>
             <div id="page5Error" class="error"></div>
             
             <input type="hidden" id="hiddenCustomerId">
@@ -247,7 +247,7 @@
             <input type="hidden" id="hiddenAssignedDriverId">
         </div>
         
-        <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Vorige</button><button class="nav-btn next" id="nextBtn">Volgende ▶</button></div>
+        <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>â—€ Vorige</button><button class="nav-btn next" id="nextBtn">Volgende â–¶</button></div>
     </div></div></div>
 
     <!-- ALLE 7 GRID BLOKKEN ONDER HET BOEKINGSFORMULIER -->
@@ -259,7 +259,7 @@
             <a href="PV_Luchthavenvervoer.html" class="service-card" style="background:var(--card-bg);backdrop-filter:blur(4px);border:1px solid var(--border-light);border-radius:36px;padding:30px 24px;text-align:center;flex:1 1 240px;text-decoration:none;color:inherit"><div class="service-icon"><i class="fas fa-plane-departure"></i></div><h3>Luchthavenvervoer</h3><p>Vaste prijs, vluchtmonitoring</p><div class="service-summary">Stress-free naar de luchthaven. Wij volgen uw vlucht en wachten op u, ook bij vertraging.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Lees meer <i class="fas fa-search"></i></div></a>
             <a href="PV_Zakelijk_Vervoer.html" class="service-card" style="background:var(--card-bg);backdrop-filter:blur(4px);border:1px solid var(--border-light);border-radius:36px;padding:30px 24px;text-align:center;flex:1 1 240px;text-decoration:none;color:inherit"><div class="service-icon"><i class="fas fa-briefcase"></i></div><h3>Zakelijk vervoer</h3><p>Executive class, facturatie</p><div class="service-summary">Maak indruk met executive class vervoer. Facturatie achteraf mogelijk voor uw bedrijf.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Lees meer <i class="fas fa-search"></i></div></a>
             <a href="PV_Events_Gala.html" class="service-card" style="background:var(--card-bg);backdrop-filter:blur(4px);border:1px solid var(--border-light);border-radius:36px;padding:30px 24px;text-align:center;flex:1 1 240px;text-decoration:none;color:inherit"><div class="service-icon"><i class="fas fa-glass-cheers"></i></div><h3>Events & Gala</h3><p>Luxe wagen met chauffeur</p><div class="service-summary">Maak uw speciale avond compleet met een luxe chauffeur. Ontdek de mogelijkheden voor events.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Lees meer <i class="fas fa-search"></i></div></a>
-            <a href="PV_Koeriersdienst.html" class="service-card" style="background:var(--card-bg);backdrop-filter:blur(4px);border:1px solid var(--border-light);border-radius:36px;padding:30px 24px;text-align:center;flex:1 1 240px;text-decoration:none;color:inherit"><div class="service-icon"><i class="fas fa-file-signature"></i></div><h3>Koeriersdienst</h3><p>Snelle documentleveringen</p><div class="service-summary">Snelle en betrouwbare documentleveringen in heel België. Ontdek onze koerierservice.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Lees meer <i class="fas fa-search"></i></div></a>
+            <a href="PV_Koeriersdienst.html" class="service-card" style="background:var(--card-bg);backdrop-filter:blur(4px);border:1px solid var(--border-light);border-radius:36px;padding:30px 24px;text-align:center;flex:1 1 240px;text-decoration:none;color:inherit"><div class="service-icon"><i class="fas fa-file-signature"></i></div><h3>Koeriersdienst</h3><p>Snelle documentleveringen</p><div class="service-summary">Snelle en betrouwbare documentleveringen in heel BelgiÃ«. Ontdek onze koerierservice.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Lees meer <i class="fas fa-search"></i></div></a>
         </div>
     </div>
 
@@ -276,11 +276,11 @@
 <a href="/taxi-brugge">Taxi Brugge</a></div><div class="footer-legal"><h4>Legal</h4><a href="/PV/PVfaq.html">FAQ</a><br><a href="/PV/PVprivacy.html">Privacy</a><br><a href="/PV/PVcookiebeleid.html">Cookiebeleid</a><br><a href="/PV/PValgemene-voorwaarden.html">Algemene voorwaarden</a></div><div class="footer-partners"><h4>FleetConnect</h4><a href="mailto:support@fleetconnect.be">Support</a><br><a href="/booking#contact">Contact</a></div></div><div class="footer-bottom">2026 FleetConnect - <a href="/">FleetConnect</a></div></div></footer>
 </div>
 
-<!-- Google Maps API met Places Autocomplete -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv51ytW1FTJoSGRiD7hLNknGwNcM8cmcM&libraries=places&callback=initGoogleMaps" async defer></script>
+<!-- Google Maps API with modern Places Autocomplete -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv51ytW1FTJoSGRiD7hLNknGwNcM8cmcM&v=weekly&libraries=places&callback=initGoogleMaps" async defer></script>
 
 <script>
-    window.gm_authFailure = function() { console.warn('Google Maps authentication failed; manual address fallback remains available.'); };
+    window.gm_authFailure = function() { console.warn('Google Maps authentication failed; route validation is unavailable.'); };
     // ====================== HAMBURGER MENU ======================
     document.addEventListener('DOMContentLoaded', function() {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -324,10 +324,9 @@
     
     // ====================== GOOGLE MAPS INTEGRATIE ======================
     let map;
-    let pickupAutocomplete, dropoffAutocomplete;
+    let mapsController = null;
     let pickupLocation = null, dropoffLocation = null;
     let lastTypedPickupAddress = "", lastTypedDropoffAddress = "";
-    let directionsService, directionsRenderer, geocoder;
     let currentRoundTrip = false;
     let currentRouteData = null;
     let selectedVehicle = null, selectedVehicleExtra = 0;
@@ -336,39 +335,50 @@
     let currentDateTime = "", currentReturnDateTime = "", currentFlight = "";
     const ROUTE_ERROR_MESSAGE = "Adres of route kon niet berekend worden. Kies een volledig adres uit de suggesties.";
     
-    window.initGoogleMaps = function() {
+    window.initGoogleMaps = async function() {
         try {
-            if (!window.google || !google.maps) {
-                console.warn('Google Maps unavailable; route validation is unavailable.');
+            if (!window.google?.maps?.importLibrary) {
+                console.warn('Google Maps importLibrary unavailable; route validation is unavailable.');
                 return;
             }
-            const belgium = { lat: 50.8503, lng: 4.3517 };
-            const mapElement = document.getElementById('map');
-            if (mapElement) {
-                map = new google.maps.Map(mapElement, {
-                    center: belgium,
-                    zoom: 8,
-                    styles: [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }]
-                });
-                directionsRenderer = new google.maps.DirectionsRenderer({
-                    map: map,
-                    polylineOptions: { strokeColor: '#d4af37', strokeWeight: 6 }
-                });
-            }
-            directionsService = new google.maps.DirectionsService();
-            geocoder = new google.maps.Geocoder();
-            initOptionalAutocomplete();
+            const { createBookingMapsController } = await import('/src/modules/maps/booking-maps.js');
+            mapsController = await createBookingMapsController({
+                mapId: 'map',
+                pickupInputId: 'pickupInput',
+                dropoffInputId: 'dropoffInput',
+                countryCode: 'be',
+                pricePerKm: 1.5,
+                routeColor: '#d4af37',
+                pickupPlaceholder: "bv. Brussels Airport",
+                dropoffPlaceholder: "bv. Grand Place Brussels",
+                onPlaceSelected(type, selected) {
+                    currentRouteData = null;
+                    if (type === 'pickup') {
+                        pickupLocation = selected.location;
+                        lastTypedPickupAddress = selected.address;
+                    } else {
+                        dropoffLocation = selected.location;
+                        lastTypedDropoffAddress = selected.address;
+                    }
+                },
+                onRouteCalculated(route) {
+                    applyRouteData(route);
+                },
+                onRouteFailed() {
+                    blockRouteCalculation();
+                }
+            });
+            map = mapsController.map;
         } catch (error) {
-            console.warn('Google Maps initialization skipped; route validation is unavailable.', error);
-            disableAutocompleteSilently();
+            console.warn('Google Maps modernization initialization failed; route validation is unavailable.', error);
+            mapsController = null;
         }
     };
 
     window.gm_authFailure = function() {
         console.warn('Google Maps authentication failed; route validation is unavailable.');
-        disableAutocompleteSilently();
+        mapsController = null;
     };
-
 
     function containsGoogleAddressError(value) {
         const text = String(value || '').toLowerCase();
@@ -380,86 +390,34 @@
         return text.includes(p1) || text.includes(p1Accent) || text.includes(p2) || text.includes(p3) || text.includes(p3Curly) || text.includes('google maps');
     }
 
-    function disableAutocompleteSilently() {
-        pickupAutocomplete = null;
-        dropoffAutocomplete = null;
-    }
-
     function sanitizeAddressInput(input, fallbackValue, fallbackPlaceholder) {
         if (!input) return fallbackValue || '';
-        if (containsGoogleAddressError(input.value)) {
-            input.value = fallbackValue || '';
-        }
-        if (containsGoogleAddressError(input.placeholder)) {
-            input.placeholder = fallbackPlaceholder;
-        }
+        if (containsGoogleAddressError(input.value)) input.value = fallbackValue || '';
+        if (containsGoogleAddressError(input.placeholder)) input.placeholder = fallbackPlaceholder;
         input.setCustomValidity('');
         input.removeAttribute('aria-invalid');
         return input.value.trim();
     }
 
-    function initOptionalAutocomplete() {
-        if (!window.google || !google.maps || !google.maps.places) return;
-        const pickupInput = document.getElementById('pickupInput');
-        const dropoffInput = document.getElementById('dropoffInput');
-        try {
-            if (pickupInput) {
-                pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, {
-                    componentRestrictions: { country: 'be' },
-                    fields: ['geometry', 'formatted_address']
-                });
-                pickupAutocomplete.addListener('place_changed', () => {
-                    const place = pickupAutocomplete.getPlace();
-                    if (place?.geometry?.location) {
-                        pickupLocation = place.geometry.location;
-                        lastTypedPickupAddress = pickupInput.value.trim() || lastTypedPickupAddress;
-                        updateRoute();
-                    }
-                });
-            }
-            if (dropoffInput) {
-                dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, {
-                    componentRestrictions: { country: 'be' },
-                    fields: ['geometry', 'formatted_address']
-                });
-                dropoffAutocomplete.addListener('place_changed', () => {
-                    const place = dropoffAutocomplete.getPlace();
-                    if (place?.geometry?.location) {
-                        dropoffLocation = place.geometry.location;
-                        lastTypedDropoffAddress = dropoffInput.value.trim() || lastTypedDropoffAddress;
-                        updateRoute();
-                    }
-                });
-            }
-        } catch (error) {
-            console.warn('Google Places autocomplete disabled; route validation is unavailable.', error);
-            disableAutocompleteSilently();
-        }
-    }
-
     function bindAddressInputFallbacks() {
         const pickupInput = document.getElementById('pickupInput');
         const dropoffInput = document.getElementById('dropoffInput');
-        const bind = (input, type) => {
+        [pickupInput, dropoffInput].forEach((input) => {
             if (!input) return;
             input.removeAttribute('aria-invalid');
             input.addEventListener('input', () => {
                 input.setCustomValidity('');
                 input.removeAttribute('aria-invalid');
                 currentRouteData = null;
-                if (type === 'pickup') pickupLocation = null;
-                if (type === 'dropoff') dropoffLocation = null;
             });
-        };
-        bind(pickupInput, 'pickup');
-        bind(dropoffInput, 'dropoff');
+        });
     }
 
     function getAddressText(inputId) {
         const input = document.getElementById(inputId);
         const isPickup = inputId === 'pickupInput';
         const previous = isPickup ? lastTypedPickupAddress : lastTypedDropoffAddress;
-        const placeholder = isPickup ? 'bv. Brussels Airport' : 'bv. Grand Place Brussels';
+        const placeholder = isPickup ? "bv. Brussels Airport" : "bv. Grand Place Brussels";
         const value = sanitizeAddressInput(input, previous, placeholder);
         if (isPickup) lastTypedPickupAddress = value;
         else lastTypedDropoffAddress = value;
@@ -471,104 +429,34 @@
         const distVal = document.getElementById('distVal');
         const timeVal = document.getElementById('timeVal');
         const priceVal = document.getElementById('priceVal');
-        if (distVal) distVal.innerHTML = '—';
-        if (timeVal) timeVal.innerHTML = '—';
-        if (priceVal) priceVal.innerHTML = '—';
+        if (distVal) distVal.innerHTML = 'â€”';
+        if (timeVal) timeVal.innerHTML = 'â€”';
+        if (priceVal) priceVal.innerHTML = 'â€”';
         updateTotalDisplay();
         setPageError(1, message);
         return false;
     }
 
-    function geocodeAddress(value) {
-        return new Promise((resolve) => {
-            if (!value || value.length < 3 || !geocoder) return resolve(null);
-            geocoder.geocode({ address: value, componentRestrictions: { country: 'BE' } }, (results, status) => {
-                if (status === 'OK' && results && results[0]?.geometry?.location) {
-                    resolve(results[0].geometry.location);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
+    function applyRouteData(route) {
+        if (!route || !Number.isFinite(Number(route.distanceKm)) || Number(route.distanceKm) <= 0) return false;
+        pickupLocation = route.pickup.location;
+        dropoffLocation = route.dropoff.location;
+        currentRouteData = { distanceKm: Number(route.distanceKm), durationMin: Number(route.durationMin) };
+        document.getElementById('distVal').innerHTML = Number(route.displayDistanceKm).toFixed(1);
+        document.getElementById('timeVal').innerHTML = Number(route.displayDurationMin);
+        document.getElementById('priceVal').innerHTML = Number(route.basePrice).toFixed(2);
+        updateTotalDisplay();
+        return true;
     }
 
-    async function resolveTypedAddresses() {
-        const pickupText = getAddressText('pickupInput');
-        const dropoffText = getAddressText('dropoffInput');
-        if (pickupText.length < 3 || dropoffText.length < 3) return false;
-        if (!pickupLocation) pickupLocation = await geocodeAddress(pickupText);
-        if (!dropoffLocation) dropoffLocation = await geocodeAddress(dropoffText);
-        return !!(pickupLocation && dropoffLocation);
+    async function calculateRoutePromise() {
+        if (!mapsController || !mapsController.hasSelectedAddresses()) return null;
+        return mapsController.calculateRoute({ roundTrip: currentRoundTrip });
     }
 
-    function calculateRoutePromise() {
-        return new Promise((resolve) => {
-            if (!pickupLocation || !dropoffLocation || !directionsService) return resolve(false);
-            directionsService.route({
-                origin: pickupLocation,
-                destination: dropoffLocation,
-                travelMode: google.maps.TravelMode.DRIVING,
-                unitSystem: google.maps.UnitSystem.METRIC
-            }, (result, status) => {
-                if (status === 'OK') {
-                    if (directionsRenderer) directionsRenderer.setDirections(result);
-                    const route = result.routes[0].legs[0];
-                    const distanceKm = (route.distance.value / 1000).toFixed(1);
-                    const durationMin = Math.round(route.duration.value / 60);
-                    currentRouteData = { distanceKm: parseFloat(distanceKm), durationMin: durationMin };
-                    let displayDistance = parseFloat(distanceKm);
-                    let displayDuration = durationMin;
-                    let price = displayDistance * 1.5;
-                    if (currentRoundTrip) { displayDistance *= 2; displayDuration *= 2; price *= 2; }
-                    document.getElementById('distVal').innerHTML = displayDistance.toFixed(1);
-                    document.getElementById('timeVal').innerHTML = displayDuration;
-                    document.getElementById('priceVal').innerHTML = price.toFixed(2);
-                    updateTotalDisplay();
-                    const bounds = new google.maps.LatLngBounds();
-                    bounds.extend(pickupLocation);
-                    bounds.extend(dropoffLocation);
-                    if (map) map.fitBounds(bounds);
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            });
-        });
-    }
-
-    function updateRoute() {
-        if (!pickupLocation || !dropoffLocation || !directionsService) return;
-        
-        directionsService.route({
-            origin: pickupLocation,
-            destination: dropoffLocation,
-            travelMode: google.maps.TravelMode.DRIVING,
-            unitSystem: google.maps.UnitSystem.METRIC
-        }, (result, status) => {
-            if (status === "OK") {
-                if (directionsRenderer) directionsRenderer.setDirections(result);
-                const route = result.routes[0].legs[0];
-                const distanceKm = (route.distance.value / 1000).toFixed(1);
-                const durationMin = Math.round(route.duration.value / 60);
-                
-                currentRouteData = { distanceKm: parseFloat(distanceKm), durationMin: durationMin };
-                
-                let displayDistance = parseFloat(distanceKm);
-                let displayDuration = durationMin;
-                let price = displayDistance * 1.5;
-                if (currentRoundTrip) { displayDistance *= 2; displayDuration *= 2; price *= 2; }
-                
-                document.getElementById("distVal").innerHTML = displayDistance.toFixed(1);
-                document.getElementById("timeVal").innerHTML = displayDuration;
-                document.getElementById("priceVal").innerHTML = price.toFixed(2);
-                updateTotalDisplay();
-                
-                const bounds = new google.maps.LatLngBounds();
-                bounds.extend(pickupLocation);
-                bounds.extend(dropoffLocation);
-                if (map) map.fitBounds(bounds);
-            }
-        });
+    async function updateRoute() {
+        const route = await calculateRoutePromise();
+        if (route) applyRouteData(route);
     }
     
     function setPageError(page, msg) {
@@ -593,10 +481,10 @@
     }
     
     function updateRitOverzicht() {
-        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || '—';
-        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || '—';
-        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value || '—';
-        document.getElementById('overviewVehicle').innerText = selectedVehicle || '—';
+        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || 'â€”';
+        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || 'â€”';
+        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value || 'â€”';
+        document.getElementById('overviewVehicle').innerText = selectedVehicle || 'â€”';
         document.getElementById('overviewExtras').innerText = getExtrasString();
         const returnContainer = document.getElementById('overviewReturnContainer');
         if (currentRoundTrip && currentReturnDateTime) {
@@ -611,7 +499,7 @@
             if (currentRoundTrip) dist *= 2;
             total = (dist * 1.5) + (selectedVehicleExtra || 0);
         }
-        document.getElementById('overviewTotal').innerHTML = total === null ? '—' : `EUR ${total.toFixed(2)}`;
+        document.getElementById('overviewTotal').innerHTML = total === null ? 'â€”' : `EUR ${total.toFixed(2)}`;
     }
     
     function getExtrasString() {
@@ -674,15 +562,11 @@
             }
             currentReturnDateTime = returnDt;
         }
-        if (!window.google || !google.maps || !directionsService || !geocoder) {
-            return blockRouteCalculation();
-        }
-        const resolved = await resolveTypedAddresses();
-        if (!resolved || !pickupLocation || !dropoffLocation) {
+        if (!mapsController || !mapsController.hasSelectedAddresses()) {
             return blockRouteCalculation();
         }
         const routed = await calculateRoutePromise();
-        if (!routed || !currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) {
+        if (!routed || !applyRouteData(routed)) {
             return blockRouteCalculation();
         }
         const urgent = isWithinNextHour(dt);
@@ -739,12 +623,6 @@
         if (page === 2 && map) {
             setTimeout(() => {
                 google.maps.event.trigger(map, 'resize');
-                if (pickupLocation && dropoffLocation) {
-                    const bounds = new google.maps.LatLngBounds();
-                    bounds.extend(pickupLocation);
-                    bounds.extend(dropoffLocation);
-                    if (map) map.fitBounds(bounds);
-                }
             }, 150);
         }
         if (page === 5) {
@@ -880,9 +758,9 @@
             document.getElementById('waterBottle').checked = false;
             document.getElementById('wifi').checked = false;
             document.getElementById('specialWishes').value = '';
-            document.getElementById('distVal').innerHTML = '—';
-            document.getElementById('timeVal').innerHTML = '—';
-            document.getElementById('priceVal').innerHTML = '—';
+            document.getElementById('distVal').innerHTML = 'â€”';
+            document.getElementById('timeVal').innerHTML = 'â€”';
+            document.getElementById('priceVal').innerHTML = 'â€”';
             document.getElementById('totalDisplay').innerHTML = "Totaal: EUR 0,00";
             
             pickupLocation = null;
@@ -893,7 +771,7 @@
             currentRoundTrip = false;
             currentDateTime = "";
             currentReturnDateTime = "";
-            if (directionsRenderer) directionsRenderer.setDirections({ routes: [] });
+            if (mapsController) mapsController.reset();
             showPage(1);
         } catch (error) {
             console.error("Fout bij boeking:", error);
@@ -943,7 +821,7 @@
         });
     });
     
-    console.log("✅ FleetConnect - Alles geladen!");
+    console.log("âœ… FleetConnect - Alles geladen!");
 </script>
 </body>
 </html>
