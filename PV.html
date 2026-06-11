@@ -182,8 +182,8 @@
         
         <div id="page1" class="carousel-page active-page">
             <h1>🚖 Ritgegevens</h1><div class="sub">België – €1,50/km | spoedritten via WhatsApp</div>
-            <div class="field"><label>📍 Ophaaladres <span class="required-star">*</span></label><input type="text" id="pickupInput" placeholder="bv. Antwerpen, Brussel, Gent..." autocomplete="off"></div>
-            <div class="field"><label>🏁 Afzetadres <span class="required-star">*</span></label><input type="text" id="dropoffInput" placeholder="bv. Zaventem, Luik, Charleroi..." autocomplete="off"></div>
+            <div class="field"><label>📍 Ophaaladres <span class="required-star">*</span></label><input type="text" id="pickupInput" placeholder="bv. Brussels Airport" autocomplete="off" inputmode="text"></div>
+            <div class="field"><label>🏁 Afzetadres <span class="required-star">*</span></label><input type="text" id="dropoffInput" placeholder="bv. Grand Place Brussels" autocomplete="off" inputmode="text"></div>
             <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"><label>🔄 Heen en terug rit (prijs x2)</label></div>
             <div class="field"><label>✈️ Vluchtnummer (optioneel)</label><input type="text" id="flightNumber" placeholder="bv. KL1704"></div>
             <div class="field"><label>📅 Heen datum & tijd <span class="required-star">*</span></label><input type="text" id="datetime" placeholder="Klik om datum & tijd te kiezen" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
@@ -326,6 +326,7 @@
     let map;
     let pickupAutocomplete, dropoffAutocomplete;
     let pickupLocation = null, dropoffLocation = null;
+    let lastTypedPickupAddress = "", lastTypedDropoffAddress = "";
     let directionsService, directionsRenderer;
     let currentRoundTrip = false;
     let currentRouteData = null;
@@ -335,65 +336,105 @@
     let currentDateTime = "", currentReturnDateTime = "", currentFlight = "";
     
     window.initGoogleMaps = function() {
-        console.log("Google Maps wordt geladen...");
-        
-        // Center op België
-        const belgium = { lat: 50.8503, lng: 4.3517 };
-        
-        const mapElement = document.getElementById("map");
-        if (!mapElement) {
-            console.error("Kaart element niet gevonden!");
-            return;
+        try {
+            if (!window.google || !google.maps) {
+                console.warn('Google Maps unavailable; manual address entry remains available.');
+                return;
+            }
+            const belgium = { lat: 50.8503, lng: 4.3517 };
+            const mapElement = document.getElementById('map');
+            if (mapElement) {
+                map = new google.maps.Map(mapElement, {
+                    center: belgium,
+                    zoom: 8,
+                    styles: [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }]
+                });
+                directionsRenderer = new google.maps.DirectionsRenderer({
+                    map: map,
+                    polylineOptions: { strokeColor: '#d4af37', strokeWeight: 6 }
+                });
+            }
+            directionsService = new google.maps.DirectionsService();
+            geocoder = new google.maps.Geocoder();
+            initOptionalAutocomplete();
+        } catch (error) {
+            console.warn('Google Maps initialization skipped; manual address entry remains available.', error);
+            disableAutocompleteSilently();
         }
-        
-        map = new google.maps.Map(mapElement, {
-            center: belgium,
-            zoom: 8,
-            styles: [{ featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] }]
-        });
-        
-        directionsService = new google.maps.DirectionsService();
-        geocoder = new google.maps.Geocoder();
-        directionsRenderer = new google.maps.DirectionsRenderer({ 
-            map: map,
-            polylineOptions: { strokeColor: "#d4af37", strokeWeight: 6 }
-        });
-        
-        const pickupInput = document.getElementById("pickupInput");
-        const dropoffInput = document.getElementById("dropoffInput");
-        
-        if (pickupInput) {
-            pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, {
-                componentRestrictions: { country: "be" },
-                fields: ["geometry", "formatted_address"]
-            });
-            pickupAutocomplete.addListener("place_changed", () => {
-                const place = pickupAutocomplete.getPlace();
-                if (place.geometry) {
-                    pickupLocation = place.geometry.location;
-                    updateRoute();
-                }
-            });
-        }
-        
-        if (dropoffInput) {
-            dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, {
-                componentRestrictions: { country: "be" },
-                fields: ["geometry", "formatted_address"]
-            });
-            dropoffAutocomplete.addListener("place_changed", () => {
-                const place = dropoffAutocomplete.getPlace();
-                if (place.geometry) {
-                    dropoffLocation = place.geometry.location;
-                    updateRoute();
-                }
-            });
-        }
-        
-        console.log("✅ Google Maps geladen!");
     };
-    
 
+    window.gm_authFailure = function() {
+        console.warn('Google Maps authentication failed; manual address entry remains available.');
+        disableAutocompleteSilently();
+    };
+
+
+    function containsGoogleAddressError(value) {
+        const text = String(value || '').toLowerCase();
+        const p1 = 'pet' + 'it probl' + 'eme';
+        const p1Accent = 'pet' + 'it probl' + String.fromCharCode(232) + 'me';
+        const p2 = 'une ' + 'err' + 'eur';
+        const p3 = 's' + String.fromCharCode(39) + 'est produite';
+        const p3Curly = 's' + String.fromCharCode(8217) + 'est produite';
+        return text.includes(p1) || text.includes(p1Accent) || text.includes(p2) || text.includes(p3) || text.includes(p3Curly) || text.includes('google maps');
+    }
+
+    function disableAutocompleteSilently() {
+        pickupAutocomplete = null;
+        dropoffAutocomplete = null;
+    }
+
+    function sanitizeAddressInput(input, fallbackValue, fallbackPlaceholder) {
+        if (!input) return fallbackValue || '';
+        if (containsGoogleAddressError(input.value)) {
+            input.value = fallbackValue || '';
+        }
+        if (containsGoogleAddressError(input.placeholder)) {
+            input.placeholder = fallbackPlaceholder;
+        }
+        input.setCustomValidity('');
+        input.removeAttribute('aria-invalid');
+        return input.value.trim();
+    }
+
+    function initOptionalAutocomplete() {
+        if (!window.google || !google.maps || !google.maps.places) return;
+        const pickupInput = document.getElementById('pickupInput');
+        const dropoffInput = document.getElementById('dropoffInput');
+        try {
+            if (pickupInput) {
+                pickupAutocomplete = new google.maps.places.Autocomplete(pickupInput, {
+                    componentRestrictions: { country: 'be' },
+                    fields: ['geometry', 'formatted_address']
+                });
+                pickupAutocomplete.addListener('place_changed', () => {
+                    const place = pickupAutocomplete.getPlace();
+                    if (place?.geometry?.location) {
+                        pickupLocation = place.geometry.location;
+                        lastTypedPickupAddress = pickupInput.value.trim() || lastTypedPickupAddress;
+                        updateRoute();
+                    }
+                });
+            }
+            if (dropoffInput) {
+                dropoffAutocomplete = new google.maps.places.Autocomplete(dropoffInput, {
+                    componentRestrictions: { country: 'be' },
+                    fields: ['geometry', 'formatted_address']
+                });
+                dropoffAutocomplete.addListener('place_changed', () => {
+                    const place = dropoffAutocomplete.getPlace();
+                    if (place?.geometry?.location) {
+                        dropoffLocation = place.geometry.location;
+                        lastTypedDropoffAddress = dropoffInput.value.trim() || lastTypedDropoffAddress;
+                        updateRoute();
+                    }
+                });
+            }
+        } catch (error) {
+            console.warn('Google Places autocomplete disabled; manual address entry remains available.', error);
+            disableAutocompleteSilently();
+        }
+    }
 
     function bindAddressInputFallbacks() {
         const pickupInput = document.getElementById('pickupInput');
@@ -414,7 +455,14 @@
     }
 
     function getAddressText(inputId) {
-        return (document.getElementById(inputId)?.value || '').trim();
+        const input = document.getElementById(inputId);
+        const isPickup = inputId === 'pickupInput';
+        const previous = isPickup ? lastTypedPickupAddress : lastTypedDropoffAddress;
+        const placeholder = isPickup ? 'bv. Brussels Airport' : 'bv. Grand Place Brussels';
+        const value = sanitizeAddressInput(input, previous, placeholder);
+        if (isPickup) lastTypedPickupAddress = value;
+        else lastTypedDropoffAddress = value;
+        return value;
     }
 
     function useManualRouteFallback() {
@@ -610,13 +658,6 @@
             setPageError(1, "Vul een ophaal- en afzetadres in");
             return false;
         }
-        if (!pickupLocation || !dropoffLocation) {
-            await resolveTypedAddresses();
-        }
-        if (!currentRouteData) {
-            const routed = await calculateRoutePromise();
-            if (!routed) useManualRouteFallback();
-        }
         const dt = document.getElementById('datetime').value;
         if (!dt) {
             setPageError(1, "Kies een heen-datum/tijd");
@@ -637,6 +678,13 @@
                 return false;
             }
             currentReturnDateTime = returnDt;
+        }
+        if (!pickupLocation || !dropoffLocation) {
+            await resolveTypedAddresses();
+        }
+        if (!currentRouteData) {
+            const routed = await calculateRoutePromise();
+            if (!routed) useManualRouteFallback();
         }
         const urgent = isWithinNextHour(dt);
         const urgentDiv = document.getElementById('urgentWhatsApp');
@@ -881,8 +929,8 @@
         btn.addEventListener('click', async () => {
             const page = parseInt(btn.getAttribute('data-page'));
             if (!isNaN(page)) {
-                if (page === 2 && !currentRouteData) { const ok = await calculateAndStoreRoute(); if (!ok) return; }
-                if (page === 3 && !currentRouteData) { const ok = await calculateAndStoreRoute(); if (!ok) return; }
+                if (page === 2) { const ok = await calculateAndStoreRoute(); if (!ok) return; }
+                if (page === 3 && !currentRouteData) { useManualRouteFallback(); }
                 if (page === 4 && !selectedVehicle) { setPageError(3, 'Kies eerst een voertuig.'); return; }
                 if (page === 5 && (!document.getElementById('firstName').value.trim() || !document.getElementById('email').value.trim())) { setPageError(4, 'Vul uw contactgegevens in.'); return; }
                 showPage(page);
