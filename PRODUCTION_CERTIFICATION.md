@@ -4,6 +4,29 @@ Date: 2026-06-02
 
 Status: PHASE 1 COMPLETE - audit only, no application code modified
 
+## Phase A.4.4.1 Live Validation Hotfix Status
+
+Date: 2026-06-11
+Repository: Javalin13/FleetConnectFork
+Branch: phase-a4.4.1-live-validation-hotfixes
+
+Status: NOT CERTIFIED - repository and live database hotfixes completed; frontend and Edge Function deployment validation pending.
+
+Summary:
+
+- Added immediate booking processing state and disabled confirmation button during booking/email processing.
+- Enforced EUR 15 minimum public ride fare in frontend payloads and `create_public_booking`.
+- Added authenticated customer booking attachment by booking number/email match through `attach_booking_to_customer`.
+- Replaced demo-only customer login with Supabase `signInWithPassword` so customer portal booking attachment has a real authenticated session.
+- Fixed customer email CTAs to route through the customer login/register portal with booking ID preserved.
+- Added driver decline reassignment state, operations-only notification trigger, dashboard reassignment alert, and driver-accept cleanup.
+- Added `CUSTOMER_REGISTRATION_CONFIRMATION` communication trigger for customer registration.
+
+Live validation:
+
+- Rollback-only Supabase validation passed for minimum fare, customer attach, driver decline, and driver accept cleanup.
+- Live `send-email` deployment from this shell failed/timed out; repository code is fixed but manual Edge Function deployment remains required.
+
 ## Phase Scope
 
 This ledger covers repository extraction, lineage analysis, repository forensics, and change classification only.

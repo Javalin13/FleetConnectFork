@@ -325,6 +325,9 @@
     let bookingSubmitInProgress = false;
     let currentDateTime = "", currentReturnDateTime = "", currentFlight = "";
     const ROUTE_ERROR_MESSAGE = "L'adresse ou l'itinéraire n'a pas pu être calculé. Choisissez une adresse complète dans les suggestions.";
+    const MIN_RIDE_PRICE = 15;
+    const MIN_RIDE_MESSAGE = "Tarif minimum applique : EUR 15";
+    const BOOKING_PROCESSING_MESSAGE = "Reservation en cours de traitement...";
     
     window.initGoogleMaps = async function() {
         try {
@@ -500,6 +503,15 @@
         }
     }
     
+    function getCalculatedFare() {
+        if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) return null;
+        let dist = Number(currentRouteData.distanceKm);
+        if (currentRoundTrip) dist *= 2;
+        const rawAmount = (dist * 1.5) + (selectedVehicleExtra || 0);
+        const totalAmount = Math.max(MIN_RIDE_PRICE, rawAmount);
+        return { distanceKm: dist, rawAmount, totalAmount, minimumApplied: rawAmount < MIN_RIDE_PRICE };
+    }
+    
     function updateTotalDisplay() {
         if (!currentRouteData) return;
         const totalDisplay = document.getElementById('totalDisplay');
@@ -525,13 +537,8 @@
         } else {
             returnContainer.style.display = 'none';
         }
-        let total = null;
-        if (currentRouteData && Number.isFinite(Number(currentRouteData.distanceKm)) && Number(currentRouteData.distanceKm) > 0) {
-            let dist = Number(currentRouteData.distanceKm);
-            if (currentRoundTrip) dist *= 2;
-            total = (dist * 1.5) + (selectedVehicleExtra || 0);
-        }
-        document.getElementById('overviewTotal').innerHTML = total === null ? '-': `EUR ${total.toFixed(2)}`;
+        const fare = getCalculatedFare();
+        document.getElementById('overviewTotal').innerHTML = fare === null ? '-' : `EUR ${fare.totalAmount.toFixed(2)}${fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : ''}`;
     }
     
     function getExtrasString() {
@@ -704,9 +711,13 @@
             alert(ROUTE_ERROR_MESSAGE);
             return;
         }
-        let dist = Number(currentRouteData.distanceKm);
-        if (currentRoundTrip) dist *= 2;
-        totalAmount = (dist * 1.5) + (selectedVehicleExtra || 0);
+        const fare = getCalculatedFare();
+        if (!fare) {
+            alert(ROUTE_ERROR_MESSAGE);
+            return;
+        }
+        let dist = fare.distanceKm;
+        totalAmount = fare.totalAmount;
         if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
             alert(ROUTE_ERROR_MESSAGE);
             return;
@@ -751,6 +762,8 @@
                 source: "web-booking-fr",
                 route_distance_km: Number(currentRouteData.distanceKm),
                 route_duration_min: Number(currentRouteData.durationMin),
+                minimum_fare_applied: fare.minimumApplied,
+                raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 pickup_place_id: pickupPlaceId,
                 dropoff_place_id: dropoffPlaceId
             },
@@ -758,6 +771,8 @@
                 route_calculated: true,
                 route_distance_km: Number(currentRouteData.distanceKm),
                 route_duration_min: Number(currentRouteData.durationMin),
+                minimum_fare_applied: fare.minimumApplied,
+                raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 pickup_place_id: pickupPlaceId,
                 dropoff_place_id: dropoffPlaceId,
                 google_places_selected: true
@@ -769,7 +784,7 @@
         
         bookingSubmitInProgress = true;
         const confirmBtn = document.getElementById('finalConfirmBtn');
-        if (confirmBtn) confirmBtn.disabled = true;
+        if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.dataset.originalText = confirmBtn.textContent; confirmBtn.textContent = BOOKING_PROCESSING_MESSAGE; }
         
         try {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
@@ -790,6 +805,8 @@
                 preferred_language: 'fr',
                 distance_km: Number(currentRouteData.distanceKm),
                 duration_min: Number(currentRouteData.durationMin),
+                minimum_fare_applied: fare.minimumApplied,
+                raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 is_registered: false
             };
             let emailResult = { success: false, error: 'Email trigger not completed' };
@@ -848,7 +865,7 @@
             alert('Erreur lors de l\'enregistrement de la réservation: ' + error.message);
         } finally {
             bookingSubmitInProgress = false;
-            if (confirmBtn) confirmBtn.disabled = false;
+            if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = confirmBtn.dataset.originalText || confirmBtn.textContent; }
         }
     }
     

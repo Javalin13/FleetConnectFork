@@ -145,7 +145,7 @@
 
         <div class="field">
             <label><i class="fas fa-envelope"></i> E-mailadres</label>
-            <input type="email" id="emailInput" placeholder="admin@ryzen.be" value="admin@ryzen.be">
+            <input type="email" id="emailInput" placeholder="uw@email.be">
         </div>
         <div class="field">
             <label><i class="fas fa-lock"></i> Wachtwoord</label>
@@ -157,19 +157,34 @@
         </button>
 
         <div class="info-text">
-            <i class="fas fa-info-circle"></i> Demo account: admin@ryzen.be / admin@ryzen.be
+            <i class="fas fa-info-circle"></i> Log in met uw FleetConnect klantaccount.
+            <br><br><a id="registerLink" href="register.html" style="color: var(--primary); font-weight: 700;">Account aanmaken</a>
         </div>
     </div>
 
-    <script>
-        // ========== VASTE INLOG GEGEVENS ==========
-        const VALID_EMAIL = 'admin@ryzen.be';
-        const VALID_PASSWORD = 'admin@ryzen.be';
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const loginBtn = document.getElementById('loginBtn');
         const emailInput = document.getElementById('emailInput');
         const passInput = document.getElementById('passInput');
         const errorBox = document.getElementById('errorBox');
+        const loginParams = new URLSearchParams(window.location.search);
+        const requestedBookingId = loginParams.get('booking') || loginParams.get('booking_id') || loginParams.get('id') || '';
+        const requestedEmail = loginParams.get('email') || '';
+
+        if (requestedEmail) emailInput.value = requestedEmail;
+        const registerLink = document.getElementById('registerLink');
+        if (registerLink) {
+            const registerParams = new URLSearchParams();
+            if (requestedBookingId) registerParams.set('booking', requestedBookingId);
+            if (requestedEmail) registerParams.set('email', requestedEmail);
+            registerLink.href = registerParams.toString() ? `register.html?${registerParams.toString()}` : 'register.html';
+        }
 
         function showError(msg) {
             errorBox.innerText = msg;
@@ -179,7 +194,7 @@
             }, 4000);
         }
 
-        function handleLogin() {
+        async function handleLogin() {
             const email = emailInput.value.trim();
             const password = passInput.value.trim();
 
@@ -188,19 +203,29 @@
                 return;
             }
 
-            if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-                // Inloggen succesvol - sla sessie op
+            loginBtn.disabled = true;
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Inloggen...';
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                if (!data.session) throw new Error('Login kon niet worden bevestigd.');
+
                 sessionStorage.setItem('loggedIn', 'true');
                 sessionStorage.setItem('userEmail', email);
-                sessionStorage.setItem('userName', 'Admin Ryzen');
-                
-                // Redirect naar klantenportaal
-                window.location.href = 'klantenportaalpv.html';
-            } else {
-                showError('Ongeldige inloggegevens. Probeer opnieuw.');
-                // Reset wachtwoord veld
+                sessionStorage.setItem('userName', data.user?.user_metadata?.full_name || email);
+
+                window.location.href = requestedBookingId
+                    ? `klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
+                    : 'klantenportaalpv.html';
+            } catch (err) {
+                showError(err.message || 'Ongeldige inloggegevens. Probeer opnieuw.');
                 passInput.value = '';
                 passInput.focus();
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = originalText;
             }
         }
 
@@ -215,10 +240,7 @@
             if (e.key === 'Enter') handleLogin();
         });
         
-        // Prefill demo gegevens voor gebruiksgemak
-        emailInput.value = 'admin@ryzen.be';
-        
-        console.log("âœ… Login pagina gereed - Gebruik admin@ryzen.be / admin@ryzen.be");
+        console.log("FleetConnect klantlogin gereed");
     </script>
 </body>
 </html>

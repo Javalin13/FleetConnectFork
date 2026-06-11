@@ -99,11 +99,14 @@ serve(async (req) => {
     console.log(`[Email Dispatch] Trigger: ${metadata?.trigger || 'Unknown'} | To: ${recipients.join(', ')}`);
 
     // 3. Dispatch via Resend
-    // FORCE canonical sender if not provided or doesn't match FleetConnect domain
+    // Allow verified FleetConnect-domain senders, otherwise use the canonical configured sender.
     const senderEnv = Deno.env.get('FLEETCONNECT_EMAIL_FROM')
-    const sender = senderEnv || 'FleetConnect <bookings@fleetconnect.be>'
-    const senderFallbackUsed = !senderEnv
+    const requestedSender = typeof from === 'string' ? from : ''
+    const requestedSenderAllowed = /@fleetconnect\\.be>?$/i.test(requestedSender.trim())
+    const sender = requestedSenderAllowed ? requestedSender : (senderEnv || 'FleetConnect <bookings@fleetconnect.be>')
+    const senderFallbackUsed = !requestedSenderAllowed && !senderEnv
     console.log(`[Email Dispatch] FLEETCONNECT_EMAIL_FROM exists: ${senderEnv ? 'yes' : 'no'}`)
+    console.log(`[Email Dispatch] Requested sender allowed: ${requestedSenderAllowed ? 'yes' : 'no'}`)
     console.log(`[Email Dispatch] Sender fallback used: ${senderFallbackUsed ? 'yes' : 'no'}`)
     console.log(`[Email Dispatch] Sender address used: ${sender}`)
 

@@ -11,6 +11,21 @@ Status: NOT CERTIFIED
 
 Phase A repository remediation is complete for routing, branded sender configuration, CTA URL generation, and the missing public booking confirmation trigger. Full production certification still requires a redeploy and live browser/inbox validation on the connected FleetConnect domains.
 
+## Phase A.4.4.1 Live Validation Hotfix Status
+
+Status: REPOSITORY FIXED, LIVE DATABASE VALIDATED, FRONTEND/EDGE DEPLOYMENT PENDING.
+
+The A.4.4.1 branch adds immediate booking processing feedback, EUR 15 minimum fare enforcement, customer Supabase login for portal access, customer portal booking attachment by booking number, corrected customer email CTAs, driver decline reassignment state, dashboard reassignment alerts, and customer registration confirmation email wiring.
+
+Live Supabase rollback validation passed for:
+
+- minimum fare storage at EUR 15
+- authenticated customer attach-by-booking-number using matching email
+- driver decline returning a booking to `reassignment_needed` and clearing assigned driver fields
+- driver accept clearing reassignment metadata after a new driver accepts
+
+The `send-email` repository code is updated for verified `@fleetconnect.be` sender handling, but live Edge Function deployment from this shell failed/timed out. It must still be deployed before inbox certification.
+
 ## Current Production Entry Points
 
 | Entry point | Route | Decision | Evidence |
