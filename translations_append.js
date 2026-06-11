@@ -23,7 +23,7 @@
 "priv_h2_5": "5. Verstrekking aan derden",
 "priv_p_5": "Wij delen uw persoonsgegevens uitsluitend met: chauffeurs (voor uitvoering rit), softwareleveranciers (met verwerkersovereenkomst) en overheidsinstanties indien wettelijk verplicht.",
 "priv_h2_6": "6. Uw rechten onder de AVG",
-"priv_p_6": "U heeft recht op inzage, rectificatie, gegevenswissing, beperking van verwerking, gegevensoverdraagbaarheid en bezwaar. Stuur een verzoek naar fleetconnect.os@gmail.com.",
+"priv_p_6": "U heeft recht op inzage, rectificatie, gegevenswissing, beperking van verwerking, gegevensoverdraagbaarheid en bezwaar. Stuur een verzoek naar support@fleetconnect.be.",
 "priv_h2_7": "7. Klacht indienen",
 "priv_p_7": "U heeft het recht om een klacht in te dienen bij de <strong>Gegevensbeschermingsautoriteit (GBA)</strong>, Drukpersstraat 35, 1000 Brussel – www.gegevensbeschermingsautoriteit.be.",
 
@@ -50,7 +50,7 @@
 "cook_p_4": "U kunt op elk moment uw cookievoorkeuren wijzigen of uw toestemming intrekken via de knop 'Cookie-instellingen' hieronder.",
 "cook_btn_settings": "🍪 Cookie-instellingen aanpassen",
 "cook_h2_5": "5. Vragen?",
-"cook_p_5": "Als u vragen heeft over ons cookiebeleid, kunt u contact met ons opnemen via fleetconnect.os@gmail.com.",
+"cook_p_5": "Als u vragen heeft over ons cookiebeleid, kunt u contact met ons opnemen via support@fleetconnect.be.",
 
 // Terms NL
 "terms_last_updated": "Laatst bijgewerkt: 1 mei 2026",
@@ -72,7 +72,7 @@
 "terms_art7": "Artikel 7 – Aansprakelijkheid",
 "terms_art7_p": "De vervoerder is aansprakelijk voor schade die het gevolg is van een aan hem toe te rekenen tekortkoming, met inachtneming van wettelijke beperkingen. Maximale aansprakelijkheid per rit is beperkt tot het factuurbedrag.",
 "terms_art8": "Artikel 8 – Klachten",
-"terms_art8_p": "Klachten dienen binnen 7 werkdagen na de rit schriftelijk te worden ingediend via fleetconnect.os@gmail.com. Wij reageren binnen 14 werkdagen.",
+"terms_art8_p": "Klachten dienen binnen 7 werkdagen na de rit schriftelijk te worden ingediend via support@fleetconnect.be. Wij reageren binnen 14 werkdagen.",
 "terms_art9": "Artikel 9 – Toepasselijk recht",
 "terms_art9_p": "Op deze Algemene Voorwaarden is Belgisch recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter te Brussel.",
 "serv_excl_breadcrumb": "Exclusieve Service",
