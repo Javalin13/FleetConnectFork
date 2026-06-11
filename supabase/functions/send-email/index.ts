@@ -12,6 +12,9 @@ const ALLOWED_ORIGINS = [
   'https://fleetconnect.be',
   'https://www.fleetconnect.be',
   'https://rpk-mu.vercel.app',
+  'https://portal.fleetconnect.be',
+  'https://client.fleetconnect.be',
+  'https://partners.fleetconnect.be',
   'http://localhost:3000',
   'http://127.0.0.1:5500'
 ]
@@ -62,14 +65,14 @@ serve(async (req) => {
 
     // 3. Dispatch via Resend
     // FORCE canonical sender if not provided or doesn't match FleetConnect domain
-  const sender = 'FleetConnect <onboarding@resend.dev>';
+  const sender = 'FleetConnect <bookings@fleetconnect.be>';
 
     const { data, error } = await resend.emails.send({
       from: sender,
       to: to,
       subject: subject,
       html: html,
-      reply_to: reply_to || 'fleetconnect.os@gmail.com',
+      reply_to: reply_to || 'support@fleetconnect.be',
       // Pass metadata as tags for Resend dashboard tracking
       tags: metadata ? Object.entries(metadata).map(([name, value]) => ({
         name: name.substring(0, 40),

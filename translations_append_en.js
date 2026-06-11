@@ -23,7 +23,7 @@
 "priv_h2_5": "5. Disclosure to third parties",
 "priv_p_5": "We share your personal data only with: drivers (to perform the ride), software providers (with data processing agreement), and government authorities if legally required.",
 "priv_h2_6": "6. Your rights under the GDPR",
-"priv_p_6": "You have the right to access, rectification, erasure, restriction of processing, data portability, and objection. Send a request to fleetconnect.os@gmail.com.",
+"priv_p_6": "You have the right to access, rectification, erasure, restriction of processing, data portability, and objection. Send a request to support@fleetconnect.be.",
 "priv_h2_7": "7. Lodging a complaint",
 "priv_p_7": "You have the right to lodge a complaint with the <strong>Data Protection Authority (GBA)</strong>, Rue de la Presse 35, 1000 Brussels – www.gegevensbeschermingsautoriteit.be.",
 
@@ -50,7 +50,7 @@
 "cook_p_4": "You can change your cookie preferences or withdraw your consent at any time via the 'Cookie Settings' button below.",
 "cook_btn_settings": "Adjust cookie settings",
 "cook_h2_5": "5. Questions?",
-"cook_p_5": "If you have any questions about our cookie policy, please contact us at fleetconnect.os@gmail.com.",
+"cook_p_5": "If you have any questions about our cookie policy, please contact us at support@fleetconnect.be.",
 
 // Terms EN
 "terms_last_updated": "Last updated: 1 May 2026",
@@ -72,7 +72,7 @@
 "terms_art7": "Article 7 – Liability",
 "terms_art7_p": "The carrier is liable for damage resulting from a shortcoming attributable to him, subject to legal limitations. Maximum liability per ride is limited to the invoice amount.",
 "terms_art8": "Article 8 – Complaints",
-"terms_art8_p": "Complaints must be submitted in writing within 7 working days after the ride to fleetconnect.os@gmail.com. We will respond within 14 working days.",
+"terms_art8_p": "Complaints must be submitted in writing within 7 working days after the ride to support@fleetconnect.be. We will respond within 14 working days.",
 "terms_art9": "Article 9 – Applicable law",
 "terms_art9_p": "These General Terms and Conditions are governed by Belgian law. Disputes shall be submitted to the competent court in Brussels.",
 "serv_excl_breadcrumb": "Exclusive Service",

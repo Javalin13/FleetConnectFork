@@ -23,7 +23,7 @@
 "priv_h2_5": "5. Communication à des tiers",
 "priv_p_5": "Nous partageons vos données uniquement avec : les chauffeurs (pour l'exécution de la course), les fournisseurs de logiciels (avec accord de traitement) et les autorités publiques si requis par la loi.",
 "priv_h2_6": "6. Vos droits au titre du RGPD",
-"priv_p_6": "Vous avez droit à l'accès, la rectification, l'effacement, la limitation du traitement, la portabilité et l'opposition. Envoyez une demande à fleetconnect.os@gmail.com.",
+"priv_p_6": "Vous avez droit à l'accès, la rectification, l'effacement, la limitation du traitement, la portabilité et l'opposition. Envoyez une demande à support@fleetconnect.be.",
 "priv_h2_7": "7. Introduire une plainte",
 "priv_p_7": "Vous avez le droit d'introduire une plainte auprès de l'<strong>Autorité de protection des données (APD)</strong>, rue de la Presse 35, 1000 Bruxelles – www.gegevensbeschermingsautoriteit.be.",
 
@@ -50,7 +50,7 @@
 "cook_p_4": "Vous pouvez à tout moment modifier vos préférences cookies ou retirer votre consentement via le bouton 'Paramètres des cookies' ci-dessous.",
 "cook_btn_settings": "🍪 Modifier les paramètres des cookies",
 "cook_h2_5": "5. Des questions ?",
-"cook_p_5": "Si vous avez des questions sur notre politique des cookies, contactez-nous à fleetconnect.os@gmail.com.",
+"cook_p_5": "Si vous avez des questions sur notre politique des cookies, contactez-nous à support@fleetconnect.be.",
 
 // Terms FR
 "terms_last_updated": "Dernière mise à jour : 1 mai 2026",
@@ -72,7 +72,7 @@
 "terms_art7": "Article 7 – Responsabilité",
 "terms_art7_p": "Le transporteur est responsable des dommages résultant d'un manquement qui lui est imputable, dans les limites légales. La responsabilité maximale par course est limitée au montant de la facture.",
 "terms_art8": "Article 8 – Réclamations",
-"terms_art8_p": "Les réclamations doivent être soumises par écrit dans les 7 jours ouvrables suivant la course à fleetconnect.os@gmail.com. Nous répondons dans les 14 jours ouvrables.",
+"terms_art8_p": "Les réclamations doivent être soumises par écrit dans les 7 jours ouvrables suivant la course à support@fleetconnect.be. Nous répondons dans les 14 jours ouvrables.",
 "terms_art9": "Article 9 – Droit applicable",
 "terms_art9_p": "Le droit belge s'applique aux présentes conditions générales. Les litiges sont soumis au tribunal compétent de Bruxelles.",
 "serv_excl_breadcrumb": "Service Exclusif",

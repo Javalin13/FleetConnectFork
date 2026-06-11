@@ -2,19 +2,40 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/PV/PV.html"
+      "has": [{ "type": "host", "value": "portal.fleetconnect.be" }],
+      "destination": "/PV/index.html"
     },
     {
-      "source": "/nl",
-      "destination": "/PV/PV.html"
+      "source": "/",
+      "has": [{ "type": "host", "value": "client.fleetconnect.be" }],
+      "destination": "/PV/klantenportaalpv.html"
     },
     {
-      "source": "/fr",
-      "destination": "/PV/PV_fr.html"
+      "source": "/",
+      "has": [{ "type": "host", "value": "partners.fleetconnect.be" }],
+      "destination": "/Paneel/partner-login.html"
     },
-    {
-      "source": "/en",
-      "destination": "/PV/PV_en.html"
-    }
+    { "source": "/", "destination": "/PV/PV.html" },
+    { "source": "/nl", "destination": "/PV/PV.html" },
+    { "source": "/fr", "destination": "/PV/PV_fr.html" },
+    { "source": "/en", "destination": "/PV/PV_en.html" },
+    { "source": "/booking", "destination": "/PV/PV.html" },
+    { "source": "/booking/:path*", "destination": "/PV/:path*" },
+    { "source": "/dashboard", "destination": "/Paneel/admin-index.html" },
+    { "source": "/operator", "destination": "/Paneel/admin-index.html" },
+    { "source": "/login", "destination": "/PV/index.html" },
+    { "source": "/register", "destination": "/PV/register.html" },
+    { "source": "/customer", "destination": "/PV/klantenportaalpv.html" },
+    { "source": "/client", "destination": "/PV/klantenportaalpv.html" },
+    { "source": "/partner-login", "destination": "/Paneel/partner-login.html" },
+    { "source": "/driver-login", "destination": "/Paneel/driver-login.html" },
+    { "source": "/taxi-brussels", "destination": "/cities/taxi-brussels.html" },
+    { "source": "/taxi-zaventem", "destination": "/cities/taxi-zaventem.html" },
+    { "source": "/taxi-antwerpen", "destination": "/cities/taxi-antwerpen.html" },
+    { "source": "/taxi-gent", "destination": "/cities/taxi-gent.html" },
+    { "source": "/taxi-brugge", "destination": "/cities/taxi-brugge.html" },
+    { "source": "/taxi-leuven", "destination": "/cities/taxi-leuven.html" },
+    { "source": "/taxi-mechelen", "destination": "/cities/taxi-mechelen.html" },
+    { "source": "/taxi-waterloo", "destination": "/cities/taxi-waterloo.html" }
   ]
 }

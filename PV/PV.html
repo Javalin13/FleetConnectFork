@@ -650,7 +650,19 @@
             const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
             const savedBookingId = data?.id || '';
-            alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}.\n\nDe bevestigingsemail wordt naar ${email} verzonden.`);
+            let emailResult = { success: false, error: 'Email trigger not completed' };
+            try {
+                const { comms } = await import('../src/modules/communication/index.js');
+                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
+            } catch (emailError) {
+                console.error('BOOKING_CONFIRMATION email error:', emailError);
+                emailResult = { success: false, error: emailError.message };
+            }
+            if (emailResult?.success === true) {
+                alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}.\n\nDe bevestigingsemail is naar ${email} verzonden.`);
+            } else {
+                alert(`Boeking ${savedBookingId} opgeslagen voor EUR ${totalAmount.toFixed(2)}.\n\nDe automatische bevestigingsemail kon niet worden verzonden. FleetConnect volgt deze boeking handmatig op.`);
+            }
             
             // Reset
             document.getElementById('pickupInput').value = '';
