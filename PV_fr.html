@@ -103,6 +103,26 @@
         .footer-bottom{text-align:center;border-top:1px solid rgba(224,237,245,0.2);padding-top:24px}
         @media (max-width:800px){.vehicle-grid,.checkbox-grid{grid-template-columns:repeat(2,1fr)}.carousel-page{padding:20px}}
         
+
+        /* Phase A.1 mobile booking hotfix */
+        html,body{max-width:100%;overflow-x:hidden}
+        input,select,textarea,button{max-width:100%;min-width:0}
+        .footer-dark a{color:#e0edf5;text-decoration:none;display:inline-block;margin:4px 0}
+        .footer-dark a:hover{text-decoration:underline}
+        @media (max-width:800px){
+            .container{padding:0 12px}
+            .booking-container{width:100%;max-width:100%;border-radius:18px;margin:0 auto 28px}
+            .steps{display:grid;grid-template-columns:1fr;gap:0}
+            .step-btn{width:100%;padding:12px 10px;text-align:left;white-space:normal}
+            .carousel-page{padding:18px 14px;min-height:auto}
+            .nav-buttons,.button-row,.info-strip,.route-legend,.payment-method{flex-direction:column;align-items:stretch}
+            .extra-grid,.vehicle-grid,.checkbox-grid{grid-template-columns:1fr}
+            .checkbox-grid label,.roundtrip-box{align-items:flex-start}
+            #map{height:300px}
+            .footer-grid{display:grid;grid-template-columns:1fr;gap:24px}
+            .language-switcher{right:12px!important;top:12px!important;gap:6px!important}
+        }
+
         /* Google Autocomplete styling */
         .pac-container { border-radius: 12px; margin-top: 4px; border: 1px solid var(--border-light); box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif; z-index: 10000; }
         .pac-item { padding: 10px 16px; font-size: 0.9rem; border-bottom: 1px solid #eee; }
@@ -122,19 +142,19 @@
         <div class="sidebar-nav">
             <div style="padding: 10px 16px; font-size: 0.75rem; font-weight: 700; color: var(--text-light);">Langue / Language</div>
             <div style="display: flex; gap: 8px; padding: 0 16px 16px;">
-                <a href="/PV/PV.html" class="lang-btn" style="flex:1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-light); background: white; cursor: pointer; text-decoration: none; text-align: center;">NL</a>
-                <a href="/PV/PV_fr.html" class="lang-btn" style="flex:1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-light); background: white; cursor: pointer; text-decoration: none; text-align: center;">FR</a>
-                <a href="/PV/PV_en.html" class="lang-btn" style="flex:1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-light); background: white; cursor: pointer; text-decoration: none; text-align: center;">EN</a>
+                <a href="PV.html" class="lang-btn" style="flex:1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-light); background: white; cursor: pointer; text-decoration: none; text-align: center;">NL</a>
+                <a href="PV_fr.html" class="lang-btn" style="flex:1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-light); background: white; cursor: pointer; text-decoration: none; text-align: center;">FR</a>
+                <a href="PV_en.html" class="lang-btn" style="flex:1; padding: 8px; border-radius: 8px; border: 1px solid var(--border-light); background: white; cursor: pointer; text-decoration: none; text-align: center;">EN</a>
             </div>
             <div style="height:1px; background:#e2edf7; margin:8px 0;"></div>
-            <a href="/PV/PV.html"><i class="fas fa-home"></i><span> Accueil</span></a>
-            <a href="/PV/PV_Exclusieve_Service.html"><i class="fas fa-gem"></i><span> Service exclusif</span></a>
-            <a href="/PV/PV-vaste-prijzen.html"><i class="fas fa-euro-sign"></i><span> Prix fixes</span></a>
-            <a href="/PV/PV-premium-vloot.html"><i class="fas fa-car-side"></i><span> Flotte premium</span></a>
-            <a href="/PV/PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i><span> Transfert aéroport</span></a>
-            <a href="/PV/PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i><span> Transport d'affaires</span></a>
-            <a href="/PV/PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i><span> Événements & Gala</span></a>
-            <a href="/PV/PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i><span> Messagerie</span></a>
+            <a href="PV.html"><i class="fas fa-home"></i><span> Accueil</span></a>
+            <a href="PV_Exclusieve_Service.html"><i class="fas fa-gem"></i><span> Service exclusif</span></a>
+            <a href="PV-vaste-prijzen.html"><i class="fas fa-euro-sign"></i><span> Prix fixes</span></a>
+            <a href="PV-premium-vloot.html"><i class="fas fa-car-side"></i><span> Flotte premium</span></a>
+            <a href="PV_Luchthavenvervoer.html"><i class="fas fa-plane-departure"></i><span> Transfert aéroport</span></a>
+            <a href="PV_Zakelijk_Vervoer.html"><i class="fas fa-briefcase"></i><span> Transport d'affaires</span></a>
+            <a href="PV_Events_Gala.html"><i class="fas fa-glass-cheers"></i><span> Événements & Gala</span></a>
+            <a href="PV_Koeriersdienst.html"><i class="fas fa-file-signature"></i><span> Messagerie</span></a>
             <a href="#contact"><i class="fas fa-envelope"></i><span> Contact</span></a>
             <a href="#booking"><i class="fas fa-calendar-alt"></i><span> Réserver</span></a>
         </div>
@@ -144,18 +164,12 @@
 
 <div class="content-overlay">
     <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 1000; background: rgba(255,255,255,0.9); padding: 6px 12px; border-radius: 40px; backdrop-filter: blur(4px); border: 1px solid rgba(0,0,0,0.1);">
-        <a href="/PV/PV.html" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">NL</a>
-        <a href="/PV/PV_fr.html" class="lang-btn active" style="background: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: white;">FR</a>
-        <a href="/PV/PV_en.html" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">EN</a>
+        <a href="PV.html" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">NL</a>
+        <a href="PV_fr.html" class="lang-btn active" style="background: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: white;">FR</a>
+        <a href="PV_en.html" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">EN</a>
     </div>
 
     <section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i> FleetConnect</h1><p>Transport taxi professionnel en Belgique – Ponctuel, fiable & confortable</p><a href="#booking" class="btn-primary"><i class="fas fa-calendar-alt"></i> Réserver</a></div></div></section>
-
-    <div class="container"><div class="uitleg-grid">
-        <a href="/PV/PV_Exclusieve_Service.html" class="uitleg-item"><i class="fas fa-gem"></i><h3>Service exclusif</h3><p>Chauffeur personnel, toujours à l'heure</p><div class="service-summary">Découvrez notre service exclusif avec chauffeur personnel et véhicules de luxe.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
-        <a href="/PV/PV-vaste-prijzen.html" class="uitleg-item"><i class="fas fa-euro-sign"></i><h3>Prix fixes</h3><p>Transparent, pas de compteur</p><div class="service-summary">Pas de surprises après. Nos prix fixes sont transparents et clairs.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
-        <a href="/PV/PV-premium-vloot.html" class="uitleg-item"><i class="fas fa-car-side"></i><h3>Flotte premium</h3><p>Mercedes, BMW & minibus luxe</p><div class="service-summary">Voyagez en style avec notre flotte premium. Découvrez Mercedes, BMW et minibus luxe.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
-    </div></div>
 
     <div class="container" id="booking"><div class="booking-container"><div class="carousel">
         <div class="steps"><button class="step-btn active" data-page="1">1. Détails du trajet</button><button class="step-btn" data-page="2">2. Itinéraire & Prix</button><button class="step-btn" data-page="3">3. Véhicule & Options</button><button class="step-btn" data-page="4">4. Coordonnées</button><button class="step-btn" data-page="5">5. Paiement</button></div>
@@ -230,16 +244,30 @@
         <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>◀ Précédent</button><button class="nav-btn next" id="nextBtn">Suivant ▶</button></div>
     </div></div></div>
 
+    <div class="container"><div class="uitleg-grid">
+        <a href="PV_Exclusieve_Service.html" class="uitleg-item"><i class="fas fa-gem"></i><h3>Service exclusif</h3><p>Chauffeur personnel, toujours à l'heure</p><div class="service-summary">Découvrez notre service exclusif avec chauffeur personnel et véhicules de luxe.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
+        <a href="PV-vaste-prijzen.html" class="uitleg-item"><i class="fas fa-euro-sign"></i><h3>Prix fixes</h3><p>Transparent, pas de compteur</p><div class="service-summary">Pas de surprises après. Nos prix fixes sont transparents et clairs.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
+        <a href="PV-premium-vloot.html" class="uitleg-item"><i class="fas fa-car-side"></i><h3>Flotte premium</h3><p>Mercedes, BMW & minibus luxe</p><div class="service-summary">Voyagez en style avec notre flotte premium. Découvrez Mercedes, BMW et minibus luxe.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
+    </div></div>
+
     <div class="container"><h2 style="text-align:center;margin-bottom:20px;"><i class="fas fa-concierge-bell"></i> Nos services</h2><div class="services-grid">
-        <a href="/PV/PV_Luchthavenvervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-plane-departure"></i></div><h3>Transfert aéroport</h3><p>Prix fixe, suivi de vol</p><div class="service-summary">Sans stress vers l'aéroport. Nous suivons votre vol et vous attendons, même en cas de retard.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
-        <a href="/PV/PV_Zakelijk_Vervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-briefcase"></i></div><h3>Transport d'affaires</h3><p>Classe executive, facturation</p><div class="service-summary">Faites impression avec un transport classe executive. Facturation différée possible pour votre entreprise.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
-        <a href="/PV/PV_Events_Gala.html" class="service-card"><div class="service-icon"><i class="fas fa-glass-cheers"></i></div><h3>Événements & Gala</h3><p>Voiture de luxe avec chauffeur</p><div class="service-summary">Complétez votre soirée spéciale avec un chauffeur de luxe. Découvrez les possibilités pour événements.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
-        <a href="/PV/PV_Koeriersdienst.html" class="service-card"><div class="service-icon"><i class="fas fa-file-signature"></i></div><h3>Service de messagerie</h3><p>Livraison rapide de documents</p><div class="service-summary">Livraison rapide et fiable de documents dans toute la Belgique. Découvrez notre service de messagerie.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
+        <a href="PV_Luchthavenvervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-plane-departure"></i></div><h3>Transfert aéroport</h3><p>Prix fixe, suivi de vol</p><div class="service-summary">Sans stress vers l'aéroport. Nous suivons votre vol et vous attendons, même en cas de retard.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
+        <a href="PV_Zakelijk_Vervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-briefcase"></i></div><h3>Transport d'affaires</h3><p>Classe executive, facturation</p><div class="service-summary">Faites impression avec un transport classe executive. Facturation différée possible pour votre entreprise.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
+        <a href="PV_Events_Gala.html" class="service-card"><div class="service-icon"><i class="fas fa-glass-cheers"></i></div><h3>Événements & Gala</h3><p>Voiture de luxe avec chauffeur</p><div class="service-summary">Complétez votre soirée spéciale avec un chauffeur de luxe. Découvrez les possibilités pour événements.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
+        <a href="PV_Koeriersdienst.html" class="service-card"><div class="service-icon"><i class="fas fa-file-signature"></i></div><h3>Service de messagerie</h3><p>Livraison rapide de documents</p><div class="service-summary">Livraison rapide et fiable de documents dans toute la Belgique. Découvrez notre service de messagerie.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> En savoir plus <i class="fas fa-search"></i></div></a>
     </div></div>
 
     <div class="contact-wrapper" id="contact"><div class="contact-row"><div class="contact-form"><h3><i class="fas fa-paper-plane"></i> Envoyez un message</h3><div class="compact-form"><div class="form-group"><label><i class="fas fa-user"></i> Votre nom *</label><input type="text" id="contactNaam"></div><div class="form-group"><label><i class="fas fa-envelope"></i> E-mail *</label><input type="email" id="contactEmail"></div><div class="form-group"><label><i class="fas fa-comment"></i> Message *</label><textarea id="contactBericht" rows="2"></textarea></div><div class="button-row"><button class="btn-primary" id="verstuurBerichtBtn"><i class="fas fa-paper-plane"></i> Envoyer</button><a href="https://wa.me/32470123456" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></div></div></div></div></div>
 
-    <footer class="footer-dark"><div class="container"><div class="footer-grid"><div class="footer-brand"><h4><i class="fas fa-car"></i> FleetConnect</h4><p>Transport taxi professionnel en Belgique – Style, ponctualité et service.</p></div><div class="footer-ryz3n"><h4>FleetConnect</h4><a href="#">Panneau de contrôle</a><a href="#">Dispatch taxi</a><a href="#">Légal & Vie privée</a></div><div class="footer-legal"><h4>Juridique</h4><a href="PVfaq.html">❓ FAQ</a><br><a href="PVprivacy.html">🔒 Vie privée</a><br><a href="PVcookiebeleid.html">🍪 Politique des cookies</a><br><a href="PValgemene-voorwaarden.html">📜 Conditions générales</a></div><div class="footer-partners"><h4>Partenaires</h4><a href="#">Support</a></div></div><div class="footer-bottom">© 2026 FleetConnect – <a href="#">FleetConnect</a></div></div></footer>
+    <footer class="footer-dark"><div class="container"><div class="footer-grid"><div class="footer-brand"><h4><i class="fas fa-car"></i> FleetConnect</h4><p>Transport taxi professionnel en Belgique - style, ponctualite et service.</p><a href="/booking#booking">Reserver</a><br><a href="/customer">Portail client</a><br><a href="/partner-login">Connexion partenaire</a></div><div class="footer-cities"><h4>Villes populaires</h4>
+<a href="/taxi-brussels">Taxi Brussels</a><br>
+<a href="/taxi-antwerpen">Taxi Antwerp</a><br>
+<a href="/taxi-gent">Taxi Ghent</a><br>
+<a href="/taxi-zaventem">Taxi Zaventem</a><br>
+<a href="/taxi-leuven">Taxi Leuven</a><br>
+<a href="/taxi-mechelen">Taxi Mechelen</a><br>
+<a href="/taxi-waterloo">Taxi Waterloo</a><br>
+<a href="/taxi-brugge">Taxi Brugge</a></div><div class="footer-legal"><h4>Legal</h4><a href="/PV/PVfaq.html">FAQ</a><br><a href="/PV/PVprivacy.html">Vie privee</a><br><a href="/PV/PVcookiebeleid.html">Politique des cookies</a><br><a href="/PV/PValgemene-voorwaarden.html">Conditions generales</a></div><div class="footer-partners"><h4>FleetConnect</h4><a href="mailto:support@fleetconnect.be">Support</a><br><a href="/booking#contact">Contact</a></div></div><div class="footer-bottom">2026 FleetConnect - <a href="/">FleetConnect</a></div></div></footer>
 </div>
 
 <!-- Google Maps API avec Places Autocomplete -->
@@ -315,6 +343,7 @@
         });
         
         directionsService = new google.maps.DirectionsService();
+        geocoder = new google.maps.Geocoder();
         directionsRenderer = new google.maps.DirectionsRenderer({ 
             map: map,
             polylineOptions: { strokeColor: "#d4af37", strokeWeight: 6 }
@@ -354,6 +383,83 @@
         console.log("✅ Google Maps chargé - FleetConnect!");
     };
     
+
+    function getAddressText(inputId) {
+        return (document.getElementById(inputId)?.value || '').trim();
+    }
+
+    function useManualRouteFallback() {
+        const pickupText = getAddressText('pickupInput');
+        const dropoffText = getAddressText('dropoffInput');
+        if (pickupText.length < 3 || dropoffText.length < 3) return false;
+        currentRouteData = { distanceKm: 0, durationMin: 0, manualAddress: true };
+        const distVal = document.getElementById('distVal');
+        const timeVal = document.getElementById('timeVal');
+        const priceVal = document.getElementById('priceVal');
+        if (distVal) distVal.innerHTML = '0.0';
+        if (timeVal) timeVal.innerHTML = '0';
+        if (priceVal) priceVal.innerHTML = '0.00';
+        updateTotalDisplay();
+        return true;
+    }
+
+    function geocodeAddress(value) {
+        return new Promise((resolve) => {
+            if (!value || value.length < 3 || !geocoder) return resolve(null);
+            geocoder.geocode({ address: value, componentRestrictions: { country: 'BE' } }, (results, status) => {
+                if (status === 'OK' && results && results[0]?.geometry?.location) {
+                    resolve(results[0].geometry.location);
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    }
+
+    async function resolveTypedAddresses() {
+        const pickupText = getAddressText('pickupInput');
+        const dropoffText = getAddressText('dropoffInput');
+        if (pickupText.length < 3 || dropoffText.length < 3) return false;
+        if (!pickupLocation) pickupLocation = await geocodeAddress(pickupText);
+        if (!dropoffLocation) dropoffLocation = await geocodeAddress(dropoffText);
+        return !!(pickupLocation && dropoffLocation) || useManualRouteFallback();
+    }
+
+    function calculateRoutePromise() {
+        return new Promise((resolve) => {
+            if (!pickupLocation || !dropoffLocation || !directionsService) return resolve(false);
+            directionsService.route({
+                origin: pickupLocation,
+                destination: dropoffLocation,
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC
+            }, (result, status) => {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result);
+                    const route = result.routes[0].legs[0];
+                    const distanceKm = (route.distance.value / 1000).toFixed(1);
+                    const durationMin = Math.round(route.duration.value / 60);
+                    currentRouteData = { distanceKm: parseFloat(distanceKm), durationMin: durationMin };
+                    let displayDistance = parseFloat(distanceKm);
+                    let displayDuration = durationMin;
+                    let price = displayDistance * 1.5;
+                    if (currentRoundTrip) { displayDistance *= 2; displayDuration *= 2; price *= 2; }
+                    document.getElementById('distVal').innerHTML = displayDistance.toFixed(1);
+                    document.getElementById('timeVal').innerHTML = displayDuration;
+                    document.getElementById('priceVal').innerHTML = price.toFixed(2);
+                    updateTotalDisplay();
+                    const bounds = new google.maps.LatLngBounds();
+                    bounds.extend(pickupLocation);
+                    bounds.extend(dropoffLocation);
+                    map.fitBounds(bounds);
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            });
+        });
+    }
+
     function updateRoute() {
         if (!pickupLocation || !dropoffLocation) return;
         
@@ -465,8 +571,18 @@
     
     async function calculateAndStoreRoute() {
         if (!pickupLocation || !dropoffLocation) {
-            setPageError(1, "Sélectionnez une adresse de prise en charge et de dépôt valide");
-            return false;
+            const resolved = await resolveTypedAddresses();
+            if (!resolved) {
+                setPageError(1, "Enter a valid pickup and destination address");
+                return false;
+            }
+        }
+        if (!currentRouteData) {
+            const routed = await calculateRoutePromise();
+            if (!routed && !useManualRouteFallback()) {
+                setPageError(1, "Enter a valid pickup and destination address");
+                return false;
+            }
         }
         const dt = document.getElementById('datetime').value;
         if (!dt) {
@@ -613,19 +729,9 @@
         if (!currentRouteData) { alert('Aucun itinéraire trouvé. Retournez à l\'étape 1.'); return; }
         if (!selectedVehicle) { alert('Sélectionnez un véhicule à l\'étape 3.'); return; }
         
-        const now = new Date();
-        const yyyy = now.getFullYear();
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        let counter = parseInt(localStorage.getItem('bookingCounter') || '0');
-        counter++;
-        localStorage.setItem('bookingCounter', counter);
-        const bookingId = `T-PV-${yyyy}${mm}${dd}-${String(counter).padStart(3, '0')}`;
-        
         const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
         
         const bookingData = {
-            id: bookingId,
             datetime: currentDateTime ? currentDateTime.split(' ')[0] : "",
             time: currentDateTime ? currentDateTime.split(' ')[1] : "",
             name: `${firstName} ${lastName}`,
@@ -654,9 +760,22 @@
         try {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
             const supabase = createClient('https://rreqjjrmvytnwnsidmqi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA');
-            const { error } = await supabase.from('bookings').insert([bookingData]);
+            const { data, error } = await supabase.rpc('create_public_booking', { payload: bookingData });
             if (error) throw error;
-            alert(`✅ Réservation ${bookingId} confirmée pour €${totalAmount.toFixed(2)}!\n\nUne confirmation a été envoyée à ${email}`);
+            const savedBookingId = data?.id || '';
+            let emailResult = { success: false, error: 'Email trigger not completed' };
+            try {
+                const { comms } = await import('./src/modules/communication/index.js');
+                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
+            } catch (emailError) {
+                console.error('BOOKING_CONFIRMATION email error:', emailError);
+                emailResult = { success: false, error: emailError.message };
+            }
+            if (emailResult?.success === true) {
+                alert(`Booking ${savedBookingId} saved for EUR ${totalAmount.toFixed(2)}.\n\nLa confirmation a ete envoyee a ${email}.`);
+            } else {
+                alert(`Booking ${savedBookingId} saved for EUR ${totalAmount.toFixed(2)}.\n\nLa reservation est enregistree, mais l email automatique n a pas pu etre envoye. FleetConnect assurera le suivi manuellement.`);
+            }
             
             // Reset formulaire
             document.getElementById('pickupInput').value = '';
