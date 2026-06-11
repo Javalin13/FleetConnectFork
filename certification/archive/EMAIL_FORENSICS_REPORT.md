@@ -163,3 +163,54 @@ Production email delivery remains blocked until Resend is configured:
 Email lifecycle is **NOT CERTIFIED**.
 
 The repository now contains the correct diagnostics and in-app account request flow, but live email delivery cannot pass until the Resend domain/sender restriction is resolved.
+
+## Phase A.4.3 Follow-Up: Verified Domain Sender Deployment
+
+Date: 2026-06-11
+
+Follow-up live evidence from the Resend dashboard confirmed that `fleetconnect.be` is verified, but production still showed `FleetConnect <onboarding@resend.dev>` as the sender. Supabase live body inspection confirmed the deployed `send-email` body was stale and still contained `onboarding@resend.dev`.
+
+Actions completed:
+
+- Added runtime sender diagnostics to `send-email`:
+  - `FLEETCONNECT_EMAIL_FROM exists`
+  - `Sender fallback used`
+  - `Sender address used`
+- Removed the live stale function body by redeploying `send-email`.
+- Added Resend tag sanitization so metadata punctuation cannot create avoidable `422` errors.
+- Redeployed `send-email` to live Supabase version 9 with JWT verification still enabled.
+
+Live deployment verification:
+
+| Check | Result |
+| --- | --- |
+| Live function version | 9 |
+| Status | ACTIVE |
+| JWT verification | true |
+| Live body contains `FLEETCONNECT_EMAIL_FROM` | Yes |
+| Live body contains `FleetConnect <bookings@fleetconnect.be>` | Yes |
+| Live body contains `onboarding@resend.dev` | No |
+| Live body contains sender diagnostics | Yes |
+| Live body contains Resend tag sanitizer | Yes |
+
+Runtime verification:
+
+| Check | Result |
+| --- | --- |
+| Controlled `send-email` call | HTTP 200 |
+| Resend response ID | `1b038b5b-d2af-46ae-9ebc-97c4f997b7b5` |
+| `FLEETCONNECT_EMAIL_FROM exists` | yes |
+| `Sender fallback used` | no |
+| `Sender address used` | `FleetConnect <bookings@fleetconnect.be>` |
+
+Lifecycle trigger routing remains intact:
+
+- `BOOKING_CONFIRMATION` uses `send-email`.
+- `BOOKING_ACCEPTED` uses `send-email`.
+- `DRIVER_ASSIGNMENT_REQUEST` uses `send-email`.
+- `DRIVER_ASSIGNED` uses `send-email`.
+- `ACCOUNT_REQUEST_INTERNAL` and `ACCOUNT_REQUEST_CONFIRMATION` use `send-email`.
+
+Current email certification status:
+
+The sender deployment blocker is resolved at the Edge Function layer. Full lifecycle email certification still requires live end-to-end browser/inbox validation for booking confirmation, booking accepted, driver assignment, driver accepted/assigned, and account request emails.

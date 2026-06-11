@@ -208,3 +208,20 @@ External requirement before email certification:
 3. Deploy the updated `send-email` function.
 4. Apply the account request migration.
 5. Retest booking confirmation, booking accepted, driver assignment, driver accepted, and account request emails.
+
+Follow-up completed on 2026-06-11:
+
+- Resend dashboard evidence confirmed `fleetconnect.be` is verified.
+- Live Supabase body inspection showed production was still running stale `send-email` code with `onboarding@resend.dev`.
+- `send-email` was redeployed to live version 9.
+- Live version 9 contains `FLEETCONNECT_EMAIL_FROM`, `FleetConnect <bookings@fleetconnect.be>`, sender diagnostics, and no `onboarding@resend.dev`.
+- Runtime logs confirm `FLEETCONNECT_EMAIL_FROM exists: yes`, `Sender fallback used: no`, and `Sender address used: FleetConnect <bookings@fleetconnect.be>`.
+- A controlled live verification email returned HTTP 200 with Resend ID `1b038b5b-d2af-46ae-9ebc-97c4f997b7b5`.
+
+Remaining before certification:
+
+1. Run live end-to-end lifecycle inbox validation for booking confirmation.
+2. Run live end-to-end lifecycle inbox validation for booking accepted.
+3. Run live end-to-end lifecycle inbox validation for driver assignment.
+4. Run live end-to-end lifecycle inbox validation for driver accepted/assigned.
+5. Apply and validate the account request migration/flow if not already applied.

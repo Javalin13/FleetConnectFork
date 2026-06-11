@@ -44,6 +44,16 @@ function isAllowedFleetConnectOrigin(origin: string | null) {
   }
 }
 
+function sanitizeResendTag(value: unknown) {
+  const cleaned = String(value ?? '')
+    .replace(/[^A-Za-z0-9_-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .substring(0, 40)
+
+  return cleaned || 'unknown'
+}
+
 serve(async (req) => {
   const origin = req.headers.get('origin')
   const isAllowedOrigin = isAllowedFleetConnectOrigin(origin)
@@ -90,8 +100,12 @@ serve(async (req) => {
 
     // 3. Dispatch via Resend
     // FORCE canonical sender if not provided or doesn't match FleetConnect domain
-    const sender = Deno.env.get('FLEETCONNECT_EMAIL_FROM') || 'FleetConnect <bookings@fleetconnect.be>';
-    console.log(`[Email Dispatch] Sender: ${sender.replace(/<.*>/, '<redacted>')}`);
+    const senderEnv = Deno.env.get('FLEETCONNECT_EMAIL_FROM')
+    const sender = senderEnv || 'FleetConnect <bookings@fleetconnect.be>'
+    const senderFallbackUsed = !senderEnv
+    console.log(`[Email Dispatch] FLEETCONNECT_EMAIL_FROM exists: ${senderEnv ? 'yes' : 'no'}`)
+    console.log(`[Email Dispatch] Sender fallback used: ${senderFallbackUsed ? 'yes' : 'no'}`)
+    console.log(`[Email Dispatch] Sender address used: ${sender}`)
 
     const { data, error } = await resend.emails.send({
       from: sender,
@@ -101,8 +115,8 @@ serve(async (req) => {
       reply_to: reply_to || 'support@fleetconnect.be',
       // Pass metadata as tags for Resend dashboard tracking
       tags: metadata ? Object.entries(metadata).map(([name, value]) => ({
-        name: name.substring(0, 40),
-        value: String(value).substring(0, 40)
+        name: sanitizeResendTag(name),
+        value: sanitizeResendTag(value)
       })) : []
     })
 

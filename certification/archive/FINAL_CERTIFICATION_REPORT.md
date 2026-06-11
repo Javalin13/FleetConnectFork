@@ -116,3 +116,20 @@ Repository remediation added:
 - `account_requests` table and `submit_account_request` RPC migration
 
 Production email lifecycle remains **NOT CERTIFIED** until the Resend sending domain is verified, `send-email` is redeployed with a verified sender, and booking/account lifecycle emails pass inbox validation.
+
+## Phase A.4.3 Sender Deployment Follow-Up
+
+Resend dashboard evidence confirmed `fleetconnect.be` is verified, but Resend logs still showed `FleetConnect <onboarding@resend.dev>`. Live Supabase body inspection confirmed production was running stale `send-email` code.
+
+Corrective action completed:
+
+- `send-email` was redeployed to live Supabase version 9.
+- JWT verification remained enabled.
+- Live body now contains `FLEETCONNECT_EMAIL_FROM` and `FleetConnect <bookings@fleetconnect.be>`.
+- Live body no longer contains `onboarding@resend.dev`.
+- Runtime logs confirm `FLEETCONNECT_EMAIL_FROM exists: yes`, fallback `no`, and sender `FleetConnect <bookings@fleetconnect.be>`.
+- Controlled live sender verification returned HTTP 200 with Resend ID `1b038b5b-d2af-46ae-9ebc-97c4f997b7b5`.
+
+Updated certification status:
+
+The stale sender deployment blocker is resolved at the Edge Function layer. FleetConnect is still not fully email-certified until booking confirmation, booking accepted, driver assignment, driver accepted/assigned, and account request emails are validated through the live UI and recipient inboxes.
