@@ -13,8 +13,7 @@
     
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        #background-map{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;filter:brightness(1.05);opacity:0.9}
-        :root{--primary:#2c6e9e;--primary-dark:#1e4a6e;--accent-gold:#c9a03d;--text-dark:#1a2a3a;--text-light:#4a627a;--white:#ffffff;--card-bg:rgba(255,255,255,0.92);--border-light:#e2edf7}
+        #background-map{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;filter:brightness(1.05);opacity:0.9}:root{--primary:#2c6e9e;--primary-dark:#1e4a6e;--accent-gold:#c9a03d;--text-dark:#1a2a3a;--text-light:#4a627a;--white:#ffffff;--card-bg:rgba(255,255,255,0.92);--border-light:#e2edf7}
         body{font-family:'Inter',sans-serif;background:#f4f7fc;color:var(--text-dark);overflow-x:hidden}
         .content-overlay{position:relative;z-index:10;background:rgba(255,255,255,0.85);min-height:100vh;display:flex;flex-direction:column}
         .container{width:100%;max-width:1300px;margin:0 auto;padding:0 24px}
@@ -138,7 +137,7 @@
 
 <div class="sidebar-overlay" id="sidebarOverlay">
     <div class="sidebar">
-        <div class="sidebar-header"><h3><i class="fas fa-car"></i> FleetConnect</h3><button class="close-menu" id="closeMenuBtn">&times;</button></div>
+        <div class="sidebar-header"><h3><i class="fas fa-car"></i>FleetConnect</h3><button class="close-menu" id="closeMenuBtn">&times;</button></div>
         <div class="sidebar-nav">
             <div style="padding: 10px 16px; font-size: 0.75rem; font-weight: 700; color: var(--text-light);">Language</div>
             <div style="display: flex; gap: 8px; padding: 0 16px 16px;">
@@ -168,47 +167,47 @@
         <a href="/fr" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">FR</a>
         <a href="/en" class="lang-btn active" style="background: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: white;">EN</a>
     </div>
-<section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i> FleetConnect</h1><p>Professional taxi transport in Belgium â€“ Punctual, reliable & comfortable</p></div></div></section>
+<section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i>FleetConnect</h1><p>Professional taxi transport in Belgium - Punctual, reliable & comfortable</p></div></div></section>
 
     <div class="container" id="booking"><div class="booking-container"><div class="carousel">
         <div class="steps"><button class="step-btn active" data-page="1">1. Trip details</button><button class="step-btn" data-page="2">2. Route & Price</button><button class="step-btn" data-page="3">3. Vehicle & Options</button><button class="step-btn" data-page="4">4. Customer info</button><button class="step-btn" data-page="5">5. Checkout</button></div>
         
         <div id="page1" class="carousel-page active-page">
-            <h1>ðŸš– Trip details</h1><div class="sub">Belgium â€“ â‚¬1.50/km | urgent trips via WhatsApp</div>
-            <div class="field"><label>ðŸ“ Pickup address <span class="required-star">*</span></label><input type="text" id="pickupInput" placeholder="e.g. Brussels Airport" autocomplete="off" inputmode="text"></div>
-            <div class="field"><label>ðŸ Dropoff address <span class="required-star">*</span></label><input type="text" id="dropoffInput" placeholder="e.g. Grand Place Brussels" autocomplete="off" inputmode="text"></div>
-            <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"><label>ðŸ”„ Round trip (price x2)</label></div>
-            <div class="field"><label>âœˆï¸ Flight number (optional)</label><input type="text" id="flightNumber" placeholder="e.g. KL1704"></div>
-            <div class="field"><label>ðŸ“… Outbound date & time <span class="required-star">*</span></label><input type="text" id="datetime" placeholder="Click to select date & time" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
-            <div class="field return-date-field" id="returnDateContainer"><label>ðŸ“… Return date & time</label><input type="text" id="returnDatetime" placeholder="Click to select date & time" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
-            <div id="urgentWhatsApp" class="urgent-whatsapp"><span>âš ï¸ Departure within the hour â€“ WhatsApp</span><a href="https://wa.me/32470123456" target="_blank" class="whatsapp-btn">ðŸ“± WhatsApp now</a></div>
-            <div id="page1Error" class="error"></div><div class="footnote">* Required â€“ click the date field to open calendar</div>
+            <h1>Trip details</h1><div class="sub">Belgium - EUR1.50/km | urgent trips via WhatsApp</div>
+            <div class="field"><label> Pickup address <span class="required-star">*</span></label><input type="text" id="pickupInput" placeholder="e.g. Brussels Airport" autocomplete="off" inputmode="text"></div>
+            <div class="field"><label> Dropoff address <span class="required-star">*</span></label><input type="text" id="dropoffInput" placeholder="e.g. Grand Place Brussels" autocomplete="off" inputmode="text"></div>
+            <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"><label> Round trip (price x2)</label></div>
+            <div class="field"><label> Flight number (optional)</label><input type="text" id="flightNumber" placeholder="e.g. KL1704"></div>
+            <div class="field"><label> Outbound date & time <span class="required-star">*</span></label><input type="text" id="datetime" placeholder="Click to select date & time" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
+            <div class="field return-date-field" id="returnDateContainer"><label> Return date & time</label><input type="text" id="returnDatetime" placeholder="Click to select date & time" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
+            <div id="urgentWhatsApp" class="urgent-whatsapp"><span> Departure within the hour - WhatsApp</span><a href="https://wa.me/32470123456" target="_blank" class="whatsapp-btn"> WhatsApp now</a></div>
+            <div id="page1Error" class="error"></div><div class="footnote">* Required - click the date field to open calendar</div>
         </div>
         
         <div id="page2" class="carousel-page">
-            <h2>ðŸ—ºï¸ Route & Price</h2>
+            <h2>Route & Price</h2>
             <div id="map"></div>
-            <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span>ðŸŸ¢ Pickup</span></div><div class="legend-item"><div class="legend-color red"></div><span>ðŸ”´ Dropoff</span></div><div class="legend-item"><div class="legend-color blue"></div><span>ðŸŸ¡ Route</span></div></div>
-            <div class="info-strip"><div class="info-card"><div class="label">ðŸ“ Distance</div><div class="value" id="distVal">â€”</div><small>km</small></div><div class="info-card"><div class="label">â±ï¸ Travel time</div><div class="value" id="timeVal">â€”</div><small>min</small></div><div class="info-card"><div class="label">ðŸ’° Price</div><div class="value" id="priceVal">â€”</div><small>â‚¬</small></div></div>
+            <div class="route-legend"><div class="legend-item"><div class="legend-color green"></div><span> Pickup</span></div><div class="legend-item"><div class="legend-color red"></div><span> Dropoff</span></div><div class="legend-item"><div class="legend-color blue"></div><span> Route</span></div></div>
+            <div class="info-strip"><div class="info-card"><div class="label"> Distance</div><div class="value" id="distVal">-</div><small>km</small></div><div class="info-card"><div class="label"> Travel time</div><div class="value" id="timeVal">-</div><small>min</small></div><div class="info-card"><div class="label"> Price</div><div class="value" id="priceVal">-</div><small>EUR</small></div></div>
             <div id="page2Error" class="error"></div>
         </div>
         
         <div id="page3" class="carousel-page">
-            <h2>ðŸš˜ Choose your vehicle</h2>
+            <h2>Choose your vehicle</h2>
             <div class="vehicle-grid" id="vehicleGrid">
-                <div class="vehicle-card" data-vehicle="Standard" data-extraprice="0"><div class="vehicle-emoji">ðŸš—</div><div class="vehicle-name">Standard</div><div class="vehicle-price">no extra charge</div></div>
-                <div class="vehicle-card" data-vehicle="Estate" data-extraprice="5"><div class="vehicle-emoji">ðŸš™</div><div class="vehicle-name">Estate</div><div class="vehicle-price">+ â‚¬5</div></div>
-                <div class="vehicle-card" data-vehicle="Executive" data-extraprice="15"><div class="vehicle-emoji">ðŸš˜</div><div class="vehicle-name">Executive</div><div class="vehicle-price">+ â‚¬15</div></div>
-                <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji">ðŸš</div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ â‚¬10</div></div>
+                <div class="vehicle-card" data-vehicle="Standard" data-extraprice="0"><div class="vehicle-emoji"><i class="fas fa-car"></i></div><div class="vehicle-name">Standard</div><div class="vehicle-price">no extra charge</div></div>
+                <div class="vehicle-card" data-vehicle="Estate" data-extraprice="5"><div class="vehicle-emoji"><i class="fas fa-car"></i></div><div class="vehicle-name">Estate</div><div class="vehicle-price">+ EUR 5</div></div>
+                <div class="vehicle-card" data-vehicle="Executive" data-extraprice="15"><div class="vehicle-emoji"><i class="fas fa-car"></i></div><div class="vehicle-name">Executive</div><div class="vehicle-price">+ EUR 15</div></div>
+                <div class="vehicle-card" data-vehicle="Mini Van" data-extraprice="10"><div class="vehicle-emoji"><i class="fas fa-car"></i></div><div class="vehicle-name">Mini Van</div><div class="vehicle-price">+ EUR 10</div></div>
             </div>
-            <div class="extra-fields"><h3>âž• Extra options</h3><div class="extra-grid"><div><label>ðŸ‘¥ Number of passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label>ðŸ§³ Luggage pieces</label><input type="number" id="luggage" min="0" value="0"></div></div>
-            <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet"> ðŸ¤ Meet & Greet</label><label><input type="checkbox" id="kissRide"> ðŸ’‹ Kiss & Ride</label><label><input type="checkbox" id="waterBottle"> ðŸ’§ Water bottle</label><label><input type="checkbox" id="wifi"> ðŸ“¶ WiFi</label></div>
-            <div><label>ðŸ“ Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g. child seat, champagne..."></textarea></div></div>
+            <div class="extra-fields"><h3>+ Extra options</h3><div class="extra-grid"><div><label> Number of passengers</label><input type="number" id="passengers" min="1" value="1"></div><div><label> Luggage pieces</label><input type="number" id="luggage" min="0" value="0"></div></div>
+            <div class="checkbox-grid"><label><input type="checkbox" id="meetGreet">  Meet & Greet</label><label><input type="checkbox" id="kissRide">  Kiss & Ride</label><label><input type="checkbox" id="waterBottle">  Water bottle</label><label><input type="checkbox" id="wifi">  WiFi</label></div>
+            <div><label> Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g. child seat, champagne..."></textarea></div></div>
             <div id="page3Error" class="error"></div>
         </div>
         
         <div id="page4" class="carousel-page">
-            <h1>ðŸ“‹ Your details</h1><div class="sub">Enter your contact information</div>
+            <h1>Your details</h1><div class="sub">Enter your contact information</div>
             <div class="field"><label>First name <span class="required-star">*</span></label><input type="text" id="firstName"></div>
             <div class="field"><label>Last name <span class="required-star">*</span></label><input type="text" id="lastName"></div>
             <div class="field"><label>Mobile <span class="required-star">*</span></label><input type="tel" id="phone" placeholder="+32 4xx xx xx xx"></div>
@@ -218,19 +217,19 @@
         </div>
         
         <div id="page5" class="carousel-page">
-            <h1>ðŸ’° Checkout</h1><div class="sub">Choose payment method & confirm</div>
-            <div class="rit-overzicht"><h3>ðŸ“‹ Your trip summary</h3>
-                <div><strong>ðŸ“ Pickup:</strong> <span id="overviewPickup">â€”</span></div>
-                <div><strong>ðŸ Dropoff:</strong> <span id="overviewDestination">â€”</span></div>
-                <div><strong>ðŸ“… Outbound date/time:</strong> <span id="overviewHeen">â€”</span></div>
-                <div id="overviewReturnContainer" style="display:none;"><strong>ðŸ”„ Return date/time:</strong> <span id="overviewReturn">â€”</span></div>
-                <div><strong>ðŸš˜ Vehicle:</strong> <span id="overviewVehicle">â€”</span></div>
-                <div><strong>âž• Extra options:</strong> <span id="overviewExtras">â€”</span></div>
-                <div><strong>ðŸ’° Total price:</strong> <span id="overviewTotal">â‚¬ 0.00</span></div>
+            <h1>Checkout</h1><div class="sub">Choose payment method & confirm</div>
+            <div class="rit-overzicht"><h3>Your trip summary</h3>
+                <div><strong> Pickup:</strong> <span id="overviewPickup">-</span></div>
+                <div><strong> Dropoff:</strong> <span id="overviewDestination">-</span></div>
+                <div><strong> Outbound date/time:</strong> <span id="overviewHeen">-</span></div>
+                <div id="overviewReturnContainer" style="display:none;"><strong> Return date/time:</strong> <span id="overviewReturn">-</span></div>
+                <div><strong> Vehicle:</strong> <span id="overviewVehicle">-</span></div>
+                <div><strong>+ Extra options:</strong> <span id="overviewExtras">-</span></div>
+                <div><strong> Total price:</strong> <span id="overviewTotal">EUR 0.00</span></div>
             </div>
-            <div class="payment-method"><span>Payment method:</span><label><input type="radio" name="payment" value="Cash" checked> ðŸ’µ Cash</label><label><input type="radio" name="payment" value="Card"> ðŸ’³ Card</label><label><input type="radio" name="payment" value="App"> ðŸ“± App</label></div>
-            <div id="totalDisplay" class="total-display">Total: â‚¬ 0.00</div>
-            <button id="finalConfirmBtn" class="btn-primary" style="width:100%">âœ… Confirm booking</button>
+            <div class="payment-method"><span>Payment method:</span><label><input type="radio" name="payment" value="Cash" checked>  Cash</label><label><input type="radio" name="payment" value="Card">  Card</label><label><input type="radio" name="payment" value="App">  App</label></div>
+            <div id="totalDisplay" class="total-display">Total: EUR 0.00</div>
+            <button id="finalConfirmBtn" class="btn-primary" style="width:100%">Confirm booking</button>
             <div id="page5Error" class="error"></div>
             
             <input type="hidden" id="hiddenCustomerId">
@@ -240,7 +239,7 @@
             <input type="hidden" id="hiddenAssignedDriverId">
         </div>
         
-        <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>â—€ Previous</button><button class="nav-btn next" id="nextBtn">Next â–¶</button></div>
+        <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>Previous</button><button class="nav-btn next" id="nextBtn">Next</button></div>
     </div></div></div>
 
     <div class="container"><div class="uitleg-grid">
@@ -249,14 +248,14 @@
         <a href="PV-premium-vloot.html" class="uitleg-item"><i class="fas fa-car-side"></i><h3>Premium fleet</h3><p>Mercedes, BMW & luxury minivans</p><div class="service-summary">Travel in style with our premium fleet. Discover Mercedes, BMW and luxury minivans.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
     </div></div>
 
-    <div class="container"><h2 style="text-align:center;margin-bottom:20px;"><i class="fas fa-concierge-bell"></i> Our services</h2><div class="services-grid">
+    <div class="container"><h2 style="text-align:center;margin-bottom:20px;"><i class="fas fa-concierge-bell"></i>Our services</h2><div class="services-grid">
         <a href="PV_Luchthavenvervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-plane-departure"></i></div><h3>Airport transfer</h3><p>Fixed price, flight monitoring</p><div class="service-summary">Stress-free to the airport. We monitor your flight and wait for you, even if delayed.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
         <a href="PV_Zakelijk_Vervoer.html" class="service-card"><div class="service-icon"><i class="fas fa-briefcase"></i></div><h3>Business transport</h3><p>Executive class, invoicing</p><div class="service-summary">Make an impression with executive class transport. Post-invoicing possible for your company.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
         <a href="PV_Events_Gala.html" class="service-card"><div class="service-icon"><i class="fas fa-glass-cheers"></i></div><h3>Events & Gala</h3><p>Luxury car with driver</p><div class="service-summary">Complete your special evening with a luxury chauffeur. Discover possibilities for events.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
         <a href="PV_Koeriersdienst.html" class="service-card"><div class="service-icon"><i class="fas fa-file-signature"></i></div><h3>Courier service</h3><p>Fast document delivery</p><div class="service-summary">Fast and reliable document delivery throughout Belgium. Discover our courier service.</div><div class="read-more-hint"><i class="fas fa-arrow-right"></i> Read more <i class="fas fa-search"></i></div></a>
     </div></div>
 
-    <div class="contact-wrapper" id="contact"><div class="contact-row"><div class="contact-form"><h3><i class="fas fa-paper-plane"></i> Send a message</h3><div class="compact-form"><div class="form-group"><label><i class="fas fa-user"></i> Your name *</label><input type="text" id="contactNaam"></div><div class="form-group"><label><i class="fas fa-envelope"></i> Email *</label><input type="email" id="contactEmail"></div><div class="form-group"><label><i class="fas fa-comment"></i> Message *</label><textarea id="contactBericht" rows="2"></textarea></div><div class="button-row"><button class="btn-primary" id="verstuurBerichtBtn"><i class="fas fa-paper-plane"></i> Send</button><a href="https://wa.me/32470123456" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></div></div></div></div></div>
+    <div class="contact-wrapper" id="contact"><div class="contact-row"><div class="contact-form"><h3><i class="fas fa-paper-plane"></i>Send a message</h3><div class="compact-form"><div class="form-group"><label><i class="fas fa-user"></i> Your name *</label><input type="text" id="contactNaam"></div><div class="form-group"><label><i class="fas fa-envelope"></i> Email *</label><input type="email" id="contactEmail"></div><div class="form-group"><label><i class="fas fa-comment"></i> Message *</label><textarea id="contactBericht" rows="2"></textarea></div><div class="button-row"><button class="btn-primary" id="verstuurBerichtBtn"><i class="fas fa-paper-plane"></i> Send</button><a href="https://wa.me/32470123456" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></div></div></div></div></div>
 
     <footer class="footer-dark"><div class="container"><div class="footer-grid"><div class="footer-brand"><h4><i class="fas fa-car"></i> FleetConnect</h4><p>Professional taxi transport in Belgium - style, punctuality and service.</p><a href="/booking#booking">Book now</a><br><a href="/customer">Customer portal</a><br><a href="/partner-login">Partner login</a></div><div class="footer-cities"><h4>Popular cities</h4>
 <a href="/taxi-brussels">Taxi Brussels</a><br>
@@ -407,8 +406,8 @@
     function getAddressText(inputId) {
         const input = document.getElementById(inputId);
         const isPickup = inputId === 'pickupInput';
-        const previous = isPickup ? lastTypedPickupAddress : lastTypedDropoffAddress;
-        const placeholder = isPickup ? "e.g. Brussels Airport" : "e.g. Grand Place Brussels";
+        const previous = isPickup ? lastTypedPickupAddress: lastTypedDropoffAddress;
+        const placeholder = isPickup ? "e.g. Brussels Airport": "e.g. Grand Place Brussels";
         const value = sanitizeAddressInput(input, previous, placeholder);
         if (isPickup) lastTypedPickupAddress = value;
         else lastTypedDropoffAddress = value;
@@ -420,9 +419,9 @@
         const distVal = document.getElementById('distVal');
         const timeVal = document.getElementById('timeVal');
         const priceVal = document.getElementById('priceVal');
-        if (distVal) distVal.innerHTML = 'â€”';
-        if (timeVal) timeVal.innerHTML = 'â€”';
-        if (priceVal) priceVal.innerHTML = 'â€”';
+        if (distVal) distVal.innerHTML = '-';
+        if (timeVal) timeVal.innerHTML = '-';
+        if (priceVal) priceVal.innerHTML = '-';
         updateTotalDisplay();
         setPageError(1, message);
         return false;
@@ -472,10 +471,10 @@
     }
     
     function updateRitOverzicht() {
-        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || 'â€”';
-        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || 'â€”';
-        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value || 'â€”';
-        document.getElementById('overviewVehicle').innerText = selectedVehicle || 'â€”';
+        document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || '-';
+        document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || '-';
+        document.getElementById('overviewHeen').innerText = document.getElementById('datetime').value || '-';
+        document.getElementById('overviewVehicle').innerText = selectedVehicle || '-';
         document.getElementById('overviewExtras').innerText = getExtrasString();
         const returnContainer = document.getElementById('overviewReturnContainer');
         if (currentRoundTrip && currentReturnDateTime) {
@@ -490,7 +489,7 @@
             if (currentRoundTrip) dist *= 2;
             total = (dist * 1.5) + (selectedVehicleExtra || 0);
         }
-        document.getElementById('overviewTotal').innerHTML = total === null ? 'â€”' : `EUR ${total.toFixed(2)}`;
+        document.getElementById('overviewTotal').innerHTML = total === null ? '-': `EUR ${total.toFixed(2)}`;
     }
     
     function getExtrasString() {
@@ -507,14 +506,14 @@
         let [datePart, timePart] = str.split(' ');
         if (!datePart) return null;
         let [dd, mm, yyyy] = datePart.split('-');
-        let [hh, min] = timePart ? timePart.split(':') : ['0','0'];
+        let [hh, min] = timePart ? timePart.split(':'): ['0','0'];
         return new Date(parseInt(yyyy), parseInt(mm)-1, parseInt(dd), parseInt(hh), parseInt(min));
     }
     
     function isPast(ds) {
         if (!ds) return false;
         const parsed = parseEuroDate(ds);
-        return parsed ? parsed < new Date() : false;
+        return parsed ? parsed < new Date(): false;
     }
     
     function isWithinNextHour(ds) {
@@ -562,7 +561,7 @@
         }
         const urgent = isWithinNextHour(dt);
         const urgentDiv = document.getElementById('urgentWhatsApp');
-        if (urgentDiv) urgent ? urgentDiv.classList.add('show') : urgentDiv.classList.remove('show');
+        if (urgentDiv) urgent ? urgentDiv.classList.add('show'): urgentDiv.classList.remove('show');
         currentDateTime = dt;
         currentFlight = document.getElementById('flightNumber').value;
         return true;
@@ -687,8 +686,8 @@
         const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
         
         const bookingData = {
-            datetime: currentDateTime ? currentDateTime.split(' ')[0] : "",
-            time: currentDateTime ? currentDateTime.split(' ')[1] : "",
+            datetime: currentDateTime ? currentDateTime.split(' ')[0]: "",
+            time: currentDateTime ? currentDateTime.split(' ')[1]: "",
             name: `${firstName} ${lastName}`,
             email: email,
             phone: phone,
@@ -699,8 +698,8 @@
             extras: getExtrasString(),
             amount: totalAmount.toFixed(2),
             payment: paymentMethod,
-            status: paymentMethod === "Cash" ? "pending" : "pending_payment",
-            payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid",
+            status: paymentMethod === "Cash" ? "pending": "pending_payment",
+            payment_status: paymentMethod === "Cash" ? "cash_pending": "unpaid",
             customer_id: customerId,
             form_data: { source: "web-booking-en", route_distance_km: Number(currentRouteData.distanceKm), route_duration_min: Number(currentRouteData.durationMin) },
             metadata: { route_calculated: true, route_distance_km: Number(currentRouteData.distanceKm), route_duration_min: Number(currentRouteData.durationMin) },
@@ -722,10 +721,13 @@
             let emailResult = { success: false, error: 'Email trigger not completed' };
             try {
                 const { comms } = await import('../src/modules/communication/index.js');
-                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase);
+                emailResult = await comms.trigger('BOOKING_CONFIRMATION', savedBookingId, supabase, { snapshot: emailSnapshot });
             } catch (emailError) {
                 console.error('BOOKING_CONFIRMATION email error:', emailError);
                 emailResult = { success: false, error: emailError.message };
+            }
+            if (emailResult?.success !== true) {
+                console.error('BOOKING_CONFIRMATION delivery failed:', { bookingId: savedBookingId, error: emailResult?.error || emailResult });
             }
             if (emailResult?.success === true) {
                 alert(`Booking ${savedBookingId} saved. Price: EUR ${totalAmount.toFixed(2)}.\n\nThe confirmation email has been sent to ${email}.`);
@@ -750,9 +752,9 @@
             document.getElementById('waterBottle').checked = false;
             document.getElementById('wifi').checked = false;
             document.getElementById('specialWishes').value = '';
-            document.getElementById('distVal').innerHTML = 'â€”';
-            document.getElementById('timeVal').innerHTML = 'â€”';
-            document.getElementById('priceVal').innerHTML = 'â€”';
+            document.getElementById('distVal').innerHTML = '-';
+            document.getElementById('timeVal').innerHTML = '-';
+            document.getElementById('priceVal').innerHTML = '-';
             document.getElementById('totalDisplay').innerHTML = "Total: EUR 0.00";
             
             pickupLocation = null;
@@ -780,7 +782,7 @@
     document.getElementById('finalConfirmBtn').addEventListener('click', async (e) => { e.preventDefault(); await finalizeBookingDirect(); });
     document.getElementById('roundtripCheckbox')?.addEventListener('change', function(e) {
         const returnContainer = document.getElementById('returnDateContainer');
-        e.target.checked ? returnContainer.classList.add('visible') : returnContainer.classList.remove('visible');
+        e.target.checked ? returnContainer.classList.add('visible'): returnContainer.classList.remove('visible');
         currentRoundTrip = e.target.checked;
         if (currentRouteData) {
             let d = currentRouteData.distanceKm, t = currentRouteData.durationMin;
@@ -813,7 +815,7 @@
         });
     });
     
-    console.log("âœ… FleetConnect EN - Everything loaded!");
+    console.log("FleetConnect EN - Everything loaded!");
 </script>
 </body>
 </html>

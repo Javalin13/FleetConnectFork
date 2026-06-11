@@ -1,4 +1,4 @@
-# FleetConnect Current Production Status
+﻿# FleetConnect Current Production Status
 
 Date: 2026-06-11
 Canonical development repository: Javalin13/FleetConnectFork
@@ -119,3 +119,60 @@ Validation still required after deployment:
 4. Confirm mobile booking pages have no horizontal overflow on a real mobile viewport.
 5. Confirm city footer links resolve to /taxi-brussels, /taxi-antwerpen, /taxi-gent, /taxi-zaventem, /taxi-leuven, /taxi-mechelen, /taxi-waterloo, and /taxi-brugge.
 6. Confirm footer links do not take public users to admin/dashboard routes.
+
+## Phase A.4 Production Booking + Dashboard Hardening Status
+
+Date: 2026-06-11
+Branch: phase-a4-production-booking-dashboard-hardening
+Status: repository hotfix completed, pending redeploy and live browser/inbox validation.
+
+Repository changes in this phase:
+
+- Public NL/FR/EN booking pages no longer submit manual_route_required bookings.
+- Public NL/FR/EN booking pages now require Google geocoding/directions to calculate a positive route distance and price before checkout.
+- Public booking payloads no longer send null amount or deferred-price metadata.
+- User-facing route failure messages now block booking submission when Google route calculation fails.
+- Dashboard selector/operator visible mojibake was corrected.
+- Ryzen login now exposes an approval-based account request path without automatic account creation.
+- Communication config now includes the public Supabase anon key fallback required for JWT-protected send-email calls.
+
+Live validation still required:
+
+1. Confirm Places suggestions appear for pickup/dropoff on /nl, /fr, and /en.
+2. Select full suggested pickup/dropoff addresses and confirm route distance/time calculate.
+3. Confirm price is calculated before checkout.
+4. Confirm booking cannot submit when route/price is unavailable.
+5. Submit one controlled booking and verify create_public_booking receives a positive amount.
+6. Verify BOOKING_CONFIRMATION and BOOKING_ACCEPTED emails send through the deployed send-email function.
+7. Verify dashboard selector and operator navigation text displays without mojibake.
+
+## Phase A.4.2 UTF-8 + Email Trigger Fix Status
+
+Date: 2026-06-11
+Branch: phase-a4.2-utf8-email-trigger-fix
+Status: repository hotfix completed, pending redeploy and live browser/inbox validation.
+
+Repository changes in this phase:
+
+- Active/root NL, FR, and EN public booking pages were cleaned of visible mojibake and broken emoji/symbol text.
+- Public booking pages still require Google route/distance/price validation before submission.
+- Public booking pages still submit through `create_public_booking`.
+- `BOOKING_CONFIRMATION` now receives the local booking snapshot after successful insert, avoiding anonymous-client RLS rehydration failure.
+- Email failure handling now logs `BOOKING_CONFIRMATION delivery failed` with booking ID and provider error details before showing the truthful customer fallback message.
+
+Static validation completed:
+
+1. Scoped mojibake/error-text scan returned no matches.
+2. NL/FR/EN active/root public page inline scripts parsed.
+3. Google Maps booking module passed `node --check`.
+4. Communication service and Resend provider passed `node --check`.
+5. Scoped public booking pages still use `create_public_booking` and no direct public `bookings.insert` path was found.
+
+Live validation still required:
+
+1. Redeploy this branch.
+2. Confirm `/nl`, `/fr`, and `/en` have no visible mojibake.
+3. Submit one controlled booking with Google-selected addresses.
+4. Confirm positive route price remains required before checkout.
+5. Confirm customer `BOOKING_CONFIRMATION` email is received.
+6. Confirm no technical escalation fires for a successful confirmation.

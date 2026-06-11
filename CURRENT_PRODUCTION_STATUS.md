@@ -145,3 +145,34 @@ Live validation still required:
 5. Submit one controlled booking and verify create_public_booking receives a positive amount.
 6. Verify BOOKING_CONFIRMATION and BOOKING_ACCEPTED emails send through the deployed send-email function.
 7. Verify dashboard selector and operator navigation text displays without mojibake.
+
+## Phase A.4.2 UTF-8 + Email Trigger Fix Status
+
+Date: 2026-06-11
+Branch: phase-a4.2-utf8-email-trigger-fix
+Status: repository hotfix completed, pending redeploy and live browser/inbox validation.
+
+Repository changes in this phase:
+
+- Active/root NL, FR, and EN public booking pages were cleaned of visible mojibake and broken emoji/symbol text.
+- Public booking pages still require Google route/distance/price validation before submission.
+- Public booking pages still submit through `create_public_booking`.
+- `BOOKING_CONFIRMATION` now receives the local booking snapshot after successful insert, avoiding anonymous-client RLS rehydration failure.
+- Email failure handling now logs `BOOKING_CONFIRMATION delivery failed` with booking ID and provider error details before showing the truthful customer fallback message.
+
+Static validation completed:
+
+1. Scoped mojibake/error-text scan returned no matches.
+2. NL/FR/EN active/root public page inline scripts parsed.
+3. Google Maps booking module passed `node --check`.
+4. Communication service and Resend provider passed `node --check`.
+5. Scoped public booking pages still use `create_public_booking` and no direct public `bookings.insert` path was found.
+
+Live validation still required:
+
+1. Redeploy this branch.
+2. Confirm `/nl`, `/fr`, and `/en` have no visible mojibake.
+3. Submit one controlled booking with Google-selected addresses.
+4. Confirm positive route price remains required before checkout.
+5. Confirm customer `BOOKING_CONFIRMATION` email is received.
+6. Confirm no technical escalation fires for a successful confirmation.

@@ -117,3 +117,17 @@ Before treating the checkpoint as preserved, confirm:
 7. Accept one booking and confirm the modal closes/dashboard updates without waiting for email.
 8. Confirm `BOOKING_ACCEPTED` still sends in the background.
 9. Open `Bekijk Fiche`, scroll inside the modal, and confirm the top-right X remains visible and closes the modal.
+
+## Phase A.4.2 UTF-8 And Confirmation Email Retest Addendum
+
+1. Redeploy branch `phase-a4.2-utf8-email-trigger-fix`.
+2. Open `/nl`, `/fr`, and `/en`.
+3. Confirm there is no visible mojibake such as `BelgiÃ«`, `FinanciÃ«n`, `ðŸ`, `â–¶`, or broken vehicle/payment symbols.
+4. Select Google-suggested pickup and destination addresses.
+5. Confirm distance, duration, and positive price calculate before checkout.
+6. Submit exactly one controlled booking.
+7. Confirm the booking is saved through `create_public_booking`.
+8. Confirm browser Network shows `functions/v1/send-email` success for `BOOKING_CONFIRMATION`.
+9. Confirm the customer receives the confirmation email.
+10. Confirm no technical escalation email is sent for the successful booking confirmation.
+11. If email fails, capture the console entry beginning `BOOKING_CONFIRMATION delivery failed` and the Edge Function response body.
