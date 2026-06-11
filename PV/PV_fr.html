@@ -164,12 +164,11 @@
 
 <div class="content-overlay">
     <div class="language-switcher" style="position: fixed; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 1000; background: rgba(255,255,255,0.9); padding: 6px 12px; border-radius: 40px; backdrop-filter: blur(4px); border: 1px solid rgba(0,0,0,0.1);">
-        <a href="PV.html" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">NL</a>
-        <a href="PV_fr.html" class="lang-btn active" style="background: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: white;">FR</a>
-        <a href="PV_en.html" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">EN</a>
+        <a href="/nl" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">NL</a>
+        <a href="/fr" class="lang-btn active" style="background: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: white;">FR</a>
+        <a href="/en" class="lang-btn" style="background: white; border: 1px solid var(--border-light); padding: 6px 14px; border-radius: 40px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text-dark);">EN</a>
     </div>
-
-    <section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i> FleetConnect</h1><p>Transport taxi professionnel en Belgique – Ponctuel, fiable & confortable</p><a href="#booking" class="btn-primary"><i class="fas fa-calendar-alt"></i> Réserver</a></div></div></section>
+<section class="hero"><div class="container"><div class="hero-card"><h1><i class="fas fa-car"></i> FleetConnect</h1><p>Transport taxi professionnel en Belgique – Ponctuel, fiable & confortable</p><a href="#booking" class="btn-primary"><i class="fas fa-calendar-alt"></i> Réserver</a></div></div></section>
 
     <div class="container" id="booking"><div class="booking-container"><div class="carousel">
         <div class="steps"><button class="step-btn active" data-page="1">1. Détails du trajet</button><button class="step-btn" data-page="2">2. Itinéraire & Prix</button><button class="step-btn" data-page="3">3. Véhicule & Options</button><button class="step-btn" data-page="4">4. Coordonnées</button><button class="step-btn" data-page="5">5. Paiement</button></div>
@@ -274,6 +273,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv51ytW1FTJoSGRiD7hLNknGwNcM8cmcM&libraries=places&callback=initGoogleMaps" async defer></script>
 
 <script>
+    window.gm_authFailure = function() { console.warn('Google Maps authentication failed; manual address fallback remains available.'); };
     // ====================== MENU HAMBURGER ======================
     document.addEventListener('DOMContentLoaded', function() {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -384,6 +384,25 @@
     };
     
 
+
+    function bindAddressInputFallbacks() {
+        const pickupInput = document.getElementById('pickupInput');
+        const dropoffInput = document.getElementById('dropoffInput');
+        const bind = (input, type) => {
+            if (!input) return;
+            input.removeAttribute('aria-invalid');
+            input.addEventListener('input', () => {
+                input.setCustomValidity('');
+                input.removeAttribute('aria-invalid');
+                currentRouteData = null;
+                if (type === 'pickup') pickupLocation = null;
+                if (type === 'dropoff') dropoffLocation = null;
+            });
+        };
+        bind(pickupInput, 'pickup');
+        bind(dropoffInput, 'dropoff');
+    }
+
     function getAddressText(inputId) {
         return (document.getElementById(inputId)?.value || '').trim();
     }
@@ -392,13 +411,13 @@
         const pickupText = getAddressText('pickupInput');
         const dropoffText = getAddressText('dropoffInput');
         if (pickupText.length < 3 || dropoffText.length < 3) return false;
-        currentRouteData = { distanceKm: 0, durationMin: 0, manualAddress: true };
+        currentRouteData = { distanceKm: null, durationMin: null, manualAddress: true, manual_route_required: true };
         const distVal = document.getElementById('distVal');
         const timeVal = document.getElementById('timeVal');
         const priceVal = document.getElementById('priceVal');
-        if (distVal) distVal.innerHTML = '0.0';
-        if (timeVal) timeVal.innerHTML = '0';
-        if (priceVal) priceVal.innerHTML = '0.00';
+        if (distVal) distVal.innerHTML = 'manual';
+        if (timeVal) timeVal.innerHTML = 'manual';
+        if (priceVal) priceVal.innerHTML = 'Le prix sera confirmé par FleetConnect';
         updateTotalDisplay();
         return true;
     }
@@ -506,13 +525,18 @@
     
     function updateTotalDisplay() {
         if (!currentRouteData) return;
+        const totalDisplay = document.getElementById('totalDisplay');
+        const overviewTotal = document.getElementById('overviewTotal');
+        if (currentRouteData.manual_route_required) {
+            if (totalDisplay) totalDisplay.innerHTML = 'Total: le prix sera confirmé par FleetConnect';
+            if (overviewTotal) overviewTotal.innerHTML = 'Le prix sera confirmé par FleetConnect';
+            return;
+        }
         let dist = currentRouteData.distanceKm;
         if (currentRoundTrip) dist *= 2;
         let total = (dist * 1.5) + (selectedVehicleExtra || 0);
-        const totalDisplay = document.getElementById('totalDisplay');
-        if (totalDisplay) totalDisplay.innerHTML = `Total: € ${total.toFixed(2)}`;
-        const overviewTotal = document.getElementById('overviewTotal');
-        if (overviewTotal) overviewTotal.innerHTML = `€ ${total.toFixed(2)}`;
+        if (totalDisplay) totalDisplay.innerHTML = `Total: EUR ${total.toFixed(2)}`;
+        if (overviewTotal) overviewTotal.innerHTML = `EUR ${total.toFixed(2)}`;
     }
     
     function updateRitOverzicht() {
@@ -570,19 +594,18 @@
     }
     
     async function calculateAndStoreRoute() {
+        const pickupText = getAddressText('pickupInput');
+        const dropoffText = getAddressText('dropoffInput');
+        if (pickupText.length < 3 || dropoffText.length < 3) {
+            setPageError(1, "Saisissez une adresse de prise en charge et de destination");
+            return false;
+        }
         if (!pickupLocation || !dropoffLocation) {
-            const resolved = await resolveTypedAddresses();
-            if (!resolved) {
-                setPageError(1, "Enter a valid pickup and destination address");
-                return false;
-            }
+            await resolveTypedAddresses();
         }
         if (!currentRouteData) {
             const routed = await calculateRoutePromise();
-            if (!routed && !useManualRouteFallback()) {
-                setPageError(1, "Enter a valid pickup and destination address");
-                return false;
-            }
+            if (!routed) useManualRouteFallback();
         }
         const dt = document.getElementById('datetime').value;
         if (!dt) {
@@ -590,17 +613,17 @@
             return false;
         }
         if (isPast(dt)) {
-            setPageError(1, "La date est dans le passé");
+            setPageError(1, "La date est dans le pass?");
             return false;
         }
         if (currentRoundTrip) {
             const returnDt = document.getElementById('returnDatetime').value;
             if (!returnDt) {
-                setPageError(1, "Sélectionnez une date/heure retour pour l'aller-retour");
+                setPageError(1, "S?lectionnez une date/heure retour pour l aller-retour");
                 return false;
             }
             if (isPast(returnDt)) {
-                setPageError(1, "La date de retour est dans le passé");
+                setPageError(1, "La date retour est dans le pass?");
                 return false;
             }
             currentReturnDateTime = returnDt;
@@ -612,7 +635,7 @@
         currentFlight = document.getElementById('flightNumber').value;
         return true;
     }
-    
+
     function initVehicleSelection() {
         document.querySelectorAll('.vehicle-card').forEach(card => {
             card.addEventListener('click', () => {
@@ -742,12 +765,13 @@
             flight_number: document.getElementById('flightNumber').value.trim() || "",
             vehicle: selectedVehicle,
             extras: getExtrasString(),
-            amount: totalAmount.toString(),
+            amount: totalAmount === null ? null : totalAmount.toString(),
             payment: paymentMethod,
             status: paymentMethod === "Cash" ? "pending" : "pending_payment",
             payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid",
             customer_id: customerId,
-            form_data: { source: "web-booking-fr" },
+            form_data: { source: "web-booking-fr", manual_route_required: !!currentRouteData?.manual_route_required },
+            metadata: { manual_route_required: !!currentRouteData?.manual_route_required, pricing_note: currentRouteData?.manual_route_required ? 'Le prix sera confirmé par FleetConnect' : null },
             created_at: new Date().toISOString(),
             partner_id: 1,
             assigned_driver_id: null
@@ -772,9 +796,9 @@
                 emailResult = { success: false, error: emailError.message };
             }
             if (emailResult?.success === true) {
-                alert(`Booking ${savedBookingId} saved for EUR ${totalAmount.toFixed(2)}.\n\nLa confirmation a ete envoyee a ${email}.`);
+                alert(`Booking ${savedBookingId} saved. Price: ${totalAmount === null ? 'Le prix sera confirmé par FleetConnect' : 'EUR ' + totalAmount.toFixed(2)}.\n\nLa confirmation a été envoyée à ${email}.`);
             } else {
-                alert(`Booking ${savedBookingId} saved for EUR ${totalAmount.toFixed(2)}.\n\nLa reservation est enregistree, mais l email automatique n a pas pu etre envoye. FleetConnect assurera le suivi manuellement.`);
+                alert(`Booking ${savedBookingId} saved. Price: ${totalAmount === null ? 'Le prix sera confirmé par FleetConnect' : 'EUR ' + totalAmount.toFixed(2)}.\n\nLa réservation est enregistrée, mais l email automatique n a pas pu être envoyé. FleetConnect assurera le suivi manuellement.`);
             }
             
             // Reset formulaire
@@ -837,6 +861,7 @@
     });
     document.getElementById('verstuurBerichtBtn')?.addEventListener('click', () => alert('Merci! Nous vous contacterons bientôt.'));
     
+    bindAddressInputFallbacks();
     initVehicleSelection();
     showPage(1);
     
@@ -844,10 +869,10 @@
     flatpickr("#returnDatetime", { locale: "fr", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
     
     document.querySelectorAll('.step-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             const page = parseInt(btn.getAttribute('data-page'));
             if (!isNaN(page)) {
-                if (page === 2 && (!pickupLocation || !dropoffLocation)) { setPageError(1, 'Sélectionnez d\'abord une adresse de prise en charge et de dépôt valide.'); return; }
+                if (page === 2 && !currentRouteData) { const ok = await calculateAndStoreRoute(); if (!ok) return; }
                 if (page === 3 && !currentRouteData) { setPageError(2, 'Calculez d\'abord l\'itinéraire via les étapes 1 & 2.'); return; }
                 if (page === 4 && !selectedVehicle) { setPageError(3, 'Choisissez d\'abord un véhicule.'); return; }
                 if (page === 5 && (!document.getElementById('firstName').value.trim() || !document.getElementById('email').value.trim())) { setPageError(4, 'Veuillez remplir vos coordonnées.'); return; }
