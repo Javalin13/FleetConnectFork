@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
@@ -181,6 +181,36 @@
             font-size: 0.8rem;
             margin-top: 0.5rem;
         }
+        .request-account-link {
+            margin-top: 1rem;
+            background: none;
+            border: 0;
+            color: #f59e0b;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .account-request {
+            display: none;
+            margin-top: 1rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.25);
+            padding-top: 1rem;
+            text-align: left;
+        }
+
+        .account-request.show { display: block; }
+
+        .account-request input,
+        .account-request select {
+            width: 100%;
+            margin-bottom: 0.6rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +234,20 @@
                 <i class="fas fa-sign-in-alt"></i> Inloggen bij Ryzen
             </button>
             <div id="errorMsg" class="error-message"></div>
+            <button type="button" class="request-account-link" id="toggleAccountRequest">Nieuwe account aanvragen</button>
+            <div class="account-request" id="accountRequestSection">
+                <input type="text" id="requestName" placeholder="Naam" autocomplete="name">
+                <input type="email" id="requestEmail" placeholder="E-mailadres" autocomplete="email">
+                <select id="requestRole">
+                    <option value="Operator">Operator</option>
+                    <option value="Partner">Partner</option>
+                    <option value="Driver">Driver</option>
+                    <option value="Finance">Financieel</option>
+                </select>
+                <input type="text" id="requestCompany" placeholder="Bedrijf / partnernaam">
+                <button type="button" class="login-btn" id="sendAccountRequest">Aanvraag versturen</button>
+                <div class="welcome-text" id="requestAccountMsg">Accounts worden alleen na goedkeuring door Ryzen/FleetConnect aangemaakt.</div>
+            </div>
         </div>
         
         <div class="panel-select" id="panelSelect">
@@ -217,17 +261,17 @@
                 <div class="panel-card card-dealer" id="btnDealer">
                     <i class="fas fa-car-side"></i>
                     <h3>Operations</h3>
-                    <p>Voorraad Â· Verkopen Â· Facturen Â· Winstmarges</p>
+                    <p>Voorraad / Verkopen / Facturen / Winstmarges</p>
                 </div>
                 <div class="panel-card card-taxi" id="btnTaxi">
                     <i class="fas fa-taxi"></i>
                     <h3>Onderaannemer</h3>
-                    <p>Ritten Â· Chauffeurs Â· Partners Â· FinanciÃ«n</p>
+                    <p>Ritten / Chauffeurs / Partners / Financiën</p>
                 </div>
                 <div class="panel-card card-woningen" id="btnWoningen">
                     <i class="fas fa-home"></i>
                     <h3>Woningen Verhuur</h3>
-                    <p>Boekingen Â· Agenda Â· Team Â· Financieel</p>
+                    <p>Boekingen / Agenda / Team / Financieel</p>
                 </div>
             </div>
             <div id="selectedHint" class="welcome-text"></div>
@@ -237,7 +281,7 @@
             <i class="fas fa-shield-alt"></i> Beveiligde Supabase login
         </div>
         <div class="ryzen-footer">
-            <i class="fas fa-copyright"></i> Ryzen - Master-level Automotive
+            Ryzen - Master-level Automotive
         </div>
     </div>
     
@@ -253,11 +297,34 @@
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const errorMsg = document.getElementById('errorMsg');
+        const toggleAccountRequest = document.getElementById('toggleAccountRequest');
+        const accountRequestSection = document.getElementById('accountRequestSection');
+        const sendAccountRequest = document.getElementById('sendAccountRequest');
 
         function showPanels() {
             loginSection.style.display = 'none';
             panelSelect.classList.add('show');
         }
+
+        toggleAccountRequest?.addEventListener('click', function() {
+            accountRequestSection.classList.toggle('show');
+        });
+
+        sendAccountRequest?.addEventListener('click', function() {
+            const name = document.getElementById('requestName').value.trim();
+            const email = document.getElementById('requestEmail').value.trim();
+            const role = document.getElementById('requestRole').value;
+            const company = document.getElementById('requestCompany').value.trim();
+            const msg = document.getElementById('requestAccountMsg');
+            if (!name || !email || !company) {
+                msg.textContent = 'Vul naam, e-mail en bedrijf/partnernaam in.';
+                return;
+            }
+            const subject = encodeURIComponent('Ryzen account request');
+            const body = encodeURIComponent('Naam: ' + name + '\nE-mail: ' + email + '\nRol: ' + role + '\nBedrijf/partner: ' + company + '\n\nAanvraag vereist handmatige goedkeuring.');
+            window.location.href = 'mailto:support@fleetconnect.be?subject=' + subject + '&body=' + body;
+            msg.textContent = 'Aanvraag voorbereid. Ryzen/FleetConnect maakt accounts alleen na goedkeuring aan.';
+        });
 
         // Login logica via Supabase
         loginBtn.addEventListener('click', async function(e) {
@@ -270,7 +337,7 @@
             errorMsg.textContent = '';
 
             if (!email || !password) {
-                errorMsg.textContent = 'âŒ Vul e-mail en wachtwoord in.';
+                errorMsg.textContent = 'Vul e-mail en wachtwoord in.';
                 return;
             }
 
@@ -334,4 +401,3 @@
     </script>
 </body>
 </html>
-

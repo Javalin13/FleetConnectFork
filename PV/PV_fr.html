@@ -318,18 +318,19 @@
     let pickupAutocomplete, dropoffAutocomplete;
     let pickupLocation = null, dropoffLocation = null;
     let lastTypedPickupAddress = "", lastTypedDropoffAddress = "";
-    let directionsService, directionsRenderer;
+    let directionsService, directionsRenderer, geocoder;
     let currentRoundTrip = false;
     let currentRouteData = null;
     let selectedVehicle = null, selectedVehicleExtra = 0;
     let currentPage = 1;
     let bookingSubmitInProgress = false;
     let currentDateTime = "", currentReturnDateTime = "", currentFlight = "";
+    const ROUTE_ERROR_MESSAGE = "L’adresse ou l’itinéraire n’a pas pu être calculé. Choisissez une adresse complète dans les suggestions.";
     
     window.initGoogleMaps = function() {
         try {
             if (!window.google || !google.maps) {
-                console.warn('Google Maps unavailable; manual address entry remains available.');
+                console.warn('Google Maps unavailable; route validation is unavailable.');
                 return;
             }
             const belgium = { lat: 50.8503, lng: 4.3517 };
@@ -349,13 +350,13 @@
             geocoder = new google.maps.Geocoder();
             initOptionalAutocomplete();
         } catch (error) {
-            console.warn('Google Maps initialization skipped; manual address entry remains available.', error);
+            console.warn('Google Maps initialization skipped; route validation is unavailable.', error);
             disableAutocompleteSilently();
         }
     };
 
     window.gm_authFailure = function() {
-        console.warn('Google Maps authentication failed; manual address entry remains available.');
+        console.warn('Google Maps authentication failed; route validation is unavailable.');
         disableAutocompleteSilently();
     };
 
@@ -422,7 +423,7 @@
                 });
             }
         } catch (error) {
-            console.warn('Google Places autocomplete disabled; manual address entry remains available.', error);
+            console.warn('Google Places autocomplete disabled; route validation is unavailable.', error);
             disableAutocompleteSilently();
         }
     }
@@ -456,19 +457,17 @@
         return value;
     }
 
-    function useManualRouteFallback() {
-        const pickupText = getAddressText('pickupInput');
-        const dropoffText = getAddressText('dropoffInput');
-        if (pickupText.length < 3 || dropoffText.length < 3) return false;
-        currentRouteData = { distanceKm: null, durationMin: null, manualAddress: true, manual_route_required: true };
+    function blockRouteCalculation(message = ROUTE_ERROR_MESSAGE) {
+        currentRouteData = null;
         const distVal = document.getElementById('distVal');
         const timeVal = document.getElementById('timeVal');
         const priceVal = document.getElementById('priceVal');
-        if (distVal) distVal.innerHTML = 'manual';
-        if (timeVal) timeVal.innerHTML = 'manual';
-        if (priceVal) priceVal.innerHTML = 'Le prix sera confirmé par FleetConnect';
+        if (distVal) distVal.innerHTML = '—';
+        if (timeVal) timeVal.innerHTML = '—';
+        if (priceVal) priceVal.innerHTML = '—';
         updateTotalDisplay();
-        return true;
+        setPageError(1, message);
+        return false;
     }
 
     function geocodeAddress(value) {
@@ -490,7 +489,7 @@
         if (pickupText.length < 3 || dropoffText.length < 3) return false;
         if (!pickupLocation) pickupLocation = await geocodeAddress(pickupText);
         if (!dropoffLocation) dropoffLocation = await geocodeAddress(dropoffText);
-        return !!(pickupLocation && dropoffLocation) || useManualRouteFallback();
+        return !!(pickupLocation && dropoffLocation);
     }
 
     function calculateRoutePromise() {
@@ -503,7 +502,7 @@
                 unitSystem: google.maps.UnitSystem.METRIC
             }, (result, status) => {
                 if (status === 'OK') {
-                    directionsRenderer.setDirections(result);
+                    if (directionsRenderer) directionsRenderer.setDirections(result);
                     const route = result.routes[0].legs[0];
                     const distanceKm = (route.distance.value / 1000).toFixed(1);
                     const durationMin = Math.round(route.duration.value / 60);
@@ -519,7 +518,7 @@
                     const bounds = new google.maps.LatLngBounds();
                     bounds.extend(pickupLocation);
                     bounds.extend(dropoffLocation);
-                    map.fitBounds(bounds);
+                    if (map) map.fitBounds(bounds);
                     resolve(true);
                 } else {
                     resolve(false);
@@ -529,7 +528,7 @@
     }
 
     function updateRoute() {
-        if (!pickupLocation || !dropoffLocation) return;
+        if (!pickupLocation || !dropoffLocation || !directionsService) return;
         
         directionsService.route({
             origin: pickupLocation,
@@ -538,7 +537,7 @@
             unitSystem: google.maps.UnitSystem.METRIC
         }, (result, status) => {
             if (status === "OK") {
-                directionsRenderer.setDirections(result);
+                if (directionsRenderer) directionsRenderer.setDirections(result);
                 const route = result.routes[0].legs[0];
                 const distanceKm = (route.distance.value / 1000).toFixed(1);
                 const durationMin = Math.round(route.duration.value / 60);
@@ -558,7 +557,7 @@
                 const bounds = new google.maps.LatLngBounds();
                 bounds.extend(pickupLocation);
                 bounds.extend(dropoffLocation);
-                map.fitBounds(bounds);
+                if (map) map.fitBounds(bounds);
             }
         });
     }
@@ -576,12 +575,8 @@
         if (!currentRouteData) return;
         const totalDisplay = document.getElementById('totalDisplay');
         const overviewTotal = document.getElementById('overviewTotal');
-        if (currentRouteData.manual_route_required) {
-            if (totalDisplay) totalDisplay.innerHTML = 'Total: le prix sera confirmé par FleetConnect';
-            if (overviewTotal) overviewTotal.innerHTML = 'Le prix sera confirmé par FleetConnect';
-            return;
-        }
-        let dist = currentRouteData.distanceKm;
+        if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) return;
+        let dist = Number(currentRouteData.distanceKm);
         if (currentRoundTrip) dist *= 2;
         let total = (dist * 1.5) + (selectedVehicleExtra || 0);
         if (totalDisplay) totalDisplay.innerHTML = `Total: EUR ${total.toFixed(2)}`;
@@ -601,13 +596,13 @@
         } else {
             returnContainer.style.display = 'none';
         }
-        let total = 0;
-        if (currentRouteData) {
-            let dist = currentRouteData.distanceKm;
+        let total = null;
+        if (currentRouteData && Number.isFinite(Number(currentRouteData.distanceKm)) && Number(currentRouteData.distanceKm) > 0) {
+            let dist = Number(currentRouteData.distanceKm);
             if (currentRoundTrip) dist *= 2;
             total = (dist * 1.5) + (selectedVehicleExtra || 0);
         }
-        document.getElementById('overviewTotal').innerHTML = `€ ${total.toFixed(2)}`;
+        document.getElementById('overviewTotal').innerHTML = total === null ? '—' : `EUR ${total.toFixed(2)}`;
     }
     
     function getExtrasString() {
@@ -646,7 +641,7 @@
         const pickupText = getAddressText('pickupInput');
         const dropoffText = getAddressText('dropoffInput');
         if (pickupText.length < 3 || dropoffText.length < 3) {
-            setPageError(1, "Saisissez une adresse de prise en charge et de destination");
+            setPageError(1, "Indiquez une adresse de prise en charge et de destination");
             return false;
         }
         const dt = document.getElementById('datetime').value;
@@ -655,27 +650,31 @@
             return false;
         }
         if (isPast(dt)) {
-            setPageError(1, "La date est dans le pass?");
+            setPageError(1, "La date est dans le passé");
             return false;
         }
         if (currentRoundTrip) {
             const returnDt = document.getElementById('returnDatetime').value;
             if (!returnDt) {
-                setPageError(1, "S?lectionnez une date/heure retour pour l aller-retour");
+                setPageError(1, "Sélectionnez une date/heure retour pour le trajet aller-retour");
                 return false;
             }
             if (isPast(returnDt)) {
-                setPageError(1, "La date retour est dans le pass?");
+                setPageError(1, "La date retour est dans le passé");
                 return false;
             }
             currentReturnDateTime = returnDt;
         }
-        if (!pickupLocation || !dropoffLocation) {
-            await resolveTypedAddresses();
+        if (!window.google || !google.maps || !directionsService || !geocoder) {
+            return blockRouteCalculation();
         }
-        if (!currentRouteData) {
-            const routed = await calculateRoutePromise();
-            if (!routed) useManualRouteFallback();
+        const resolved = await resolveTypedAddresses();
+        if (!resolved || !pickupLocation || !dropoffLocation) {
+            return blockRouteCalculation();
+        }
+        const routed = await calculateRoutePromise();
+        if (!routed || !currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) {
+            return blockRouteCalculation();
         }
         const urgent = isWithinNextHour(dt);
         const urgentDiv = document.getElementById('urgentWhatsApp');
@@ -735,7 +734,7 @@
                     const bounds = new google.maps.LatLngBounds();
                     bounds.extend(pickupLocation);
                     bounds.extend(dropoffLocation);
-                    map.fitBounds(bounds);
+                    if (map) map.fitBounds(bounds);
                 }
             }, 150);
         }
@@ -752,9 +751,9 @@
         if (currentPage === 1) {
             const ok = await calculateAndStoreRoute();
             if (ok && currentRouteData) showPage(2);
-            else if (!currentRouteData) setPageError(1, "Sélectionnez d'abord une adresse de prise en charge et de dépôt valide");
+            else if (!currentRouteData) setPageError(1, ROUTE_ERROR_MESSAGE);
         } else if (currentPage === 2) {
-            if (!currentRouteData) { setPageError(2, "Calculez d'abord un itinéraire via l'étape 1"); return; }
+            if (!currentRouteData) { setPageError(2, "Calculez d abord un itinéraire valide à l étape 1"); return; }
             showPage(3);
         } else if (currentPage === 3) {
             if (!selectedVehicle) { setPageError(3, "Sélectionnez un véhicule"); return; }
@@ -765,7 +764,7 @@
             const ph = document.getElementById('phone').value.trim();
             const em = document.getElementById('email').value.trim();
             if (!fn || !ln || !ph || !em) { setPageError(4, "Veuillez remplir tous les champs obligatoires"); return; }
-            if (!currentRouteData) { setPageError(4, "Pas de données d'itinéraire – retournez à l'étape 1"); return; }
+            if (!currentRouteData) { setPageError(4, ROUTE_ERROR_MESSAGE); return; }
             if (!selectedVehicle) { setPageError(4, "Choisissez un véhicule"); return; }
             showPage(5);
             updateRitOverzicht();
@@ -782,10 +781,16 @@
         
         const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
         let totalAmount = 0;
-        if (currentRouteData) {
-            let dist = currentRouteData.distanceKm;
-            if (currentRoundTrip) dist *= 2;
-            totalAmount = (dist * 1.5) + (selectedVehicleExtra || 0);
+        if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) {
+            alert(ROUTE_ERROR_MESSAGE);
+            return;
+        }
+        let dist = Number(currentRouteData.distanceKm);
+        if (currentRoundTrip) dist *= 2;
+        totalAmount = (dist * 1.5) + (selectedVehicleExtra || 0);
+        if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
+            alert(ROUTE_ERROR_MESSAGE);
+            return;
         }
         
         const firstName = document.getElementById('firstName').value.trim();
@@ -814,13 +819,13 @@
             flight_number: document.getElementById('flightNumber').value.trim() || "",
             vehicle: selectedVehicle,
             extras: getExtrasString(),
-            amount: totalAmount === null ? null : totalAmount.toString(),
+            amount: totalAmount.toFixed(2),
             payment: paymentMethod,
             status: paymentMethod === "Cash" ? "pending" : "pending_payment",
             payment_status: paymentMethod === "Cash" ? "cash_pending" : "unpaid",
             customer_id: customerId,
-            form_data: { source: "web-booking-fr", manual_route_required: !!currentRouteData?.manual_route_required },
-            metadata: { manual_route_required: !!currentRouteData?.manual_route_required, pricing_note: currentRouteData?.manual_route_required ? 'Le prix sera confirmé par FleetConnect' : null },
+            form_data: { source: "web-booking-fr", route_distance_km: Number(currentRouteData.distanceKm), route_duration_min: Number(currentRouteData.durationMin) },
+            metadata: { route_calculated: true, route_distance_km: Number(currentRouteData.distanceKm), route_duration_min: Number(currentRouteData.durationMin) },
             created_at: new Date().toISOString(),
             partner_id: 1,
             assigned_driver_id: null
@@ -845,9 +850,9 @@
                 emailResult = { success: false, error: emailError.message };
             }
             if (emailResult?.success === true) {
-                alert(`Booking ${savedBookingId} saved. Price: ${totalAmount === null ? 'Le prix sera confirmé par FleetConnect' : 'EUR ' + totalAmount.toFixed(2)}.\n\nLa confirmation a été envoyée à ${email}.`);
+                alert(`Réservation ${savedBookingId} enregistrée. Prix: EUR ${totalAmount.toFixed(2)}.\n\nLa confirmation a été envoyée à ${email}.`);
             } else {
-                alert(`Booking ${savedBookingId} saved. Price: ${totalAmount === null ? 'Le prix sera confirmé par FleetConnect' : 'EUR ' + totalAmount.toFixed(2)}.\n\nLa réservation est enregistrée, mais l email automatique n a pas pu être envoyé. FleetConnect assurera le suivi manuellement.`);
+                alert(`Réservation ${savedBookingId} enregistrée. Prix: EUR ${totalAmount.toFixed(2)}.\n\nLa réservation est enregistrée, mais l email automatique n a pas pu être envoyé. FleetConnect assurera le suivi manuellement.`);
             }
             
             // Reset formulaire
@@ -870,7 +875,7 @@
             document.getElementById('distVal').innerHTML = '—';
             document.getElementById('timeVal').innerHTML = '—';
             document.getElementById('priceVal').innerHTML = '—';
-            document.getElementById('totalDisplay').innerHTML = 'Total: € 0,00';
+            document.getElementById('totalDisplay').innerHTML = "Total: EUR 0,00";
             
             pickupLocation = null;
             dropoffLocation = null;

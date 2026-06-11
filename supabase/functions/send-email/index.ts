@@ -12,6 +12,8 @@ const ALLOWED_ORIGINS = [
   'https://fleetconnect.be',
   'https://www.fleetconnect.be',
   'https://rpk-mu.vercel.app',
+  'https://fleetconnectfork.vercel.app',
+  'https://fleet-connect-fork.vercel.app',
   'https://portal.fleetconnect.be',
   'https://client.fleetconnect.be',
   'https://partners.fleetconnect.be',
