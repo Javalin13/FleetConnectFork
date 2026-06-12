@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleetConnect - Review</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { margin: 0; font-family: Inter, Arial, sans-serif; background: #f8fafc; color: #0f172a; }
+        main { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+        section { width: min(560px, 100%); background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 28px; box-shadow: 0 18px 50px rgba(15,23,42,0.08); }
+        h1 { margin: 0 0 10px; font-size: 1.55rem; }
+        p { color: #475569; line-height: 1.55; }
+        label { display: block; margin: 16px 0 6px; font-weight: 700; }
+        input, select, textarea { width: 100%; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 8px; padding: 11px 12px; font: inherit; }
+        textarea { min-height: 120px; resize: vertical; }
+        button { margin-top: 18px; width: 100%; border: 0; border-radius: 8px; background: #0f172a; color: white; padding: 13px 16px; font-weight: 800; cursor: pointer; }
+        button:disabled { opacity: 0.65; cursor: wait; }
+        .msg { margin-top: 14px; padding: 12px; border-radius: 8px; display: none; }
+        .msg.ok { display: block; background: #dcfce7; color: #166534; }
+        .msg.err { display: block; background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+<main>
+    <section>
+        <h1>Beoordeel uw rit</h1>
+        <p>Bedankt voor het reizen met FleetConnect. Deel uw ervaring met het ritnummer uit uw e-mail.</p>
+        <form id="reviewForm">
+            <label for="bookingId">Boekingsnummer</label>
+            <input id="bookingId" name="bookingId" required placeholder="FC-...">
+
+            <label for="rating">Score</label>
+            <select id="rating" name="rating" required>
+                <option value="5">5 - Uitstekend</option>
+                <option value="4">4 - Goed</option>
+                <option value="3">3 - Voldoende</option>
+                <option value="2">2 - Matig</option>
+                <option value="1">1 - Onvoldoende</option>
+            </select>
+
+            <label for="comment">Opmerking</label>
+            <textarea id="comment" name="comment" maxlength="1200" placeholder="Uw feedback"></textarea>
+
+            <button id="submitBtn" type="submit">Review verzenden</button>
+            <div id="message" class="msg"></div>
+        </form>
+    </section>
+</main>
+<script>
+    const SUPABASE_URL = 'https://rreqjjrmvytnwnsidmqi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA';
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const params = new URLSearchParams(window.location.search);
+    const bookingParam = params.get('booking');
+    const form = document.getElementById('reviewForm');
+    const bookingInput = document.getElementById('bookingId');
+    const submitBtn = document.getElementById('submitBtn');
+    const message = document.getElementById('message');
+
+    if (bookingParam) bookingInput.value = bookingParam;
+
+    function showMessage(text, ok) {
+        message.textContent = text;
+        message.className = `msg ${ok ? 'ok' : 'err'}`;
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Review wordt verzonden...';
+        message.className = 'msg';
+
+        try {
+            const bookingId = bookingInput.value.trim();
+            const rating = Number(document.getElementById('rating').value);
+            const comment = document.getElementById('comment').value.trim();
+            const { error } = await client.rpc('submit_ride_review', {
+                p_booking_id: bookingId,
+                p_rating: rating,
+                p_comment: comment
+            });
+            if (error) throw error;
+            showMessage('Bedankt. Uw review is ontvangen.', true);
+            form.reset();
+            if (bookingParam) bookingInput.value = bookingParam;
+        } catch (error) {
+            console.error('submit_ride_review failed:', error);
+            showMessage(error.message || 'Review verzenden mislukt.', false);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Review verzenden';
+        }
+    });
+</script>
+</body>
+</html>

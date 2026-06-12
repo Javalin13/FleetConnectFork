@@ -20,6 +20,9 @@ export class RouteBuilder {
             case 'view-booking':
                 return `${baseUrl}/PV/index.html?booking=${encodeURIComponent(params.id || '')}&email=${encodeURIComponent(params.email || '')}`;
 
+            case 'customer-login':
+                return `${baseUrl}/PV/index.html${params.email ? `?email=${encodeURIComponent(params.email)}` : ''}`;
+
             case 'review':
                 return `${baseUrl}/review.html?booking=${encodeURIComponent(params.id || '')}`;
 

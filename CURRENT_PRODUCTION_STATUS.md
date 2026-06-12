@@ -133,6 +133,18 @@ Live validation blockers addressed in repository:
 - Visible city quick access links were added to the active public footer for Brussels, Antwerp, Ghent, Zaventem, Leuven, Mechelen, Waterloo, and Brugge.
 - Public footer links were corrected away from placeholder/admin-style targets toward public booking, customer, partner, support, legal, and city routes.
 
+## Phase A.4.4.4 Repository Status
+
+Status: REPOSITORY REMEDIATED - LIVE VALIDATION REQUIRED
+
+- Account request approval now creates/links a `customers` record and records `account_requests.customer_id`.
+- Matching Supabase Auth users are linked through `account_requests.user_id`; missing Auth users still require the safe verification/invite path.
+- Customer portal booking creation now uses the hardened `create_public_booking` RPC instead of direct `bookings` insert.
+- Operator dashboard now keeps assignment in `assignment_sent` until driver acceptance.
+- Operator dashboard supports controlled operator-created bookings through an authenticated RPC.
+- Completed rides can trigger the review request email and store reviews through `ride_reviews`.
+- Deployment, migration application, browser validation, and inbox validation are still required before certification.
+
 Validation still required after deployment:
 
 1. Submit one booking from /PV/PV.html or /nl.

@@ -330,21 +330,19 @@ export class TemplateRenderer {
 
     static renderAccountWelcome(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data, labels);
+        const portalUrl = RouteBuilder.build('customer-login', { email: data.customer?.email || data.email });
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.CUSTOMER_REGISTRATION_CONFIRMATION || subjects.ACCOUNT_WELCOME}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.registrationConfirmationBody || labels.welcomeBody}
             </p>
-            ${EmailComponents.cta(labels.viewBooking || labels.setupAccount, RouteBuilder.build('customer-booking', { id: data.booking_id || data.id, email: data.customer?.email || data.email }))}
+            ${EmailComponents.cta(labels.confirmRegistration || labels.setupAccount, portalUrl)}
         `;
     }
 
     static renderCustomerRegistrationConfirmation(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data, labels);
-        const portalUrl = RouteBuilder.build('customer-booking', {
-            id: data.booking_id || data.id,
-            email: data.customer?.email || data.email
-        });
+        const portalUrl = RouteBuilder.build('customer-login', { email: data.customer?.email || data.email });
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.CUSTOMER_REGISTRATION_CONFIRMATION || subjects.ACCOUNT_ONBOARDING}</h2>
@@ -356,7 +354,7 @@ export class TemplateRenderer {
                 ${EmailComponents.detailsRow(labels.accountStatus || 'Account status', labels.accountCreated || 'Account created')}
                 ${EmailComponents.detailsRow(labels.support, CommunicationConfig.brand.supportEmail)}
             </table>
-            ${EmailComponents.cta(labels.viewBooking, portalUrl)}
+            ${EmailComponents.cta(labels.confirmRegistration || labels.setupAccount, portalUrl)}
         `;
     }
 

@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="../translations.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv51ytW1FTJoSGRiD7hLNknGwNcM8cmcM&libraries=places" async defer></script>
     <style>
         :root { --primary: #2c7da0; --primary-dark: #1a5c8c; --bg: #f4f7fc; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
@@ -21,6 +22,7 @@
         .btn-register:hover { background: var(--primary-dark); transform: translateY(-1px); }
         .footer-link { display: inline-block; margin-top: 24px; font-size: 0.85rem; color: var(--primary); text-decoration: none; font-weight: 600; }
         .error-msg { background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; display: none; text-align: left; }
+        .success-msg { background: #dcfce7; color: #166534; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px; display: none; text-align: left; }
     </style>
 </head>
 <body>
@@ -30,6 +32,7 @@
         <p data-i18n="auth_register_subtitle">Registreer voor een snellere boekingervaring</p>
 
         <div id="errorBox" class="error-msg"></div>
+        <div id="successBox" class="success-msg"></div>
 
         <form id="registerForm">
             <div class="field">
@@ -52,6 +55,10 @@
                 <label data-i18n="auth_password">Wachtwoord</label>
                 <input type="password" id="passInput" placeholder="********" required minlength="6">
             </div>
+            <div class="field">
+                <label>Herhaal wachtwoord</label>
+                <input type="password" id="repeatPassInput" placeholder="********" required minlength="6">
+            </div>
             <button type="submit" class="btn-register" id="regBtn" data-i18n="auth_register_btn">Registreren</button>
         </form>
 
@@ -68,6 +75,8 @@
 
         const registerForm = document.getElementById('registerForm');
         const errorBox = document.getElementById('errorBox');
+        const successBox = document.getElementById('successBox');
+        const regBtn = document.getElementById('regBtn');
         const registerParams = new URLSearchParams(window.location.search);
         const requestedBookingId = registerParams.get('booking') || registerParams.get('booking_id') || registerParams.get('id') || '';
         const requestedEmail = registerParams.get('email') || '';
@@ -79,6 +88,33 @@
         if (requestedBookingId) {
             document.querySelector('.footer-link').href = `/PV/index.html?booking=${encodeURIComponent(requestedBookingId)}`;
         }
+
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.style.display = 'block';
+            successBox.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            successBox.textContent = message;
+            successBox.style.display = 'block';
+            errorBox.style.display = 'none';
+        }
+
+        function initAddressAutocomplete() {
+            const input = document.getElementById('pickupInput');
+            if (!input || !window.google?.maps?.places?.Autocomplete) return;
+            try {
+                new google.maps.places.Autocomplete(input, {
+                    fields: ['formatted_address', 'geometry', 'name'],
+                    componentRestrictions: { country: ['be'] }
+                });
+            } catch (err) {
+                console.warn('Registration address autocomplete unavailable:', err.message);
+            }
+        }
+
+        window.addEventListener('load', () => setTimeout(initAddressAutocomplete, 400));
 
         const { data: existingSession } = await supabase.auth.getSession();
         if (existingSession?.session?.user) {
@@ -94,8 +130,16 @@
             const phone = document.getElementById('phoneInput').value.trim();
             const pickup = document.getElementById('pickupInput').value.trim();
             const password = document.getElementById('passInput').value;
+            const repeatPassword = document.getElementById('repeatPassInput').value;
+
+            if (password !== repeatPassword) {
+                showError('De wachtwoorden komen niet overeen.');
+                return;
+            }
 
             try {
+                regBtn.disabled = true;
+                regBtn.textContent = 'Registratie wordt verwerkt...';
                 // 1. Sign up user
                 const { data, error: signUpError } = await supabase.auth.signUp({
                     email,
@@ -129,22 +173,29 @@
                          console.warn('Customer record insertion delayed or failed:', dbError.message);
                     }
 
+                    const { error: linkError } = await supabase.rpc('link_customer_after_registration');
+                    if (linkError) {
+                        console.warn('Account request linkage delayed or not applicable:', linkError.message);
+                    }
+
                     await comms.sendAccountWelcome({
                         id: customerId,
-                        booking_id: requestedBookingId,
                         name: fullName,
                         email,
                         phone
                     }, supabase);
 
-                    alert(i18n.t('auth_magic_link_sent').replace('{email}', email));
+                    showSuccess(`Uw account is aangemaakt. Controleer ${email} voor de verificatie- of bevestigingslink.`);
+                    alert(`Uw account is aangemaakt. Controleer ${email} voor de verificatie- of bevestigingslink.`);
                     window.location.href = requestedBookingId
                         ? `/PV/index.html?booking=${encodeURIComponent(requestedBookingId)}&email=${encodeURIComponent(email)}`
                         : `/PV/index.html?email=${encodeURIComponent(email)}`;
                 }
             } catch (err) {
-                errorBox.innerText = err.message;
-                errorBox.style.display = 'block';
+                showError(err.message);
+            } finally {
+                regBtn.disabled = false;
+                regBtn.textContent = 'Registreren';
             }
         });
     </script>

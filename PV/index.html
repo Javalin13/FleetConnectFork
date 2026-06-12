@@ -223,7 +223,20 @@
                     ? `/PV/klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
                     : '/PV/klantenportaalpv.html';
             } catch (err) {
-                showError(err.message || 'Ongeldige inloggegevens. Probeer opnieuw.');
+                let message = err.message || 'Ongeldige inloggegevens. Probeer opnieuw.';
+                try {
+                    const { data: requestStatus } = await supabase.rpc('get_account_request_status', { p_email: email });
+                    if (requestStatus?.found && requestStatus.status === 'pending') {
+                        message = 'Uw accountaanvraag wacht nog op goedkeuring door FleetConnect.';
+                    } else if (requestStatus?.found && requestStatus.status === 'approved') {
+                        message = 'Uw account is goedgekeurd. Controleer uw verificatiemail of maak uw wachtwoord opnieuw aan via de officiële Supabase verificatielink.';
+                    } else if (requestStatus?.found && requestStatus.status === 'rejected') {
+                        message = 'Uw accountaanvraag werd niet goedgekeurd. Neem contact op met support@fleetconnect.be.';
+                    }
+                } catch (statusError) {
+                    console.warn('Account request status unavailable:', statusError.message);
+                }
+                showError(message);
                 passInput.value = '';
                 passInput.focus();
             } finally {
