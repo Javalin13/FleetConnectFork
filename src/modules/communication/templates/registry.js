@@ -26,6 +26,9 @@ export const TemplateRegistry = {
     BOOKING_CANCELLED: {
         render: (data, lang, mode) => TemplateRenderer.render('BOOKING_CANCELLED', data, lang, mode)
     },
+    BOOKING_REJECTED: {
+        render: (data, lang, mode) => TemplateRenderer.render('BOOKING_REJECTED', data, lang, mode)
+    },
     RIDE_COMPLETED: {
         render: (data, lang, mode) => TemplateRenderer.render('RIDE_COMPLETED', data, lang, mode)
     },

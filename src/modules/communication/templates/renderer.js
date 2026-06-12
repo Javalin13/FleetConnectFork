@@ -82,6 +82,7 @@ export class TemplateRenderer {
             case 'DRIVER_REASSIGNED': return this.renderDriverReassigned(data, labels, subjects, lang);
             case 'DRIVER_DECLINED': return this.renderDriverDeclined(data, labels, subjects, lang);
             case 'BOOKING_CANCELLED': return this.renderBookingCancelled(data, labels, subjects, lang);
+            case 'BOOKING_REJECTED': return this.renderBookingRejected(data, labels, subjects, lang);
             case 'RIDE_COMPLETED_REVIEW_REQUEST':
             case 'BOOKING_COMPLETED':
             case 'RIDE_COMPLETED':
@@ -277,11 +278,26 @@ export class TemplateRenderer {
 
     static renderBookingCancelled(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data, labels);
+        const reason = data.metadata?.cancellation_reason || data.cancellation_reason || '';
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_CANCELLED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
                 ${labels.greeting(customerName)} ${labels.cancelledBody(data.reference || data.id)}
             </p>
+            ${reason ? `<p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #475569;"><strong>${labels.reason || 'Reason'}:</strong> ${reason}</p>` : ''}
+            ${EmailComponents.cta(labels.bookNew, RouteBuilder.build('book-new'))}
+        `;
+    }
+
+    static renderBookingRejected(data, labels, subjects, lang) {
+        const customerName = this.getCustomerName(data, labels);
+        const reason = data.metadata?.rejection_reason || data.rejection_reason || '';
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: #ef4444;">${subjects.BOOKING_REJECTED || 'Booking request declined'}</h2>
+            <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.rejectedBody ? labels.rejectedBody(data.reference || data.id) : `your booking request ${data.reference || data.id} could not be accepted.`}
+            </p>
+            ${reason ? `<p style="font-family: 'Inter', sans-serif; font-size: 14px; color: #475569;"><strong>${labels.reason || 'Reason'}:</strong> ${reason}</p>` : ''}
             ${EmailComponents.cta(labels.bookNew, RouteBuilder.build('book-new'))}
         `;
     }

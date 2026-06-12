@@ -71,6 +71,26 @@ Date added: 2026-06-11
 10. Reassign to another driver, accept from driver CTA, and confirm the reassignment alert clears.
 11. Register a new customer and confirm CUSTOMER_REGISTRATION_CONFIRMATION arrives separately from booking confirmation.
 
+## Phase A.4.4.3 Required Live Checks
+
+Date added: 2026-06-12
+
+1. Deploy `phase-a4.4.3-customer-portal-auth-routing`.
+2. Apply migration `supabase/migrations/20260612000000_phase_a443_customer_auth_routing_workflows.sql`.
+3. Open `/customer`, `/client`, `portal.fleetconnect.be`, and `client.fleetconnect.be`; confirm each shows the customer login/register entry, not an unauthenticated portal dashboard.
+4. Confirm `/login.html` and `/register.html` resolve correctly.
+5. Register a new customer; confirm the page does not go blank and the user lands in the customer login/portal flow.
+6. Log in with Supabase Auth; confirm first screen is `Mijn Profiel`.
+7. Attach a booking by booking number where booking email matches logged-in customer email; confirm it appears after refresh.
+8. Try wrong-email and already-linked-to-another-user booking attachment; confirm both are rejected.
+9. In the operator dashboard, review pending account requests; approve and reject one controlled request and verify Supabase status and decision email.
+10. Reject a pending booking from the fiche; confirm status `declined`, customer rejection email, and removal from active New Orders.
+11. Cancel an accepted/unassigned booking with reason; confirm status `cancelled`, cancellation email, and metadata reason.
+12. Confirm expired pending bookings do not remain in active New Orders.
+13. Archive a driver; confirm the driver is not in assignment dropdowns and appears only in the archived driver section.
+14. Reactivate that driver; confirm it returns to the active driver list and assignment dropdown.
+15. Re-run driver decline/reassignment: dispatch email, reassignment alert, cleared visible driver, reassignment to another driver, and alert cleared after acceptance.
+
 ## Current Verdict
 
 Ready for human validation: YES, for implemented non-Stripe workflows.

@@ -9,6 +9,14 @@ Base commit audited: e035acffb002345590a222bb5b08d51f4df9f373
 
 Status: NOT CERTIFIED
 
+## Phase A.4.4.3 Customer Portal Auth/Routing Status
+
+Status: REPOSITORY HOTFIX COMPLETE, MIGRATION AND LIVE VALIDATION PENDING.
+
+The customer portal entry points now route through the Supabase customer login/register page instead of directly rendering the protected portal. The customer portal no longer creates a demo user when no Supabase session exists; unauthenticated customers are redirected to `/PV/index.html` with the booking ID preserved where present.
+
+Account request approval/rejection, secure booking attachment, operator rejection/cancellation, and driver reactivation are backed by migration `supabase/migrations/20260612000000_phase_a443_customer_auth_routing_workflows.sql`. Browser-side approval does not create Supabase Auth users directly because that requires service-role/admin privileges; approval persists the decision and customer profile state and must be paired with an approved Auth invite/admin activation flow.
+
 Phase A repository remediation is complete for routing, branded sender configuration, CTA URL generation, and the missing public booking confirmation trigger. Full production certification still requires a redeploy and live browser/inbox validation on the connected FleetConnect domains.
 
 ## Phase A.4.4.2 Customer Email Lifecycle Status
@@ -38,12 +46,12 @@ Internal workflow events no longer send customer emails. `BOOKING_ACCEPTED` and 
 | Operator dashboard | /dashboard, /operator | Rewrites to /Paneel/admin-index.html | vercel.json |
 | Customer login | /login | Rewrites to /PV/index.html | vercel.json |
 | Customer registration | /register | Rewrites to /PV/register.html | vercel.json |
-| Customer portal | /customer, /client | Rewrites to /PV/klantenportaalpv.html | vercel.json |
+| Customer portal entry | /customer, /client | Rewrites to /PV/index.html so unauthenticated users see login/register first | vercel.json |
 | Partner login | /partner-login | Rewrites to /Paneel/partner-login.html | vercel.json |
 | Driver login | /driver-login | Rewrites to /Paneel/driver-login.html | vercel.json |
 | City pages | /taxi-brussels, /taxi-zaventem, /taxi-antwerpen, /taxi-gent, /taxi-brugge, /taxi-leuven, /taxi-mechelen, /taxi-waterloo | Rewrites to existing /cities/*.html files | vercel.json and cities/ |
 | portal.fleetconnect.be root | / | Rewrites to /PV/index.html | host-specific vercel.json rewrite |
-| client.fleetconnect.be root | / | Rewrites to /PV/klantenportaalpv.html | host-specific vercel.json rewrite |
+| client.fleetconnect.be root | / | Rewrites to /PV/index.html so auth is required before portal access | host-specific vercel.json rewrite |
 | partners.fleetconnect.be root | / | Rewrites to /Paneel/partner-login.html | host-specific vercel.json rewrite |
 
 Routes for /hotels, /b2b, a separate B2B portal, a separate Client Portal build, Partner Portal buildout, TaxisBrussels split, and SEO page generation were not created because they are explicitly outside Phase A scope.

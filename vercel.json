@@ -8,7 +8,7 @@
     {
       "source": "/",
       "has": [{ "type": "host", "value": "client.fleetconnect.be" }],
-      "destination": "/PV/klantenportaalpv.html"
+      "destination": "/PV/index.html"
     },
     {
       "source": "/",
@@ -24,9 +24,11 @@
     { "source": "/dashboard", "destination": "/Paneel/admin-index.html" },
     { "source": "/operator", "destination": "/Paneel/admin-index.html" },
     { "source": "/login", "destination": "/PV/index.html" },
+    { "source": "/login.html", "destination": "/PV/index.html" },
     { "source": "/register", "destination": "/PV/register.html" },
-    { "source": "/customer", "destination": "/PV/klantenportaalpv.html" },
-    { "source": "/client", "destination": "/PV/klantenportaalpv.html" },
+    { "source": "/register.html", "destination": "/PV/register.html" },
+    { "source": "/customer", "destination": "/PV/index.html" },
+    { "source": "/client", "destination": "/PV/index.html" },
     { "source": "/partner-login", "destination": "/Paneel/partner-login.html" },
     { "source": "/driver-login", "destination": "/Paneel/driver-login.html" },
     { "source": "/taxi-brussels", "destination": "/cities/taxi-brussels.html" },

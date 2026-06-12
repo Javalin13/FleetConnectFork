@@ -183,7 +183,14 @@
             const registerParams = new URLSearchParams();
             if (requestedBookingId) registerParams.set('booking', requestedBookingId);
             if (requestedEmail) registerParams.set('email', requestedEmail);
-            registerLink.href = registerParams.toString() ? `register.html?${registerParams.toString()}` : 'register.html';
+            registerLink.href = registerParams.toString() ? `/PV/register.html?${registerParams.toString()}` : '/PV/register.html';
+        }
+
+        const { data: existingSession } = await supabase.auth.getSession();
+        if (existingSession?.session?.user) {
+            window.location.replace(requestedBookingId
+                ? `/PV/klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
+                : '/PV/klantenportaalpv.html');
         }
 
         function showError(msg) {
@@ -212,13 +219,9 @@
                 if (error) throw error;
                 if (!data.session) throw new Error('Login kon niet worden bevestigd.');
 
-                sessionStorage.setItem('loggedIn', 'true');
-                sessionStorage.setItem('userEmail', email);
-                sessionStorage.setItem('userName', data.user?.user_metadata?.full_name || email);
-
                 window.location.href = requestedBookingId
-                    ? `klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
-                    : 'klantenportaalpv.html';
+                    ? `/PV/klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
+                    : '/PV/klantenportaalpv.html';
             } catch (err) {
                 showError(err.message || 'Ongeldige inloggegevens. Probeer opnieuw.');
                 passInput.value = '';

@@ -24,6 +24,22 @@ The customer email lifecycle has been simplified in repository code:
 
 Supabase migration `20260611030000_customer_email_lifecycle_refinement.sql` persists reassignment and customer notification audit state. Certification still requires migration application, Vercel deployment, and inbox validation.
 
+## Phase A.4.4.3 Customer Portal Auth/Routing Addendum
+
+Repository hotfixes now address the live customer portal blockers:
+
+- customer routes and customer subdomain roots enter the login/register page first
+- `/login.html` and `/register.html` aliases resolve to the existing customer auth pages
+- `PV/register.html` no longer contains the duplicate broken document tail that caused blank registration behavior
+- `PV/klantenportaalpv.html` requires a real Supabase Auth session and no longer falls back to a demo user
+- first authenticated customer screen is `Mijn Profiel`, with linked booking count and booking attach field
+- booking attachment is secured server-side by logged-in user, matching email, and ownership conflict checks
+- operator dashboard can review pending account requests and approve/reject them through operator-only RPCs
+- pending booking rejection and active booking cancellation use operator-only RPCs with reason metadata
+- archived drivers are separated from active drivers, excluded from assignment, and can be reactivated through an operator-only RPC
+
+The actual Supabase Auth invite or admin-created user step for approved account requests remains a service-role/admin workflow. It was not implemented browser-side because that would require unsafe exposure of privileged credentials.
+
 ## Phase A Work Completed
 
 1. Full routing inventory and route decision table completed.

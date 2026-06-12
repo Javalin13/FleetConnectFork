@@ -146,3 +146,35 @@ Live rollback validation:
 Phase A.4.4 repository and live Supabase remediation is complete for the identified lifecycle blockers that could be safely repaired without redesigning workflows.
 
 FleetConnect is not fully certified until the branch is deployed and the live browser/inbox lifecycle tests pass.
+# Phase A.4.4.3 Addendum - Customer Portal Auth And Routing
+
+Date: 2026-06-12
+
+This addendum records the customer portal authentication/routing and operator workflow hardening applied after live validation of the A.4.4 lifecycle work.
+
+Implemented in repository:
+
+- customer portal direct-route bypass removed from Vercel routing
+- customer login/register aliases added
+- broken duplicate registration document removed
+- customer portal demo fallback removed
+- Supabase session required before portal dashboard/profile access
+- booking attachment secured by authenticated user, matching booking email, and conflict-safe ownership checks
+- operator account request review added
+- account request approve/reject RPCs added
+- operator booking reject/cancel RPCs with reason metadata added
+- booking rejection email trigger added
+- archived drivers separated from active drivers and excluded from assignment
+- driver reactivation RPC added
+
+Still requiring live validation:
+
+- migration application
+- customer login/register route test
+- booking attachment positive/negative tests
+- account approval/rejection email delivery
+- booking rejection/cancellation email delivery
+- archived driver assignment exclusion after deploy
+- driver decline/reassignment regression test
+
+Certification remains NOT CERTIFIED until the above live tests pass.

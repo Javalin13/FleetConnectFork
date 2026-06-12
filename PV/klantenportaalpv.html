@@ -447,6 +447,11 @@
         <div id="profile-container" class="tab-container hidden">
             <div class="profile-card">
                 <h3><i class="fas fa-user-edit"></i> Mijn gegevens</h3>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:20px;">
+                    <div><small style="color:var(--text-light);">Account status</small><br><strong id="accountStatus">Actief</strong></div>
+                    <div><small style="color:var(--text-light);">Gekoppelde ritten</small><br><strong id="linkedBookingsCount">0</strong></div>
+                    <div><small style="color:var(--text-light);">E-mailadres</small><br><strong id="profileEmailSummary">-</strong></div>
+                </div>
                 <form id="profileForm">
                     <div class="field"><label>Volledige naam</label><input type="text" id="fullName" required></div>
                     <div class="field"><label>E-mail</label><input type="email" id="profileEmail" required></div>
@@ -602,7 +607,7 @@
 
 <script>
     // ==================== GLOBALE VARIABELEN ====================
-    let currentUser = { id: 'demo-user', full_name: 'Demo Gebruiker', email: 'demo@nh.be', phone: '+32 470 12 34 56', default_pickup_address: '' };
+    let currentUser = { id: '', full_name: '', email: '', phone: '', default_pickup_address: '' };
     let userBookings = [];
     let currentPage = 1;
     let selectedVehicle = 'Standaard', selectedVehicleExtra = 0;
@@ -638,8 +643,8 @@
             const supabase = getSupabase();
             if (supabase) await supabase.auth.signOut();
             localStorage.clear(); sessionStorage.clear();
-            window.location.href = 'index.html?t=' + Date.now();
-        } catch(err) { window.location.href = 'index.html?t=' + Date.now(); }
+            window.location.href = '/PV/index.html?t=' + Date.now();
+        } catch(err) { window.location.href = '/PV/index.html?t=' + Date.now(); }
     }
     document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
     
@@ -965,6 +970,9 @@
         document.getElementById('profileEmail').value = currentUser.email;
         document.getElementById('profilePhone').value = currentUser.phone;
         document.getElementById('defaultPickup').value = currentUser.default_pickup_address;
+        document.getElementById('accountStatus').textContent = 'Actief';
+        document.getElementById('profileEmailSummary').textContent = currentUser.email;
+        document.getElementById('linkedBookingsCount').textContent = String(userBookings.length || 0);
         document.getElementById('firstName').value = currentUser.full_name.split(' ')[0] || '';
         document.getElementById('lastName').value = currentUser.full_name.split(' ').slice(1).join(' ') || '';
         document.getElementById('phone').value = currentUser.phone;
@@ -991,6 +999,7 @@
             const { data, error } = await supabase.from('bookings').select('*').eq('customer_id', customerId).order('datetime', { ascending: false });
             if (error) throw error;
             userBookings = data || [];
+            document.getElementById('linkedBookingsCount').textContent = String(userBookings.length || 0);
             renderDashboard();
         } catch (err) { console.error('Error loading bookings:', err); }
     }
@@ -1068,17 +1077,6 @@
     }
     
     // ==================== INITIALISATIE ====================
-    function initDemoUser() {
-        currentUser = {
-            id: 'demo-user-001',
-            full_name: 'Jan Janssens',
-            email: 'jan@voorbeeld.be',
-            phone: '+32 470 12 34 56',
-            default_pickup_address: 'Brussels Airport, Zaventem'
-        };
-        loadUserProfile();
-    }
-
     async function initCustomerSession() {
         const supabase = getSupabase();
         const params = new URLSearchParams(window.location.search);
@@ -1087,26 +1085,30 @@
             const attachInput = document.getElementById('attachBookingInput');
             if (attachInput) attachInput.value = bookingId;
         }
-        if (supabase?.auth?.getUser) {
-            const { data } = await supabase.auth.getUser();
-            if (data?.user?.email) {
-                currentUser = {
-                    id: data.user.id,
-                    full_name: data.user.user_metadata?.full_name || data.user.email,
-                    email: data.user.email,
-                    phone: data.user.user_metadata?.phone || '',
-                    default_pickup_address: ''
-                };
-            } else {
-                initDemoUser();
-            }
-        } else {
-            initDemoUser();
+        if (!supabase?.auth?.getUser) {
+            window.location.replace('/PV/index.html' + (bookingId ? `?booking=${encodeURIComponent(bookingId)}` : ''));
+            return false;
         }
+        const { data, error } = await supabase.auth.getUser();
+        if (error || !data?.user?.email) {
+            window.location.replace('/PV/index.html' + (bookingId ? `?booking=${encodeURIComponent(bookingId)}` : ''));
+            return false;
+        }
+        currentUser = {
+            id: data.user.id,
+            full_name: data.user.user_metadata?.full_name || data.user.email,
+            email: data.user.email,
+            phone: data.user.user_metadata?.phone || '',
+            default_pickup_address: ''
+        };
         loadUserProfile();
+        await loadUserBookings();
         if (bookingId) {
             switchToTab('dashboard');
+        } else {
+            switchToTab('profile');
         }
+        return true;
     }
     
     initLeafletMap();
@@ -1117,7 +1119,6 @@
     flatpickr("#datetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
     flatpickr("#returnDatetime", { locale: "nl", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minDate: "today" });
     
-    setTimeout(() => { loadUserBookings(); }, 500);
     
     console.log("✅ Klantenportaal NL geladen - Alles werkt!");
 </script>
