@@ -184,3 +184,31 @@ Live retest required:
 4. Register with a manually typed default pickup address and confirm visible validation/errors.
 5. Confirm the dashboard receives the fallback booking and that confirmation email behavior remains visible in browser console/network.
 6. Confirm `admin@ryzen.be` is no longer shown or accepted as a live driver/operator credential.
+
+## Final Live Retest Follow-Up - 2026-06-12
+
+Status: REMEDIATION UPDATED - A.4.4.4 REMAINS NOT CERTIFIED UNTIL LIVE RETEST PASSES
+
+Additional live blockers confirmed:
+
+- Registration saw `ApiNotActivatedMapError`; address suggestion failure still affected customer registration.
+- Supabase verification redirect returned to the customer entry but did not exchange the confirmation `code`, leaving customers in a profile-not-linked/account-not-confirmed dead end.
+- Customer account requests were not clearly separated from operator/dashboard account requests.
+- Scheduled rides inside the one-hour window showed the wrong address/route validation message.
+- Guest bookings could send confirmation email but remain absent from the dashboard New Orders view when the booking status was `pending_payment`.
+
+Repository remediation added:
+
+- Registration now treats Google Places as optional enhancement only; failed Places initialization or Google auth failure leaves the pickup field as normal manual text and validates only minimum address length.
+- Customer verification redirects now call `supabase.auth.exchangeCodeForSession(...)` before checking portal access.
+- New migration `20260612060000_phase_a444_live_retest_blockers.sql` adds scoped customer account requests, creates/links customer profiles during registration/approval, links verified Auth users by email, and keeps pending approval as a clear state instead of a dead end.
+- Dashboard now has a separate Customer Account Requests navigation section while keeping operator/dashboard account requests separate.
+- Public booking pages preserve the specific one-hour/ASAP validation message instead of overwriting it with the generic route error.
+- Dashboard New Orders now includes both `pending` and `pending_payment` bookings so newly created guest bookings are visible before payment/dispatch advancement.
+- Booking pages detect `ApiNotActivatedMapError`, `RefererNotAllowedMapError`, and Google Maps API script failures and keep manual booking fallback enabled with persisted `manual_route_required` / `google_places_unavailable` metadata.
+
+Validation status:
+
+- Inline script parse passed for active NL/FR/EN booking pages, customer login/register pages, and the operator dashboard.
+- Live Supabase migration application is still required.
+- Live Vercel deployment and browser/inbox validation are still required.

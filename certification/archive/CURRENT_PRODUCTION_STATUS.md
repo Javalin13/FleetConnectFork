@@ -318,3 +318,20 @@ Pending:
 1. Apply `20260612050000_phase_a444_final_certification_blockers.sql`.
 2. Deploy this branch.
 3. Collect live screenshots/evidence for registration, verification, approval, login, portal access, review submission, testimonial visibility, and Account Requests translations.
+
+## Phase A.4.4.4 Final Live Retest Status
+
+Status: NOT CERTIFIED - REMEDIATION UPDATED, LIVE MIGRATION/DEPLOYMENT/RETEST REQUIRED.
+
+The final live retest still failed on Google API unavailability during registration, Supabase verification/profile linking, customer account request visibility/notification, incorrect one-hour booking validation messaging, and dashboard New Orders visibility for newly created guest bookings.
+
+Repository updates now:
+
+- keep registration/profile address entry manual when Google Places is unavailable;
+- exchange Supabase verification `code` redirects before portal access checks;
+- add scoped customer account requests and customer/profile linking migration `20260612060000_phase_a444_live_retest_blockers.sql`;
+- add a separate dashboard Customer Account Requests section;
+- preserve the correct one-hour/ASAP validation message;
+- show `pending_payment` guest bookings in New Orders alongside `pending` bookings.
+
+Production remains blocked until the migration is applied to live Supabase, the branch is redeployed, and the full registration/approval/login/booking/dashboard/email retest passes.

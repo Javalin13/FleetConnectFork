@@ -89,7 +89,10 @@
             document.querySelector('.footer-link').href = `/PV/index.html?booking=${encodeURIComponent(requestedBookingId)}`;
         }
 
+        let registrationPlacesAvailable = true;
+
         window.gm_authFailure = function() {
+            registrationPlacesAvailable = false;
             console.warn('Google Maps authentication failed; registration address remains a manual text field.');
         };
 
@@ -107,13 +110,18 @@
 
         function initAddressAutocomplete() {
             const input = document.getElementById('pickupInput');
-            if (!input || !window.google?.maps?.places?.Autocomplete) return;
+            if (!input) return;
+            if (!window.google?.maps?.places?.Autocomplete) {
+                registrationPlacesAvailable = false;
+                return;
+            }
             try {
                 new google.maps.places.Autocomplete(input, {
                     fields: ['formatted_address', 'geometry', 'name'],
                     componentRestrictions: { country: ['be'] }
                 });
             } catch (err) {
+                registrationPlacesAvailable = false;
                 console.warn('Registration address autocomplete unavailable:', err.message);
             }
         }
@@ -174,8 +182,8 @@
                 return;
             }
 
-            if (pickup && pickup.length < 3) {
-                showError('Vul een volledig ophaaladres in of laat het veld leeg. Google suggesties zijn niet verplicht.');
+            if (!pickup || pickup.length < 3) {
+                showError('Vul een ophaaladres in van minimaal 3 tekens. Google suggesties zijn niet verplicht.');
                 return;
             }
 
@@ -219,9 +227,46 @@
                          console.warn('Customer record insertion delayed or failed:', dbError.message);
                     }
 
+                    const { data: accountRequest, error: requestError } = await supabase
+                        .rpc('submit_account_request', {
+                            payload: {
+                                name: fullName,
+                                email,
+                                phone,
+                                company: 'FleetConnect customer',
+                                account_type: 'Client',
+                                notes: requestedBookingId
+                                    ? `Customer portal registration for booking ${requestedBookingId}`
+                                    : 'Customer portal registration',
+                                source: 'customer-registration',
+                                request_scope: 'customer',
+                                default_pickup_address: pickup,
+                                google_places_available: registrationPlacesAvailable
+                            }
+                        });
+
+                    if (requestError) {
+                        console.warn('Customer account request creation failed:', requestError.message);
+                    }
+
                     const { error: linkError } = await supabase.rpc('link_customer_after_registration');
                     if (linkError) {
                         console.warn('Account request linkage delayed or not applicable:', linkError.message);
+                    }
+
+                    try {
+                        const reviewUrl = `${window.location.origin}/Paneel/admin-index.html`;
+                        const subject = 'Nieuwe FleetConnect klantaccountaanvraag';
+                        const html = `<div style="font-family: Inter, Arial, sans-serif; color:#0f172a;"><h2>Nieuwe klantaccountaanvraag</h2><p><strong>Naam:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Telefoon:</strong> ${phone}</p><p><strong>Standaard ophaaladres:</strong> ${pickup}</p>${requestedBookingId ? `<p><strong>Boeking:</strong> ${requestedBookingId}</p>` : ''}<p><a href="${reviewUrl}" style="display:inline-block; background:#0f172a; color:#ffffff; padding:12px 18px; border-radius:8px; text-decoration:none; font-weight:700;">Aanvraag beoordelen</a></p></div>`;
+                        const notifyResult = await comms.activeProvider.send('support@fleetconnect.be', subject, html, {
+                            trigger: 'CUSTOMER_ACCOUNT_REQUEST',
+                            bookingId: accountRequest?.id || customerId,
+                            supabaseUrl: SUPABASE_URL,
+                            supabaseKey: SUPABASE_ANON_KEY
+                        });
+                        if (!notifyResult.success) console.warn('Customer account request notification failed:', notifyResult.error);
+                    } catch (notifyError) {
+                        console.warn('Customer account request notification unavailable:', notifyError.message);
                     }
 
                     await comms.sendAccountWelcome({

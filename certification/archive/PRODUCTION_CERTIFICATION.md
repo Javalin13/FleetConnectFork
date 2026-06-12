@@ -2105,6 +2105,30 @@ Repository updates:
 
 Certification status remains NOT CERTIFIED.
 
+## Phase A.4.4.4 Final Live Retest Remediation
+
+Status: NOT CERTIFIED - REPOSITORY REMEDIATION UPDATED, LIVE MIGRATION AND RETEST REQUIRED.
+
+Final live retest failures addressed in repository:
+
+- Google `ApiNotActivatedMapError` / `RefererNotAllowedMapError` is now treated as an unavailable enhancement. Registration and booking address fields remain plain manual inputs.
+- Customer verification redirects now exchange the Supabase confirmation `code` before portal access validation.
+- New migration `supabase/migrations/20260612060000_phase_a444_live_retest_blockers.sql` scopes customer account requests separately, creates/links customer profiles, links verified Auth users by email, and preserves pending approval as a clear login state.
+- Dashboard now exposes Customer Account Requests separately from operator/dashboard account requests.
+- Public booking validation no longer overwrites the one-hour/ASAP message with a generic address/route error.
+- Dashboard New Orders now includes `pending_payment` bookings as well as `pending`, addressing the confirmed-email-but-not-visible dashboard regression.
+
+Required live validation before certification:
+
+1. Apply `20260612060000_phase_a444_live_retest_blockers.sql`.
+2. Redeploy this branch.
+3. Register with manual address while Google API is unavailable.
+4. Verify email, approve customer request, and log in without profile-link dead end or redirect loop.
+5. Create scheduled and ASAP guest bookings and confirm both appear in New Orders.
+6. Confirm customer registration request notification and booking confirmation emails.
+
+Certification status remains NOT CERTIFIED.
+
 ## Phase A.4.4.4 19:39 Live Hotfix Status
 
 Status: NOT CERTIFIED - REPOSITORY HOTFIX COMPLETE, LIVE RETEST REQUIRED.

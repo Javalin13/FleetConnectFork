@@ -299,6 +299,22 @@
             return { allowed: false, message: 'Geen gekoppeld klantprofiel gevonden. Maak eerst een account aan of wacht op goedkeuring.' };
         }
 
+        const authCode = loginParams.get('code');
+        if (authCode) {
+            try {
+                const { error: codeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+                if (codeError) {
+                    showError('Verificatie kon niet worden afgerond: ' + codeError.message, true);
+                } else {
+                    showInfo('Uw e-mailadres is bevestigd. We controleren nu uw klanttoegang.', true);
+                    window.history.replaceState({}, document.title, `/PV/index.html${requestedBookingId ? `?booking=${encodeURIComponent(requestedBookingId)}` : ''}`);
+                }
+            } catch (codeExchangeError) {
+                showError('Verificatie kon niet worden afgerond. Probeer opnieuw of contacteer support@fleetconnect.be.', true);
+                console.warn('Supabase verification exchange failed:', codeExchangeError.message);
+            }
+        }
+
         const { data: existingSession } = await supabase.auth.getSession();
         if (existingSession?.session?.user) {
             const access = await canOpenPortal(existingSession.session.user);
