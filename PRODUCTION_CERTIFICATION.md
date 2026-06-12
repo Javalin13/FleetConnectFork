@@ -2105,6 +2105,36 @@ Repository updates:
 
 Certification status remains NOT CERTIFIED.
 
+## Phase A.4.4.4 Critical Dashboard Visibility Regression
+
+Status: NOT CERTIFIED - HOTFIX APPLIED, LIVE UI RETEST REQUIRED.
+
+Latest live retest reported that dashboard data disappeared after the A.4.4.4 migration/deploy cycle.
+
+Read-only live Supabase evidence:
+
+- `bookings`: 99 rows.
+- `drivers`: 5 rows.
+- `partners`: 3 rows.
+- `customers`: 3 rows.
+- `account_requests`: 2 rows.
+- Hoofd/operator partner mappings exist for `admin@ryzen.be` and `iliass.el.krichi@gmail.com`.
+
+Conclusion:
+
+- No data deletion was found.
+- The failure is a visibility/auth/RLS fetch regression.
+
+Remediation:
+
+- Added `supabase/migrations/20260613000000_phase_a444_dashboard_visibility_repair.sql`.
+- Live-applied `public.get_operator_dashboard_snapshot()`.
+- The dashboard now validates Supabase session state, loads one guarded operator snapshot, and falls back to legacy table queries if the RPC is unavailable.
+- If `public.is_operator()` fails, dashboard now reports an operator mapping problem instead of silently rendering empty data.
+- Registration Google API error handling was hardened for `ApiNotActivatedMapError` / `RefererNotAllowedMapError`.
+
+Certification status remains NOT CERTIFIED until live dashboard visibility and customer registration/verification/approval/login are retested successfully.
+
 ## Phase A.4.4.4 Final Live Retest Remediation
 
 Status: NOT CERTIFIED - REPOSITORY REMEDIATION UPDATED, LIVE MIGRATION AND RETEST REQUIRED.

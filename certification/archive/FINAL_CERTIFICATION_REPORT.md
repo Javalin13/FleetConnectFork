@@ -212,3 +212,19 @@ Certification is still blocked until:
 1. the new migration is applied to live Supabase;
 2. this branch is redeployed;
 3. live registration, verification, approval, login, scheduled booking, ASAP booking, confirmation email, customer request notification, and dashboard New Orders evidence is collected.
+
+## A.4.4.4 Critical Dashboard Visibility Regression
+
+Verdict remains: **NOT CERTIFIED**.
+
+The latest live retest reported an empty operator dashboard: drivers, rides, history, and agenda were not visible. Live read-only database verification confirmed the data still exists: 99 bookings, 5 drivers, 3 partners, 3 customers, and 2 account requests. This is therefore a visibility/auth/RLS fetch regression rather than data deletion.
+
+Remediation added:
+
+- `supabase/migrations/20260613000000_phase_a444_dashboard_visibility_repair.sql`
+- `public.get_operator_dashboard_snapshot()` live-applied with authenticated-only execute grant.
+- Dashboard now validates Supabase session and loads the guarded operator snapshot before falling back to direct table queries.
+- Dashboard now surfaces an operator mapping error if the logged-in user is not recognized by `public.is_operator()`.
+- Registration now handles Google API unavailable states as non-blocking manual-address mode.
+
+Final certification remains blocked until redeployed browser validation proves that existing bookings, drivers, orders, history, and agenda are visible again and the customer registration/verification/approval/login flow passes.

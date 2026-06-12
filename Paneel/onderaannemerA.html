@@ -492,6 +492,9 @@
             async loadPartners() { const { data, error } = await supabase.from('partners').select('*').order('is_hoofd', { ascending: false }); if (error) { this.showToast('Fout bij laden partners: ' + error.message, true); return; } this.partners = data || []; },
             async loadDrivers() { const { data, error } = await supabase.from('drivers').select('*'); if (error) { this.showToast('Fout bij laden drivers: ' + error.message, true); return; } this.drivers = data || []; },
             async loadAccountRequests() { const { data, error } = await supabase.from('account_requests').select('*').order('created_at', { ascending: false }); if (error) { this.showToast('Fout bij laden accountaanvragen: ' + error.message, true); return; } this.accountRequests = data || []; },
+            async ensureSupabaseSession() { const { data, error } = await supabase.auth.getSession(); if (error || !data?.session?.user) { sessionStorage.removeItem('horizon_logged_in'); window.location.replace('admin-index.html'); return false; } return true; },
+            async loadOperatorDashboardSnapshot() { const { data, error } = await supabase.rpc('get_operator_dashboard_snapshot'); if (error) throw error; this.allBookings = data?.bookings || []; this.drivers = data?.drivers || []; this.partners = data?.partners || []; this.accountRequests = data?.account_requests || []; },
+            async loadDashboardData() { if (!(await this.ensureSupabaseSession())) return false; try { await this.loadOperatorDashboardSnapshot(); } catch (snapshotError) { console.warn('Operator dashboard snapshot unavailable, falling back to table queries:', snapshotError.message); if (/Operator access required/i.test(snapshotError.message || '')) { this.showToast('Operator toegang vereist. Controleer Supabase partner user_id/is_hoofd mapping.', true); return false; } const bookings = await this.fetchBookingsFromSupabase(); this.allBookings = bookings; await this.loadPartners(); await this.loadDrivers(); await this.loadAccountRequests(); } this.filterAndSortData(); return true; },
             formatDate(date) { let d = new Date(date); return `${d.getDate().toString().padStart(2,'0')}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getFullYear()}`; },
             parseDate(dateStr, timeStr) { let parts = dateStr.split('-'); let timeParts = timeStr ? timeStr.split(':') : ['00','00']; return new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]), parseInt(timeParts[0]), parseInt(timeParts[1])); },
             isExpired(dateStr, timeStr) { return this.parseDate(dateStr, timeStr) < new Date(); },
@@ -644,19 +647,15 @@
             async rejectAccountRequest(requestId) { const t = translations[currentLang]; const request = this.accountRequests.find(r => r.id === requestId); const reason = prompt(t.accountRequestsRejectReason) || ''; const { error } = await supabase.rpc('reject_account_request', { p_request_id: requestId, p_reason: reason }); if (error) { this.showToast(`${t.accountRequestsRejectFailed}: ${error.message}`, true); return; } await this.sendAccountDecisionEmail(request, false, reason); this.showToast(t.accountRequestsRejected); await this.loadAccountRequests(); this.renderAccountRequests(); },
             refreshCurrentTab() { switch(this.currentTab) { case 'neworders': this.renderNewOrders(); break; case 'orders': this.renderOrders(); break; case 'history': this.renderHistory(); break; case 'agenda': this.renderAgenda(); break; case 'drivers': this.renderDrivers(); break; case 'partners': this.renderPartners(); break; case 'customeraccountrequests': this.renderAccountRequests(); break; case 'accountrequests': this.renderAccountRequests(); break; case 'financieel': this.renderFinance(); break; case 'settlements': this.renderSettlements(); break; case 'wiki': this.renderWiki(); break; default: this.renderNewOrders(); } },
             switchTab(tabName) { this.currentTab = tabName; document.querySelectorAll('.nav-item').forEach(item => { const itemTab = item.getAttribute('data-tab'); if (itemTab === tabName) item.classList.add('active'); else item.classList.remove('active'); }); this.refreshCurrentTab(); },
-            async refreshAllData(silent = false) { let t = translations[currentLang]; if (!silent) this.showToast(t.toastRefreshing); const bookings = await this.fetchBookingsFromSupabase(); this.allBookings = bookings; this.filterAndSortData(); await this.loadPartners(); await this.loadDrivers(); await this.loadAccountRequests(); this.refreshCurrentTab(); if (!silent) this.showToast(t.toastRefreshed); },
+            async refreshAllData(silent = false) { let t = translations[currentLang]; if (!silent) this.showToast(t.toastRefreshing); const loaded = await this.loadDashboardData(); if (!loaded) return; this.refreshCurrentTab(); if (!silent) this.showToast(t.toastRefreshed); },
             async logout() { let t = translations[currentLang]; if (confirm(t.confirmLogout)) { sessionStorage.removeItem('horizon_logged_in'); window.location.replace('admin-index.html'); } },
             async init() {
                 const savedLang = localStorage.getItem('nh_language');
                 if (savedLang && translations[savedLang]) currentLang = savedLang;
                 updateUILanguage();
                 document.querySelectorAll('.lang-btn').forEach(btn => { if (btn.getAttribute('data-lang') === currentLang) btn.classList.add('active'); btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang'))); });
-                const bookings = await this.fetchBookingsFromSupabase();
-                this.allBookings = bookings;
-                this.filterAndSortData();
-                await this.loadPartners();
-                await this.loadDrivers();
-                await this.loadAccountRequests();
+                const loaded = await this.loadDashboardData();
+                if (!loaded) return;
                 this.switchTab('neworders');
                 document.querySelectorAll('.nav-item[data-tab]').forEach(item => { item.addEventListener('click', (e) => { e.preventDefault(); const tab = item.getAttribute('data-tab'); if (tab) this.switchTab(tab); }); });
                 document.getElementById('switchWoningenBtn')?.addEventListener('click', () => window.location.href = 'commander.html');

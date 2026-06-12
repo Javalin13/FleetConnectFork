@@ -212,3 +212,45 @@ Validation status:
 - Inline script parse passed for active NL/FR/EN booking pages, customer login/register pages, and the operator dashboard.
 - Live Supabase migration application is still required.
 - Live Vercel deployment and browser/inbox validation are still required.
+
+## 2026-06-13 Critical Live Retest Regression
+
+Status: REMEDIATION UPDATED - NOT CERTIFIED
+
+Live retest reported that the operator dashboard showed no bookings, drivers, history, or agenda data after the latest A.4.4.4 migration/deploy cycle.
+
+Read-only live Supabase verification showed data was not deleted:
+
+- `bookings`: 99 rows.
+- `drivers`: 5 rows.
+- `partners`: 3 rows.
+- `customers`: 3 rows.
+- `account_requests`: 2 rows.
+- Booking statuses: `pending` 4, `accepted` 4, `assigned` 7, `cancelled` 21, `completed` 63.
+- Drivers are attached to partner `1` and partner `13`.
+- Hoofd/operator partner rows exist for `admin@ryzen.be` and `iliass.el.krichi@gmail.com`.
+
+Root-cause assessment:
+
+- The data disappearance is a visibility/auth/RLS fetch regression, not data loss.
+- Dashboard tables are RLS-gated by `public.is_operator()`.
+- When the dashboard session is missing, stale, or table-level RLS evaluation fails, direct table queries can return empty arrays across all tabs.
+
+Repository remediation:
+
+- Added migration `20260613000000_phase_a444_dashboard_visibility_repair.sql`.
+- Applied the live function/grants for `public.get_operator_dashboard_snapshot()`.
+- The function is `SECURITY DEFINER`, requires `auth.uid()` and `public.is_operator()`, and returns bookings, drivers, partners, and account requests in one guarded operator-only snapshot.
+- `Paneel/onderaannemerA.html` now loads the operator dashboard snapshot first, validates a Supabase session, and falls back to the previous direct table queries if the RPC is unavailable.
+- If the authenticated user is not mapped as operator, the dashboard now shows a clear operator-mapping error instead of silently rendering empty data.
+
+Additional repository remediation:
+
+- `PV/register.html` now detects `ApiNotActivatedMapError`, `RefererNotAllowedMapError`, and Google Maps script errors through `window.onerror` and keeps manual address entry enabled.
+
+Live validation still required:
+
+1. Redeploy the branch containing this remediation.
+2. Open the dashboard as a mapped operator and verify Drivers, New Orders, Orders, History, and Agenda repopulate.
+3. Register with a manually typed pickup address while Google Places remains unavailable.
+4. Confirm verification, approval, login, customer request notification, and portal access.

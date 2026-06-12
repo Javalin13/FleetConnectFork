@@ -255,3 +255,18 @@ Before treating the checkpoint as preserved, confirm:
 11. Select ASAP, submit a guest booking, and confirm metadata includes `asap_requested = true`.
 12. Confirm fallback/manual bookings keep amount `>= 15`, use `create_public_booking`, and appear in dashboard New Orders even when status is `pending_payment`.
 13. Confirm booking confirmation emails still arrive and no new silent failures appear in browser console/network.
+
+## Phase A.4.4.4 Dashboard Visibility Regression Retest
+
+1. Confirm live Supabase contains existing production data before UI retest: bookings, drivers, partners, customers, and account requests.
+2. Confirm `get_operator_dashboard_snapshot()` exists and execute is granted only to authenticated users.
+3. Log in through `/Paneel/admin-index.html` using a mapped hoofd/operator Supabase Auth account.
+4. Open `/Paneel/onderaannemerA.html`.
+5. Verify Drivers tab shows live drivers.
+6. Verify New Orders shows pending/pending-payment bookings.
+7. Verify Orders shows accepted/assignment/assigned/reassignment bookings.
+8. Verify History shows completed/cancelled/declined/expired bookings.
+9. Verify Agenda shows live bookings on the relevant dates.
+10. If data is still empty, capture the toast/console message for operator mapping or snapshot fallback.
+11. Register a customer with manual address while Google API reports `ApiNotActivatedMapError`.
+12. Verify customer account request notification, dashboard Customer Account Requests visibility, approval, verification, login, and portal access.

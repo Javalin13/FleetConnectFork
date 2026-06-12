@@ -335,3 +335,26 @@ Repository updates now:
 - show `pending_payment` guest bookings in New Orders alongside `pending` bookings.
 
 Production remains blocked until the migration is applied to live Supabase, the branch is redeployed, and the full registration/approval/login/booking/dashboard/email retest passes.
+
+## 2026-06-13 A.4.4.4 Critical Regression Status
+
+Status: NOT CERTIFIED - DASHBOARD VISIBILITY HOTFIX APPLIED TO REPOSITORY AND LIVE RPC, REDEPLOY/RETEST REQUIRED.
+
+Live database verification confirmed production data still exists:
+
+- 99 bookings.
+- 5 drivers.
+- 3 partners.
+- 3 customers.
+- 2 account requests.
+
+Therefore the dashboard-empty state is classified as a visibility/auth/RLS fetch regression, not data loss.
+
+Remediation:
+
+- Added and live-applied operator-only RPC `get_operator_dashboard_snapshot()`.
+- Updated the dashboard to load that snapshot first and to show an explicit operator-mapping error if access is not valid.
+- Preserved fallback to existing direct table queries.
+- Registration now detects Google API unavailable states and keeps manual address entry enabled.
+
+FleetConnect remains NOT CERTIFIED until the redeployed dashboard shows existing live bookings/drivers/history/agenda and the customer registration/verification/approval/login flow passes live.

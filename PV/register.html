@@ -91,10 +91,21 @@
 
         let registrationPlacesAvailable = true;
 
-        window.gm_authFailure = function() {
+        function markRegistrationPlacesUnavailable(reason) {
             registrationPlacesAvailable = false;
-            console.warn('Google Maps authentication failed; registration address remains a manual text field.');
+            console.warn('Registration address autocomplete unavailable; manual address entry remains enabled.', reason || 'unknown');
+        }
+
+        window.gm_authFailure = function() {
+            markRegistrationPlacesUnavailable('Google Maps authentication failure');
         };
+
+        window.addEventListener('error', function(event) {
+            const message = String(event?.message || '');
+            if (message.includes('ApiNotActivatedMapError') || message.includes('RefererNotAllowedMapError') || message.includes('Google Maps JavaScript API error')) {
+                markRegistrationPlacesUnavailable(message);
+            }
+        });
 
         function showError(message) {
             errorBox.textContent = message;
@@ -112,7 +123,7 @@
             const input = document.getElementById('pickupInput');
             if (!input) return;
             if (!window.google?.maps?.places?.Autocomplete) {
-                registrationPlacesAvailable = false;
+                markRegistrationPlacesUnavailable('Places library missing');
                 return;
             }
             try {
@@ -121,8 +132,7 @@
                     componentRestrictions: { country: ['be'] }
                 });
             } catch (err) {
-                registrationPlacesAvailable = false;
-                console.warn('Registration address autocomplete unavailable:', err.message);
+                markRegistrationPlacesUnavailable(err.message);
             }
         }
 
