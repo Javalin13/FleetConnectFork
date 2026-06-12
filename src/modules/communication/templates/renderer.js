@@ -87,6 +87,8 @@ export class TemplateRenderer {
             case 'ACCOUNT_WELCOME':
             case 'ACCOUNT_ONBOARDING':
                 return this.renderAccountWelcome(data, labels, subjects, lang);
+            case 'CUSTOMER_REGISTRATION_CONFIRMATION':
+                return this.renderCustomerRegistrationConfirmation(data, labels, subjects, lang);
             case 'PAYMENT_REFUND_CONFIRMATION':
                 return this.renderPaymentRefundConfirmation(data, labels, subjects, lang);
             default: return `<p style="font-family: sans-serif;">Update regarding booking ${data.reference || data.id}</p>`;
@@ -101,7 +103,7 @@ export class TemplateRenderer {
     }
 
     static renderBookingConfirmation(data, labels, subjects, lang) {
-        const viewUrl = RouteBuilder.build('view-booking', { id: data.id });
+        const viewUrl = RouteBuilder.build('view-booking', { id: data.id, email: data.customer?.email || data.email });
         const distanceValue = Number(
             data.distance_km ||
             data.route_distance_km ||
@@ -147,10 +149,10 @@ export class TemplateRenderer {
     static renderBookingAccepted(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data, labels);
 
-        // CTA Routing Decision
-        const ctaUrl = data.is_registered
-            ? RouteBuilder.build('view-booking', { id: data.id })
-            : RouteBuilder.build('setup-account-prefilled', { id: data.id, email: data.customer?.email || data.email });
+        const ctaUrl = RouteBuilder.build('customer-booking', {
+            id: data.id,
+            email: data.customer?.email || data.email
+        });
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.primaryColor};">${subjects.BOOKING_ACCEPTED}</h2>
@@ -308,6 +310,27 @@ export class TemplateRenderer {
                 ${labels.greeting(customerName)} ${labels.welcomeBody}
             </p>
             ${EmailComponents.cta(labels.setupAccount, RouteBuilder.build('account-welcome', { token: data.token }))}
+        `;
+    }
+
+    static renderCustomerRegistrationConfirmation(data, labels, subjects, lang) {
+        const customerName = this.getCustomerName(data, labels);
+        const portalUrl = RouteBuilder.build('customer-booking', {
+            id: data.booking_id || data.id,
+            email: data.customer?.email || data.email
+        });
+
+        return `
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.CUSTOMER_REGISTRATION_CONFIRMATION || subjects.ACCOUNT_ONBOARDING}</h2>
+            <p style="margin: 0 0 24px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
+                ${labels.greeting(customerName)} ${labels.registrationConfirmationBody || labels.welcomeBody}
+            </p>
+            ${EmailComponents.sectionTitle(labels.summary)}
+            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.accountStatus || 'Account status', labels.accountCreated || 'Account created')}
+                ${EmailComponents.detailsRow(labels.support, CommunicationConfig.brand.supportEmail)}
+            </table>
+            ${EmailComponents.cta(labels.viewBooking, portalUrl)}
         `;
     }
 

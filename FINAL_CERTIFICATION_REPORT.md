@@ -11,6 +11,21 @@ NOT CERTIFIED
 
 The repository now contains the minimal Phase A fixes required before live validation, but production certification cannot be granted until the updated branch and send-email function are deployed and the booking/email/dashboard/driver lifecycle is validated in browser and inbox.
 
+## Phase A.4.4.1 Addendum
+
+The A.4.4.1 live-validation hotfix branch adds:
+
+- immediate booking processing state on confirmation
+- EUR 15 minimum fare enforcement in frontend payloads and the public booking RPC
+- customer portal login/register CTA routing with booking ID preservation
+- authenticated customer booking attachment by booking number/email match
+- corrected BOOKING_ACCEPTED CTA generation
+- driver decline reassignment state, operations-only notification trigger, and dashboard alert
+- reassignment cleanup after new driver acceptance
+- customer registration confirmation email trigger
+
+Live Supabase rollback validation passed for the minimum fare, customer attach, driver decline, and driver accept cleanup paths. Production remains not certified until Vercel redeploy, send-email Edge Function deployment, and live browser/inbox validation are complete.
+
 ## Phase A Work Completed
 
 1. Full routing inventory and route decision table completed.

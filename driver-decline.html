@@ -84,7 +84,7 @@
                 if (error) throw error;
 
                 if (data?.id) {
-                    await comms.trigger('DRIVER_DECLINED', data.id, supabase, { operationsOnly: true });
+                    await comms.trigger('DRIVER_DECLINED', data.id, supabase, { operationsOnly: true, snapshot: data.snapshot });
                 }
 
                 showState('success');

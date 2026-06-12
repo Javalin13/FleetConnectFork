@@ -48,6 +48,15 @@ Rationale: core dispatch and RLS risk has been reduced, but required customer an
 | Manual/operator-created ride flow missing | Medium | Medium | Operators cannot create manual rides through a certified workflow. | Implement a narrow operator-only manual ride creation flow in a separately approved phase. | Engineering |
 | Review workflow incomplete | Medium | Medium | Completed rides cannot reliably drive customers to a verified review journey. | Implement/certify review page, per-landing reviews, and completed-ride CTA in a separately approved phase. | Product/Engineering |
 
+## Phase A.4.4.1 Launch Risks
+
+| Risk | Severity | Likelihood | Impact | Mitigation | Owner |
+| --- | --- | --- | --- | --- | --- |
+| A.4.4.1 frontend not deployed | Critical | High | Booking loading state, minimum fare, customer attach flow, CTA fix, and reassignment alert are not live until Vercel redeploys this branch. | Deploy `phase-a4.4.1-live-validation-hotfixes` and run the A.4.4.1 checklist. | Release manager |
+| send-email deployment blocked from this shell | Critical | Medium | Customer registration confirmation and verified sender handling may not be active in production. | Deploy `send-email` manually with Supabase CLI and confirm live logs before inbox tests. | Release manager |
+| Customer attach flow not browser-tested | High | Medium | Customer may not be able to attach booking history despite rollback RPC validation. | Test with authenticated customer using the same email as the booking. | QA |
+| Driver reassignment alert not browser/inbox-tested | High | Medium | Operator may miss declined-driver reassignment work in live dashboard. | Run one controlled decline/reassign/accept cycle and verify operations email plus alert behavior. | QA |
+
 ## Phase 5.8 Booking Insert Risks
 
 | Risk | Severity | Likelihood | Impact | Mitigation | Owner |
