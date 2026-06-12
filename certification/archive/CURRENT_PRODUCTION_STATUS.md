@@ -291,3 +291,11 @@ Still required:
 4. Test full inbox lifecycle: booking confirmation, accepted, driver assignment, driver accepted/assigned, account request.
 5. Implement manual/operator-created booking in a separately approved phase.
 6. Implement/certify review page, per-landing-page reviews, and completed-ride review CTA in a separately approved phase.
+
+## Phase A.4.4.4 19:39 Live Validation Status
+
+Status: NOT CERTIFIED - LIVE RETEST REQUIRED AFTER HOTFIX DEPLOYMENT.
+
+The 19:39 live validation failure showed that Google referrer blocking still prevented manual address entry in several paths and that at least one homepage/customer login route still reached a missing page. The repository has been updated so active/root NL/FR/EN customer links point to `/PV/index.html`, manual address fallback can persist through `create_public_booking` with `manual_route_required` and `google_places_unavailable` metadata, registration shows explicit errors, and fake `admin@ryzen.be` driver credentials have been removed.
+
+Production remains blocked until these fixes are deployed and browser-tested against the live Vercel domain and Supabase project.

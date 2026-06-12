@@ -34,7 +34,7 @@
         <div id="errorBox" class="error-msg"></div>
         <div id="successBox" class="success-msg"></div>
 
-        <form id="registerForm">
+        <form id="registerForm" novalidate>
             <div class="field">
                 <label data-i18n="auth_fullname">Volledige naam</label>
                 <input type="text" id="nameInput" placeholder="Jan Janssen" required>
@@ -89,6 +89,10 @@
             document.querySelector('.footer-link').href = `/PV/index.html?booking=${encodeURIComponent(requestedBookingId)}`;
         }
 
+        window.gm_authFailure = function() {
+            console.warn('Google Maps authentication failed; registration address remains a manual text field.');
+        };
+
         function showError(message) {
             errorBox.textContent = message;
             errorBox.style.display = 'block';
@@ -113,6 +117,10 @@
                 console.warn('Registration address autocomplete unavailable:', err.message);
             }
         }
+
+        document.getElementById('pickupInput')?.addEventListener('input', () => {
+            errorBox.style.display = 'none';
+        });
 
         window.addEventListener('load', () => setTimeout(initAddressAutocomplete, 400));
 
@@ -149,6 +157,26 @@
             const pickup = document.getElementById('pickupInput').value.trim();
             const password = document.getElementById('passInput').value;
             const repeatPassword = document.getElementById('repeatPassInput').value;
+
+            if (!fullName || !email || !phone || !password || !repeatPassword) {
+                showError('Vul alle verplichte velden in.');
+                return;
+            }
+
+            if (!document.getElementById('emailInput').checkValidity()) {
+                showError('Vul een geldig e-mailadres in.');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Kies een wachtwoord van minimaal 6 tekens.');
+                return;
+            }
+
+            if (pickup && pickup.length < 3) {
+                showError('Vul een volledig ophaaladres in of laat het veld leeg. Google suggesties zijn niet verplicht.');
+                return;
+            }
 
             if (password !== repeatPassword) {
                 showError('De wachtwoorden komen niet overeen.');

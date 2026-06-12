@@ -257,7 +257,7 @@
 
     <div class="contact-wrapper" id="contact"><div class="contact-row"><div class="contact-form"><h3><i class="fas fa-paper-plane"></i>Send a message</h3><div class="compact-form"><div class="form-group"><label><i class="fas fa-user"></i> Your name *</label><input type="text" id="contactNaam"></div><div class="form-group"><label><i class="fas fa-envelope"></i> Email *</label><input type="email" id="contactEmail"></div><div class="form-group"><label><i class="fas fa-comment"></i> Message *</label><textarea id="contactBericht" rows="2"></textarea></div><div class="button-row"><button class="btn-primary" id="verstuurBerichtBtn"><i class="fas fa-paper-plane"></i> Send</button><a href="https://wa.me/32470123456" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></div></div></div></div></div>
 
-    <footer class="footer-dark"><div class="container"><div class="footer-grid"><div class="footer-brand"><h4><i class="fas fa-car"></i> FleetConnect</h4><p>Professional taxi transport in Belgium - style, punctuality and service.</p><a href="/booking#booking">Book now</a><br><a href="/customer">Customer portal</a><br><a href="/partner-login">Partner login</a></div><div class="footer-cities"><h4>Popular cities</h4>
+    <footer class="footer-dark"><div class="container"><div class="footer-grid"><div class="footer-brand"><h4><i class="fas fa-car"></i> FleetConnect</h4><p>Professional taxi transport in Belgium - style, punctuality and service.</p><a href="/booking#booking">Book now</a><br><a href="/PV/index.html">Customer portal</a><br><a href="/partner-login">Partner login</a></div><div class="footer-cities"><h4>Popular cities</h4>
 <a href="/taxi-brussels">Taxi Brussels</a><br>
 <a href="/taxi-antwerpen">Taxi Antwerp</a><br>
 <a href="/taxi-gent">Taxi Ghent</a><br>
@@ -432,7 +432,12 @@
         return value;
     }
 
+    function isManualRouteFallback() {
+        return !!(currentRouteData?.manualRouteRequired && lastTypedPickupAddress && lastTypedDropoffAddress);
+    }
+
     function hasStrictRouteSelection() {
+        if (isManualRouteFallback()) return true;
         return !!(
             currentRouteData &&
             Number.isFinite(Number(currentRouteData.distanceKm)) &&
@@ -504,6 +509,9 @@
     }
     
     function getCalculatedFare() {
+        if (isManualRouteFallback()) {
+            return { distanceKm: 0, rawAmount: MIN_RIDE_PRICE, totalAmount: MIN_RIDE_PRICE, minimumApplied: false, manualRouteRequired: true };
+        }
         if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) return null;
         let dist = Number(currentRouteData.distanceKm);
         if (currentRoundTrip) dist *= 2;
@@ -516,12 +524,16 @@
         if (!currentRouteData) return;
         const totalDisplay = document.getElementById('totalDisplay');
         const overviewTotal = document.getElementById('overviewTotal');
-        if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) return;
-        let dist = Number(currentRouteData.distanceKm);
-        if (currentRoundTrip) dist *= 2;
-        let total = (dist * 1.5) + (selectedVehicleExtra || 0);
-        if (totalDisplay) totalDisplay.innerHTML = `Total: EUR ${total.toFixed(2)}`;
-        if (overviewTotal) overviewTotal.innerHTML = `EUR ${total.toFixed(2)}`;
+        const fare = getCalculatedFare();
+        if (!fare) return;
+        if (fare.manualRouteRequired) {
+            if (totalDisplay) totalDisplay.innerHTML = `Total: EUR ${fare.totalAmount.toFixed(2)}<br><small>${MANUAL_ROUTE_MESSAGE}</small>`;
+            if (overviewTotal) overviewTotal.innerHTML = `EUR ${fare.totalAmount.toFixed(2)}<br><small>${MANUAL_ROUTE_MESSAGE}</small>`;
+            return;
+        }
+        const minimumNote = fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : '';
+        if (totalDisplay) totalDisplay.innerHTML = `Total: EUR ${fare.totalAmount.toFixed(2)}${minimumNote}`;
+        if (overviewTotal) overviewTotal.innerHTML = `EUR ${fare.totalAmount.toFixed(2)}${minimumNote}`;
     }
     
     function updateRitOverzicht() {
@@ -538,7 +550,7 @@
             returnContainer.style.display = 'none';
         }
         const fare = getCalculatedFare();
-        document.getElementById('overviewTotal').innerHTML = fare === null ? '-' : `EUR ${fare.totalAmount.toFixed(2)}${fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : ''}`;
+        document.getElementById('overviewTotal').innerHTML = fare === null ? '-' : `EUR ${fare.totalAmount.toFixed(2)}${fare.manualRouteRequired ? `<br><small>${MANUAL_ROUTE_MESSAGE}</small>` : (fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : '')}`;
     }
     
     function getExtrasString() {
@@ -602,7 +614,21 @@
             currentReturnDateTime = returnDt;
         }
         if (!mapsController || !mapsController.hasSelectedAddresses()) {
-            return blockRouteCalculation();
+            pickupPlaceId = 'manual-pickup';
+            dropoffPlaceId = 'manual-dropoff';
+            currentRouteData = {
+                distanceKm: 0,
+                durationMin: 0,
+                manualRouteRequired: true,
+                googlePlacesUnavailable: googleRouteUnavailable || !mapsController || !mapsController.hasSelectedAddresses()
+            };
+            document.getElementById('distVal').innerHTML = '-';
+            document.getElementById('timeVal').innerHTML = '-';
+            document.getElementById('priceVal').innerHTML = '15.00';
+            updateTotalDisplay();
+            currentDateTime = dt;
+            currentFlight = document.getElementById('flightNumber').value;
+            return true;
         }
         const routed = await calculateRoutePromise();
         if (!routed || !applyRouteData(routed)) {
@@ -762,6 +788,8 @@
                 source: "web-booking-en",
                 route_distance_km: Number(currentRouteData.distanceKm),
                 route_duration_min: Number(currentRouteData.durationMin),
+                manual_route_required: fare.manualRouteRequired === true,
+                google_places_unavailable: fare.manualRouteRequired === true,
                 minimum_fare_applied: fare.minimumApplied,
                 raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 pickup_place_id: pickupPlaceId,
@@ -771,11 +799,13 @@
                 route_calculated: true,
                 route_distance_km: Number(currentRouteData.distanceKm),
                 route_duration_min: Number(currentRouteData.durationMin),
+                manual_route_required: fare.manualRouteRequired === true,
+                google_places_unavailable: fare.manualRouteRequired === true,
                 minimum_fare_applied: fare.minimumApplied,
                 raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 pickup_place_id: pickupPlaceId,
                 dropoff_place_id: dropoffPlaceId,
-                google_places_selected: true
+                google_places_selected: fare.manualRouteRequired !== true
             },
             created_at: new Date().toISOString(),
             partner_id: 1,
@@ -806,6 +836,8 @@
                 distance_km: Number(currentRouteData.distanceKm),
                 duration_min: Number(currentRouteData.durationMin),
                 minimum_fare_applied: fare.minimumApplied,
+                manual_route_required: fare.manualRouteRequired === true,
+                google_places_unavailable: fare.manualRouteRequired === true,
                 raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 is_registered: false
             };

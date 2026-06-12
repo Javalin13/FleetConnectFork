@@ -270,3 +270,14 @@ FleetConnect remains NOT CERTIFIED until live migration, browser, inbox, and acc
 | Multi-row selectors and full table sorting/filtering | OPEN ENHANCEMENT | Requested after blockers; not implemented in this blocker pass. | Schedule separately after live blockers pass. |
 
 FleetConnect remains NOT CERTIFIED.
+
+## Phase A.4.4.4 19:39 Live Hotfix Gap Update
+
+| Item | Classification | Evidence | Required next action |
+| --- | --- | --- | --- |
+| Homepage/dropdown login 404 | RESOLVED IN REPOSITORY, BLOCKED PENDING DEPLOYMENT | Active/root NL/FR/EN customer links now route to `/PV/index.html`; stale homepage `/customer`, `/client`, `/login`, and relative `index.html` routes no longer scan in touched public entry pages. | Redeploy and click all homepage/dropdown/footer customer links. |
+| Google referrer/manual address failure | MITIGATED IN REPOSITORY, BLOCKED PENDING LIVE BROWSER TESTING | Public and customer portal booking flows now allow typed manual addresses when Google Places is unavailable and persist `manual_route_required` plus `google_places_unavailable`. | Test under the current `RefererNotAllowedMapError`; still add production domains to Google Cloud referrer allowlist. |
+| Registration silent failure | RESOLVED IN REPOSITORY, BLOCKED PENDING LIVE BROWSER TESTING | Registration now uses explicit visible validation and does not require Google autocomplete for default pickup address. | Register with manual default pickup and verify visible errors/success. |
+| Fake `admin@ryzen.be` driver login | RESOLVED IN REPOSITORY, BLOCKED PENDING DEPLOYMENT | Driver login no longer pre-fills, documents, or accepts the fake hardcoded credential. | Redeploy and verify invalid driver login shows a clean error. |
+
+FleetConnect remains NOT CERTIFIED until this 19:39 hotfix is deployed and live-tested.

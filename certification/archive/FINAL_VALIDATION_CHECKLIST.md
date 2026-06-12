@@ -214,3 +214,14 @@ Before treating the checkpoint as preserved, confirm:
 11. Assign a driver, let driver accept, then attempt another driver accept/reassignment without recall; server must reject it.
 12. Recall assigned driver, assign a new driver, and confirm the new token works.
 13. Open `/review` and `/review.html?booking=<BOOKING_ID>` after deploy; page should load safely.
+
+## Phase A.4.4.4 19:39 Live Hotfix Retest Addendum
+
+1. Redeploy `phase-a4.4.4-live-auth-email-dashboard-remediation` after the 19:39 hotfix commit.
+2. Scan/open NL/FR/EN homepage menus and footer customer links; each customer/login entry must route to `/PV/index.html`.
+3. Confirm no active public entry page contains stale `/customer`, `/client`, `/login`, or relative `index.html` customer login routes.
+4. With Google Places blocked by `RefererNotAllowedMapError`, type manual pickup and destination addresses of at least 3 characters and submit a guest booking.
+5. Verify the created booking has amount `>= 15`, `metadata.manual_route_required = true`, and `metadata.google_places_unavailable = true`.
+6. Register a customer with a manually typed default pickup address; visible errors must appear for incomplete data and Google autocomplete must not block submission.
+7. Open the customer portal new-ride form and create a manual fallback booking using typed addresses.
+8. Confirm `Paneel/driver-login.html` does not show or accept `admin@ryzen.be`.

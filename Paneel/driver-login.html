@@ -66,26 +66,25 @@
     <form id="loginForm">
         <div class="form-group">
             <label id="emailLabel">E-mailadres</label>
-            <input type="email" id="email" value="admin@ryzen.be">
+            <input type="email" id="email" autocomplete="username">
         </div>
         <div class="form-group">
             <label id="passwordLabel">Wachtwoord</label>
-            <input type="password" id="password" value="admin@ryzen.be">
+            <input type="password" id="password" autocomplete="current-password">
         </div>
         <button type="submit" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Inloggen</button>
         <div id="errorMsg" class="error-msg"></div>
     </form>
     <div class="test-credentials" id="testCreds">
-        <i class="fas fa-info-circle"></i> Testgegevens:<br>
-        <strong>admin@ryzen.be</strong> / <strong>admin@ryzen.be</strong>
+        <i class="fas fa-info-circle"></i> Gebruik uw toegewezen chauffeuraccount.
     </div>
 </div>
 <script>
     const translations = {
-        nl: { title: "FleetConnect Driver", subtitle: "Driver portal", emailLabel: "E-mailadres", passwordLabel: "Wachtwoord", loginBtn: "Inloggen", testCreds: "Gebruik uw toegewezen driver-account.", errorMsg: "Ongeldige inloggegevens. Gebruik admin@ryzen.be / admin@ryzen.be" },
-        fr: { title: "FleetConnect Chauffeur", subtitle: "Portail chauffeur", emailLabel: "Adresse e-mail", passwordLabel: "Mot de passe", loginBtn: "Se connecter", testCreds: "Utilisez votre compte chauffeur attribue.", errorMsg: "Identifiants invalides. Utilisez admin@ryzen.be / admin@ryzen.be" },
-        es: { title: "FleetConnect Conductor", subtitle: "Portal de conductor", emailLabel: "Correo electrÃ³nico", passwordLabel: "ContraseÃ±a", loginBtn: "Iniciar sesiÃ³n", testCreds: "Use su cuenta de conductor asignada.", errorMsg: "Credenciales invÃ¡lidas. Use admin@ryzen.be / admin@ryzen.be" },
-        en: { title: "FleetConnect Driver", subtitle: "Driver portal", emailLabel: "Email address", passwordLabel: "Password", loginBtn: "Login", testCreds: "Use your assigned driver account.", errorMsg: "Invalid credentials. Use admin@ryzen.be / admin@ryzen.be" }
+        nl: { title: "FleetConnect Driver", subtitle: "Driver portal", emailLabel: "E-mailadres", passwordLabel: "Wachtwoord", loginBtn: "Inloggen", testCreds: "Gebruik uw toegewezen chauffeuraccount.", errorMsg: "Ongeldige inloggegevens. Gebruik een geldig live chauffeuraccount." },
+        fr: { title: "FleetConnect Chauffeur", subtitle: "Portail chauffeur", emailLabel: "Adresse e-mail", passwordLabel: "Mot de passe", loginBtn: "Se connecter", testCreds: "Utilisez votre compte chauffeur attribue.", errorMsg: "Identifiants invalides. Utilisez un compte chauffeur live valide." },
+        es: { title: "FleetConnect Conductor", subtitle: "Portal de conductor", emailLabel: "Correo electronico", passwordLabel: "Contrasena", loginBtn: "Iniciar sesion", testCreds: "Use su cuenta de conductor asignada.", errorMsg: "Credenciales invalidas. Use una cuenta de conductor valida." },
+        en: { title: "FleetConnect Driver", subtitle: "Driver portal", emailLabel: "Email address", passwordLabel: "Password", loginBtn: "Login", testCreds: "Use your assigned driver account.", errorMsg: "Invalid credentials. Use a valid live driver account." }
     };
     let currentLang = 'nl';
     function updateUI(lang) {
@@ -105,22 +104,9 @@
     updateUI(saved);
     document.getElementById('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        const email = document.getElementById('email').value;
-        const pwd = document.getElementById('password').value;
-        if (email === 'admin@ryzen.be' && pwd === 'admin@ryzen.be') {
-            sessionStorage.setItem('driver_id', '101');
-            sessionStorage.setItem('driver_name', 'Admin Driver');
-            sessionStorage.setItem('driver_email', email);
-            sessionStorage.setItem('driver_vehicle', 'Tesla Model 3');
-            sessionStorage.setItem('driver_plate', 'AB-123');
-            sessionStorage.setItem('driver_logged_in', 'true');
-            sessionStorage.setItem('driver_lang', currentLang);
-            window.location.href = 'driverpaneel.html';
-        } else {
-            const err = document.getElementById('errorMsg');
-            err.textContent = translations[currentLang].errorMsg;
-            err.style.display = 'block';
-        }
+        const err = document.getElementById('errorMsg');
+        err.textContent = translations[currentLang].errorMsg;
+        err.style.display = 'block';
     });
 </script>
 </body>
