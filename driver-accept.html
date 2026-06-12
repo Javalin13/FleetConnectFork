@@ -86,8 +86,17 @@
 
                 if (error) throw error;
 
-                // 4. Trigger Customer Notification
-                await comms.trigger('DRIVER_ASSIGNED', data.id, supabase);
+                const customerTrigger = data?.notification_trigger || 'DRIVER_ASSIGNED';
+                const emailResult = await comms.trigger(customerTrigger, data.id, supabase);
+                if (emailResult?.success !== true) {
+                    throw new Error(emailResult?.error || 'Customer confirmation email failed');
+                }
+
+                await supabase.rpc('record_customer_lifecycle_email', {
+                    p_booking_id: data.id,
+                    p_assignment_token: token,
+                    p_trigger: customerTrigger
+                });
 
                 showState('success');
 

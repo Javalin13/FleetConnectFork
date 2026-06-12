@@ -14,6 +14,9 @@ export const TemplateRegistry = {
     DRIVER_ASSIGNED: {
         render: (data, lang, mode) => TemplateRenderer.render('DRIVER_ASSIGNED', data, lang, mode)
     },
+    DRIVER_REASSIGNED: {
+        render: (data, lang, mode) => TemplateRenderer.render('DRIVER_REASSIGNED', data, lang, mode)
+    },
     DRIVER_ASSIGNMENT_REQUEST: {
         render: (data, lang, mode) => TemplateRenderer.render('DRIVER_ASSIGNMENT_REQUEST', data, lang, mode)
     },
@@ -37,7 +40,10 @@ export const TemplateRegistry = {
         render: (data, lang, mode) => TemplateRenderer.render('RIDE_COMPLETED', data, lang, mode)
     },
     ACCOUNT_WELCOME: {
-        render: (data, lang, mode) => TemplateRenderer.render('ACCOUNT_ONBOARDING', data, lang, mode)
+        render: (data, lang, mode) => TemplateRenderer.render('CUSTOMER_REGISTRATION_CONFIRMATION', data, lang, mode)
+    },
+    RIDE_COMPLETED_REVIEW_REQUEST: {
+        render: (data, lang, mode) => TemplateRenderer.render('RIDE_COMPLETED_REVIEW_REQUEST', data, lang, mode)
     },
     PAYMENT_REFUND_CONFIRMATION: {
         render: (data, lang, mode) => TemplateRenderer.render('PAYMENT_REFUND_CONFIRMATION', data, lang, mode)

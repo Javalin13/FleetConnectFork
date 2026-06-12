@@ -21,7 +21,7 @@ export class RouteBuilder {
                 return `${baseUrl}/PV/index.html?booking=${encodeURIComponent(params.id || '')}&email=${encodeURIComponent(params.email || '')}`;
 
             case 'review':
-                return `${baseUrl}/review/${params.id}`; // Future route
+                return `${baseUrl}/review.html?booking=${encodeURIComponent(params.id || '')}`;
 
             case 'support-whatsapp':
                 return `https://wa.me/${CommunicationConfig.brand.supportWhatsapp}`;

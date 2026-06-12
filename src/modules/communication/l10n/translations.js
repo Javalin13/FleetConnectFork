@@ -6,15 +6,18 @@ export const EmailTranslations = {
     nl: {
         subjects: {
             BOOKING_CONFIRMATION: 'Uw FleetConnect boeking is ontvangen',
-            BOOKING_ACCEPTED: 'Goed nieuws! Uw boeking is geaccepteerd',
+            BOOKING_ACCEPTED: 'Interne dispatchupdate',
             DRIVER_ASSIGNMENT_REQUEST: 'Nieuwe ritopdracht beschikbaar',
-            DRIVER_ASSIGNED: 'Uw chauffeur is onderweg',
+            DRIVER_ASSIGNED: 'Uw rit is bevestigd',
+            DRIVER_REASSIGNED: 'Uw chauffeur is gewijzigd',
             DRIVER_DECLINED: 'Chauffeur heeft ritopdracht geweigerd',
             BOOKING_CANCELLED: 'Bevestiging van annulering',
             BOOKING_COMPLETED: 'Bedankt voor het reizen met FleetConnect',
             RIDE_COMPLETED: 'Bedankt voor het reizen met FleetConnect',
+            RIDE_COMPLETED_REVIEW_REQUEST: 'Bedankt voor het reizen met FleetConnect',
             ACCOUNT_WELCOME: 'Welkom bij FleetConnect',
             ACCOUNT_ONBOARDING: 'Welkom bij FleetConnect',
+            CUSTOMER_REGISTRATION_CONFIRMATION: 'Uw FleetConnect account is aangemaakt',
             PAYMENT_REFUND_CONFIRMATION: 'Uw terugbetaling is verwerkt'
         },
         labels: {
@@ -30,6 +33,7 @@ export const EmailTranslations = {
             price: 'Totaalprijs',
             payment: 'Betaalmethode',
             distance: 'Afstand',
+            duration: 'Duur',
             support: 'Klantenservice',
             viewBooking: 'Bekijk Boeking',
             bookNew: 'Nieuwe Rit Boeken',
@@ -45,6 +49,8 @@ export const EmailTranslations = {
             confirmationBody: 'we hebben uw boeking goed ontvangen. Ons team verwerkt uw aanvraag momenteel.',
             acceptedBody: 'uw boeking is bevestigd door onze dispatching. We kijken ernaar uit u te mogen vervoeren.',
             assignedBody: 'uw persoonlijke chauffeur is toegewezen voor uw rit. Hieronder vindt u de details van uw chauffeur.',
+            rideConfirmedBody: 'uw rit is bevestigd. Uw chauffeur heeft de rit geaccepteerd en de details staan hieronder.',
+            driverReassignedBody: 'uw chauffeur is gewijzigd. Hieronder vindt u de bijgewerkte chauffeurgegevens.',
             assignmentRequestBody: 'u bent geselecteerd voor een nieuwe rit. Bekijk de details hieronder en laat ons weten of u deze rit kunt uitvoeren.',
             acceptAssignment: 'Accepteren',
             declineAssignment: 'Weigeren',
@@ -52,6 +58,7 @@ export const EmailTranslations = {
             cancelledBody: (ref) => `uw boeking met referentie <strong>${ref}</strong> is geannuleerd. Indien u reeds heeft betaald, wordt het bedrag teruggestort.`,
             completedBody: 'we hopen dat u een prettige rit heeft gehad. Bedankt voor uw vertrouwen in FleetConnect.',
             welcomeBody: 'welkom bij FleetConnect. We hebben een account voor u klaargezet waarmee u ritten sneller kunt boeken en uw historie kunt inzien.',
+            registrationConfirmationBody: 'uw FleetConnect account is aangemaakt. U kunt inloggen op het klantportaal en ritten toevoegen met uw boekingsnummer.',
             refundConfirmationBody: 'uw terugbetaling is succesvol verwerkt. Het bedrag zal binnen enkele werkdagen op uw rekening verschijnen.',
             refundStatus: 'Terugbetaling Status'
         }
@@ -59,13 +66,15 @@ export const EmailTranslations = {
     fr: {
         subjects: {
             BOOKING_CONFIRMATION: 'Votre réservation FleetConnect est reçue',
-            BOOKING_ACCEPTED: 'Bonne nouvelle ! Votre réservation est acceptée',
+            BOOKING_ACCEPTED: 'Mise a jour interne dispatch',
             DRIVER_ASSIGNMENT_REQUEST: 'Nouvelle mission de transport disponible',
-            DRIVER_ASSIGNED: 'Votre chauffeur est en route',
+            DRIVER_ASSIGNED: 'Votre trajet est confirme',
+            DRIVER_REASSIGNED: 'Votre chauffeur a ete modifie',
             DRIVER_DECLINED: 'Le chauffeur a refusé la mission',
             BOOKING_CANCELLED: 'Confirmation d\'annulation',
             BOOKING_COMPLETED: 'Merci d\'avoir voyagé avec FleetConnect',
             RIDE_COMPLETED: 'Merci d\'avoir voyagé avec FleetConnect',
+            RIDE_COMPLETED_REVIEW_REQUEST: 'Merci d\'avoir voyage avec FleetConnect',
             ACCOUNT_WELCOME: 'Bienvenue chez FleetConnect',
             ACCOUNT_ONBOARDING: 'Bienvenue chez FleetConnect',
             CUSTOMER_REGISTRATION_CONFIRMATION: 'Votre compte FleetConnect est cree',
@@ -84,6 +93,7 @@ export const EmailTranslations = {
             price: 'Prix total',
             payment: 'Mode de paiement',
             distance: 'Distance',
+            duration: 'Duree',
             support: 'Service client',
             viewBooking: 'Voir la réservation',
             bookNew: 'Réserver une nouvelle course',
@@ -99,6 +109,8 @@ export const EmailTranslations = {
             confirmationBody: 'nous avons bien reçu votre réservation. Notre équipe traite actuellement votre demande.',
             acceptedBody: 'votre réservation a été confirmée par notre dispatching. Nous nous réjouissons de vous transporter.',
             assignedBody: 'votre chauffeur personnel a été assigné pour votre trajet. Voici les détails de votre chauffeur.',
+            rideConfirmedBody: 'votre trajet est confirme. Votre chauffeur a accepte la course et les details sont ci-dessous.',
+            driverReassignedBody: 'votre chauffeur a ete modifie. Voici les informations mises a jour du chauffeur.',
             assignmentRequestBody: 'vous avez été sélectionné pour une nouvelle course. Consultez les détails ci-dessous et faites-nous savoir si vous pouvez l\'effectuer.',
             acceptAssignment: 'Accepter',
             declineAssignment: 'Refuser',
@@ -106,9 +118,7 @@ export const EmailTranslations = {
             cancelledBody: (ref) => `votre réservation avec la référence <strong>${ref}</strong> a été annulée. Si vous avez déjà payé, le montant vous sera remboursé.`,
             completedBody: 'nous espérons que vous avez passé un agréable trajet. Merci de votre confiance en FleetConnect.',
             welcomeBody: 'bienvenue chez FleetConnect. Nous avons prepare un compte pour vous permettre de reserver vos trajets plus rapidement.',
-            registrationConfirmationBody: 'votre compte FleetConnect est cree. Vous pouvez maintenant vous connecter au portail client et ajouter vos trajets avec votre numero de reservation.',
-            accountStatus: 'Statut du compte',
-            accountCreated: 'Compte cree',
+            registrationConfirmationBody: 'votre compte FleetConnect est cree. Vous pouvez vous connecter au portail client et ajouter vos trajets avec votre numero de reservation.',
             refundConfirmationBody: 'votre remboursement a été traité avec succès. Le montant apparaîtra sur votre compte d\'ici quelques jours ouvrables.',
             refundStatus: 'Statut du remboursement'
         }
@@ -116,15 +126,18 @@ export const EmailTranslations = {
     en: {
         subjects: {
             BOOKING_CONFIRMATION: 'Your FleetConnect booking is received',
-            BOOKING_ACCEPTED: 'Good news! Your booking is accepted',
+            BOOKING_ACCEPTED: 'Internal dispatch update',
             DRIVER_ASSIGNMENT_REQUEST: 'New ride assignment available',
-            DRIVER_ASSIGNED: 'Your driver is on the way',
+            DRIVER_ASSIGNED: 'Your ride is confirmed',
+            DRIVER_REASSIGNED: 'Your driver has been updated',
             DRIVER_DECLINED: 'Driver declined ride assignment',
             BOOKING_CANCELLED: 'Cancellation confirmation',
             BOOKING_COMPLETED: 'Thank you for traveling with FleetConnect',
             RIDE_COMPLETED: 'Thank you for traveling with FleetConnect',
+            RIDE_COMPLETED_REVIEW_REQUEST: 'Thank you for traveling with FleetConnect',
             ACCOUNT_WELCOME: 'Welcome to FleetConnect',
             ACCOUNT_ONBOARDING: 'Welcome to FleetConnect',
+            CUSTOMER_REGISTRATION_CONFIRMATION: 'Your FleetConnect account has been created',
             PAYMENT_REFUND_CONFIRMATION: 'Your refund has been processed'
         },
         labels: {
@@ -155,6 +168,8 @@ export const EmailTranslations = {
             confirmationBody: 'we have received your booking. Our team is currently processing your request.',
             acceptedBody: 'your booking has been confirmed by our dispatching. We look forward to transporting you.',
             assignedBody: 'your personal chauffeur has been assigned for your ride. Below are the details of your driver.',
+            rideConfirmedBody: 'your ride is confirmed. Your driver has accepted the ride and the details are below.',
+            driverReassignedBody: 'your driver has been updated. The new driver details are below.',
             assignmentRequestBody: 'you have been selected for a new ride. Review the details below and let us know if you can perform this assignment.',
             acceptAssignment: 'Accept',
             declineAssignment: 'Decline',
@@ -162,6 +177,7 @@ export const EmailTranslations = {
             cancelledBody: (ref) => `your booking with reference <strong>${ref}</strong> has been cancelled. If you have already paid, the amount will be refunded.`,
             completedBody: 'we hope you had a pleasant ride. Thank you for your trust in FleetConnect.',
             welcomeBody: 'welcome to FleetConnect. We have set up an account for you to book rides faster and view your history.',
+            registrationConfirmationBody: 'your FleetConnect account has been created. You can sign in to the customer portal and add rides with your booking number.',
             refundConfirmationBody: 'your refund has been successfully processed. The amount will appear in your account within a few business days.',
             refundStatus: 'Refund Status'
         }

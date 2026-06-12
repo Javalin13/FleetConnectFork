@@ -17,6 +17,19 @@ The live lifecycle was traced through repository code and live Supabase state be
 | Driver accepted email | `driver-accept.html` calls `driver_accept_assignment` then triggers `DRIVER_ASSIGNED` | Reported live working, but customer email used dispatch phone fallback | Repaired |
 | Account request flow | `Paneel/admin-index.html` calls `submit_account_request` | Live schema did not contain `account_requests` or `submit_account_request(payload)` | Repaired and validated |
 
+## Phase A.4.4.2 Customer Email Lifecycle Refinement
+
+The customer lifecycle was refined after live review:
+
+- `BOOKING_ACCEPTED` is no longer customer-facing. Operator acceptance remains an internal dispatch state transition.
+- `DRIVER_ASSIGNED` is now the customer-facing ride confirmation sent only after the driver accepts.
+- `DRIVER_REASSIGNED` is sent only when a replacement driver accepts after a prior accepted driver was changed.
+- `DRIVER_DECLINED` remains internal/operations-only and does not notify the customer.
+- `CUSTOMER_REGISTRATION_CONFIRMATION` confirms customer account creation separately from booking confirmation.
+- `RIDE_COMPLETED_REVIEW_REQUEST` / `RIDE_COMPLETED` is reserved for completed ride review follow-up.
+
+Persistence is handled by Supabase migration `20260611030000_customer_email_lifecycle_refinement.sql`, which stores reassignment state, declined driver snapshots, customer notification intent, and customer notification sent timestamps/history in booking metadata.
+
 ## Repairs Completed
 
 ### 1. Strict Public Booking Address/Route Enforcement

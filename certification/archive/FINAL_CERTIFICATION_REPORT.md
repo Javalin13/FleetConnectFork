@@ -11,20 +11,18 @@ NOT CERTIFIED
 
 The repository now contains the minimal Phase A fixes required before live validation, but production certification cannot be granted until the updated branch and send-email function are deployed and the booking/email/dashboard/driver lifecycle is validated in browser and inbox.
 
-## Phase A.4.4.1 Addendum
+## Phase A.4.4.2 Customer Email Lifecycle Addendum
 
-The A.4.4.1 live-validation hotfix branch adds:
+The customer email lifecycle has been simplified in repository code:
 
-- immediate booking processing state on confirmation
-- EUR 15 minimum fare enforcement in frontend payloads and the public booking RPC
-- customer portal login/register CTA routing with booking ID preservation
-- authenticated customer booking attachment by booking number/email match
-- corrected BOOKING_ACCEPTED CTA generation
-- driver decline reassignment state, operations-only notification trigger, and dashboard alert
-- reassignment cleanup after new driver acceptance
-- customer registration confirmation email trigger
+- operator acceptance no longer sends a customer email
+- driver acceptance is the customer-facing ride confirmation
+- driver decline is internal-only and urgent for dispatch/operator
+- reassignment customer email is sent only after the replacement driver accepts
+- registration confirmation is separated from booking confirmation
+- completed ride review request uses the review route with booking context
 
-Live Supabase rollback validation passed for the minimum fare, customer attach, driver decline, and driver accept cleanup paths. Production remains not certified until Vercel redeploy, send-email Edge Function deployment, and live browser/inbox validation are complete.
+Supabase migration `20260611030000_customer_email_lifecycle_refinement.sql` persists reassignment and customer notification audit state. Certification still requires migration application, Vercel deployment, and inbox validation.
 
 ## Phase A Work Completed
 

@@ -79,13 +79,16 @@ export class TemplateRenderer {
             case 'BOOKING_ACCEPTED': return this.renderBookingAccepted(data, labels, subjects, lang);
             case 'DRIVER_ASSIGNMENT_REQUEST': return this.renderDriverAssignmentRequest(data, labels, subjects, lang);
             case 'DRIVER_ASSIGNED': return this.renderDriverAssigned(data, labels, subjects, lang);
+            case 'DRIVER_REASSIGNED': return this.renderDriverReassigned(data, labels, subjects, lang);
             case 'DRIVER_DECLINED': return this.renderDriverDeclined(data, labels, subjects, lang);
             case 'BOOKING_CANCELLED': return this.renderBookingCancelled(data, labels, subjects, lang);
+            case 'RIDE_COMPLETED_REVIEW_REQUEST':
             case 'BOOKING_COMPLETED':
             case 'RIDE_COMPLETED':
                 return this.renderBookingCompleted(data, labels, subjects, lang);
             case 'ACCOUNT_WELCOME':
             case 'ACCOUNT_ONBOARDING':
+            case 'CUSTOMER_REGISTRATION_CONFIRMATION':
                 return this.renderAccountWelcome(data, labels, subjects, lang);
             case 'CUSTOMER_REGISTRATION_CONFIRMATION':
                 return this.renderCustomerRegistrationConfirmation(data, labels, subjects, lang);
@@ -215,36 +218,43 @@ export class TemplateRenderer {
     static renderDriverAssigned(data, labels, subjects, lang) {
         const d = data.driver || {};
         const customerName = this.getCustomerName(data, labels);
-        const driverFirstName = d.name ? d.name.split(' ')[0] : (labels.driver || 'Your FleetConnect Driver');
+        const driverName = d.name || (labels.driver || 'Your FleetConnect Driver');
         const driverPhone = d.phone || CommunicationConfig.brand.supportPhone;
-        const phoneLabel = labels.phone || 'Phone';
-        const contactLabel = d.phone ? `${labels.driver || 'Driver'} ${phoneLabel.toLowerCase()}` : labels.dispatchContact;
+        const amountValue = Number(data.amount || 0);
+        const distanceValue = Number(data.distance_km || data.route_distance_km || data.form_data?.route_distance_km || data.metadata?.route_distance_km || 0);
+        const durationValue = Number(data.duration_min || data.route_duration_min || data.form_data?.route_duration_min || data.metadata?.route_duration_min || 0);
+        const ctaUrl = RouteBuilder.build('view-booking', { id: data.id, email: data.customer?.email || data.email });
 
         return `
             <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.DRIVER_ASSIGNED}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(customerName)} ${labels.assignedBody}
+                ${labels.greeting(customerName)} ${labels.rideConfirmedBody || labels.assignedBody}
             </p>
-            ${EmailComponents.sectionTitle(labels.driver)}
+            ${EmailComponents.sectionTitle(labels.summary)}
             <table width="100%" style="margin-bottom: 30px;">
-                ${EmailComponents.detailsRow(labels.name, driverFirstName)}
-                ${EmailComponents.detailsRow(phoneLabel, driverPhone)}
-                ${EmailComponents.detailsRow(labels.vehicle, `${d.vehicle || 'Luxury Vehicle'} (${d.color || '...'})`)}
-                ${EmailComponents.detailsRow(labels.plate, d.license_plate || '...')}
-            </table>
-            ${EmailComponents.sectionTitle(labels.pickupInfo)}
-            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.bookingReference, data.reference || data.id)}
                 ${EmailComponents.detailsRow(labels.dateTime, `${data.datetime} ${data.time}`)}
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
                 ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
+                ${Number.isFinite(distanceValue) && distanceValue > 0 ? EmailComponents.detailsRow(labels.distance, `${distanceValue.toFixed(1)} km`) : ''}
+                ${Number.isFinite(durationValue) && durationValue > 0 ? EmailComponents.detailsRow(labels.duration || 'Duration', `${Math.round(durationValue)} min`) : ''}
+                ${EmailComponents.detailsRow(labels.price, `EUR ${amountValue.toFixed(2)}`)}
             </table>
-            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-                <p style="margin: 0; font-family: 'Inter', sans-serif; font-size: 14px; color: #64748b; text-align: center;">
-                    ${contactLabel}: <strong>${driverPhone}</strong>
-                </p>
-            </div>
-            ${EmailComponents.cta(labels.viewBooking, RouteBuilder.build('view-booking', { id: data.id }))}
+            ${EmailComponents.sectionTitle(labels.driver)}
+            <table width="100%" style="margin-bottom: 30px;">
+                ${EmailComponents.detailsRow(labels.name, driverName)}
+                ${EmailComponents.detailsRow(labels.phone || 'Phone', driverPhone)}
+                ${EmailComponents.detailsRow(labels.vehicle, `${d.vehicle || data.vehicle || 'Vehicle'}${d.color ? ` (${d.color})` : ''}`)}
+                ${EmailComponents.detailsRow(labels.plate, d.license_plate || '...')}
+            </table>
+            ${EmailComponents.cta(labels.viewBooking, ctaUrl)}
         `;
+    }
+
+    static renderDriverReassigned(data, labels, subjects, lang) {
+        const html = this.renderDriverAssigned(data, labels, subjects, lang);
+        return html.replace(subjects.DRIVER_ASSIGNED, subjects.DRIVER_REASSIGNED || subjects.DRIVER_ASSIGNED)
+            .replace(labels.rideConfirmedBody || labels.assignedBody, labels.driverReassignedBody || labels.rideConfirmedBody || labels.assignedBody);
     }
 
     static renderDriverDeclined(data, labels, subjects, lang) {
@@ -293,7 +303,7 @@ export class TemplateRenderer {
                 ${EmailComponents.detailsRow(labels.driver, d.name || '...')}
                 ${EmailComponents.detailsRow(labels.vehicle, `${d.vehicle || data.vehicle || '...'} (${d.color || '...'})`)}
             </table>
-            ${EmailComponents.cta(labels.writeReview, ReviewConfig.googleReviewUrl)}
+            ${EmailComponents.cta(labels.writeReview, RouteBuilder.build('review', { id: data.id }) || ReviewConfig.googleReviewUrl)}
             <div style="text-align: center; margin-top: 10px;">
                 <a href="${RouteBuilder.build('book-new')}" style="color: ${CommunicationConfig.theme.primaryColor}; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none;">
                     &rarr; ${labels.bookNew}
@@ -305,11 +315,11 @@ export class TemplateRenderer {
     static renderAccountWelcome(data, labels, subjects, lang) {
         const customerName = this.getCustomerName(data, labels);
         return `
-            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.ACCOUNT_WELCOME}</h2>
+            <h2 style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 22px; color: ${CommunicationConfig.theme.secondaryColor};">${subjects.CUSTOMER_REGISTRATION_CONFIRMATION || subjects.ACCOUNT_WELCOME}</h2>
             <p style="margin: 0 0 30px 0; font-family: 'Inter', sans-serif; font-size: 15px; color: #475569; line-height: 24px;">
-                ${labels.greeting(customerName)} ${labels.welcomeBody}
+                ${labels.greeting(customerName)} ${labels.registrationConfirmationBody || labels.welcomeBody}
             </p>
-            ${EmailComponents.cta(labels.setupAccount, RouteBuilder.build('account-welcome', { token: data.token }))}
+            ${EmailComponents.cta(labels.viewBooking || labels.setupAccount, RouteBuilder.build('customer-booking', { id: data.booking_id || data.id, email: data.customer?.email || data.email }))}
         `;
     }
 
