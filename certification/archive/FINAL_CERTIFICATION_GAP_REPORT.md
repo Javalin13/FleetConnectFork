@@ -296,3 +296,17 @@ FleetConnect remains NOT CERTIFIED until this 19:39 hotfix is deployed and live-
 | Dashboard Mail tab | SAFE PLAN COMPLETE, OUT OF CERTIFICATION BLOCKER SCOPE | `MAIL_INTEGRATION_PLAN.md` documents secure IMAP/SMTP architecture; no unsafe frontend mailbox credentials added. | Implement later through server-side proxy only. |
 
 FleetConnect remains NOT CERTIFIED until live migration and validation evidence pass.
+
+## Phase A.4.4.4 Customer Self-Service Gap Update
+
+| Item | Classification | Evidence | Required next action |
+| --- | --- | --- | --- |
+| Customer registration approval requirement | RESOLVED IN REPOSITORY AND LIVE DB, BLOCKED PENDING LIVE BROWSER TESTING | Customer registration no longer submits customer approval requests; customer-scope pending requests were converted to approved/informational. | Register a new customer, verify email, log in, and confirm no manual operator approval is required. |
+| `defaultPickupAddress` / `default_pickup_address` mismatch | RESOLVED IN REPOSITORY AND LIVE DB, BLOCKED PENDING LIVE BROWSER TESTING | Live `customers.default_pickup_address` exists; profile RPC normalizes `default_pickup_address`, `defaultPickupAddress`, and legacy typo variant. | Register with manual default pickup address and confirm no schema/mapping error. |
+| Customer dashboard visibility | RESOLVED IN REPOSITORY AND LIVE DB, BLOCKED PENDING LIVE BROWSER TESTING | Dashboard snapshot now includes `customers`; dashboard has `Klanten` tab with active/archived customers and auth-linkage state. | Log in as mapped operator and confirm newly registered customers appear under `Klanten`. |
+| Customer/operator account request separation | RESOLVED IN REPOSITORY AND LIVE DB, BLOCKED PENDING LIVE BROWSER TESTING | Account Requests tab filters out customer-scope records; normal customer registrations are no longer pending operator approvals. | Confirm Account Requests contains dashboard/operator requests only. |
+| Google API unavailable during registration | MITIGATED IN REPOSITORY, BLOCKED PENDING LIVE BROWSER TESTING | Registration catches Google API error states and validates manual address text only. | Retest with `ApiNotActivatedMapError` / `RefererNotAllowedMapError`. |
+| `België` mojibake | RESOLVED IN REPOSITORY, BLOCKED PENDING DEPLOYMENT | Scoped scan of active PV/Paneel/Supabase paths found no `BelgiÃ` or malformed `Belgie` variants. | Redeploy and visually confirm on touched live pages. |
+| Scope B dashboard power features | DEFERRED | Multi-row selectors, bulk actions, table sorting/filtering, and Agenda fiche buttons were not implemented in this blocker pass. | Reopen only after Scope A customer self-service live validation passes. |
+
+FleetConnect remains NOT CERTIFIED until Scope A live validation passes.

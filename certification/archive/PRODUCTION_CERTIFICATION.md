@@ -2105,6 +2105,44 @@ Repository updates:
 
 Certification status remains NOT CERTIFIED.
 
+## Phase A.4.4.4 Customer Self-Service Repair - 2026-06-13
+
+Status: NOT CERTIFIED - REPOSITORY AND LIVE SUPABASE REPAIR APPLIED, LIVE BROWSER VALIDATION REQUIRED.
+
+Certification blockers addressed in this pass:
+
+- Customer registration no longer requires manual operator approval.
+- Customer profile creation now normalizes `default_pickup_address`, `defaultPickupAddress`, and the legacy typo variant without failing profile creation.
+- Live `customers` schema now includes `default_pickup_address`, `is_active`, `archived_at`, and `updated_at`.
+- Customer portal access can auto-link a verified Supabase Auth user to a customer profile by auth email/user id.
+- Dashboard exposes a separate `Klanten` section for active and archived customer records.
+- Dashboard/operator account requests remain separate from normal customer registrations.
+- Customer archive/deactivate is RPC-based and preserves bookings/history.
+- Google Places failure remains non-blocking for customer registration manual address entry.
+- Visible `België` encoding issues in touched active pages were corrected.
+
+Live Supabase evidence:
+
+- Verified customer columns: `default_pickup_address`, `is_active`, `archived_at`, `updated_at`.
+- Verified RPCs: `create_customer_registration_profile`, `link_customer_after_registration`, `get_customer_portal_access`, `archive_operator_customer`, `get_operator_dashboard_snapshot`.
+- Customer request statuses after repair: approved 1, rejected 1, pending 0.
+- Customer rows after repair: total 4, active 4, linked 1.
+
+Local validation:
+
+- `git diff --check` passed.
+- Inline module script parsing passed for active touched customer/dashboard/booking pages.
+- Scoped typo scan found no remaining `BelgiÃ`, malformed `Belgie`, stale `customeraccountrequests`, or lower-case `defaultpickupadress` references in active PV/Paneel/Supabase paths.
+
+Remaining certification blocker:
+
+- Live browser retest must prove registration -> verification email -> login -> customer portal -> dashboard `Klanten` visibility -> safe archive/deactivate.
+
+Scope B dashboard power features:
+
+- Multi-row selectors, bulk actions, table-wide sorting/filtering, and Agenda `Bekijk fiche` were intentionally not implemented in this pass.
+- They remain deferred until Scope A live customer lifecycle validation is stable.
+
 ## Phase A.4.4.4 Critical Dashboard Visibility Regression
 
 Status: NOT CERTIFIED - HOTFIX APPLIED, LIVE UI RETEST REQUIRED.

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
@@ -112,17 +112,17 @@
         </div>
     </div>
     <div class="nav-menu">
-        <div class="nav-section"><div class="nav-section-title" id="navRides">ðŸš– RITTEN</div>
+        <div class="nav-section"><div class="nav-section-title" id="navRides">RITTEN</div>
             <div class="nav-item active" data-tab="myrides" onclick="app.switchTab('myrides')"><i class="fas fa-calendar-check"></i><span id="navMyRides">Mijn Ritten</span></div>
             <div class="nav-item" data-tab="history" onclick="app.switchTab('history')"><i class="fas fa-history"></i><span id="navHistory">Historiek</span></div>
         </div>
-        <div class="nav-section"><div class="nav-section-title" id="navFinanceTitle">ðŸ’° FINANCIÃ‹N</div>
+        <div class="nav-section"><div class="nav-section-title" id="navFinanceTitle">FINANCIËN</div>
             <div class="nav-item" data-tab="finance" onclick="app.switchTab('finance')"><i class="fas fa-chart-line"></i><span id="navFinance">Financieel</span></div>
         </div>
-        <div class="nav-section"><div class="nav-section-title" id="navProfileTitle">ðŸ‘¤ PROFIEL</div>
+        <div class="nav-section"><div class="nav-section-title" id="navProfileTitle">PROFIEL</div>
             <div class="nav-item" data-tab="profile" onclick="app.switchTab('profile')"><i class="fas fa-id-card"></i><span id="navProfileText">Mijn Profiel</span></div>
         </div>
-        <div class="nav-section"><div class="nav-section-title" id="navWikiTitle">â„¹ï¸ INFO</div>
+        <div class="nav-section"><div class="nav-section-title" id="navWikiTitle">INFO</div>
             <div class="nav-item" data-tab="wiki" onclick="app.switchTab('wiki')"><i class="fas fa-robot"></i><span id="navWiki">Wiki Agent</span></div>
         </div>
         <div class="nav-item logout-item" onclick="app.showLogoutModal()"><i class="fas fa-sign-out-alt"></i><span id="logoutText">Uitloggen</span></div>
@@ -164,7 +164,7 @@
         <div id="rideModalBody"></div>
         <div class="modal-buttons">
             <button class="modal-btn cancel" onclick="app.closeRideModal()">Sluiten</button>
-            <button class="modal-btn confirm" id="completeRideBtn" style="display:none;">âœ… Rit voltooien</button>
+            <button class="modal-btn confirm" id="completeRideBtn" style="display:none;">Rit voltooien</button>
         </div>
     </div>
 </div>
@@ -174,14 +174,14 @@
 <script>
     // ==================== DEMO DATA (met lange adressen voor tooltip demo) ====================
     let myRides = [
-        { id: "T-PV-20260601-001", datetime: "01-06-2026", time: "09:30", name: "Mevr. De Vries", pickup: "Antwerpen Centraal, Antwerpen, Vlaanderen, 2000, BelgiÃ«", destination: "Brussels Airport, Zaventem, Vlaams-Brabant, 1930, BelgiÃ«", vehicle: "Standaard", amount: 45.00, status: "assigned" },
-        { id: "T-PV-20260601-002", datetime: "01-06-2026", time: "14:15", name: "Dhr. Peeters", pickup: "Mechelen Nekkerhal, Mechelen, Antwerpen, 2800, BelgiÃ«", destination: "Antwerpen Haven, Antwerpen, 2000, BelgiÃ«", vehicle: "Break", amount: 32.50, status: "assigned" },
-        { id: "T-PV-20260602-003", datetime: "02-06-2026", time: "08:00", name: "Mevr. Claes", pickup: "Leuven Station, Leuven, Vlaams-Brabant, 3000, BelgiÃ«", destination: "Zaventem Brussels Airport, Zaventem, 1930, BelgiÃ«", vehicle: "Exclusieve", amount: 67.00, status: "assigned" }
+        { id: "T-PV-20260601-001", datetime: "01-06-2026", time: "09:30", name: "Mevr. De Vries", pickup: "Antwerpen Centraal, Antwerpen, Vlaanderen, 2000, België", destination: "Brussels Airport, Zaventem, Vlaams-Brabant, 1930, België", vehicle: "Standaard", amount: 45.00, status: "assigned" },
+        { id: "T-PV-20260601-002", datetime: "01-06-2026", time: "14:15", name: "Dhr. Peeters", pickup: "Mechelen Nekkerhal, Mechelen, Antwerpen, 2800, België", destination: "Antwerpen Haven, Antwerpen, 2000, België", vehicle: "Break", amount: 32.50, status: "assigned" },
+        { id: "T-PV-20260602-003", datetime: "02-06-2026", time: "08:00", name: "Mevr. Claes", pickup: "Leuven Station, Leuven, Vlaams-Brabant, 3000, België", destination: "Zaventem Brussels Airport, Zaventem, 1930, België", vehicle: "Exclusieve", amount: 67.00, status: "assigned" }
     ];
     let historyRides = [
-        { id: "T-PV-20260530-045", datetime: "30-05-2026", time: "11:20", name: "Dhr. Janssen", pickup: "Brussel Zuid, Brussel, 1060, BelgiÃ«", destination: "Luik, LiÃ¨ge, 4000, BelgiÃ«", vehicle: "Standaard", amount: 87.50, status: "completed" },
-        { id: "T-PV-20260529-032", datetime: "29-05-2026", time: "18:45", name: "Mevr. Willems", pickup: "Gent Sint-Pieters, Gent, Oost-Vlaanderen, 9000, BelgiÃ«", destination: "Oostende, West-Vlaanderen, 8400, BelgiÃ«", vehicle: "Mini Van", amount: 64.00, status: "completed" },
-        { id: "T-PV-20260528-021", datetime: "28-05-2026", time: "07:30", name: "Dhr. Maes", pickup: "Hasselt, Limburg, 3500, BelgiÃ«", destination: "Eindhoven Airport, Eindhoven, Nederland", vehicle: "Break", amount: 112.00, status: "completed" }
+        { id: "T-PV-20260530-045", datetime: "30-05-2026", time: "11:20", name: "Dhr. Janssen", pickup: "Brussel Zuid, Brussel, 1060, België", destination: "Luik, Liège, 4000, België", vehicle: "Standaard", amount: 87.50, status: "completed" },
+        { id: "T-PV-20260529-032", datetime: "29-05-2026", time: "18:45", name: "Mevr. Willems", pickup: "Gent Sint-Pieters, Gent, Oost-Vlaanderen, 9000, België", destination: "Oostende, West-Vlaanderen, 8400, België", vehicle: "Mini Van", amount: 64.00, status: "completed" },
+        { id: "T-PV-20260528-021", datetime: "28-05-2026", time: "07:30", name: "Dhr. Maes", pickup: "Hasselt, Limburg, 3500, België", destination: "Eindhoven Airport, Eindhoven, Nederland", vehicle: "Break", amount: 112.00, status: "completed" }
     ];
     
     // Helper functie om route in te korten
@@ -196,11 +196,11 @@
             if (result.length > 55) result = result.substring(0, 52) + '...';
             return result;
         };
-        return `${shortenAddress(pickup)} â†’ ${shortenAddress(destination)}`;
+        return `${shortenAddress(pickup)} -> ${shortenAddress(destination)}`;
     }
     
     function getFullRoute(pickup, destination) {
-        return `${pickup || ''} â†’ ${destination || ''}`;
+        return `${pickup || ''} -> ${destination || ''}`;
     }
     
     let totalRides = 0, totalAmount = 0, avgAmount = 0, chartLabels = [], chartValues = [];
@@ -226,37 +226,37 @@
     // ==================== VERTALINGEN ====================
     const translations = {
         nl: {
-            logoSubtext: "Driver Paneel", navRides: "ðŸš– RITTEN", navMyRides: "Mijn Ritten", navHistory: "Historiek",
-            navFinanceTitle: "ðŸ’° FINANCIÃ‹N", navFinance: "Financieel", navProfileTitle: "ðŸ‘¤ PROFIEL", navProfileText: "Mijn Profiel",
-            navWikiTitle: "â„¹ï¸ INFO", navWiki: "Wiki Agent", logoutText: "Uitloggen", logoutTitle: "Uitloggen",
+            logoSubtext: "Driver Paneel", navRides: "RITTEN", navMyRides: "Mijn Ritten", navHistory: "Historiek",
+            navFinanceTitle: "FINANCIËN", navFinance: "Financieel", navProfileTitle: "PROFIEL", navProfileText: "Mijn Profiel",
+            navWikiTitle: "INFO", navWiki: "Wiki Agent", logoutText: "Uitloggen", logoutTitle: "Uitloggen",
             logoutConfirmMsg: "Weet u zeker dat u wilt uitloggen?", logoutCancel: "Annuleren", logoutConfirm: "Uitloggen",
             refreshText: "Vernieuwen", pageTitleMyRides: "Mijn Ritten", pageTitleHistory: "Historiek", pageTitleProfile: "Mijn Profiel",
             pageTitleFinance: "Financieel Overzicht", pageTitleWiki: "Wiki Agent",
             filterOrderId: "Rit ID", filterName: "Klantnaam", search: "Zoeken", reset: "Reset",
             tableId: "ID", tableDateTime: "Datum/Tijd", tableCustomer: "Klant", tableRoute: "Route", tableVehicle: "Voertuig", tableStatus: "Status", tableAmount: "Bedrag", tableAction: "Actie",
-            noData: "ðŸ“­ Geen ritten gevonden",
+            noData: "Geen ritten gevonden",
             profileName: "Naam", profileEmail: "E-mail", profileVehicle: "Voertuig", profilePlate: "Nummerplaat",
             profileFooter: "Dit is een demonstratieomgeving. Uw echte gegevens worden via de database geladen.",
             financeTotalRides: "Totaal ritten", financeTotalAmount: "Totale omzet", financeAvgAmount: "Gemiddeld per rit",
-            financePeriodLabel: "Alle voltooide ritten", chartLabel: "Omzet per maand (â‚¬)", noChartData: "Geen data",
+            financePeriodLabel: "Alle voltooide ritten", chartLabel: "Omzet per maand (EUR)", noChartData: "Geen data",
             toastRefresh: "Gegevens vernieuwd", toastComplete: "Rit gemarkeerd als voltooid", toastError: "Fout",
             btnView: "Bekijk", btnComplete: "Voltooien", rideDetailTitle: "Rit details"
         },
         fr: {
             logoSubtext: "Portail Chauffeur", navMyRides: "Mes Courses", navHistory: "Historique",
-            btnView: "Voir", btnComplete: "Terminer", rideDetailTitle: "DÃ©tails de la course",
-            toastComplete: "Course terminÃ©e", noData: "ðŸ“­ Aucune course trouvÃ©e",
-            pageTitleMyRides: "Mes Courses", pageTitleHistory: "Historique", pageTitleFinance: "AperÃ§u financier",
+            btnView: "Voir", btnComplete: "Terminer", rideDetailTitle: "Détails de la course",
+            toastComplete: "Course terminée", noData: "Aucune course trouvée",
+            pageTitleMyRides: "Mes Courses", pageTitleHistory: "Historique", pageTitleFinance: "Aperçu financier",
             financeTotalRides: "Courses totales", financeTotalAmount: "Chiffre d'affaires", financeAvgAmount: "Moyenne par course",
-            tableId: "ID", tableDateTime: "Date/Heure", tableCustomer: "Client", tableRoute: "Trajet", tableVehicle: "VÃ©hicule", tableStatus: "Statut", tableAmount: "Montant", tableAction: "Action",
-            filterOrderId: "ID Course", filterName: "Client", search: "Rechercher", reset: "RÃ©initialiser",
-            profileName: "Nom", profileEmail: "E-mail", profileVehicle: "VÃ©hicule", profilePlate: "Plaque",
-            logoutText: "DÃ©connexion", refreshText: "Actualiser"
+            tableId: "ID", tableDateTime: "Date/Heure", tableCustomer: "Client", tableRoute: "Trajet", tableVehicle: "Véhicule", tableStatus: "Statut", tableAmount: "Montant", tableAction: "Action",
+            filterOrderId: "ID Course", filterName: "Client", search: "Rechercher", reset: "Réinitialiser",
+            profileName: "Nom", profileEmail: "E-mail", profileVehicle: "Véhicule", profilePlate: "Plaque",
+            logoutText: "Déconnexion", refreshText: "Actualiser"
         },
         en: {
             logoSubtext: "Driver Panel", navMyRides: "My Rides", navHistory: "History",
             btnView: "View", btnComplete: "Complete", rideDetailTitle: "Ride details",
-            toastComplete: "Ride completed", noData: "ðŸ“­ No rides found",
+            toastComplete: "Ride completed", noData: "No rides found",
             pageTitleMyRides: "My Rides", pageTitleHistory: "History", pageTitleFinance: "Financial Overview",
             financeTotalRides: "Total rides", financeTotalAmount: "Total revenue", financeAvgAmount: "Average per ride",
             tableId: "ID", tableDateTime: "Date/Time", tableCustomer: "Customer", tableRoute: "Route", tableVehicle: "Vehicle", tableStatus: "Status", tableAmount: "Amount", tableAction: "Action",
@@ -305,7 +305,7 @@
                 <div class="fiche-row"><span class="fiche-label">Klant:</span><span>${ride.name}</span></div>
                 <div class="fiche-row"><span class="fiche-label">Route:</span><span title="${fullRoute}">${shortenRoute(ride.pickup, ride.destination)}</span></div>
                 <div class="fiche-row"><span class="fiche-label">Voertuig:</span><span>${ride.vehicle}</span></div>
-                <div class="fiche-row"><span class="fiche-label">Bedrag:</span><span>â‚¬ ${(parseFloat(ride.amount)||0).toFixed(2)}</span></div>
+                <div class="fiche-row"><span class="fiche-label">Bedrag:</span><span>EUR ${(parseFloat(ride.amount)||0).toFixed(2)}</span></div>
                 <div class="fiche-row"><span class="fiche-label">Status:</span><span>${ride.status === 'assigned' ? 'Toegewezen' : (ride.status === 'completed' ? 'Voltooid' : ride.status)}</span></div>
             `;
             if (!isCompleted && ride.status === 'assigned') {
@@ -387,7 +387,7 @@
                     <td class="route-cell" title="${fullRoute.replace(/"/g, '&quot;')}" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: help;">${shortRoute}</span></td>
                     <td style="white-space: nowrap;">${r.vehicle}</td>
                     <td style="white-space: nowrap;"><span class="status-badge ${statusClass}">${statusText}</span></td>`;
-                if (type === 'history') row += `<td style="white-space: nowrap;">â‚¬${(parseFloat(r.amount)||0).toFixed(2)}</span></td>`;
+                if (type === 'history') row += `<td style="white-space: nowrap;">EUR ${(parseFloat(r.amount)||0).toFixed(2)}</span></td>`;
                 if (showAction) row += `<td style="white-space: nowrap;"><button class="action-btn" onclick='app.showRideModal(${JSON.stringify(r).replace(/'/g, "&#39;")})'>${t('btnView')}</button></td>`;
                 row += `</tr>`;
                 return row;
@@ -421,8 +421,8 @@
             updateFinanceData();
             let html = `<div class="finance-stats-grid">
                             <div class="finance-stat-card"><div class="value">${totalRides}</div><div class="label">${t('financeTotalRides')}</div></div>
-                            <div class="finance-stat-card"><div class="value">â‚¬${totalAmount.toFixed(2)}</div><div class="label">${t('financeTotalAmount')}</div></div>
-                            <div class="finance-stat-card"><div class="value">â‚¬${avgAmount.toFixed(2)}</div><div class="label">${t('financeAvgAmount')}</div></div>
+                            <div class="finance-stat-card"><div class="value">EUR ${totalAmount.toFixed(2)}</div><div class="label">${t('financeTotalAmount')}</div></div>
+                            <div class="finance-stat-card"><div class="value">EUR ${avgAmount.toFixed(2)}</div><div class="label">${t('financeAvgAmount')}</div></div>
                         </div>
                         <p style="margin-bottom:16px;">${t('financePeriodLabel')}</p>
                         <div class="chart-container"><canvas id="revenueChart" width="400" height="200"></canvas></div>`;
@@ -440,7 +440,7 @@
         },
         renderWiki() {
             let html = `<div class="wiki-container">
-                <h2><i class="fas fa-robot"></i> Wiki Agent â€“ Uitgebreid rapport Driver Paneel</h2>
+                <h2><i class="fas fa-robot"></i> Wiki Agent - Uitgebreid rapport Driver Paneel</h2>
                 <p style="margin-bottom: 20px;">Dit document beschrijft de volledige werking, dataverkeer, authenticatie en maandelijkse afrekening van het FleetConnect Driver Paneel. Het rapport dient als naslagwerk voor chauffeurs en technisch beheer.</p>
                 
                 <div class="report-section">
@@ -462,7 +462,7 @@
                         <tr><th>Kolom</th><th>Beschrijving</th></tr>
                         <tr><td>id</span></span><td>Uniek ritnummer (bv. T-PV-20260601-001)</span></span></tr>
                         <tr><td>assigned_driver_id</span></span><td>ID van de chauffeur die de rit toegewezen heeft gekregen</span></span></tr>
-                        <tr><td>status</span></span><td>pending â†’ accepted â†’ assigned â†’ completed / cancelled</span></span></tr>
+                        <tr><td>status</span></span><td>pending -> accepted -> assigned -> completed / cancelled</span></span></tr>
                         <tr><td>amount</span></span><td>Ritbedrag in euro's (exclusief commissie)</span></span></tr>
                         <tr><td>datetime, time</span></span><td>Datum en tijd van de rit</span></span></tr>
                     </table>
@@ -472,7 +472,7 @@
                 </div>
 
                 <hr style="margin: 24px 0;">
-                <p style="text-align: center; font-size: 0.75rem; color: #64748b;">Â© 2026 FleetConnect â€“ Driver Paneel versie 2.0</p>
+                <p style="text-align: center; font-size: 0.75rem; color: #64748b;">(c) 2026 FleetConnect - Driver Paneel versie 2.0</p>
             </div>`;
             document.getElementById('contentArea').innerHTML = html;
             document.getElementById('pageTitle').innerHTML = t('pageTitleWiki') + ' <span class="demo-badge">DEMO MODE</span>';
@@ -521,4 +521,3 @@
 </script>
 </body>
 </html>
-

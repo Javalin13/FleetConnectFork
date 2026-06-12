@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
@@ -149,7 +149,7 @@
     <div class="login-card">
         <i class="fas fa-car" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 16px;"></i>
         <h1>FleetConnect</h1>
-        <p>Professioneel taxivervoer in BelgiÃ«</p>
+        <p>Professioneel taxivervoer in België</p>
 
         <div id="errorBox" class="error-msg"></div>
         <div id="infoBox" class="info-msg"></div>
@@ -199,7 +199,7 @@
             registerLink.href = registerParams.toString() ? `/PV/register.html?${registerParams.toString()}` : '/PV/register.html';
         }
 
-        if (loginReason === 'registered') showInfo('Account successfully created. Please verify your email address. If account approval is required, you will receive access once approved.', true);
+        if (loginReason === 'registered') showInfo('Account successfully created. Please verify your email address. After verification you can log in to the customer portal.', true);
         if (loginReason === 'verified') showInfo('Email successfully verified. You can now log in if your account has been approved.', true);
         if (loginReason === 'pending') showError('Your account is awaiting approval.', true);
         if (loginReason === 'profile') showError('Uw klantprofiel is nog niet gekoppeld. Log opnieuw in na verificatie of contacteer support.', true);
@@ -266,10 +266,10 @@
             }
 
             const status = await getRequestStatus(user.email);
-            if (status?.found && status.status === 'pending') {
+            if (status?.found && status.status === 'pending' && status.request_scope !== 'customer') {
                 return { allowed: false, message: 'Your account is awaiting approval.' };
             }
-            if (status?.found && status.status === 'rejected') {
+            if (status?.found && status.status === 'rejected' && status.request_scope !== 'customer') {
                 return { allowed: false, message: 'Uw accountaanvraag werd niet goedgekeurd. Neem contact op met support@fleetconnect.be.' };
             }
 
@@ -292,7 +292,7 @@
 
             if (customers?.length) return { allowed: true };
 
-            if (status?.found && status.status === 'approved') {
+            if (status?.found && status.status === 'approved' && status.request_scope !== 'customer') {
                 return { allowed: false, message: 'Uw account is goedgekeurd, maar uw klantprofiel is nog niet gekoppeld. Controleer uw verificatiemail of contacteer support.' };
             }
 
@@ -384,5 +384,3 @@
     </script>
 </body>
 </html>
-
-

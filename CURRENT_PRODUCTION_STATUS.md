@@ -358,3 +358,18 @@ Remediation:
 - Registration now detects Google API unavailable states and keeps manual address entry enabled.
 
 FleetConnect remains NOT CERTIFIED until the redeployed dashboard shows existing live bookings/drivers/history/agenda and the customer registration/verification/approval/login flow passes live.
+
+## 2026-06-13 Customer Self-Service Status
+
+Status: NOT CERTIFIED - SELF-SERVICE CUSTOMER REPAIR APPLIED, LIVE BROWSER RETEST REQUIRED.
+
+The customer lifecycle has been changed so normal customer registration does not require manual operator approval. Operator approval remains for dashboard/operator access requests only.
+
+Applied:
+
+- Live Supabase now has customer profile fields required by registration and dashboard visibility: `default_pickup_address`, `is_active`, `archived_at`, and `updated_at`.
+- Live Supabase now has customer lifecycle RPCs for registration profile creation, auth-user linking, portal access, customer archive, and operator dashboard snapshot.
+- Customer-scope pending account requests were converted to approved/informational state.
+- Dashboard now exposes customers separately under `Klanten`; operator/dashboard account requests remain separate.
+
+Production remains blocked until live retest confirms registration, verification, login, customer portal access, customer dashboard visibility, and safe archive/deactivate behavior.

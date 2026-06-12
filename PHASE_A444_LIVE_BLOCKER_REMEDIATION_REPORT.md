@@ -254,3 +254,63 @@ Live validation still required:
 2. Open the dashboard as a mapped operator and verify Drivers, New Orders, Orders, History, and Agenda repopulate.
 3. Register with a manually typed pickup address while Google Places remains unavailable.
 4. Confirm verification, approval, login, customer request notification, and portal access.
+
+## 2026-06-13 Self-Service Customer Lifecycle Repair
+
+Status: REMEDIATION APPLIED TO REPOSITORY AND LIVE SUPABASE - NOT CERTIFIED UNTIL LIVE BROWSER RETEST PASSES
+
+Live/schema root cause:
+
+- The live `customers` table did not contain `default_pickup_address`, while customer registration/profile RPCs expected that field.
+- Customer-scoped account requests could remain in the approval queue, which conflicted with the required customer self-service lifecycle.
+- Customer registrations were mixed with dashboard/operator account requests, making approval state ambiguous.
+
+Repository remediation:
+
+- Added migration `20260613010000_phase_a444_customer_self_service.sql`.
+- Customer registration no longer submits a customer approval request.
+- Customer registration still sends FleetConnect an informational registration notification.
+- Customer portal login no longer blocks customer-scope records on pending/rejected approval states.
+- Dashboard now has a `Klanten` section that lists active and archived customers with name, email, phone, default pickup address, created date, and auth-linkage state.
+- Dashboard/operator account requests are filtered to non-customer requests only.
+- Customer archive/deactivate uses `archive_operator_customer(...)` and preserves booking/history records.
+- Registration catches Google API unavailable states and keeps manual default pickup address entry enabled.
+- Visible `België` mojibake was corrected in touched active pages.
+
+Live Supabase remediation applied:
+
+- Added `customers.default_pickup_address`, `customers.is_active`, `customers.archived_at`, and `customers.updated_at`.
+- Deployed/updated `create_customer_registration_profile(payload jsonb)`.
+- Deployed/updated `link_customer_after_registration()`.
+- Deployed/updated `get_customer_portal_access()`.
+- Deployed/updated `archive_operator_customer(text, text)`.
+- Deployed/updated `get_operator_dashboard_snapshot()` with `customers` included.
+- Converted pending customer-scope account request state to approved/informational; rejected historical customer request remained rejected.
+
+Live verification evidence:
+
+- `customers_columns`: `default_pickup_address`, `is_active`, `archived_at`, `updated_at`.
+- `customer_functions`: `archive_operator_customer`, `create_customer_registration_profile`, `get_customer_portal_access`, `get_operator_dashboard_snapshot`, `link_customer_after_registration`.
+- `customer_request_statuses`: approved 1, rejected 1, pending 0.
+- `customer_counts`: total 4, active 4, linked 1.
+
+Validation completed locally:
+
+- `git diff --check`: passed.
+- Inline module script parse passed for `PV/register.html`, `PV/index.html`, `Paneel/onderaannemerA.html`, `PV/PV.html`, and `PV.html`.
+- Scoped scan found no remaining `BelgiÃ`, malformed `Belgie`, stale `customeraccountrequests`, or lower-case `defaultpickupadress` references in active PV/Paneel/Supabase paths.
+
+Scope B status:
+
+- Multi-row selectors, dashboard-wide sorting/filtering, and Agenda `Bekijk fiche` enhancements were not implemented in this pass.
+- They remain open dashboard power features and should not block Scope A certification unless partially implemented later.
+
+Live validation still required:
+
+1. Redeploy this branch.
+2. Register a new customer with manual default pickup address while Google API remains unavailable.
+3. Click the Supabase verification email and confirm code exchange/login works.
+4. Confirm the customer portal opens without a profile-link dead end.
+5. Confirm the new customer appears under dashboard `Klanten`.
+6. Confirm dashboard/operator account requests remain separate from customers.
+7. Archive/deactivate one safe test customer and confirm booking/history records remain.

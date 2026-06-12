@@ -228,3 +228,28 @@ Remediation added:
 - Registration now handles Google API unavailable states as non-blocking manual-address mode.
 
 Final certification remains blocked until redeployed browser validation proves that existing bookings, drivers, orders, history, and agenda are visible again and the customer registration/verification/approval/login flow passes.
+
+## A.4.4.4 Customer Self-Service Follow-Up
+
+Verdict remains: **NOT CERTIFIED**.
+
+The latest blocker pass converted normal customer registration to a self-service customer lifecycle. Customers should no longer wait for manual dashboard approval before using the customer portal after Supabase email verification.
+
+Evidence added:
+
+- Repository migration `20260613010000_phase_a444_customer_self_service.sql`.
+- Live Supabase columns verified: `customers.default_pickup_address`, `customers.is_active`, `customers.archived_at`, `customers.updated_at`.
+- Live Supabase RPCs verified: `create_customer_registration_profile`, `link_customer_after_registration`, `get_customer_portal_access`, `archive_operator_customer`, `get_operator_dashboard_snapshot`.
+- Pending customer-scope approval queue count is now zero; customer records are visible through the operator snapshot.
+- Dashboard now separates `Klanten` from operator/dashboard account requests.
+
+Certification remains blocked until live browser evidence confirms:
+
+1. manual-address customer registration works while Google Places is unavailable;
+2. verification email code exchange works;
+3. verified customer login opens the customer portal;
+4. the customer appears in dashboard `Klanten`;
+5. customer archive/deactivate preserves bookings/history;
+6. operator/dashboard account requests remain separate.
+
+Scope B dashboard power features were not implemented in this certification-blocker pass and remain deferred.

@@ -270,3 +270,18 @@ Before treating the checkpoint as preserved, confirm:
 10. If data is still empty, capture the toast/console message for operator mapping or snapshot fallback.
 11. Register a customer with manual address while Google API reports `ApiNotActivatedMapError`.
 12. Verify customer account request notification, dashboard Customer Account Requests visibility, approval, verification, login, and portal access.
+
+## Phase A.4.4.4 Customer Self-Service Retest
+
+1. Confirm live Supabase has `customers.default_pickup_address`, `customers.is_active`, `customers.archived_at`, and `customers.updated_at`.
+2. Confirm live Supabase has `create_customer_registration_profile`, `link_customer_after_registration`, `get_customer_portal_access`, `archive_operator_customer`, and `get_operator_dashboard_snapshot`.
+3. Redeploy the current remediation branch.
+4. Register a new customer with a manually typed default pickup address while Google API reports `ApiNotActivatedMapError` or `RefererNotAllowedMapError`.
+5. Confirm registration succeeds without manual operator approval and without a `defaultpickupadress` / `defaultPickupAddress` mapping error.
+6. Click the Supabase verification email and confirm the auth code is exchanged.
+7. Log in as the verified customer and confirm `/PV/klantenportaalpv.html` opens without redirect loop or profile-not-linked dead end.
+8. Open the operator dashboard and confirm the customer appears under `Klanten` with name, email, phone, default pickup address, created date, and auth linkage status.
+9. Confirm dashboard/operator account requests remain separate and do not contain normal customer registrations as pending approvals.
+10. Archive/deactivate a safe test customer and confirm the customer is marked archived while bookings/history remain intact.
+11. Confirm `België` renders correctly on the touched live pages.
+12. Keep FleetConnect marked NOT CERTIFIED until all items above pass in live browser validation.

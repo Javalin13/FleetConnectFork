@@ -237,28 +237,6 @@
                          console.warn('Customer record insertion delayed or failed:', dbError.message);
                     }
 
-                    const { data: accountRequest, error: requestError } = await supabase
-                        .rpc('submit_account_request', {
-                            payload: {
-                                name: fullName,
-                                email,
-                                phone,
-                                company: 'FleetConnect customer',
-                                account_type: 'Client',
-                                notes: requestedBookingId
-                                    ? `Customer portal registration for booking ${requestedBookingId}`
-                                    : 'Customer portal registration',
-                                source: 'customer-registration',
-                                request_scope: 'customer',
-                                default_pickup_address: pickup,
-                                google_places_available: registrationPlacesAvailable
-                            }
-                        });
-
-                    if (requestError) {
-                        console.warn('Customer account request creation failed:', requestError.message);
-                    }
-
                     const { error: linkError } = await supabase.rpc('link_customer_after_registration');
                     if (linkError) {
                         console.warn('Account request linkage delayed or not applicable:', linkError.message);
@@ -266,17 +244,17 @@
 
                     try {
                         const reviewUrl = `${window.location.origin}/Paneel/admin-index.html`;
-                        const subject = 'Nieuwe FleetConnect klantaccountaanvraag';
-                        const html = `<div style="font-family: Inter, Arial, sans-serif; color:#0f172a;"><h2>Nieuwe klantaccountaanvraag</h2><p><strong>Naam:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Telefoon:</strong> ${phone}</p><p><strong>Standaard ophaaladres:</strong> ${pickup}</p>${requestedBookingId ? `<p><strong>Boeking:</strong> ${requestedBookingId}</p>` : ''}<p><a href="${reviewUrl}" style="display:inline-block; background:#0f172a; color:#ffffff; padding:12px 18px; border-radius:8px; text-decoration:none; font-weight:700;">Aanvraag beoordelen</a></p></div>`;
+                        const subject = 'Nieuwe FleetConnect klantregistratie';
+                        const html = `<div style="font-family: Inter, Arial, sans-serif; color:#0f172a;"><h2>Nieuwe klantregistratie</h2><p>Deze klantregistratie vereist geen operator-goedkeuring.</p><p><strong>Naam:</strong> ${fullName}</p><p><strong>Email:</strong> ${email}</p><p><strong>Telefoon:</strong> ${phone}</p><p><strong>Standaard ophaaladres:</strong> ${pickup}</p>${requestedBookingId ? `<p><strong>Boeking:</strong> ${requestedBookingId}</p>` : ''}<p><a href="${reviewUrl}" style="display:inline-block; background:#0f172a; color:#ffffff; padding:12px 18px; border-radius:8px; text-decoration:none; font-weight:700;">Dashboard openen</a></p></div>`;
                         const notifyResult = await comms.activeProvider.send('support@fleetconnect.be', subject, html, {
-                            trigger: 'CUSTOMER_ACCOUNT_REQUEST',
-                            bookingId: accountRequest?.id || customerId,
+                            trigger: 'CUSTOMER_REGISTRATION_NOTICE',
+                            bookingId: customerId,
                             supabaseUrl: SUPABASE_URL,
                             supabaseKey: SUPABASE_ANON_KEY
                         });
-                        if (!notifyResult.success) console.warn('Customer account request notification failed:', notifyResult.error);
+                        if (!notifyResult.success) console.warn('Customer registration notification failed:', notifyResult.error);
                     } catch (notifyError) {
-                        console.warn('Customer account request notification unavailable:', notifyError.message);
+                        console.warn('Customer registration notification unavailable:', notifyError.message);
                     }
 
                     await comms.sendAccountWelcome({
@@ -286,7 +264,7 @@
                         phone
                     }, supabase);
 
-                    showSuccess('Account successfully created. Please verify your email address. If account approval is required, you will receive access once approved.');
+                    showSuccess('Account successfully created. Please verify your email address. After verification you can log in to the customer portal.');
                     setTimeout(() => {
                         window.location.href = loginUrl(email);
                     }, 1800);
