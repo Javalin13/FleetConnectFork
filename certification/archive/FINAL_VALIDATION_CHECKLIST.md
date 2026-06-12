@@ -239,3 +239,19 @@ Before treating the checkpoint as preserved, confirm:
 9. Open `/nl`, `/fr`, and `/en`; confirm five-star comment reviews appear under `Highlighted Testimonials` newest-first and other comment reviews under `See All Testimonials`.
 10. Confirm the Google Reviews CTA is visible and points to the configured verified Google review URL when `window.FLEETCONNECT_REVIEW_URL` is set.
 11. Open the dashboard Account Requests tab and switch NL/FR/EN; verify headers, buttons, statuses, prompts, actions, and messages are translated.
+
+## Phase A.4.4.4 Final Live Retest Checklist
+
+1. Apply `20260612060000_phase_a444_live_retest_blockers.sql` to live Supabase.
+2. Redeploy `phase-a4.4.4-live-auth-email-dashboard-remediation`.
+3. With Google Maps unavailable (`ApiNotActivatedMapError` or `RefererNotAllowedMapError`), register using a manually typed pickup address of at least 3 characters.
+4. Confirm customer registration sends the customer confirmation email and support/operator customer-account request notification.
+5. Click the Supabase verification link and confirm `/PV/index.html` completes the verification callback without saying the customer profile is not linked.
+6. Before dashboard approval, confirm login shows account awaiting approval, not another verification prompt.
+7. In the dashboard, open Customer Account Requests, approve the customer request, and verify `account_requests.customer_id`, `account_requests.user_id` when available, and matching `customers`.
+8. Log in as the approved customer and confirm `/PV/klantenportaalpv.html` opens without an index/portal redirect loop.
+9. Create a scheduled guest booking more than 1 hour ahead and confirm it appears in New Orders after dashboard refresh.
+10. Attempt scheduled booking inside 1 hour without ASAP; confirm the exact one-hour/ASAP message appears instead of an incomplete-address error.
+11. Select ASAP, submit a guest booking, and confirm metadata includes `asap_requested = true`.
+12. Confirm fallback/manual bookings keep amount `>= 15`, use `create_public_booking`, and appear in dashboard New Orders even when status is `pending_payment`.
+13. Confirm booking confirmation emails still arrive and no new silent failures appear in browser console/network.

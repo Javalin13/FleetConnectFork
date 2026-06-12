@@ -193,3 +193,22 @@ Remaining before certification:
 5. Implement/certify review page, per-landing-page review surfacing, and completed-ride review CTA in a separately approved phase.
 
 Certification verdict remains: **NOT CERTIFIED** until the live deployment and inbox validation evidence is collected.
+
+## A.4.4.4 Final Live Retest Remediation
+
+Verdict remains: **NOT CERTIFIED**.
+
+Final live retest found additional production blockers in the customer registration/auth lifecycle and dashboard visibility. The repository now includes targeted repairs for:
+
+- Google API unavailable states during registration and public booking manual fallback;
+- Supabase verification callback handling through `exchangeCodeForSession`;
+- customer request scoping and profile/auth linking via `20260612060000_phase_a444_live_retest_blockers.sql`;
+- separate dashboard Customer Account Requests visibility;
+- one-hour booking validation message ordering;
+- New Orders visibility for `pending_payment` guest bookings.
+
+Certification is still blocked until:
+
+1. the new migration is applied to live Supabase;
+2. this branch is redeployed;
+3. live registration, verification, approval, login, scheduled booking, ASAP booking, confirmation email, customer request notification, and dashboard New Orders evidence is collected.

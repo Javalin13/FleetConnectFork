@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>FleetConnect | Professional taxi transport Belgium</title>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/en.js"></script>
-    
+
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         #background-map{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;filter:brightness(1.05);opacity:0.9}:root{--primary:#2c6e9e;--primary-dark:#1e4a6e;--accent-gold:#c9a03d;--text-dark:#1a2a3a;--text-light:#4a627a;--white:#ffffff;--card-bg:rgba(255,255,255,0.92);--border-light:#e2edf7}
@@ -101,7 +101,7 @@
         .footer-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;margin-bottom:30px}
         .footer-bottom{text-align:center;border-top:1px solid rgba(224,237,245,0.2);padding-top:24px}
         @media (max-width:800px){.vehicle-grid,.checkbox-grid{grid-template-columns:repeat(2,1fr)}.carousel-page{padding:20px}}
-        
+
 
         /* Phase A.1 mobile booking hotfix */
         html,body{max-width:100%;overflow-x:hidden}
@@ -179,7 +179,7 @@
 
     <div class="container" id="booking"><div class="booking-container"><div class="carousel">
         <div class="steps"><button class="step-btn active" data-page="1">1. Trip details</button><button class="step-btn" data-page="2">2. Route & Price</button><button class="step-btn" data-page="3">3. Vehicle & Options</button><button class="step-btn" data-page="4">4. Customer info</button><button class="step-btn" data-page="5">5. Checkout</button></div>
-        
+
         <div id="page1" class="carousel-page active-page">
             <h1>Trip details</h1><div class="sub">Belgium - EUR1.50/km | urgent trips via WhatsApp</div>
             <div class="sub" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;"><span>Have an account? Use your profile to autofill pickup details and link rides to your account.</span><a href="/PV/index.html" style="font-weight:800; color:var(--primary);">Sign in / register</a></div>
@@ -193,7 +193,7 @@
             <div id="urgentWhatsApp" class="urgent-whatsapp"><span> Departure within the hour - WhatsApp</span><a href="https://wa.me/32470123456" target="_blank" class="whatsapp-btn"> WhatsApp now</a></div>
             <div id="page1Error" class="error"></div><div class="footnote">* Required - click the date field to open calendar</div>
         </div>
-        
+
         <div id="page2" class="carousel-page">
             <h2>Route & Price</h2>
             <div id="map"></div>
@@ -201,7 +201,7 @@
             <div class="info-strip"><div class="info-card"><div class="label"> Distance</div><div class="value" id="distVal">-</div><small>km</small></div><div class="info-card"><div class="label"> Travel time</div><div class="value" id="timeVal">-</div><small>min</small></div><div class="info-card"><div class="label"> Price</div><div class="value" id="priceVal">-</div><small>EUR</small></div></div>
             <div id="page2Error" class="error"></div>
         </div>
-        
+
         <div id="page3" class="carousel-page">
             <h2>Choose your vehicle</h2>
             <div class="vehicle-grid" id="vehicleGrid">
@@ -215,7 +215,7 @@
             <div><label> Special requests</label><textarea id="specialWishes" rows="2" placeholder="e.g. child seat, champagne..."></textarea></div></div>
             <div id="page3Error" class="error"></div>
         </div>
-        
+
         <div id="page4" class="carousel-page">
             <h1>Your details</h1><div class="sub">Enter your contact information</div>
             <div class="field"><label>First name <span class="required-star">*</span></label><input type="text" id="firstName"></div>
@@ -225,7 +225,7 @@
             <div class="field"><label>VAT (optional)</label><input type="text" id="vat" placeholder="BE 0123.456.789"></div>
             <div id="page4Error" class="error"></div>
         </div>
-        
+
         <div id="page5" class="carousel-page">
             <h1>Checkout</h1><div class="sub">Choose payment method & confirm</div>
             <div class="rit-overzicht"><h3>Your trip summary</h3>
@@ -241,14 +241,14 @@
             <div id="totalDisplay" class="total-display">Total: EUR 0.00</div>
             <button id="finalConfirmBtn" class="btn-primary" style="width:100%">Confirm booking</button>
             <div id="page5Error" class="error"></div>
-            
+
             <input type="hidden" id="hiddenCustomerId">
             <input type="hidden" id="hiddenFormData">
             <input type="hidden" id="hiddenCreatedAt">
             <input type="hidden" id="hiddenPartnerId" value="1">
             <input type="hidden" id="hiddenAssignedDriverId">
         </div>
-        
+
         <div class="nav-buttons"><button class="nav-btn prev" id="prevBtn" disabled>Previous</button><button class="nav-btn next" id="nextBtn">Next</button></div>
     </div></div></div>
 
@@ -291,7 +291,7 @@
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const closeMenuBtn = document.getElementById('closeMenuBtn');
-        
+
         if (hamburgerBtn) {
             hamburgerBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -299,7 +299,7 @@
                 document.body.style.overflow = 'hidden';
             });
         }
-        
+
         if (closeMenuBtn) {
             closeMenuBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -307,7 +307,7 @@
                 document.body.style.overflow = '';
             });
         }
-        
+
         if (sidebarOverlay) {
             sidebarOverlay.addEventListener('click', function(e) {
                 if (e.target === sidebarOverlay) {
@@ -316,7 +316,7 @@
                 }
             });
         }
-        
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && sidebarOverlay.classList.contains('active')) {
                 sidebarOverlay.classList.remove('active');
@@ -324,7 +324,7 @@
             }
         });
     });
-    
+
     // ====================== GOOGLE MAPS INTEGRATION ======================
     let map;
     let mapsController = null;
@@ -342,10 +342,20 @@
     const MIN_RIDE_MESSAGE = "Minimum fare applied: EUR 15";
     const BOOKING_PROCESSING_MESSAGE = "Booking is being processed...";
     const ASAP_TIME_MESSAGE = "ASAP ride: FleetConnect will confirm by email when the driver can arrive.";
-    const ONE_HOUR_MESSAGE = "Schedule at least 1 hour ahead or choose ASAP.";
+    const ONE_HOUR_MESSAGE = "Scheduled rides must be booked at least 1 hour in advance. For faster pickup, choose ASAP or contact us via WhatsApp.";
     const MANUAL_ROUTE_MESSAGE = "Google address verification is unavailable. FleetConnect will manually confirm route and price.";
     let googleRouteUnavailable = false;
-    
+    function markGoogleRouteUnavailable(reason) {
+        googleRouteUnavailable = true;
+        mapsController = null;
+        console.warn('Google address services unavailable; manual address entry remains enabled.', reason || 'unknown');
+    }
+    window.addEventListener('error', function(event) {
+        const message = String(event?.message || '');
+        if (message.includes('ApiNotActivatedMapError') || message.includes('RefererNotAllowedMapError') || message.includes('Google Maps JavaScript API error')) {
+            markGoogleRouteUnavailable(message);
+        }
+    });
     window.initGoogleMaps = async function() {
         try {
             if (!window.google?.maps?.importLibrary) {
@@ -397,15 +407,13 @@
             map = mapsController.map;
         } catch (error) {
             console.warn('Google Maps modernization initialization failed; route validation is unavailable.', error);
-            googleRouteUnavailable = true;
-            mapsController = null;
+            markGoogleRouteUnavailable('Google Maps authentication failure');
         }
     };
 
     window.gm_authFailure = function() {
         console.warn('Google Maps authentication failed; route validation is unavailable.');
-        googleRouteUnavailable = true;
-        mapsController = null;
+        markGoogleRouteUnavailable('Google Maps authentication failure');
     };
 
     function containsGoogleAddressError(value) {
@@ -518,7 +526,7 @@
         const route = await calculateRoutePromise();
         if (route) applyRouteData(route);
     }
-    
+
     function setPageError(page, msg) {
         const errDiv = document.getElementById(`page${page}Error`);
         if (errDiv) {
@@ -527,7 +535,7 @@
             setTimeout(() => errDiv.style.display = 'none', 4000);
         }
     }
-    
+
     function getCalculatedFare() {
         if (isManualRouteFallback()) {
             return { distanceKm: 0, rawAmount: MIN_RIDE_PRICE, totalAmount: MIN_RIDE_PRICE, minimumApplied: false, manualRouteRequired: true };
@@ -539,7 +547,7 @@
         const totalAmount = Math.max(MIN_RIDE_PRICE, rawAmount);
         return { distanceKm: dist, rawAmount, totalAmount, minimumApplied: rawAmount < MIN_RIDE_PRICE };
     }
-    
+
     function updateTotalDisplay() {
         if (!currentRouteData) return;
         const totalDisplay = document.getElementById('totalDisplay');
@@ -557,7 +565,7 @@
         if (totalDisplay) totalDisplay.innerHTML = `Total: EUR ${total.toFixed(2)}`;
         if (overviewTotal) overviewTotal.innerHTML = `EUR ${total.toFixed(2)}`;
     }
-    
+
     function updateRitOverzicht() {
         document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || '-';
         document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || '-';
@@ -574,7 +582,7 @@
         const fare = getCalculatedFare();
         document.getElementById('overviewTotal').innerHTML = fare === null ? '-' : `EUR ${fare.totalAmount.toFixed(2)}${fare.manualRouteRequired ? `<br><small>${MANUAL_ROUTE_MESSAGE}</small>` : (fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : '')}`;
     }
-    
+
     function getExtrasString() {
         const extras = [];
         if (document.getElementById('meetGreet')?.checked) extras.push("Meet & Greet");
@@ -583,7 +591,7 @@
         if (document.getElementById('wifi')?.checked) extras.push("WiFi");
         return extras.join(", ") || "None";
     }
-    
+
     function parseEuroDate(str) {
         if (!str) return null;
         let [datePart, timePart] = str.split(' ');
@@ -592,13 +600,13 @@
         let [hh, min] = timePart ? timePart.split(':'): ['0','0'];
         return new Date(parseInt(yyyy), parseInt(mm)-1, parseInt(dd), parseInt(hh), parseInt(min));
     }
-    
+
     function isPast(ds) {
         if (!ds) return false;
         const parsed = parseEuroDate(ds);
         return parsed ? parsed < new Date(): false;
     }
-    
+
     function isWithinNextHour(ds) {
         if (!ds) return false;
         const parsed = parseEuroDate(ds);
@@ -612,7 +620,7 @@
         if (!parsed) return false;
         return parsed - new Date() >= 3600000;
     }
-    
+
     async function calculateAndStoreRoute() {
         const pickupText = getAddressText('pickupInput');
         const dropoffText = getAddressText('dropoffInput');
@@ -689,7 +697,7 @@
         const firstVehicle = document.querySelector('.vehicle-card');
         if (firstVehicle && !selectedVehicle) firstVehicle.click();
     }
-    
+
     function addOkButtonToFlatpickr(instance) {
         if (!instance.calendarContainer.querySelector('.flatpickr-ok-button')) {
             const btn = document.createElement('button');
@@ -706,7 +714,7 @@
             footer.appendChild(btn);
         }
     }
-    
+
     function showPage(page) {
         document.querySelectorAll('.carousel-page').forEach((p, idx) => {
             p.classList.remove('active-page');
@@ -731,12 +739,11 @@
             document.getElementById('nextBtn').style.display = 'flex';
         }
     }
-    
+
     async function nextPage() {
         if (currentPage === 1) {
             const ok = await calculateAndStoreRoute();
             if (ok && currentRouteData) showPage(2);
-            else if (!currentRouteData) setPageError(1, ROUTE_ERROR_MESSAGE);
         } else if (currentPage === 2) {
             if (!currentRouteData) { setPageError(2, "Calculate a valid route in step 1 first"); return; }
             showPage(3);
@@ -758,12 +765,12 @@
             await finalizeBookingDirect();
         }
     }
-    
+
     function prevPage() { if (currentPage > 1) showPage(currentPage-1); }
-    
+
     async function finalizeBookingDirect() {
         if (bookingSubmitInProgress) return;
-        
+
         const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Cash";
         let totalAmount = 0;
         if (!hasStrictRouteSelection()) {
@@ -781,22 +788,22 @@
             alert(ROUTE_ERROR_MESSAGE);
             return;
         }
-        
+
         const firstName = document.getElementById('firstName').value.trim();
         const lastName = document.getElementById('lastName').value.trim();
         const email = document.getElementById('email').value.trim();
         const phone = document.getElementById('phone').value.trim();
-        
+
         if (!firstName || !lastName || !email || !phone) {
             alert('Please fill in all required fields (name, email, phone)');
             return;
         }
-        
+
         if (!hasStrictRouteSelection()) { alert(ROUTE_ERROR_MESSAGE); return; }
         if (!selectedVehicle) { alert("Select a vehicle in step 3."); return; }
-        
+
         const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
-        
+
         const bookingData = {
             datetime: currentDateTime ? currentDateTime.split(' ')[0]: "",
             time: currentDateTime ? currentDateTime.split(' ')[1]: "",
@@ -847,11 +854,11 @@
             partner_id: 1,
             assigned_driver_id: null
         };
-        
+
         bookingSubmitInProgress = true;
         const confirmBtn = document.getElementById('finalConfirmBtn');
         if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.dataset.originalText = confirmBtn.textContent; confirmBtn.textContent = BOOKING_PROCESSING_MESSAGE; }
-        
+
         try {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
             const supabase = createClient('https://rreqjjrmvytnwnsidmqi.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZXFqanJtdnl0bnduc2lkbXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MjAxMzcsImV4cCI6MjA5Mzk5NjEzN30.q4M3A6Dix3F_9Im2pw8DUIeE4C-INtUlvImRDM58MTA');
@@ -895,7 +902,7 @@
             } else {
                 alert(`Booking ${savedBookingId} saved. Price: EUR ${totalAmount.toFixed(2)}.\n\nConfirmation email failed: ${emailResult?.error || 'unknown error'}. FleetConnect will follow up manually.`);
             }
-            
+
             // Reset form
             document.getElementById('pickupInput').value = '';
             document.getElementById('dropoffInput').value = '';
@@ -917,7 +924,7 @@
             document.getElementById('timeVal').innerHTML = '-';
             document.getElementById('priceVal').innerHTML = '-';
             document.getElementById('totalDisplay').innerHTML = "Total: EUR 0.00";
-            
+
             pickupLocation = null;
             dropoffLocation = null;
             currentRouteData = null;
@@ -938,7 +945,7 @@
             if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = confirmBtn.dataset.originalText || confirmBtn.textContent; }
         }
     }
-    
+
     // Event listeners
     document.getElementById('nextBtn').addEventListener('click', nextPage);
     document.getElementById('prevBtn').addEventListener('click', prevPage);
@@ -957,14 +964,14 @@
         }
     });
     document.getElementById('verstuurBerichtBtn')?.addEventListener('click', () => alert('Thank you! We will contact you soon.'));
-    
+
     bindAddressInputFallbacks();
     initVehicleSelection();
     showPage(1);
-    
+
     flatpickr("#datetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, defaultDate: new Date(new Date().setHours(new Date().getHours()+1)), minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
     flatpickr("#returnDatetime", { locale: "en", enableTime: true, dateFormat: "d-m-Y H:i", time_24hr: true, minuteIncrement: 1, onReady: (_, __, inst) => addOkButtonToFlatpickr(inst) });
-    
+
     document.querySelectorAll('.step-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             const page = parseInt(btn.getAttribute('data-page'));
@@ -977,7 +984,7 @@
             }
         });
     });
-    
+
     console.log("FleetConnect EN - Everything loaded!");
 </script>
 </body>
