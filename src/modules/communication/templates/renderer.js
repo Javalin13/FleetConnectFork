@@ -117,7 +117,13 @@ export class TemplateRenderer {
             data.metadata?.distance_km ||
             data.distance
         );
-        if (!Number.isFinite(distanceValue) || distanceValue <= 0) {
+        const manualRoute = data.manual_route_required === true
+            || data.form_data?.manual_route_required === true
+            || data.metadata?.manual_route_required === true;
+        const asapRequested = data.asap_requested === true
+            || data.form_data?.asap_requested === true
+            || data.metadata?.asap_requested === true;
+        if (!manualRoute && (!Number.isFinite(distanceValue) || distanceValue <= 0)) {
             throw new Error(`Booking confirmation distance missing for ${data.reference || data.id || 'unknown booking'}`);
         }
         const durationValue = Number(
@@ -141,11 +147,12 @@ export class TemplateRenderer {
                 ${EmailComponents.detailsRow(labels.pickup, data.pickup || '...')}
                 ${EmailComponents.detailsRow(labels.destination, data.destination || '...')}
                 ${EmailComponents.detailsRow(labels.vehicle, data.vehicle || 'Standard')}
-                ${EmailComponents.detailsRow(labels.distance, `${distanceValue.toFixed(1)} km`)}
+                ${manualRoute ? EmailComponents.detailsRow(labels.distance, labels.manualRoutePending || 'FleetConnect will confirm route and price') : EmailComponents.detailsRow(labels.distance, `${distanceValue.toFixed(1)} km`)}
                 ${Number.isFinite(durationValue) && durationValue > 0 ? EmailComponents.detailsRow(labels.duration || 'Duration', `${Math.round(durationValue)} min`) : ''}
                 ${EmailComponents.detailsRow(labels.price, `EUR ${amountValue.toFixed(2)}`)}
                 ${EmailComponents.detailsRow(labels.payment, data.payment || 'Unspecified')}
             </table>
+            ${asapRequested ? `<p style="margin: 0 0 20px 0; font-family: 'Inter', sans-serif; font-size: 14px; color: #92400e; line-height: 22px;"><strong>${labels.asapRide || 'ASAP ride'}:</strong> ${labels.asapConfirmation || 'FleetConnect will confirm by email when the driver can arrive.'}</p>` : ''}
             ${EmailComponents.cta(labels.viewBooking, viewUrl)}
         `;
     }

@@ -166,6 +166,48 @@ begin
 end;
 $$;
 
+create or replace function public.create_customer_registration_profile(payload jsonb)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_email text;
+  v_customer_id text;
+  v_result jsonb;
+begin
+  v_email := lower(nullif(btrim(payload->>'email'), ''));
+  if v_email is null then
+    raise exception 'Email required';
+  end if;
+
+  v_customer_id := coalesce(
+    nullif(payload->>'id', ''),
+    'CUST-' || substring(regexp_replace(v_email, '[^a-z0-9]', '', 'gi') from 1 for 30)
+  );
+
+  insert into public.customers (id, user_id, name, email, phone, default_pickup_address, created_at)
+  values (
+    v_customer_id,
+    auth.uid(),
+    nullif(payload->>'name', ''),
+    v_email,
+    nullif(payload->>'phone', ''),
+    nullif(payload->>'default_pickup_address', ''),
+    now()
+  )
+  on conflict (id) do update
+    set user_id = coalesce(public.customers.user_id, auth.uid()),
+        name = coalesce(nullif(excluded.name, ''), public.customers.name),
+        phone = coalesce(nullif(excluded.phone, ''), public.customers.phone),
+        default_pickup_address = coalesce(nullif(excluded.default_pickup_address, ''), public.customers.default_pickup_address)
+  returning jsonb_build_object('id', id, 'email', email, 'user_id', user_id) into v_result;
+
+  return v_result;
+end;
+$$;
+
 revoke all on function public.approve_account_request(uuid) from public;
 revoke all on function public.approve_account_request(uuid) from anon;
 grant execute on function public.approve_account_request(uuid) to authenticated;
@@ -176,6 +218,9 @@ grant execute on function public.link_customer_after_registration() to authentic
 
 revoke all on function public.get_account_request_status(text) from public;
 grant execute on function public.get_account_request_status(text) to anon, authenticated;
+
+revoke all on function public.create_customer_registration_profile(jsonb) from public;
+grant execute on function public.create_customer_registration_profile(jsonb) to anon, authenticated;
 
 select pg_notify('pgrst', 'reload schema');
 

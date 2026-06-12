@@ -198,3 +198,19 @@ Before treating the checkpoint as preserved, confirm:
 10. Driver accepts and dashboard no longer shows reassignment action/alert.
 11. Complete the ride and confirm the review email CTA opens `/review` or `/review.html`.
 12. Submit one review and verify `ride_reviews` persists in Supabase.
+
+## Phase A.4.4.4 Live Failure Retest Addendum
+
+1. Redeploy the latest remediation branch.
+2. Open `/PV/index.html` logged out and confirm it stays on login.
+3. Open `/PV/klantenportaalpv.html` logged out and confirm it redirects once to login with no loop.
+4. Register a new account and confirm it returns to `/PV/index.html` with a clear verification/login message.
+5. Approve account request and verify `account_requests.customer_id`, `customers.id`, and `auth.users.email`.
+6. Log in after verification and confirm the portal opens.
+7. Open `/nl`, `/fr`, `/en` and click menu login links; all should route to `/PV/index.html`.
+8. Attempt scheduled booking within 1 hour without ASAP; it must be blocked.
+9. Select ASAP and submit; booking must persist with `metadata.asap_requested = true`.
+10. If Google returns `RefererNotAllowedMapError`, type manual addresses and confirm booking persists with `metadata.manual_route_required = true` and amount at least EUR 15.
+11. Assign a driver, let driver accept, then attempt another driver accept/reassignment without recall; server must reject it.
+12. Recall assigned driver, assign a new driver, and confirm the new token works.
+13. Open `/review` and `/review.html?booking=<BOOKING_ID>` after deploy; page should load safely.

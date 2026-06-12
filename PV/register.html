@@ -116,8 +116,26 @@
 
         window.addEventListener('load', () => setTimeout(initAddressAutocomplete, 400));
 
+        function loginUrl(email = requestedEmail) {
+            const params = new URLSearchParams();
+            if (requestedBookingId) params.set('booking', requestedBookingId);
+            if (email) params.set('email', email);
+            return params.toString() ? `/PV/index.html?${params.toString()}` : '/PV/index.html';
+        }
+
+        async function canOpenPortal(user) {
+            if (!user?.email) return false;
+            try { await supabase.rpc('link_customer_after_registration'); } catch (_) {}
+            const { data: customers } = await supabase
+                .from('customers')
+                .select('id')
+                .or(`user_id.eq.${user.id},email.eq.${user.email}`)
+                .limit(1);
+            return !!customers?.length;
+        }
+
         const { data: existingSession } = await supabase.auth.getSession();
-        if (existingSession?.session?.user) {
+        if (existingSession?.session?.user && await canOpenPortal(existingSession.session.user)) {
             window.location.replace(requestedBookingId
                 ? `/PV/klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
                 : '/PV/klantenportaalpv.html');
@@ -147,27 +165,26 @@
                     options: {
                         data: { full_name: fullName, phone: phone },
                         emailRedirectTo: requestedBookingId
-                            ? `${window.location.origin}/PV/klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
-                            : `${window.location.origin}/PV/klantenportaalpv.html`
+                            ? `${window.location.origin}/PV/index.html?booking=${encodeURIComponent(requestedBookingId)}&email=${encodeURIComponent(email)}`
+                            : `${window.location.origin}/PV/index.html?email=${encodeURIComponent(email)}`
                     }
                 });
 
                 if (signUpError) throw signUpError;
 
                 if (data.user) {
-                    // 2. Create customer record (linking to user_id)
+                    // 2. Create customer record through a constrained RPC. Link user_id now only when a verified session exists.
                     const customerId = `CUST-${email.replace(/[^a-z0-9]/gi, '').substring(0,30)}`;
                     const { error: dbError } = await supabase
-                        .from('customers')
-                        .insert([{
+                        .rpc('create_customer_registration_profile', {
+                            payload: {
                             id: customerId,
-                            user_id: data.user.id,
                             name: fullName,
                             email: email,
                             phone: phone,
-                            default_pickup_address: pickup,
-                            created_at: new Date().toISOString()
-                        }]);
+                            default_pickup_address: pickup
+                            }
+                        });
 
                     if (dbError) {
                          console.warn('Customer record insertion delayed or failed:', dbError.message);
@@ -187,9 +204,7 @@
 
                     showSuccess(`Uw account is aangemaakt. Controleer ${email} voor de verificatie- of bevestigingslink.`);
                     alert(`Uw account is aangemaakt. Controleer ${email} voor de verificatie- of bevestigingslink.`);
-                    window.location.href = requestedBookingId
-                        ? `/PV/index.html?booking=${encodeURIComponent(requestedBookingId)}&email=${encodeURIComponent(email)}`
-                        : `/PV/index.html?email=${encodeURIComponent(email)}`;
+                    window.location.href = loginUrl(email);
                 }
             } catch (err) {
                 showError(err.message);

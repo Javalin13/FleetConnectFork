@@ -176,6 +176,7 @@
         const loginParams = new URLSearchParams(window.location.search);
         const requestedBookingId = loginParams.get('booking') || loginParams.get('booking_id') || loginParams.get('id') || '';
         const requestedEmail = loginParams.get('email') || '';
+        const loginReason = loginParams.get('reason') || '';
 
         if (requestedEmail) emailInput.value = requestedEmail;
         const registerLink = document.getElementById('registerLink');
@@ -186,19 +187,79 @@
             registerLink.href = registerParams.toString() ? `/PV/register.html?${registerParams.toString()}` : '/PV/register.html';
         }
 
-        const { data: existingSession } = await supabase.auth.getSession();
-        if (existingSession?.session?.user) {
-            window.location.replace(requestedBookingId
+        if (loginReason === 'pending') showError('Uw accountaanvraag wacht nog op goedkeuring door FleetConnect.', true);
+        if (loginReason === 'profile') showError('Uw klantprofiel is nog niet gekoppeld. Log opnieuw in na verificatie of contacteer support.', true);
+        if (loginReason === 'session') showError('Log in om het klantportaal te openen.', true);
+
+        function portalUrl() {
+            return requestedBookingId
                 ? `/PV/klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
-                : '/PV/klantenportaalpv.html');
+                : '/PV/klantenportaalpv.html';
         }
 
-        function showError(msg) {
+        function showError(msg, persist = false) {
             errorBox.innerText = msg;
             errorBox.style.display = 'block';
-            setTimeout(() => {
-                errorBox.style.display = 'none';
-            }, 4000);
+            if (!persist) {
+                setTimeout(() => {
+                    errorBox.style.display = 'none';
+                }, 4000);
+            }
+        }
+
+        async function getRequestStatus(email) {
+            if (!email) return null;
+            try {
+                const { data } = await supabase.rpc('get_account_request_status', { p_email: email });
+                return data || null;
+            } catch (statusError) {
+                console.warn('Account request status unavailable:', statusError.message);
+                return null;
+            }
+        }
+
+        async function canOpenPortal(user) {
+            if (!user?.email) return { allowed: false, message: 'Geen geldige sessie gevonden.' };
+
+            const status = await getRequestStatus(user.email);
+            if (status?.found && status.status === 'pending') {
+                return { allowed: false, message: 'Uw accountaanvraag wacht nog op goedkeuring door FleetConnect.' };
+            }
+            if (status?.found && status.status === 'rejected') {
+                return { allowed: false, message: 'Uw accountaanvraag werd niet goedgekeurd. Neem contact op met support@fleetconnect.be.' };
+            }
+
+            try {
+                await supabase.rpc('link_customer_after_registration');
+            } catch (linkError) {
+                console.warn('Customer linkage unavailable:', linkError.message);
+            }
+
+            const { data: customers, error } = await supabase
+                .from('customers')
+                .select('id,user_id,email')
+                .or(`user_id.eq.${user.id},email.eq.${user.email}`)
+                .limit(1);
+
+            if (error) {
+                console.warn('Customer profile check failed:', error.message);
+                return { allowed: false, message: 'Klantprofiel kon niet worden gecontroleerd. Probeer opnieuw of contacteer support.' };
+            }
+
+            if (customers?.length) return { allowed: true };
+
+            if (status?.found && status.status === 'approved') {
+                return { allowed: false, message: 'Uw account is goedgekeurd, maar uw klantprofiel is nog niet gekoppeld. Controleer uw verificatiemail of contacteer support.' };
+            }
+
+            return { allowed: false, message: 'Geen gekoppeld klantprofiel gevonden. Maak eerst een account aan of wacht op goedkeuring.' };
+        }
+
+        const { data: existingSession } = await supabase.auth.getSession();
+        if (existingSession?.session?.user) {
+            const access = await canOpenPortal(existingSession.session.user);
+            if (access.allowed) window.location.replace(portalUrl());
+            else showError(access.message, true);
         }
 
         async function handleLogin() {
@@ -219,24 +280,27 @@
                 if (error) throw error;
                 if (!data.session) throw new Error('Login kon niet worden bevestigd.');
 
-                window.location.href = requestedBookingId
-                    ? `/PV/klantenportaalpv.html?id=${encodeURIComponent(requestedBookingId)}`
-                    : '/PV/klantenportaalpv.html';
+                const access = await canOpenPortal(data.session.user);
+                if (!access.allowed) {
+                    await supabase.auth.signOut();
+                    showError(access.message, true);
+                    return;
+                }
+
+                window.location.href = portalUrl();
             } catch (err) {
                 let message = err.message || 'Ongeldige inloggegevens. Probeer opnieuw.';
-                try {
-                    const { data: requestStatus } = await supabase.rpc('get_account_request_status', { p_email: email });
-                    if (requestStatus?.found && requestStatus.status === 'pending') {
-                        message = 'Uw accountaanvraag wacht nog op goedkeuring door FleetConnect.';
-                    } else if (requestStatus?.found && requestStatus.status === 'approved') {
-                        message = 'Uw account is goedgekeurd. Controleer uw verificatiemail of maak uw wachtwoord opnieuw aan via de officiële Supabase verificatielink.';
-                    } else if (requestStatus?.found && requestStatus.status === 'rejected') {
-                        message = 'Uw accountaanvraag werd niet goedgekeurd. Neem contact op met support@fleetconnect.be.';
-                    }
-                } catch (statusError) {
-                    console.warn('Account request status unavailable:', statusError.message);
+                const requestStatus = await getRequestStatus(email);
+                if (requestStatus?.found && requestStatus.status === 'pending') {
+                    message = 'Uw accountaanvraag wacht nog op goedkeuring door FleetConnect.';
+                } else if (requestStatus?.found && requestStatus.status === 'approved') {
+                    message = 'Uw account is goedgekeurd. Controleer uw verificatiemail of maak uw wachtwoord opnieuw aan via de officiële Supabase verificatielink.';
+                } else if (requestStatus?.found && requestStatus.status === 'rejected') {
+                    message = 'Uw accountaanvraag werd niet goedgekeurd. Neem contact op met support@fleetconnect.be.';
+                } else if (String(message).toLowerCase().includes('email not confirmed')) {
+                    message = 'Uw e-mailadres is nog niet bevestigd. Controleer uw verificatiemail.';
                 }
-                showError(message);
+                showError(message, true);
                 passInput.value = '';
                 passInput.focus();
             } finally {

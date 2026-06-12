@@ -255,3 +255,18 @@ FleetConnect remains NOT CERTIFIED pending redeploy, browser testing, inbox test
 | Ride completed review workflow | RESOLVED IN REPOSITORY, BLOCKED PENDING LIVE VALIDATION | Added `operator_complete_booking`, `ride_reviews`, `submit_ride_review`, `/review`, and `review.html`. | Complete one ride, confirm email CTA, submit review, verify `ride_reviews`. |
 
 FleetConnect remains NOT CERTIFIED until live migration, browser, inbox, and account-linkage validation are complete.
+
+## Phase A.4.4.4 Live Validation Failure Gap Update
+
+| Item | Classification | Evidence | Required next action |
+| --- | --- | --- | --- |
+| Customer portal redirect loop | RESOLVED IN REPOSITORY, BLOCKED PENDING LIVE BROWSER TESTING | Login/register/portal now gate portal entry on session plus linked customer profile. | Redeploy and test login/register/customer portal entry. |
+| Account request/customer/auth chain | LIVE DB READY, BLOCKED PENDING LIVE BROWSER TESTING | Live DB has customer/profile RPCs and account request linkage columns. | Submit, approve, verify, and log in with screenshots. |
+| Google referrer/address failure | MITIGATED IN REPOSITORY, REQUIRES GOOGLE CLOUD CONFIG | UI now allows manual route fallback if Google auth/referrer fails; live domain should still be added to Google API restrictions. | Add Vercel/custom domains to Google Cloud allowed referrers and retest autocomplete. |
+| Homepage login 404 | RESOLVED IN REPOSITORY | Public page login links now use `/PV/index.html`. | Redeploy and click NL/FR/EN menu login links. |
+| One-hour booking rule / ASAP | RESOLVED IN REPOSITORY, BLOCKED PENDING LIVE BROWSER TESTING | Public forms enforce one hour unless ASAP; ASAP metadata is stored. | Test scheduled ride under 1h blocked; ASAP accepted with correct messaging. |
+| Driver double assignment | LIVE DB READY, BLOCKED PENDING LIVE BROWSER TESTING | Dashboard uses `operator_assign_driver`; live `driver_accept_assignment` rejects already-assigned rides; recall RPC exists. | Attempt second driver accept after first accepted. |
+| Review URL | RESOLVED IN REPOSITORY, BLOCKED PENDING DEPLOYMENT | `vercel.json` routes `/review` to `review.html`; `submit_ride_review` exists live. | Redeploy and open `/review` and `/review.html?booking=<ID>`. |
+| Multi-row selectors and full table sorting/filtering | OPEN ENHANCEMENT | Requested after blockers; not implemented in this blocker pass. | Schedule separately after live blockers pass. |
+
+FleetConnect remains NOT CERTIFIED.

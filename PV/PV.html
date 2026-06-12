@@ -157,7 +157,7 @@
             <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
             <a href="#booking"><i class="fas fa-calendar-alt"></i> Reserveer nu</a>
         </div>
-        <div class="login-section"><a href="index.html" class="login-btn"><i class="fas fa-sign-in-alt"></i> LOGIN <i class="fas fa-arrow-right"></i></a></div>
+        <div class="login-section"><a href="/PV/index.html" class="login-btn"><i class="fas fa-sign-in-alt"></i> LOGIN <i class="fas fa-arrow-right"></i></a></div>
     </div>
 </div>
 
@@ -181,11 +181,13 @@
         
         <div id="page1" class="carousel-page active-page">
             <h1>Ritgegevens</h1><div class="sub">België - EUR1,50/km | spoedritten via WhatsApp</div>
+            <div class="sub" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;"><span>Heeft u een account? Gebruik uw profiel om ophaaladres automatisch in te vullen en ritten te koppelen.</span><a href="/PV/index.html" style="font-weight:800; color:var(--primary);">Inloggen / registreren</a></div>
             <div class="field"><label> Ophaaladres <span class="required-star">*</span></label><input type="text" id="pickupInput" placeholder="bv. Brussels Airport" autocomplete="off" inputmode="text"></div>
             <div class="field"><label> Afzetadres <span class="required-star">*</span></label><input type="text" id="dropoffInput" placeholder="bv. Grand Place Brussels" autocomplete="off" inputmode="text"></div>
             <div class="roundtrip-box"><input type="checkbox" id="roundtripCheckbox"><label> Heen en terug rit (prijs x2)</label></div>
             <div class="field"><label> Vluchtnummer (optioneel)</label><input type="text" id="flightNumber" placeholder="bv. KL1704"></div>
             <div class="field"><label> Heen datum & tijd <span class="required-star">*</span></label><input type="text" id="datetime" placeholder="Klik om datum & tijd te kiezen" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
+            <div class="roundtrip-box"><input type="checkbox" id="asapCheckbox"> <label>ASAP / Zo snel mogelijk - FleetConnect bevestigt per e-mail wanneer de chauffeur kan aankomen. Voor directe hulp kunt u WhatsApp gebruiken.</label></div>
             <div class="field return-date-field" id="returnDateContainer"><label> Terug datum & tijd</label><input type="text" id="returnDatetime" placeholder="Klik om datum & tijd te kiezen" readonly><i class="fas fa-calendar-alt date-icon"></i></div>
             <div id="urgentWhatsApp" class="urgent-whatsapp"><span> Vertrekt binnen het uur - WhatsApp</span><a href="https://wa.me/32470123456" target="_blank" class="whatsapp-btn"> WhatsApp nu</a></div>
             <div id="page1Error" class="error"></div><div class="footnote">* Verplicht - klik in het datumveld om de kalender te openen</div>
@@ -337,11 +339,16 @@
     const MIN_RIDE_PRICE = 15;
     const MIN_RIDE_MESSAGE = "Minimumtarief toegepast: EUR 15";
     const BOOKING_PROCESSING_MESSAGE = "Boeking wordt verwerkt...";
+    const ASAP_TIME_MESSAGE = "ASAP rit: FleetConnect bevestigt per e-mail wanneer de chauffeur kan aankomen.";
+    const ONE_HOUR_MESSAGE = "Plan uw rit minstens 1 uur vooruit of kies ASAP / Zo snel mogelijk.";
+    const MANUAL_ROUTE_MESSAGE = "Google adrescontrole is niet beschikbaar. FleetConnect bevestigt route en prijs handmatig.";
+    let googleRouteUnavailable = false;
     
     window.initGoogleMaps = async function() {
         try {
             if (!window.google?.maps?.importLibrary) {
                 console.warn('Google Maps importLibrary unavailable; route validation is unavailable.');
+                googleRouteUnavailable = true;
                 return;
             }
             const { createBookingMapsController } = await import('/src/modules/maps/booking-maps.js');
@@ -388,12 +395,14 @@
             map = mapsController.map;
         } catch (error) {
             console.warn('Google Maps modernization initialization failed; route validation is unavailable.', error);
+            googleRouteUnavailable = true;
             mapsController = null;
         }
     };
 
     window.gm_authFailure = function() {
         console.warn('Google Maps authentication failed; route validation is unavailable.');
+        googleRouteUnavailable = true;
         mapsController = null;
     };
 
@@ -441,7 +450,12 @@
         return value;
     }
 
+    function isManualRouteFallback() {
+        return !!(currentRouteData?.manualRouteRequired && lastTypedPickupAddress && lastTypedDropoffAddress);
+    }
+
     function hasStrictRouteSelection() {
+        if (isManualRouteFallback()) return true;
         return !!(
             currentRouteData &&
             Number.isFinite(Number(currentRouteData.distanceKm)) &&
@@ -513,6 +527,9 @@
     }
     
     function getCalculatedFare() {
+        if (isManualRouteFallback()) {
+            return { distanceKm: 0, rawAmount: MIN_RIDE_PRICE, totalAmount: MIN_RIDE_PRICE, minimumApplied: false, manualRouteRequired: true };
+        }
         if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) return null;
         let dist = Number(currentRouteData.distanceKm);
         if (currentRoundTrip) dist *= 2;
@@ -525,9 +542,13 @@
         if (!currentRouteData) return;
         const totalDisplay = document.getElementById('totalDisplay');
         const overviewTotal = document.getElementById('overviewTotal');
-        if (!currentRouteData || !Number.isFinite(Number(currentRouteData.distanceKm)) || Number(currentRouteData.distanceKm) <= 0) return;
         const fare = getCalculatedFare();
         if (!fare) return;
+        if (fare.manualRouteRequired) {
+            if (totalDisplay) totalDisplay.innerHTML = `Totaal: EUR ${fare.totalAmount.toFixed(2)}<br><small>${MANUAL_ROUTE_MESSAGE}</small>`;
+            if (overviewTotal) overviewTotal.innerHTML = `EUR ${fare.totalAmount.toFixed(2)}<br><small>${MANUAL_ROUTE_MESSAGE}</small>`;
+            return;
+        }
         const minimumNote = fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : '';
         if (totalDisplay) totalDisplay.innerHTML = `Totaal: EUR ${fare.totalAmount.toFixed(2)}${minimumNote}`;
         if (overviewTotal) overviewTotal.innerHTML = `EUR ${fare.totalAmount.toFixed(2)}${minimumNote}`;
@@ -547,7 +568,7 @@
             returnContainer.style.display = 'none';
         }
         const fare = getCalculatedFare();
-        document.getElementById('overviewTotal').innerHTML = fare === null ? '-' : `EUR ${fare.totalAmount.toFixed(2)}${fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : ''}`;
+        document.getElementById('overviewTotal').innerHTML = fare === null ? '-' : `EUR ${fare.totalAmount.toFixed(2)}${fare.manualRouteRequired ? `<br><small>${MANUAL_ROUTE_MESSAGE}</small>` : (fare.minimumApplied ? `<br><small>${MIN_RIDE_MESSAGE}</small>` : '')}`;
     }
     
     function getExtrasString() {
@@ -581,6 +602,12 @@
         const diff = parsed - new Date();
         return diff > 0 && diff < 3600000;
     }
+
+    function isAtLeastOneHourAhead(ds) {
+        const parsed = parseEuroDate(ds);
+        if (!parsed) return false;
+        return parsed - new Date() >= 3600000;
+    }
     
     async function calculateAndStoreRoute() {
         const pickupText = getAddressText('pickupInput');
@@ -598,6 +625,11 @@
             setPageError(1, "Datum ligt in het verleden");
             return false;
         }
+        const asap = document.getElementById('asapCheckbox')?.checked === true;
+        if (!asap && !isAtLeastOneHourAhead(dt)) {
+            setPageError(1, ONE_HOUR_MESSAGE);
+            return false;
+        }
         if (currentRoundTrip) {
             const returnDt = document.getElementById('returnDatetime').value;
             if (!returnDt) {
@@ -611,6 +643,18 @@
             currentReturnDateTime = returnDt;
         }
         if (!mapsController || !mapsController.hasSelectedAddresses()) {
+            if (googleRouteUnavailable) {
+                pickupPlaceId = 'manual-pickup';
+                dropoffPlaceId = 'manual-dropoff';
+                currentRouteData = { distanceKm: 0, durationMin: 0, manualRouteRequired: true };
+                document.getElementById('distVal').innerHTML = '-';
+                document.getElementById('timeVal').innerHTML = '-';
+                document.getElementById('priceVal').innerHTML = '15.00';
+                updateTotalDisplay();
+                currentDateTime = dt;
+                currentFlight = document.getElementById('flightNumber').value;
+                return true;
+            }
             return blockRouteCalculation();
         }
         const routed = await calculateRoutePromise();
@@ -770,6 +814,8 @@
                 source: "web-booking",
                 route_distance_km: Number(currentRouteData.distanceKm),
                 route_duration_min: Number(currentRouteData.durationMin),
+                manual_route_required: fare.manualRouteRequired === true,
+                asap_requested: document.getElementById('asapCheckbox')?.checked === true,
                 minimum_fare_applied: fare.minimumApplied,
                 raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 pickup_place_id: pickupPlaceId,
@@ -779,6 +825,9 @@
                 route_calculated: true,
                 route_distance_km: Number(currentRouteData.distanceKm),
                 route_duration_min: Number(currentRouteData.durationMin),
+                manual_route_required: fare.manualRouteRequired === true,
+                asap_requested: document.getElementById('asapCheckbox')?.checked === true,
+                asap_message: document.getElementById('asapCheckbox')?.checked === true ? ASAP_TIME_MESSAGE : '',
                 minimum_fare_applied: fare.minimumApplied,
                 raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 pickup_place_id: pickupPlaceId,
@@ -814,6 +863,9 @@
                 distance_km: Number(currentRouteData.distanceKm),
                 duration_min: Number(currentRouteData.durationMin),
                 minimum_fare_applied: fare.minimumApplied,
+                manual_route_required: fare.manualRouteRequired === true,
+                asap_requested: document.getElementById('asapCheckbox')?.checked === true,
+                asap_message: document.getElementById('asapCheckbox')?.checked === true ? ASAP_TIME_MESSAGE : '',
                 raw_calculated_amount: Number(fare.rawAmount.toFixed(2)),
                 is_registered: false
             };

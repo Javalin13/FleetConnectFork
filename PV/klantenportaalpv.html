@@ -1120,17 +1120,29 @@
         const supabase = getSupabase();
         const params = new URLSearchParams(window.location.search);
         const bookingId = params.get('id') || params.get('booking') || params.get('booking_id') || '';
+        const loginRedirect = (reason) => {
+            const redirectParams = new URLSearchParams();
+            if (bookingId) redirectParams.set('booking', bookingId);
+            if (reason) redirectParams.set('reason', reason);
+            window.location.replace('/PV/index.html' + (redirectParams.toString() ? `?${redirectParams.toString()}` : ''));
+        };
         if (bookingId) {
             const attachInput = document.getElementById('attachBookingInput');
             if (attachInput) attachInput.value = bookingId;
         }
         if (!supabase?.auth?.getUser) {
-            window.location.replace('/PV/index.html' + (bookingId ? `?booking=${encodeURIComponent(bookingId)}` : ''));
+            loginRedirect('session');
             return false;
         }
         const { data, error } = await supabase.auth.getUser();
         if (error || !data?.user?.email) {
-            window.location.replace('/PV/index.html' + (bookingId ? `?booking=${encodeURIComponent(bookingId)}` : ''));
+            loginRedirect('session');
+            return false;
+        }
+        const { data: requestStatus } = await supabase.rpc('get_account_request_status', { p_email: data.user.email });
+        if (requestStatus?.found && requestStatus.status === 'pending') {
+            await supabase.auth.signOut();
+            loginRedirect('pending');
             return false;
         }
         currentUser = {
@@ -1145,7 +1157,18 @@
         } catch (linkError) {
             console.warn('Customer account request linkage unavailable:', linkError.message);
         }
-        loadUserProfile();
+        const { data: linkedCustomers, error: customerCheckError } = await supabase
+            .from('customers')
+            .select('id,email,user_id')
+            .or(`user_id.eq.${data.user.id},email.eq.${data.user.email}`)
+            .limit(1);
+        if (customerCheckError || !linkedCustomers?.length) {
+            console.warn('Customer portal profile gate failed:', customerCheckError?.message || 'no linked customer');
+            await supabase.auth.signOut();
+            loginRedirect('profile');
+            return false;
+        }
+        await loadUserProfile();
         await loadUserBookings();
         if (bookingId) {
             switchToTab('dashboard');

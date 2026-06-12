@@ -2076,3 +2076,31 @@ Remaining blockers:
 - If an account request is approved before a matching `auth.users` row exists, Supabase Auth activation still requires the safe verification/invite path; this must be validated before certification.
 
 Certification status: NOT CERTIFIED.
+
+## Phase A.4.4.4 Live Validation Failure Remediation
+
+Status: LIVE DATABASE READY FOR RETEST - FRONTEND/BROWSER VALIDATION FAILED UNTIL REDEPLOYED AND RETESTED
+
+Date: 2026-06-12
+
+Live database updates applied:
+
+- Account conversion/profile functions and columns.
+- Operator booking/review functions.
+- `ride_reviews` table and `submit_ride_review`.
+- Operator assignment/unassignment RPCs.
+- Hardened driver acceptance RPC that rejects already-assigned rides.
+- Hardened public booking RPC with a marked manual-route exception and minimum EUR 15.
+
+Repository updates:
+
+- Deterministic customer auth routing removes the index/portal redirect loop.
+- Registration creates customer profile through RPC and returns to login entry after signup.
+- Login displays pending approval, rejected approval, unverified email, and missing profile messages.
+- Public page login links now point to `/PV/index.html`.
+- Public forms now expose an account CTA near booking.
+- Public forms enforce one-hour minimum scheduling unless ASAP is selected.
+- ASAP/manual-route metadata is stored and reflected in confirmation email wording.
+- Dashboard assignment uses server-side assignment RPCs and requires recall before reassignment.
+
+Certification status remains NOT CERTIFIED.

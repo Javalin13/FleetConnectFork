@@ -97,3 +97,60 @@ Static validation passed:
 NOT CERTIFIED.
 
 Repository blockers covered by this phase are repaired, but live migration, browser, inbox, and Supabase Auth linkage evidence are still required before conditional certification.
+
+## Live Blocker Remediation Pass - 2026-06-12
+
+Status: LIVE DB PATCH APPLIED - BROWSER VALIDATION STILL FAILED/PENDING RETEST
+
+Applied to live Supabase:
+
+- `account_requests.customer_id`
+- `account_requests.user_id`
+- `approve_account_request`
+- `link_customer_after_registration`
+- `get_account_request_status`
+- `create_customer_registration_profile`
+- `create_operator_booking`
+- `operator_complete_booking`
+- `ride_reviews`
+- `submit_ride_review`
+- `operator_assign_driver`
+- `operator_unassign_driver`
+- hardened `driver_accept_assignment`
+- hardened `create_public_booking` manual-route exception
+
+Live verification result:
+
+- `account_requests.customer_id`: exists.
+- `account_requests.user_id`: exists.
+- `ride_reviews`: exists.
+- `submit_ride_review`: exists.
+- `create_operator_booking`: exists.
+- `operator_assign_driver`: exists.
+- `operator_unassign_driver`: exists.
+- `driver_accept_assignment` contains server-side duplicate-assignment rejection.
+- `approve_account_request` references `auth.users` and links `customer_id`.
+- `create_public_booking` supports marked manual-route fallback with minimum EUR 15.
+
+Repository hotfixes:
+
+- Customer login no longer redirects to the portal solely because a Supabase session exists; it first verifies customer/profile linkage.
+- Register flow redirects to the login entry after signup/verification instead of directly into the portal.
+- Portal signs out and returns to login with a deterministic reason when no linked customer profile exists.
+- Homepage/dropdown login links now use `/PV/index.html` instead of relative `index.html`.
+- Homepage booking form now has a non-blocking account CTA.
+- Public NL/FR/EN booking forms enforce one-hour minimum scheduling unless ASAP is selected.
+- ASAP bookings carry persisted `asap_requested` metadata and confirmation email wording.
+- Google referrer/auth failure no longer writes an error into address inputs; when Google is unavailable, manual route fallback is marked and stored with minimum EUR 15 for FleetConnect follow-up.
+- Dashboard assignment now calls `operator_assign_driver` instead of direct `bookings.update`.
+- Assigned driver is shown clearly in the booking fiche.
+- Reassignment now requires operator recall through `operator_unassign_driver`.
+
+Still not certified:
+
+- Customer portal redirect/login/register must be retested in browser.
+- Google referrer configuration should still be corrected in Google Cloud for the production domain.
+- Manual route fallback must be live-tested with the current domain restriction state.
+- Driver double-assignment prevention must be live-tested with two assignment tokens.
+- Review page route `/review` and `/review.html?booking=<BOOKING_ID>` must be deployed and opened.
+- Multi-row selectors and full table sorting/filtering remain requested enhancements; not certified in this blocker pass.
