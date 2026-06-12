@@ -2038,3 +2038,41 @@ Remaining blockers:
 - Review page, per-landing-page reviews, and completed-ride review CTA remain open functional gaps.
 
 Certification status: NOT CERTIFIED until deployment and live validation evidence are complete.
+
+## Phase A.4.4.4 - Live Auth, Email CTA, Dashboard, And Review Remediation
+
+Status: REPOSITORY REMEDIATION COMPLETE - NOT CERTIFIED
+
+Date: 2026-06-12
+Branch: phase-a4.4.4-live-auth-email-dashboard-remediation
+
+Completed:
+
+- Customer portal active page now persists NL/FR/EN language switching for core navigation/profile labels.
+- Registration flow now has address autocomplete, repeat-password validation, clearer verification wording, and no reset-link wording.
+- Registration/customer welcome emails now use registration confirmation CTA text and route to customer login.
+- Account request operator email now includes a dashboard review CTA.
+- Account request approval now creates or updates a `customers` row and links `account_requests.customer_id`.
+- Existing matching Supabase Auth users are linked through `account_requests.user_id`; newly authenticated customers can call `link_customer_after_registration`.
+- Customer portal booking creation now uses `create_public_booking` with Google place IDs, route distance, duration, and positive amount.
+- Dashboard assignment now uses `assignment_sent` until driver acceptance and hides reassignment controls after a driver accepts.
+- Dashboard silently refreshes every 30 seconds when the fiche modal is closed.
+- Driver archive now blocks active assigned rides and lists the blocking rides.
+- Operator-created bookings now go through authenticated operator-only `create_operator_booking`.
+- Ride completion now uses operator-only `operator_complete_booking`, triggers `RIDE_COMPLETED_REVIEW_REQUEST`, and provides `/review` / `review.html` with Supabase-backed `ride_reviews`.
+
+Validation:
+
+- Communication modules parsed with `node --check`.
+- Touched HTML inline scripts parsed.
+- `vercel.json` parsed as valid JSON.
+- Targeted static scans found no touched-path direct `bookings.insert`, `manual_route_required`, placeholder Supabase key, or Resend testing sender.
+
+Remaining blockers:
+
+- Live migrations must be applied.
+- Live browser validation must confirm account request approval, Auth/customer linkage, customer portal login, customer portal booking, assignment, completion, and review submission.
+- Inbox validation remains required for account, booking, driver, and review lifecycle emails.
+- If an account request is approved before a matching `auth.users` row exists, Supabase Auth activation still requires the safe verification/invite path; this must be validated before certification.
+
+Certification status: NOT CERTIFIED.

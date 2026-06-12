@@ -29,6 +29,7 @@
     { "source": "/register.html", "destination": "/PV/register.html" },
     { "source": "/customer", "destination": "/PV/index.html" },
     { "source": "/client", "destination": "/PV/index.html" },
+    { "source": "/review", "destination": "/review.html" },
     { "source": "/partner-login", "destination": "/Paneel/partner-login.html" },
     { "source": "/driver-login", "destination": "/Paneel/driver-login.html" },
     { "source": "/taxi-brussels", "destination": "/cities/taxi-brussels.html" },

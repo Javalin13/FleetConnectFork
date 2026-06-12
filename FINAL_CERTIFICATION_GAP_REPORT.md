@@ -239,3 +239,19 @@ FleetConnect remains NOT CERTIFIED pending live browser/inbox validation and oth
 | Booking fiche close X | RESOLVED IN REPOSITORY | Modal header close button is sticky and accessible. | Redeploy and browser-test while modal body is scrolled. |
 
 FleetConnect remains NOT CERTIFIED pending redeploy, browser testing, inbox testing, and previously documented non-Stripe blockers.
+
+## Phase A.4.4.4 Live Blocker Gap Update
+
+| Item | Classification | Evidence | Required next action |
+| --- | --- | --- | --- |
+| Account request support notification | RESOLVED IN REPOSITORY | Account request email now includes a dashboard review CTA. | Redeploy and submit one request. |
+| Account request to customer conversion | RESOLVED IN REPOSITORY, BLOCKED PENDING LIVE VALIDATION | `approve_account_request` creates/updates `customers`, stores `account_requests.customer_id`, and links existing `auth.users` through `account_requests.user_id`. | Apply migration, approve one request, verify account_requests/auth.users/customers linkage. |
+| Missing Auth user during approval | BLOCKED PENDING MANUAL APPROVAL | Frontend cannot safely create Auth users with service-role privileges. Approval creates the customer row but reports whether Auth linkage exists. | Use Supabase Auth invite/verification flow when no matching Auth user exists. |
+| Customer portal multilingual persistence | RESOLVED IN REPOSITORY | Active customer portal language switcher persists NL/FR/EN in localStorage. | Browser-test NL/FR/EN portal labels after login. |
+| Customer portal direct booking insert | RESOLVED IN REPOSITORY | Customer portal booking now uses `create_public_booking` with place IDs, route distance, duration, and amount. | Browser-test one customer portal booking. |
+| Assignment sent status | RESOLVED IN REPOSITORY | Dashboard writes `assignment_sent`; driver accept RPC clears reassignment flags and sets `assigned`. | Assign a driver and validate dashboard status before/after accept. |
+| Driver archive active ride protection | RESOLVED IN REPOSITORY | Dashboard blocks archive when active rides are assigned and lists blocking ride IDs. | Browser-test archive attempt with active ride. |
+| Operator-created booking | RESOLVED IN REPOSITORY, BLOCKED PENDING LIVE VALIDATION | Added authenticated operator-only `create_operator_booking`. | Apply migration and create one controlled operator booking. |
+| Ride completed review workflow | RESOLVED IN REPOSITORY, BLOCKED PENDING LIVE VALIDATION | Added `operator_complete_booking`, `ride_reviews`, `submit_ride_review`, `/review`, and `review.html`. | Complete one ride, confirm email CTA, submit review, verify `ride_reviews`. |
+
+FleetConnect remains NOT CERTIFIED until live migration, browser, inbox, and account-linkage validation are complete.

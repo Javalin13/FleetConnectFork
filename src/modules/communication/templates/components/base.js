@@ -43,23 +43,29 @@ export const EmailComponents = {
     /**
      * Premium CTA Button.
      */
-    cta: (text, url) => `
+    cta: (text, url) => {
+        const safeUrl = String(url || CommunicationConfig.brand.website || 'https://fleetconnect.be');
+        return `
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td align="center" style="padding: 40px 0;">
                     <table border="0" cellpadding="0" cellspacing="0">
                         <tr>
                             <td align="center" bgcolor="${CommunicationConfig.theme.primaryColor}" style="border-radius: 50px;">
-                                <a href="${url}" target="_blank" style="display: inline-block; padding: 18px 48px; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: ${CommunicationConfig.theme.secondaryColor}; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
+                                <a href="${safeUrl}" target="_blank" rel="noopener" style="display: inline-block; padding: 18px 48px; font-family: 'Inter', Arial, sans-serif; font-size: 16px; font-weight: 700; color: ${CommunicationConfig.theme.secondaryColor}; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
                                     ${text}
                                 </a>
                             </td>
                         </tr>
                     </table>
+                    <div style="font-family: 'Inter', Arial, sans-serif; font-size: 12px; line-height: 18px; color: #64748b; margin-top: 14px;">
+                        <a href="${safeUrl}" target="_blank" rel="noopener" style="color: ${CommunicationConfig.theme.primaryColor}; text-decoration: underline;">${safeUrl}</a>
+                    </div>
                 </td>
             </tr>
         </table>
-    `,
+        `;
+    },
 
     /**
      * trilingual Divider.

@@ -183,3 +183,18 @@ Before treating the checkpoint as preserved, confirm:
 9. Confirm the customer receives the confirmation email.
 10. Confirm no technical escalation email is sent for the successful booking confirmation.
 11. If email fails, capture the console entry beginning `BOOKING_CONFIRMATION delivery failed` and the Edge Function response body.
+
+## Phase A.4.4.4 Live Blocker Remediation Retest Addendum
+
+1. Apply migrations `20260612010000_phase_a444_account_customer_conversion.sql`, `20260612020000_phase_a444_dashboard_lifecycle.sql`, and `20260612030000_phase_a444_review_workflow.sql`.
+2. Redeploy branch `phase-a4.4.4-live-auth-email-dashboard-remediation`.
+3. Submit an account request and verify support receives a dashboard-review CTA.
+4. Approve the request and verify `account_requests.customer_id`, `account_requests.user_id` where an Auth user exists, and a matching `customers` row.
+5. Register or verify the customer account and confirm `link_customer_after_registration` links the authenticated user.
+6. Open `/PV/index.html`, log in, and verify the portal stays authenticated without redirect loops.
+7. In the customer portal, create one booking through selected Google suggestions and confirm Network uses `create_public_booking`.
+8. Accept the booking in the dashboard and confirm the fiche remains open under Orders.
+9. Assign a driver and confirm dashboard status is waiting for driver response until driver accepts.
+10. Driver accepts and dashboard no longer shows reassignment action/alert.
+11. Complete the ride and confirm the review email CTA opens `/review` or `/review.html`.
+12. Submit one review and verify `ride_reviews` persists in Supabase.
