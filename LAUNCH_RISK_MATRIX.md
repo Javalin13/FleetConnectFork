@@ -91,3 +91,12 @@ Rationale: core dispatch and RLS risk has been reduced, but required customer an
 | Browser session uses an unmapped operator account | High | Low | RPCs again fail with `Operator access required`. | Use `admin@ryzen.be` or map the intended auth user to a hoofd partner. | Release manager |
 | Background email failure missed by operator/customer | Medium | Medium | Booking is saved/accepted but email may fail after UI has moved on. | Watch secondary alerts/toasts and verify inbox/technical escalation. | Release manager |
 | Partner/driver creation not tested after live mapping | Medium | Medium | Mapping is rollback-validated but actual dashboard prompts remain unproven. | Create one real test partner and driver after redeploy. | Release manager |
+
+## Phase A.4.4.4 19:39 Live Hotfix Risks
+
+| Risk | Severity | Likelihood | Impact | Mitigation | Owner |
+| --- | --- | --- | --- | --- | --- |
+| Google Cloud referrer restrictions remain misconfigured | High | High | Autocomplete, route, and pricing may remain unavailable on production domains. | Keep manual fallback deployed, but add the live Vercel/custom domains to the Google API referrer allowlist and retest. | Release manager |
+| Manual-route fallback is not live-tested after redeploy | High | Medium | Users may still be blocked when Google returns `RefererNotAllowedMapError`. | Submit one controlled manual fallback booking and verify Supabase metadata plus dashboard visibility. | Release manager |
+| Registration feedback not browser-tested | Medium | Medium | New customers may still fail to understand why registration did not proceed. | Test blank, invalid email, short password, manual pickup, and successful signup states. | QA |
+| Fake driver credential remains in deployed cache | Medium | Low | Testers may keep trying a non-live credential. | Redeploy and hard-refresh `Paneel/driver-login.html`; verify `admin@ryzen.be` is absent. | Release manager |

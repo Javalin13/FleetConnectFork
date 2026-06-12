@@ -2104,3 +2104,20 @@ Repository updates:
 - Dashboard assignment uses server-side assignment RPCs and requires recall before reassignment.
 
 Certification status remains NOT CERTIFIED.
+
+## Phase A.4.4.4 19:39 Live Hotfix Status
+
+Status: NOT CERTIFIED - REPOSITORY HOTFIX COMPLETE, LIVE RETEST REQUIRED.
+
+Scope completed:
+
+- Customer/login links on active/root NL/FR/EN public booking pages now point to `/PV/index.html`.
+- Public booking and customer portal booking no longer hard-require Google `place_id` when Google Places is unavailable; typed addresses can persist through `create_public_booking` with `manual_route_required` and `google_places_unavailable` metadata.
+- Minimum EUR 15 protection remains in the manual fallback path.
+- Registration now surfaces explicit validation errors and allows manual default pickup address entry without Google autocomplete.
+- `Paneel/driver-login.html` no longer presents or accepts `admin@ryzen.be` as a fake live credential.
+
+Certification decision:
+
+- FleetConnect is still NOT CERTIFIED.
+- Required next evidence: deployed browser validation for links, manual-address guest booking, manual-address registration, customer portal manual booking, dashboard receipt, email behavior, and removal of fake credential from live pages.

@@ -618,6 +618,7 @@
     let pickupLocation = null, dropoffLocation = null;
     let pickupPlaceId = null, dropoffPlaceId = null;
     let directionsService;
+    let googlePlacesUnavailable = false;
     const portalTranslations = {
         nl: { navProfile:'Mijn Profiel', navDashboard:'Dashboard & Ritten', navNewRide:'Nieuwe Rit', navPayments:'Betalingen', logout:'Uitloggen', profileTitle:'Mijn gegevens', accountStatusLabel:'Account status', linkedRidesLabel:'Gekoppelde ritten', emailLabel:'E-mailadres', fullNameLabel:'Volledige naam', phoneLabel:'Telefoon', defaultPickupLabel:'Standaard ophaallocatie', save:'Opslaan', active:'Actief' },
         fr: { navProfile:'Mon profil', navDashboard:'Tableau de bord & trajets', navNewRide:'Nouveau trajet', navPayments:'Paiements', logout:'Déconnexion', profileTitle:'Mes données', accountStatusLabel:'Statut du compte', linkedRidesLabel:'Trajets liés', emailLabel:'E-mail', fullNameLabel:'Nom complet', phoneLabel:'Téléphone', defaultPickupLabel:'Adresse de départ par défaut', save:'Enregistrer', active:'Actif' },
@@ -713,9 +714,15 @@
     applyPortalLanguage(portalLang);
     
     // ==================== GOOGLE MAPS AUTOCOMPLETE ====================
+    window.gm_authFailure = function() {
+        googlePlacesUnavailable = true;
+        console.warn("Google Maps authentication failed; customer portal address fields remain manual text inputs.");
+    };
+
     window.initGoogleMapsCallback = function() {
         console.log("Google Maps geladen met Places API");
-        if (typeof google !== 'undefined') {
+        if (typeof google !== 'undefined' && google.maps?.places?.Autocomplete) {
+            try {
             directionsService = new google.maps.DirectionsService();
             
             const pickupInput = document.getElementById('pickupInput');
@@ -751,11 +758,57 @@
                     }
                 });
             }
+            } catch (err) {
+                googlePlacesUnavailable = true;
+                directionsService = null;
+                console.warn("Google Places autocomplete unavailable; manual address entry enabled.", err.message);
+            }
+        } else {
+            googlePlacesUnavailable = true;
         }
     };
+
+    function getManualAddressText(inputId) {
+        return (document.getElementById(inputId)?.value || '').trim();
+    }
+
+    function setManualRouteFallback() {
+        const pickupText = getManualAddressText('pickupInput');
+        const dropoffText = getManualAddressText('dropoffInput');
+        if (pickupText.length < 3 || dropoffText.length < 3) return false;
+        pickupPlaceId = pickupPlaceId || 'manual-pickup';
+        dropoffPlaceId = dropoffPlaceId || 'manual-dropoff';
+        currentRouteData = {
+            distanceKm: 0,
+            durationMin: 0,
+            manualRouteRequired: true,
+            googlePlacesUnavailable: true
+        };
+        document.getElementById("distVal").innerHTML = '-';
+        document.getElementById("timeVal").innerHTML = '-';
+        document.getElementById("priceVal").innerHTML = '15.00';
+        updateTotalDisplay();
+        return true;
+    }
+
+    ['pickupInput', 'dropoffInput'].forEach((id) => {
+        document.getElementById(id)?.addEventListener('input', () => {
+            currentRouteData = null;
+            if (id === 'pickupInput') {
+                pickupLocation = null;
+                pickupPlaceId = null;
+            } else {
+                dropoffLocation = null;
+                dropoffPlaceId = null;
+            }
+        });
+    });
     
     function calculateGoogleRoute() {
-        if (!pickupLocation || !dropoffLocation || !directionsService) return;
+        if (!pickupLocation || !dropoffLocation || !directionsService) {
+            setManualRouteFallback();
+            return;
+        }
         
         directionsService.route({
             origin: pickupLocation,
@@ -771,7 +824,8 @@
                 updateDisplayAndRoute(route);
             } else {
                 console.error("Route berekening mislukt:", status);
-                showError(1, "Route kon niet worden berekend. Probeer andere adressen.");
+                googlePlacesUnavailable = true;
+                setManualRouteFallback();
             }
         });
     }
@@ -781,6 +835,7 @@
         let displayDuration = currentRouteData.durationMin;
         let price = displayDistance * 1.5;
         if (currentRoundTrip) { displayDistance *= 2; displayDuration *= 2; price *= 2; }
+        if (price < 15) price = 15;
         
         document.getElementById("distVal").innerHTML = displayDistance.toFixed(1);
         document.getElementById("timeVal").innerHTML = displayDuration;
@@ -829,6 +884,7 @@
         let dist = parseFloat(currentRouteData.distanceKm);
         if (currentRoundTrip) dist *= 2;
         let total = dist * 1.5 + selectedVehicleExtra;
+        if (total < 15) total = 15;
         document.getElementById('totalDisplay').innerHTML = `Totaal: EUR ${total.toFixed(2)}`;
         document.getElementById('overviewPickup').innerText = document.getElementById('pickupInput').value || '-';
         document.getElementById('overviewDestination').innerText = document.getElementById('dropoffInput').value || '-';
@@ -883,7 +939,11 @@
             const urgent = isWithinNextHour(dt);
             const urgentDiv = document.getElementById('urgentWhatsApp');
             if (urgentDiv) urgent ? urgentDiv.classList.add('show') : urgentDiv.classList.remove('show');
-            if (!pickupLocation || !dropoffLocation || !pickupPlaceId || !dropoffPlaceId) { showError(1, 'Selecteer een geldig ophaal- en afzetadres uit de suggesties'); return; }
+            const pickupText = getManualAddressText('pickupInput');
+            const dropoffText = getManualAddressText('dropoffInput');
+            if (pickupText.length < 3 || dropoffText.length < 3) { showError(1, 'Vul een ophaal- en afzetadres in van minimaal 3 tekens'); return; }
+            if (!currentRouteData) calculateGoogleRoute();
+            if (!currentRouteData && !setManualRouteFallback()) { showError(1, 'Vul een ophaal- en afzetadres in van minimaal 3 tekens'); return; }
             showPage(2);
         } else if (currentPage === 2) {
             if (!currentRouteData) { showError(2, 'Bereken eerst een route via stap 1'); return; }
@@ -936,7 +996,7 @@
     // ==================== BOEKING OPSLAAN ====================
     async function finalizeBooking() {
         if (bookingSubmitInProgress) return;
-        if (!currentRouteData) { showError(5, 'Bereken eerst de route in stap 1 en 2'); return; }
+        if (!currentRouteData && !setManualRouteFallback()) { showError(5, 'Vul eerst een geldig ophaal- en afzetadres in'); return; }
         
         const fn = document.getElementById('firstName').value.trim();
         const ln = document.getElementById('lastName').value.trim();
@@ -952,7 +1012,9 @@
         let datePart = "", timePart = "";
         if (dt) { const parts = dt.split(' '); datePart = parts[0]; timePart = parts[1] || ""; }
         
-        if (!pickupPlaceId || !dropoffPlaceId) { showError(5, 'Selecteer een geldig ophaal- en afzetadres uit de suggesties'); return; }
+        if (!pickupPlaceId || !dropoffPlaceId) {
+            if (!setManualRouteFallback()) { showError(5, 'Vul eerst een geldig ophaal- en afzetadres in'); return; }
+        }
         if (!Number.isFinite(totalAmount) || totalAmount < 15) totalAmount = 15;
         const customerId = `CUST-${em.replace(/[^a-z0-9]/gi, '').substring(0, 30)}`;
         
@@ -966,8 +1028,8 @@
             dropoff_place_id: dropoffPlaceId,
             route_distance_km: currentRouteData.distanceKm,
             route_duration_min: currentRouteData.durationMin,
-            form_data: { source: "customer-portal", pickup_place_id: pickupPlaceId, dropoff_place_id: dropoffPlaceId, route_distance_km: currentRouteData.distanceKm, route_duration_min: currentRouteData.durationMin },
-            metadata: { source: "customer-portal", pickup_place_id: pickupPlaceId, dropoff_place_id: dropoffPlaceId, route_distance_km: currentRouteData.distanceKm, route_duration_min: currentRouteData.durationMin },
+            form_data: { source: "customer-portal", pickup_place_id: pickupPlaceId, dropoff_place_id: dropoffPlaceId, route_distance_km: currentRouteData.distanceKm, route_duration_min: currentRouteData.durationMin, manual_route_required: currentRouteData.manualRouteRequired === true, google_places_unavailable: currentRouteData.googlePlacesUnavailable === true },
+            metadata: { source: "customer-portal", pickup_place_id: pickupPlaceId, dropoff_place_id: dropoffPlaceId, route_distance_km: currentRouteData.distanceKm, route_duration_min: currentRouteData.durationMin, manual_route_required: currentRouteData.manualRouteRequired === true, google_places_unavailable: currentRouteData.googlePlacesUnavailable === true },
             created_at: new Date().toISOString(), partner_id: 1,
             assigned_driver_id: null, payment_status: payment === "Cash" ? "cash_pending" : "unpaid"
         };

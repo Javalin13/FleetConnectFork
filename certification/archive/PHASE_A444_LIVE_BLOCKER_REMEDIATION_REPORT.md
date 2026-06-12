@@ -154,3 +154,33 @@ Still not certified:
 - Driver double-assignment prevention must be live-tested with two assignment tokens.
 - Review page route `/review` and `/review.html?booking=<BOOKING_ID>` must be deployed and opened.
 - Multi-row selectors and full table sorting/filtering remain requested enhancements; not certified in this blocker pass.
+
+## Live Validation Failure Follow-Up - 2026-06-12 19:39
+
+Status: REMEDIATION UPDATED - NOT CERTIFIED UNTIL LIVE RETEST PASSES
+
+Live blockers confirmed after the prior deployment:
+
+- Homepage/dropdown login links still produced Page Not Found in at least one deployed entry path.
+- Google Maps returned `RefererNotAllowedMapError`; address autocomplete then blocked registration/profile address entry and guest booking.
+- Registration could fail without a useful visible page error.
+- Guest booking still depended on Google suggestion selection in some active/root page copies.
+- The driver login page still presented `admin@ryzen.be` as a fake live credential.
+
+Repository hotfixes added in this pass:
+
+- Active NL/FR/EN public pages and root duplicate booking pages now route customer portal links to `/PV/index.html`; stale `/customer`, `/client`, `/login`, and relative `index.html` homepage login/menu routes were removed from the active public entry pages.
+- Public guest booking pages now permit manual pickup/dropoff text when Google Places is unavailable or no Google suggestion was selected.
+- Manual fallback bookings keep the EUR 15 minimum fare and persist `manual_route_required: true` plus `google_places_unavailable: true` in booking payload metadata/form data.
+- Customer portal booking form no longer requires Google `place_id` values; manual typed pickup/dropoff addresses of at least 3 characters can proceed and persist through `create_public_booking`.
+- Registration default pickup address remains a manual text field if Google Places fails; the form now uses explicit visible validation instead of silent native browser blocking.
+- `Paneel/driver-login.html` no longer pre-fills, documents, or accepts `admin@ryzen.be` as a live credential. Invalid login now shows a clean invalid-account message only.
+
+Live retest required:
+
+1. Deploy this branch again.
+2. Open `/nl`, `/fr`, `/en`, `PV.html`, `PV_fr.html`, and `PV_en.html` routes where applicable and verify login/customer links open `/PV/index.html`.
+3. With the current `RefererNotAllowedMapError`, type manual pickup/dropoff addresses and confirm guest booking persists through `create_public_booking`.
+4. Register with a manually typed default pickup address and confirm visible validation/errors.
+5. Confirm the dashboard receives the fallback booking and that confirmation email behavior remains visible in browser console/network.
+6. Confirm `admin@ryzen.be` is no longer shown or accepted as a live driver/operator credential.
